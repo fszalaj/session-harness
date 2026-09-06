@@ -40,23 +40,35 @@ def _apis():
     return kernel, security
 
 
+def _token_identity(security, token, information_class):
+    from ctypes import wintypes as w
+    length = w.DWORD()
+    security.GetTokenInformation(token, information_class, None, 0, ctypes.byref(length))
+    if not length.value or length.value > 65536:
+        raise OSError('Windows token identity size unavailable')
+    buffer = ctypes.create_string_buffer(length.value)
+    if not security.GetTokenInformation(token, information_class, buffer, length, ctypes.byref(length)):
+        raise OSError('Windows token identity unavailable')
+    return buffer, ctypes.cast(buffer, ctypes.POINTER(ctypes.c_void_p))[0]
+
+
 def protect(path):
     from ctypes import wintypes as w
     reject_reparse(path)
     kernel, security = _apis()
-    token = w.HANDLE(); length = w.DWORD()
+    token = w.HANDLE()
     descriptor = ctypes.c_void_p(); old = ctypes.c_void_p(); sid_text = w.LPWSTR()
     try:
         if not security.OpenProcessToken(kernel.GetCurrentProcess(), 8, ctypes.byref(token)):
             raise OSError('Windows user token unavailable')
-        security.GetTokenInformation(token, 1, None, 0, ctypes.byref(length))
-        buffer = ctypes.create_string_buffer(length.value)
-        if not security.GetTokenInformation(token, 1, buffer, length, ctypes.byref(length)):
-            raise OSError('Windows user identity unavailable')
-        sid = ctypes.cast(buffer, ctypes.POINTER(ctypes.c_void_p))[0]
+        user_buffer, sid = _token_identity(security, token, 1)
+        owner_buffer, default_owner = _token_identity(security, token, 4)
         owner = ctypes.c_void_p()
-        if security.GetNamedSecurityInfoW(str(path), 1, 1, ctypes.byref(owner), None, None, None, ctypes.byref(old)) or not security.EqualSid(sid, owner):
-            raise OSError('Windows private state must belong to the current user')
+        if security.GetNamedSecurityInfoW(str(path), 1, 1, ctypes.byref(owner), None, None, None, ctypes.byref(old)):
+            raise OSError('Windows private state ownership unavailable')
+        user_owned = bool(security.EqualSid(sid, owner))
+        if not user_owned and not security.EqualSid(default_owner, owner):
+            raise OSError('Windows private state must belong to the current user or token default owner')
         if not security.ConvertSidToStringSidW(sid, ctypes.byref(sid_text)):
             raise OSError('Windows private ACL identity unavailable')
         sddl = 'D:P(A;OICI;FA;;;SY)(A;OICI;FA;;;' + sid_text.value + ')'
@@ -65,7 +77,9 @@ def protect(path):
         present = w.BOOL(); defaulted = w.BOOL(); dacl = ctypes.c_void_p()
         if not security.GetSecurityDescriptorDacl(descriptor, ctypes.byref(present), ctypes.byref(dacl), ctypes.byref(defaulted)) or not present:
             raise OSError('Windows private ACL unavailable')
-        if security.SetNamedSecurityInfoW(str(path), 1, 4 | 0x80000000, None, None, dacl, None):
+        # Elevated tokens can create files with their verified default group owner.
+        owner_flag, new_owner = (0, None) if user_owned else (1, sid)
+        if security.SetNamedSecurityInfoW(str(path), 1, 4 | 0x80000000 | owner_flag, new_owner, None, dacl, None):
             raise OSError('Windows private ACL application failed')
         reject_reparse(path)
     finally:

@@ -43,6 +43,24 @@ class PipeTests(unittest.TestCase):
         finally:
             proc.kill(); proc.wait(); reader.close(); proc.stdout.close()
 
+    def test_portable_runner_reports_failure_and_continues_later_files(self):
+        source = next(parent / 'scripts' / name for parent in Path(__file__).resolve().parents
+                      for name in ('test.py', 'test-agent-harness.py')
+                      if (parent / 'scripts' / name).is_file())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); (root / 'scripts').mkdir()
+            runner = root / 'scripts/test.py'; runner.write_bytes(source.read_bytes())
+            tests = root / 'skills/session-harness/scripts'; tests.mkdir(parents=True)
+            (tests / 'test_a_failure.py').write_text('raise SystemExit(7)')
+            (tests / 'test_b_later.py').write_text('from pathlib import Path; Path("later-ran").touch()')
+            (root / 'scripts/install-agent-profile.test.py').write_text('from pathlib import Path; Path("installer-ran").touch()')
+            result = subprocess.run([sys.executable, str(runner)], capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertTrue((root / 'later-ran').exists())
+            self.assertTrue((root / 'installer-ran').exists())
+            self.assertIn('test_a_failure.py', result.stdout)
+
+
 
 @unittest.skipUnless(os.name == 'nt', 'Native Windows Job Object, IPC and ACL contracts')
 class WindowsTests(unittest.TestCase):
@@ -161,6 +179,33 @@ class WindowsTests(unittest.TestCase):
             command = "$a=Get-Acl -LiteralPath '" + str(path).replace("'", "''") + "'; [Console]::Write($a.AreAccessRulesProtected)"
             result = subprocess.check_output(['pwsh', '-NoProfile', '-Command', command], text=True)
             self.assertEqual(result.strip(), 'True')
+
+
+    def test_token_default_owner_is_normalized_to_private_user_owner(self):
+        import windows_security
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'created-with-token-default-owner'
+            path.mkdir()
+            windows_security.protect(path)
+            command = ("$a=Get-Acl -LiteralPath '" + str(path).replace("'", "''") +
+                       "'; $u=[System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value; "
+                       "[Console]::Write($a.AreAccessRulesProtected -and "
+                       "($a.GetOwner([System.Security.Principal.SecurityIdentifier]).Value -eq $u))")
+            result = subprocess.check_output(['pwsh', '-NoProfile', '-Command', command], text=True)
+            self.assertEqual(result.strip(), 'True')
+
+    def test_unmatched_owner_is_denied_before_acl_mutation(self):
+        import windows_security
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'unchanged.txt'; path.write_text('preserved')
+            kernel, security = windows_security._apis()
+            with patch.object(windows_security, '_apis', return_value=(kernel, security)), \
+                 patch.object(security, 'EqualSid', return_value=False), \
+                 patch.object(security, 'SetNamedSecurityInfoW') as mutate:
+                with self.assertRaisesRegex(OSError, 'token default owner'):
+                    windows_security.protect(path)
+                mutate.assert_not_called()
+            self.assertEqual(path.read_text(), 'preserved')
 
     def test_reparse_ancestor_is_rejected(self):
         import windows_security
