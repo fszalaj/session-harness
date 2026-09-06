@@ -1,4 +1,5 @@
 import json
+from contextlib import closing
 import multiprocessing
 from pathlib import Path
 import sqlite3
@@ -119,7 +120,7 @@ class BudgetTests(unittest.TestCase):
     def test_native_growth_clamp_cannot_be_evaded_by_partial_daily_counter(self):
         self.adaptive()
         self.record(41, now=self.now + 1)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             state = json.loads(db.execute("SELECT value FROM state WHERE key='service:account'").fetchone()[0])
             state["days"][self.ledger._day(self.now)]["weekly"]["consumed"] = 0
             db.execute("UPDATE state SET value=? WHERE key='service:account'", (json.dumps(state),))
@@ -248,11 +249,11 @@ class BudgetTests(unittest.TestCase):
 
     def test_corrupt_budget_state_fails_closed_without_mutation(self):
         self.adaptive()
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db:
             raw = db.execute("SELECT value FROM state WHERE key='budget_v1'").fetchone()[0]
         for broken in ("broken", '{}', raw.replace('"strategy": "adaptive"', '"strategy": "wrong"'),
                        raw.replace('"allocation": 10.0', '"allocation": false')):
-            with sqlite3.connect(self.path) as db:
+            with closing(sqlite3.connect(self.path)) as db, db:
                 db.execute("UPDATE state SET value=? WHERE key='budget_v1'", (broken,))
             result = self.ledger.check("account", now=self.now)
             self.assertIn("invalid_ledger", result["reasons"])

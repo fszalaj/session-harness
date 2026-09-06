@@ -186,14 +186,20 @@ class NativeTests(unittest.TestCase):
             self.assertEqual("1", kwargs["env"]["SESSION_HARNESS_LEAF"])
             self.assertIn("--safe-mode", argv)
             self.assertIn("--no-session-persistence", argv)
-            self.assertEqual("/dev/stderr", argv[argv.index("--debug-file") + 1])
+            debug = argv[argv.index("--debug-file") + 1]
+            if os.name == 'nt':
+                self.assertEqual(Path(kwargs['cwd']) / 'native-debug.log', Path(debug))
+                self.assertTrue(Path(debug).is_file())
+                Path(debug).write_text(DEBUG, encoding='utf-8')
+            else:
+                self.assertEqual('/dev/stderr', debug)
             requests = [json.loads(line) for line in kwargs["stdin"].splitlines()]
             self.assertEqual(["initialize", "get_usage"], [r["request"]["subtype"] for r in requests])
             self.assertTrue(requests[1]["request"]["skip_behaviors"])
             self.assertTrue(all(r["type"] == "control_request" for r in requests))
-            return 0, stream(claude_data(), tuple(r["request_id"] for r in requests)), DEBUG
+            return 0, stream(claude_data(), tuple(r["request_id"] for r in requests)), '' if os.name == 'nt' else DEBUG
         with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "secret", "ANTHROPIC_MODEL": "secret"}), \
-                patch.object(native.shutil, "which", side_effect=lambda name: "/native/" + name), \
+                patch.object(native.harness.platform_runtime, "which", side_effect=lambda name: "/native/" + name), \
                 patch.object(native.harness, "run", side_effect=run), patch.object(native.time, "time", return_value=NOW):
             for service in ("claude",):
                 self.assertEqual(NOW, native.read_snapshot(service)["observed_at"])
@@ -201,9 +207,14 @@ class NativeTests(unittest.TestCase):
     def test_antigravity_uses_owned_force_refresh_only(self):
         import agy_quota
         self.assertFalse(hasattr(native, "antigravity_snapshot"))
-        with patch.object(native.shutil, "which", return_value="/native/agy"), \
+        with patch.object(native.harness.platform_runtime, "which", return_value="/native/agy"), \
                 patch.object(agy_quota, "read_snapshot", return_value={"complete": True}) as reader, \
                 patch.object(native.harness, "run", side_effect=AssertionError("No cached slash-command fallback")):
+            if os.name == 'nt':
+                with self.assertRaises(native.NativeQuotaError):
+                    native.read_snapshot('antigravity')
+                reader.assert_not_called()
+                return
             self.assertTrue(native.read_snapshot("antigravity")["complete"])
             reader.assert_called_once_with("/native/agy")
             reader.side_effect = ValueError("secret diagnostic")
@@ -213,15 +224,25 @@ class NativeTests(unittest.TestCase):
 
     def test_failures_redact_raw_diagnostics(self):
         for effect in ((1, "credential-secret", "credential-secret"), (0, "credential-secret", "")):
-            with patch.object(native.shutil, "which", return_value="/native/agy"), \
+            with patch.object(native.harness.platform_runtime, "which", return_value="/native/agy"), \
                     patch.object(native.harness, "run", return_value=effect):
                 with self.assertRaises(native.NativeQuotaError) as raised:
                     native.read_snapshot("claude")
                 self.assertNotIn("credential-secret", str(raised.exception))
                 self.assertTrue(raised.exception.__suppress_context__)
-        with patch.object(native.shutil, "which", return_value=None):
+        with patch.object(native.harness.platform_runtime, "which", return_value=None):
             with self.assertRaises(native.NativeQuotaError):
                 native.read_snapshot("claude")
+
+
+    def test_windows_antigravity_rejects_before_discovery_or_spawn(self):
+        with patch.object(native.os, 'name', 'nt'), \
+                patch.object(native.harness.platform_runtime, 'which') as discover, \
+                patch.object(native.harness, 'run') as run:
+            with self.assertRaises(native.NativeQuotaError):
+                native.read_snapshot('antigravity')
+            discover.assert_not_called()
+            run.assert_not_called()
 
 
 if __name__ == "__main__":

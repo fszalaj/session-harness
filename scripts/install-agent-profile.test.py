@@ -355,6 +355,17 @@ class CheckedCopyTests(unittest.TestCase):
         output = subprocess.check_output([sys.executable, str(entry), 'inventory', *args], text=True)
         self.assertEqual(json.loads(output), ['inventory', *args])
 
+    def test_launcher_in_process_path_preserves_output_imports_and_exit_status(self):
+        runtime = self.skill / 'scripts/harness.py'
+        (runtime.parent / 'sibling.py').write_text('MESSAGE = "from sibling"')
+        runtime.write_text('import sibling,sys; print(sibling.MESSAGE,flush=True); raise SystemExit(7)')
+        launcher = self.root / 'portable-launcher.py'
+        content = MODULE.launcher_content(runtime).decode().replace("if os.name == 'nt':", 'if True:')
+        launcher.write_text(content)
+        result = subprocess.run([sys.executable, str(launcher), 'inventory'], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 7)
+        self.assertEqual(result.stdout.strip(), 'from sibling')
+
     def test_modified_copy_is_preserved(self):
         self.install()
         target = self.home / '.codex/AGENTS.md'; target.write_text('local edit')

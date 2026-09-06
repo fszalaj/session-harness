@@ -60,7 +60,13 @@ def launcher_content(runtime: Path) -> bytes:
         "    forwarded = args\n"
         "else:\n"
         "    forwarded = ['launch', *args[:1], '--execute', *args[1:]]\n"
-        "os.execv(sys.executable, [sys.executable, runtime, *forwarded])\n"
+        "if os.name == 'nt':\n"
+        "    import runpy\n"
+        "    sys.argv = [runtime, *forwarded]\n"
+        "    sys.path.insert(0, os.path.dirname(runtime))\n"
+        "    runpy.run_path(runtime, run_name='__main__')\n"
+        "else:\n"
+        "    os.execv(sys.executable, [sys.executable, runtime, *forwarded])\n"
     ).encode()
 
 

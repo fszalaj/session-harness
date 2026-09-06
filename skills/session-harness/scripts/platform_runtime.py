@@ -17,8 +17,17 @@ WINDOWS = os.name == 'nt'
 def which(name):
     if not WINDOWS:
         return shutil.which(name)
-    paths = [p for p in os.environ.get('PATH', '').split(os.pathsep)
-             if p and Path(p).is_absolute() and Path(p).resolve() != Path.cwd()]
+    paths = []
+    for entry in os.environ.get('PATH', '').split(os.pathsep):
+        if not entry or not Path(entry).is_absolute():
+            continue
+        try:
+            directory = Path(entry).resolve(strict=True)
+            if not directory.is_dir() or directory.samefile(Path.cwd().resolve(strict=True)):
+                continue
+        except OSError:
+            continue
+        paths.append(directory)
     # Python's Windows which can prepend CWD even with an explicit PATH.
     for directory in paths:
         for suffix in ('', '.exe', '.cmd'):

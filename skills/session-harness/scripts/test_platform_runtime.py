@@ -43,6 +43,14 @@ class PipeTests(unittest.TestCase):
         finally:
             proc.kill(); proc.wait(); reader.close(); proc.stdout.close()
 
+    def test_lookup_excludes_alias_of_cwd(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); (root / 'evil.cmd').write_text('never execute')
+            alias = root / 'nested' / '..'; (root / 'nested').mkdir()
+            with patch.object(runtime, 'WINDOWS', True), patch.dict(os.environ, {'PATH': str(alias)}), \
+                 patch.object(Path, 'cwd', return_value=root):
+                self.assertIsNone(runtime.which('evil'))
+
     def test_portable_runner_reports_failure_and_continues_later_files(self):
         source = next(parent / 'scripts' / name for parent in Path(__file__).resolve().parents
                       for name in ('test.py', 'test-agent-harness.py')
@@ -212,8 +220,9 @@ class WindowsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); target = root / 'target'; target.mkdir()
             alias = root / 'junction'
-            command = 'mklink /J "' + str(alias) + '" "' + str(target) + '"'
-            result = subprocess.run(['cmd.exe', '/d', '/c', command], capture_output=True)
+            command = ("New-Item -ItemType Junction -Path '" + str(alias).replace("'", "''") +
+                       "' -Target '" + str(target).replace("'", "''") + "' -ErrorAction Stop | Out-Null")
+            result = subprocess.run(['pwsh', '-NoProfile', '-Command', command], capture_output=True)
             self.assertEqual(result.returncode, 0, 'Creating an unprivileged directory junction must succeed')
             try:
                 with self.assertRaisesRegex(ValueError, 'reparse'):

@@ -2,6 +2,7 @@
 from datetime import datetime
 from collections import Counter
 import json
+import os
 import math
 import re
 import shutil
@@ -219,6 +220,8 @@ def read_snapshot(service):
     try:
         if service not in ("claude", "antigravity"):
             invalid()
+        if service == "antigravity" and os.name == "nt":
+            invalid()
         executable = harness.platform_runtime.which("claude" if service == "claude" else "agy")
         if executable is None:
             invalid()
@@ -236,7 +239,6 @@ def read_snapshot(service):
         stdin = ("\n".join(json.dumps(row) for row in requests) + "\n").encode()
         with tempfile.TemporaryDirectory(prefix="session-harness-quota-") as directory:
             from pathlib import Path
-            import os
             debug = Path(directory) / 'native-debug.log'
             if os.name == 'nt':
                 from windows_security import prepare_private_file

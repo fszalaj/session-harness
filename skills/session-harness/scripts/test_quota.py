@@ -164,13 +164,16 @@ class QuotaTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Ledger(self.path, timezone="UTC")
 
-    def test_permissions_and_allowlisted_storage(self):
+    def test_allowlisted_storage(self):
         data = snapshot()
         data["secret"] = "NEVER_STORE_THIS"
         self.ledger.record(data, now=1000, initialize=True)
+        self.assertNotIn(b"NEVER_STORE_THIS", self.path.read_bytes())
+
+    @unittest.skipIf(sys.platform == "win32", "Windows ACLs are checked by test_platform_runtime")
+    def test_posix_private_storage_permissions(self):
         self.assertEqual(self.path.stat().st_mode & 0o777, 0o600)
         self.assertEqual(self.path.parent.stat().st_mode & 0o777, 0o700)
-        self.assertNotIn(b"NEVER_STORE_THIS", self.path.read_bytes())
 
     def test_corruption_denies(self):
         self.record()

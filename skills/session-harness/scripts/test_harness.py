@@ -297,7 +297,7 @@ class ExecutionTests(unittest.TestCase):
 
     def test_literal_stdin_is_not_shell_code(self):
         payload = b"$(touch /tmp/not-created-by-harness) `printf shell`\n"
-        result = harness.run([sys.executable, "-c", "import sys; sys.stdout.write(sys.stdin.read())"], stdin=payload)
+        result = harness.run([sys.executable, "-c", "import sys; sys.stdout.buffer.write(sys.stdin.buffer.read())"], stdin=payload)
         self.assertEqual(result[1].encode(), payload)
 
     def test_stdout_callback_receives_final_line_without_newline(self):
@@ -517,15 +517,43 @@ class QuotaProcessIntegrationTests(unittest.TestCase):
         original = harness.supervision.Watch
         with tempfile.TemporaryDirectory() as directory:
             pid_file = Path(directory) / 'pid'
-            child = ('import os,time,pathlib; pathlib.Path(' + repr(str(pid_file)) +
-                     ').write_text(str(os.getpid())); os.close(1); os.close(2); time.sleep(30)')
+            child = ('import os,time,pathlib,subprocess,sys,json; '
+                     'grandchild=subprocess.Popen([sys.executable,"-c","import time; time.sleep(30)"],'
+                     'stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); '
+                     'pathlib.Path(' + repr(str(pid_file)) +
+                     ').write_text(json.dumps([os.getpid(),grandchild.pid])); '
+                     'os.close(1); os.close(2); time.sleep(30)')
             with patch('usage.require_admission', side_effect=[{'allowed': True},
                         {'allowed': False, 'reasons': ['daily_limit']}]), \
                     patch.object(harness.supervision, 'Watch', side_effect=lambda service: original(service, interval=.25)):
                 with self.assertRaises(harness.supervision.Stop):
                     harness.run([sys.executable, '-c', child], timeout=5, quota_service='codex')
-            with self.assertRaises(ProcessLookupError):
-                os.kill(int(pid_file.read_text()), 0)
+            parent_pid, grandchild_pid = json.loads(pid_file.read_text())
+            if os.name == 'nt':
+                import ctypes
+                from ctypes import wintypes
+                kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+                kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+                kernel.OpenProcess.restype = wintypes.HANDLE
+                kernel.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+                kernel.WaitForSingleObject.restype = wintypes.DWORD
+                kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+                kernel.CloseHandle.restype = wintypes.BOOL
+                for pid in (parent_pid, grandchild_pid):
+                    handle = kernel.OpenProcess(0x100000, False, pid)
+                    if not handle:
+                        self.assertEqual(ctypes.get_last_error(), 87, 'Cannot verify process exit')
+                        continue
+                    try:
+                        self.assertEqual(kernel.WaitForSingleObject(handle, 2000), 0)
+                    finally:
+                        kernel.CloseHandle(handle)
+            else:
+                with self.assertRaises(ProcessLookupError):
+                    os.kill(parent_pid, 0)
+                status = subprocess.run(['ps', '-p', str(grandchild_pid), '-o', 'stat='],
+                                        capture_output=True, text=True).stdout.strip()
+                self.assertTrue(not status or status.startswith('Z'), 'Grandchild survived quota denial')
 
     def test_terminal_launch_uses_supervisor(self):
         capability = {'executable': 'never-run', 'auth': {'status': 'subscription'},
