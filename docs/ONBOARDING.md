@@ -72,6 +72,12 @@ python3 scripts/install-agent-profile.py --launcher
 python3 scripts/install-agent-profile.py --launcher --apply
 ```
 
+On Windows, use `python`, install `requirements-windows.txt`, and add
+`--link-mode copy` to both installer commands when symlinks are unavailable.
+PowerShell 7.3+ supports the installed `.ps1` launcher; Python can invoke
+`ai-session.py` directly. Copy mode checks drift instead of overwriting user edits.
+Read [platform support](../skills/session-harness/references/platforms.md).
+
 Use the same optional `--repo` on both installer commands when using a private
 merged source. Review preview replacements before applying; installation requested
 by the user covers reversible installation, with unresolved policy conflicts
@@ -102,7 +108,7 @@ repository's maintenance policy over another project's `AGENTS.md`.
 Reuse the project's durable documentation or vault. Record its entry point, reading
 order, session handoff location and how decisions/tests update durable pages. If a
 code graph exists, document its query command, measured blind spots and rebuild
-procedure. Use that graph for dependencies and blast radius. If neither exists,
+procedure. Use that graph for dependencies and blast radius before code, README or documentation changes. If neither exists,
 start with a small project-owned knowledge entry page and source inspection; do
 not add a service merely to satisfy onboarding.
 
@@ -134,18 +140,17 @@ the quota. Do not pin current model IDs or interpret a model list as review acce
 Strict mode remains the default and blocks inference without enforceable bounds.
 Observed-threshold mode is an explicit local user choice accepting possible
 in-flight overshoot. Preserve the existing budget strategy, reserves, grants and
-history until the user authorizes a migration. New ledgers default to fixed
-20 percentage points/day and a 0% reserve. There is no mandatory 10% floor.
+history until the user authorizes a migration. New ledgers default to adaptive allocation and a 0% reserve. There is no mandatory 10% floor.
 For an authorized full-utilization target, configure adaptive budgets with reserve
 0 for the relevant service or pool.
 
 Review these editable preferences during onboarding: working days, ledger timezone,
-reset cutoff, fallback reserve and any service/pool overrides. The calendar defaults
+reset cutoff, fallback strategy, fixed daily limit, reserve and any service/pool overrides. The calendar defaults
 to all seven days and an inclusive 08:30 cutoff in the ledger timezone. Examples:
 
 ```sh
 ai-session budget calendar --workdays all --reset-cutoff 08:30 --timezone UTC
-ai-session budget defaults --reserve 0
+ai-session budget defaults --strategy adaptive --reserve 0
 ai-session budget set codex --strategy adaptive --reserve 0
 ai-session budget
 ai-session budget add codex 5
@@ -171,6 +176,17 @@ additions, actual reset horizons and unknown-window exceptions. Follow the maint
 help for configuration. Metadata success is not admission: inspect `allowed` and
 stop reasons. Do not run a paid inference merely to make onboarding appear complete.
 
+For explicitly authorized paid work, include the eight direct API routes listed in
+[API and money setup](../skills/session-harness/references/api-and-spend.md).
+Discover existing key presence without exposing values, select current models and
+establish a total monthly amount/currency before inference. Show `ai-session spend
+status`, `spend set`, `spend add`, `api models` and bounded `api run`. Money mode is
+separate from subscription mode. Never create a paid allowance merely to finish
+onboarding. Native extra-credit receipt accounting does not establish protected
+native paid execution; retain units and report missing eligibility controls.
+Current Codex and Antigravity readers cannot establish paid-use disablement, so
+their protected native adapters remain blocked despite available quota metadata.
+
 Keep the same task in the current session through compaction by default. At 60%
 context usage, save a checkpoint; at 75%, reduce new context and use bounded packets;
 at 85%, use native compaction when available and resume from the checkpoint. These
@@ -192,7 +208,9 @@ UI where documented. File existence and symlink resolution alone are insufficien
 
 Leave a concise durable record of selected scope, preserved rules, changed skills,
 knowledge/graph integration, tests, restart needs, quota mode and unresolved items.
-Keep private paths/account evidence in private notes. Update maintained sources
+Keep private paths/account evidence in private notes. After every push, verify
+README/docs/skills against published code and synchronize configured local consumers
+without publishing their repositories or private setup. Update maintained sources
 and reinstall for future changes; do not edit immutable snapshots in place.
 
 Rollback uses the manifest to restore only changed paths from private backups.

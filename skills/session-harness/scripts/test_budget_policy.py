@@ -29,6 +29,7 @@ class BudgetTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.path = Path(self.tmp.name) / "ledger.sqlite3"
         self.ledger = Ledger(self.path, timezone="Europe/Warsaw", reserve=10)
+        self.ledger.budget_defaults(strategy="fixed", now=0)
         self.ledger.set_mode("observed")
         self.now = stamp("2026-09-06T12:00:00")
         self.reset = stamp("2026-09-13T00:00:00")

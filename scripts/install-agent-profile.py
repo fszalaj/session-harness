@@ -12,6 +12,9 @@ import shutil
 import stat
 import sys
 import uuid
+import tempfile
+
+WINDOWS = os.name == "nt"
 from datetime import datetime, timezone
 
 
@@ -53,12 +56,191 @@ def launcher_content(runtime: Path) -> bytes:
         "import sys\n\n"
         f"runtime = {str(runtime)!r}\n"
         "args = sys.argv[1:]\n"
-        "if args and args[0] in {'budget', 'inventory', 'usage'}:\n"
+        "if args and args[0] in {'budget', 'inventory', 'usage', 'api', 'spend'}:\n"
         "    forwarded = args\n"
         "else:\n"
         "    forwarded = ['launch', *args[:1], '--execute', *args[1:]]\n"
         "os.execv(sys.executable, [sys.executable, runtime, *forwarded])\n"
     ).encode()
+
+
+def windows_security():
+    roots = [Path(__file__).resolve().parents[1] / 'skills/session-harness/scripts',
+             Path(__file__).resolve().parents[1] / '.claude/skills/session-harness/scripts']
+    directory = next((root for root in roots if (root / 'windows_security.py').is_file()), None)
+    if directory is None:
+        raise InstallationError('Windows security helper is missing')
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('installer_windows_security', directory / 'windows_security.py')
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    return module
+
+
+def set_permissions(path, mode):
+    if WINDOWS:
+        windows_security().protect(path)
+    else:
+        path.chmod(mode)
+
+
+def launcher_files(home, runtime):
+    if not WINDOWS:
+        return {str(home / '.local/bin/ai-session'): launcher_content(runtime)}
+    entry = home / '.local/bin/ai-session.py'
+    python = str(Path(sys.executable).resolve()).replace("'", "''")
+    script = str(entry).replace("'", "''")
+    wrapper = ("#requires -Version 7.3\n"
+               "$PSNativeCommandArgumentPassing = 'Standard'\n"
+               f"& '{python}' '{script}' @args\n"
+               "exit $LASTEXITCODE\n")
+    return {str(entry): launcher_content(runtime),
+            str(home / '.local/bin/ai-session.ps1'): wrapper.encode('utf-8')}
+
+
+def copy_state_path(home):
+    return home / '.local/state/session-harness/copy-state.json'
+
+
+def file_digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def plan_copy(home, repo, include_launcher):
+    payload, native = release_sources(repo)
+    source_hash = release_hash(payload)
+    release = home / '.local/share/session-harness/releases' / source_hash
+    state_path = copy_state_path(home)
+    if WINDOWS:
+        windows_security().reject_reparse(state_path)
+    if state_path.is_symlink():
+        raise InstallationError('Copy installation state must not be a symlink')
+    previous = json.loads(state_path.read_text()) if state_path.exists() else {}
+    if not isinstance(previous, dict) or any(not isinstance(k, str) or not isinstance(v, str) or
+                                            len(v) != 64 for k, v in previous.items()):
+        raise InstallationError('Invalid copy installation state')
+    content = {}
+    instruction_paths = ['.agents/AGENTS.md', '.codex/AGENTS.md', '.claude/CLAUDE.md',
+                         '.gemini/GEMINI.md', '.copilot/copilot-instructions.md']
+    for destination in instruction_paths:
+        content[str(home / destination)] = payload['AGENTS.md']['content']
+    roots = [home / path for path in ['.agents/skills/session-harness', '.codex/skills/session-harness',
+             '.claude/skills/session-harness', '.gemini/config/skills/session-harness',
+             '.copilot/skills/session-harness', '.cursor/skills/session-harness']]
+    for root in roots:
+        if root.is_symlink():
+            raise InstallationError('Resolve existing skill symlinks before selecting copy mode')
+        for relative, item in payload.items():
+            if relative.startswith('session-harness/'):
+                content[str(root / relative[len('session-harness/'):])] = item['content']
+        if root.exists():
+            for path in root.rglob('*'):
+                if '__pycache__' in path.parts or path.suffix in {'.pyc', '.pyo'}:
+                    continue
+                if path.is_symlink() or (path.is_file() and str(path) not in previous):
+                    raise InstallationError('Unmanaged content in copied skill; preserve and reconcile it first')
+    for destination, relative in native:
+        content[str(home / destination)] = payload[relative]['content']
+    if include_launcher:
+        content.update(launcher_files(home, release / 'session-harness/scripts/harness.py'))
+    else:
+        for name in ('ai-session', 'ai-session.py', 'ai-session.ps1'):
+            path = home / '.local/bin' / name
+            if str(path) in previous and path.is_file():
+                content[str(path)] = path.read_bytes()
+    result = dict(home=str(home), repo=str(repo), source_hash=source_hash, release_root=str(release),
+                  release_files=len(payload), release_created=False, link_mode='copy', changes=[], unchanged=[])
+    snapshots = {}
+    for name in sorted(set(content) | set(previous)):
+        path = Path(name)
+        if not path.is_absolute() or not path.resolve().is_relative_to(home.resolve()):
+            raise InstallationError('Copy state path is outside the selected home')
+        if WINDOWS: windows_security().reject_reparse(path)
+        if path.is_symlink() or (path.exists() and not path.is_file()):
+            raise InstallationError('Copy destination must be a regular file')
+        if name in previous and (not path.exists() or file_digest(path) != previous[name]):
+            raise InstallationError('Managed copy was modified; preserve and reconcile it first')
+        if name in content and path.is_file() and path.read_bytes() == content[name]:
+            result['unchanged'].append(name); continue
+        action = 'delete' if name not in content else ('replace' if path.exists() else 'create')
+        result['changes'].append(dict(path=name, kind='copy', action=action, applied=False))
+        snapshots[name] = fingerprint(path)
+    return result, dict(content=content, release=payload, snapshots=snapshots,
+                        state_snapshot=fingerprint(state_path))
+
+
+def apply_copy(result, internal):
+    home = Path(result['home'])
+    lock = copy_state_path(home).with_name('copy-install.lock')
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    if WINDOWS:
+        windows_security().prepare_private_file(lock)
+    elif lock.is_symlink():
+        raise InstallationError('Copy installation lock must not be a symlink')
+    descriptor = os.open(lock, os.O_RDWR | os.O_CREAT | (getattr(os, 'O_NOFOLLOW', 0)), 0o600)
+    try:
+        if WINDOWS:
+            import msvcrt
+            if not os.fstat(descriptor).st_size: os.write(descriptor, b'0')
+            os.lseek(descriptor, 0, os.SEEK_SET)
+            try: msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+            except OSError as error: raise InstallationError('Another copy installation is active') from error
+        else:
+            import fcntl
+            try: fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError as error: raise InstallationError('Another copy installation is active') from error
+        _apply_copy_locked(result, internal)
+    finally:
+        os.close(descriptor)
+
+
+def _apply_copy_locked(result, internal):
+    home = Path(result['home']); state_path = copy_state_path(home)
+    if fingerprint(state_path) != internal['state_snapshot']:
+        raise InstallationError('Copy installation state changed after preview')
+    for entry in result['changes']:
+        if fingerprint(Path(entry['path'])) != internal['snapshots'][entry['path']]:
+            raise InstallationError('Copy destination changed after preview')
+    install_release(result, internal['release'])
+    if not result['changes'] and state_path.exists():
+        return
+    run = private_backup_run(home)
+    result['backup_root'] = str(run)
+    try:
+        for entry in result['changes']:
+            path = Path(entry['path']); expected = internal['snapshots'][str(path)]
+            if fingerprint(path) != expected:
+                raise InstallationError('Copy destination changed during installation')
+            if entry['action'] in {'replace', 'delete'}:
+                backup = run / path.relative_to(home); backup.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(path, backup); entry['backup'] = str(backup)
+            if entry['action'] == 'delete':
+                if fingerprint(path) != expected:
+                    raise InstallationError('Copy destination changed while backing up')
+                path.unlink()
+            else:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                if WINDOWS: windows_security().reject_reparse(path)
+                temporary = path.with_name('.' + path.name + '.' + uuid.uuid4().hex)
+                try:
+                    temporary.write_bytes(internal['content'][str(path)])
+                    set_permissions(temporary, 0o755 if path.name.startswith('ai-session') else 0o644)
+                    if fingerprint(path) != expected:
+                        raise InstallationError('Copy destination changed before replacement')
+                    os.replace(temporary, path)
+                finally:
+                    if temporary.exists(): temporary.unlink()
+            entry['applied'] = True
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+        state = {name: hashlib.sha256(value).hexdigest() for name, value in internal['content'].items()}
+        temporary = state_path.with_name('.copy-state-' + uuid.uuid4().hex)
+        try:
+            temporary.write_text(json.dumps(state, sort_keys=True), encoding='utf-8')
+            set_permissions(temporary, 0o600)
+            os.replace(temporary, state_path)
+        finally:
+            if temporary.exists(): temporary.unlink()
+    finally:
+        write_manifest(run, result)
 
 
 def release_sources(repo: Path) -> tuple[dict, list]:
@@ -81,7 +263,7 @@ def release_sources(repo: Path) -> tuple[dict, list]:
         if path.is_symlink():
             raise InstallationError(f"Snapshot sources must not contain symlinks: {path}")
         if path.is_file():
-            sources[str(Path("session-harness") / relative)] = path
+            sources[(Path("session-harness") / relative).as_posix()] = path
     legal_names = ("LICENSE", "NOTICE")
     if any((legal_root / name).exists() or (legal_root / name).is_symlink() for name in legal_names):
         for name in legal_names:
@@ -89,14 +271,14 @@ def release_sources(repo: Path) -> tuple[dict, list]:
             if path.is_symlink() or not path.is_file():
                 raise InstallationError(f"Missing or nonregular licensing artifact: {path}")
             sources[name] = path
-            sources[str(Path("session-harness") / name)] = path
+            sources[(Path("session-harness") / name).as_posix()] = path
     native = []
     for provider, directory, pattern, destination in [
         ("codex", "codex-agents", "*.toml", ".codex/agents"),
         ("claude", "claude-agents", "*.md", ".claude/agents"),
     ]:
         for path in sorted((profile / directory).glob(pattern)):
-            relative = str(Path("native") / provider / path.name)
+            relative = (Path("native") / provider / path.name).as_posix()
             sources[relative] = path
             native.append((Path(destination) / path.name, relative))
     payload = {}
@@ -117,17 +299,19 @@ def release_hash(payload: dict) -> str:
 
 
 def verify_release(release: Path, payload: dict) -> None:
+    if WINDOWS: windows_security().reject_reparse(release)
     if release.is_symlink() or not release.is_dir():
         raise InstallationError(f"Release must be an immutable directory: {release}")
-    if stat.S_IMODE(release.stat().st_mode) != 0o555:
+    if not WINDOWS and stat.S_IMODE(release.stat().st_mode) != 0o555:
         raise InstallationError(f"Installed release directory permissions were modified: {release}")
     actual = set()
     for path in release.rglob("*"):
+        if WINDOWS: windows_security().reject_reparse(path)
         if path.is_symlink():
             raise InstallationError(f"Unexpected symlink in installed release: {path}")
         if path.is_file():
-            actual.add(str(path.relative_to(release)))
-        elif path.is_dir() and stat.S_IMODE(path.stat().st_mode) != 0o555:
+            actual.add(path.relative_to(release).as_posix())
+        elif not WINDOWS and path.is_dir() and stat.S_IMODE(path.stat().st_mode) != 0o555:
             raise InstallationError(f"Installed release directory permissions were modified: {path}")
         elif not path.is_dir():
             raise InstallationError(f"Unexpected special file in installed release: {path}")
@@ -135,7 +319,7 @@ def verify_release(release: Path, payload: dict) -> None:
         raise InstallationError(f"Installed release file set differs from its source hash: {release}")
     for relative, item in payload.items():
         path = release / relative
-        if path.read_bytes() != item["content"] or stat.S_IMODE(path.stat().st_mode) != item["mode"]:
+        if path.read_bytes() != item["content"] or (not WINDOWS and stat.S_IMODE(path.stat().st_mode) != item["mode"]):
             raise InstallationError(f"Installed release was modified; preserve and inspect it: {path}")
 
 
@@ -148,7 +332,7 @@ def install_release(result: dict, payload: dict) -> None:
         if directory.is_symlink() or (directory.exists() and not directory.is_dir()):
             raise InstallationError(f"Release location must be a real directory: {directory}")
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-        directory.chmod(0o700)
+        set_permissions(directory, 0o700)
     staging = release.parent / (".building-" + uuid.uuid4().hex)
     staging.mkdir(mode=0o700)
     try:
@@ -156,10 +340,10 @@ def install_release(result: dict, payload: dict) -> None:
             path = staging / relative
             path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
             path.write_bytes(item["content"])
-            path.chmod(item["mode"])
+            set_permissions(path, item["mode"])
         for directory in [path for path in staging.rglob("*") if path.is_dir()]:
-            directory.chmod(0o555)
-        staging.chmod(0o555)
+            set_permissions(directory, 0o555)
+        set_permissions(staging, 0o555)
         try:
             staging.rename(release)
         except OSError:
@@ -170,18 +354,22 @@ def install_release(result: dict, payload: dict) -> None:
             result["release_created"] = True
     finally:
         if staging.exists():
-            staging.chmod(0o700)
+            set_permissions(staging, 0o700)
             for directory in [path for path in staging.rglob("*") if path.is_dir()]:
-                directory.chmod(0o700)
+                set_permissions(directory, 0o700)
             shutil.rmtree(staging)
 
 
-def plan_install(home: Path, repo: Path, include_launcher: bool) -> tuple[dict, dict]:
+def plan_install(home: Path, repo: Path, include_launcher: bool, link_mode="symlink") -> tuple[dict, dict]:
     for variable, directory in [("CODEX_HOME", ".codex"), ("CLAUDE_CONFIG_DIR", ".claude"),
                                 ("COPILOT_HOME", ".copilot")]:
         override = os.environ.get(variable)
         if override and Path(override).expanduser().resolve() != (home / directory).resolve():
             raise InstallationError(f"Custom {variable} is unsupported by this installer; preserve it and configure its instruction links explicitly")
+    if link_mode == 'copy':
+        return plan_copy(home, repo, include_launcher)
+    if link_mode != 'symlink':
+        raise InstallationError('Link mode must be symlink or copy')
     payload, native = release_sources(repo)
     source_hash = release_hash(payload)
     release = home / ".local/share/session-harness/releases" / source_hash
@@ -213,9 +401,9 @@ def plan_install(home: Path, repo: Path, include_launcher: bool) -> tuple[dict, 
         runtime = skill / "scripts/harness.py"
         if "session-harness/scripts/harness.py" not in payload:
             raise InstallationError("Missing harness runtime: session-harness/scripts/harness.py")
-        launcher = str(home / ".local/bin/ai-session")
-        content[launcher] = launcher_content(runtime)
-        entries.append({"path": launcher, "kind": "launcher", "mode": "0755"})
+        launchers = launcher_files(home, runtime)
+        content.update(launchers)
+        entries.extend({'path': path, 'kind': 'launcher', 'mode': '0755'} for path in launchers)
 
     result = {"home": str(home), "repo": str(repo), "source_hash": source_hash,
               "release_root": str(release), "release_files": len(payload),
@@ -236,7 +424,7 @@ def plan_install(home: Path, repo: Path, include_launcher: bool) -> tuple[dict, 
         else:
             matches = (previous_kind == "file"
                        and path.read_bytes() == content[str(path)]
-                       and stat.S_IMODE(path.stat().st_mode) == 0o755)
+                       and (WINDOWS or stat.S_IMODE(path.stat().st_mode) == 0o755))
         if matches:
             result["unchanged"].append(str(path))
             continue
@@ -255,7 +443,7 @@ def private_backup_run(home: Path) -> Path:
         if path.is_symlink() or (path.exists() and not path.is_dir()):
             raise InstallationError(f"Backup location must be a real directory: {path}")
         path.mkdir(parents=True, exist_ok=True, mode=0o700)
-        path.chmod(0o700)
+        set_permissions(path, 0o700)
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ") + "-" + uuid.uuid4().hex[:8]
     run = root / "backups" / run_id
     run.mkdir(mode=0o700)
@@ -271,6 +459,8 @@ def write_manifest(run: Path, result: dict) -> None:
 
 
 def apply_install(result: dict, internal: dict) -> None:
+    if result.get('link_mode') == 'copy':
+        return apply_copy(result, internal)
     home = Path(result["home"])
     changes = result["changes"]
     backup_run = None
@@ -278,6 +468,15 @@ def apply_install(result: dict, internal: dict) -> None:
         path = Path(entry["path"])
         if fingerprint(path) != internal["snapshots"][str(path)]:
             raise InstallationError(f"Managed path changed after preflight: {path}")
+    if WINDOWS:
+        with tempfile.TemporaryDirectory(prefix='harness-link-probe-') as directory:
+            root = Path(directory)
+            source = root / 'source'; source.write_text('probe')
+            try:
+                (root / 'file-link').symlink_to(source)
+                (root / 'directory-link').symlink_to(home, target_is_directory=True)
+            except OSError as error:
+                raise InstallationError('Windows symlinks unavailable; explicitly select --link-mode copy') from error
     install_release(result, internal["release"])
     if any(entry["action"] == "replace" for entry in changes):
         backup_run = private_backup_run(home)
@@ -294,7 +493,7 @@ def apply_install(result: dict, internal: dict) -> None:
                 backup = backup_run / path.relative_to(home)
                 backup.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
                 if path.is_symlink():
-                    backup.symlink_to(os.readlink(path))
+                    backup.symlink_to(os.readlink(path), target_is_directory=path.is_dir())
                     shutil.copystat(path, backup, follow_symlinks=False)
                 else:
                     shutil.copy2(path, backup)
@@ -306,12 +505,12 @@ def apply_install(result: dict, internal: dict) -> None:
             temporary = path.with_name(f".{path.name}.install-{uuid.uuid4().hex}")
             try:
                 if entry["kind"] == "symlink":
-                    temporary.symlink_to(entry["target"])
+                    temporary.symlink_to(entry["target"], target_is_directory=Path(entry["target"]).is_dir())
                 else:
                     descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o755)
                     with os.fdopen(descriptor, "wb") as stream:
                         stream.write(internal["content"][str(path)])
-                    temporary.chmod(0o755)
+                    set_permissions(temporary, 0o755)
                 if fingerprint(path) != expected:
                     raise InstallationError(f"Managed path changed before replacement: {path}")
                 os.replace(temporary, path)
@@ -330,13 +529,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[1],
                         help="Durable repository checkout containing profile sources")
     parser.add_argument("--apply", action="store_true", help="Apply the previewed links with private backups")
+    parser.add_argument("--link-mode", choices=("symlink", "copy"), default="symlink",
+                        help="Explicit checked-copy mode supports homes without symlink privileges")
     parser.add_argument("--launcher", action="store_true", help="Also install ~/.local/bin/ai-session")
     args = parser.parse_args(argv)
     result = {"mode": "apply" if args.apply else "dry-run"}
     try:
         home = args.home.expanduser().resolve()
         repo = args.repo.expanduser().resolve()
-        plan, internal = plan_install(home, repo, args.launcher)
+        plan, internal = plan_install(home, repo, args.launcher, args.link_mode)
         result.update(plan)
         if args.apply:
             apply_install(result, internal)

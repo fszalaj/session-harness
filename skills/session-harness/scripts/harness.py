@@ -18,6 +18,7 @@ import threading
 import time
 
 import supervision
+import platform_runtime
 
 
 PROVIDERS = {"codex": "codex", "claude": "claude", "antigravity": "agy"}
@@ -62,6 +63,8 @@ def child_env(env=None, leaf=False):
 
 def stop_group(proc):
     """Signal the owned group before reaping its leader and releasing its PID."""
+    if os.name == 'nt':
+        return platform_runtime.stop(proc)
     if proc.returncode is not None:
         return proc.returncode
     observer = getattr(proc, "_harness_exit", None)
@@ -93,14 +96,17 @@ def interrupt_children(signum, _frame):
 
 def register_process(proc):
     if not _OWNED_PROCESSES and threading.current_thread() is threading.main_thread():
-        for number in (signal.SIGTERM, signal.SIGHUP):
+        for number in ([signal.SIGTERM] if os.name == "nt" else [signal.SIGTERM, signal.SIGHUP]):
             _PREVIOUS_SIGNALS[number] = signal.getsignal(number)
             signal.signal(number, interrupt_children)
     _OWNED_PROCESSES[proc.pid] = proc
-    proc._harness_exit = supervision.ChildExit(proc.pid)
+    if os.name != "nt":
+        proc._harness_exit = supervision.ChildExit(proc.pid)
 
 
 def unregister_process(proc):
+    if os.name == 'nt':
+        platform_runtime.close(proc)
     _OWNED_PROCESSES.pop(proc.pid, None)
     observer = getattr(proc, "_harness_exit", None)
     if observer is not None:
@@ -113,8 +119,9 @@ def unregister_process(proc):
 
 def run(argv, *, stdin=b"", timeout=15, cwd=None, env=None, on_stdout_line=None,
         quota_service=None):
-    if os.name != "posix":
-        raise HarnessError("unsupported_capability", "Process-group isolation requires POSIX.")
+    if os.name == 'nt':
+        return platform_runtime.run(argv, stdin=stdin, timeout=timeout, cwd=cwd, env=env,
+                                    on_stdout_line=on_stdout_line, quota_service=quota_service)
     watch = supervision.Watch(quota_service) if quota_service else None
     if watch:
         watch.start()
@@ -213,6 +220,8 @@ def cli_help(argv):
 
 
 def parent_commands():
+    if os.name == "nt":
+        return []
     current = os.getppid()
     commands = []
     for _ in range(8):
@@ -315,23 +324,28 @@ def select_models(models, family):
 
 class CodexRPC:
     def __init__(self, executable):
-        self.proc = subprocess.Popen([executable, "app-server", "--stdio"],
+        self.proc = platform_runtime.spawn([executable, "app-server", "--stdio"],
                                      stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                      stderr=subprocess.DEVNULL, start_new_session=True,
                                      env=child_env(), bufsize=0)
         register_process(self.proc)
-        self.selector = selectors.DefaultSelector()
-        self.selector.register(self.proc.stdout, selectors.EVENT_READ)
+        self.reader = platform_runtime.Reader(self.proc.stdout) if os.name == 'nt' else None
+        self.selector = None if self.reader else selectors.DefaultSelector()
+        if self.selector: self.selector.register(self.proc.stdout, selectors.EVENT_READ)
         self.buffer = b""
         self.counter = 0
 
     def notify(self, method):
-        self.proc.stdin.write((json.dumps({"method": method}) + "\n").encode())
+        data = (json.dumps({"method": method}) + "\n").encode()
+        if self.reader: platform_runtime.write(self.proc.stdin, data, 12)
+        else: self.proc.stdin.write(data)
 
     def request(self, method, params, timeout=12):
         self.counter += 1
         request = {"id": self.counter, "method": method, "params": params}
-        self.proc.stdin.write((json.dumps(request) + "\n").encode())
+        data = (json.dumps(request) + "\n").encode()
+        if self.reader: platform_runtime.write(self.proc.stdin, data, timeout)
+        else: self.proc.stdin.write(data)
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             while b"\n" in self.buffer:
@@ -347,8 +361,9 @@ class CodexRPC:
                 if not isinstance(reply.get("result"), dict):
                     raise HarnessError("schema_error", "Codex response has no result object.")
                 return reply["result"]
-            if self.selector.select(0.1):
-                chunk = os.read(self.proc.stdout.fileno(), 65536)
+            chunk = self.reader.read(.1) if self.reader else None
+            if chunk is not None or (self.selector and self.selector.select(0.1)):
+                if self.selector: chunk = os.read(self.proc.stdout.fileno(), 65536)
                 if not chunk:
                     raise HarnessError("provider_error", "Codex discovery server exited.")
                 self.buffer += chunk
@@ -361,7 +376,8 @@ class CodexRPC:
             stop_group(self.proc)
         finally:
             unregister_process(self.proc)
-        self.selector.close()
+        if self.reader: self.reader.close()
+        if self.selector: self.selector.close()
         self.proc.stdin.close()
         self.proc.stdout.close()
 
@@ -546,7 +562,7 @@ def discover_claude(executable, offline=False):
 
 
 def discover_provider(provider, offline=False):
-    executable = shutil.which(PROVIDERS[provider])
+    executable = platform_runtime.which(PROVIDERS[provider])
     if not executable:
         return {"status": "missing_cli", "reason": "No installed CLI.", "review": {"status": "missing_cli"}}
     try:
@@ -907,6 +923,13 @@ def review(provider, artifact, timeout, capability, effort=None):
 
 def main(argv=None):
     arguments = list(sys.argv[1:] if argv is None else argv)
+    if os.environ.get(LEAF_MARKER):
+        print(json.dumps({"status": "recursion_blocked"}))
+        return 2
+    if arguments and arguments[0] in {"spend", "api"}:
+        import api_execution
+        import spend_cli
+        return (spend_cli if arguments[0] == "spend" else api_execution).main(arguments[1:])
     if arguments and arguments[0] == "budget":
         import budget_cli
         return budget_cli.main(arguments[1:])
@@ -918,8 +941,14 @@ def main(argv=None):
             print(json.dumps({"status": "recursion_blocked"}))
             return 2
         import inventory
+        import api_providers
         native = {provider: discover_provider(provider) for provider in PROVIDERS}
+        api = {service: {"key_present": bool(os.environ.get(settings[2])),
+                         "account_access": "unverified", "execution": "explicit_paid_text_route",
+                         "model_catalog": "unsupported" if service == "zai" else "explicit_metadata_command"}
+               for service, settings in api_providers.SERVICES.items()}
         print(json.dumps({"native_clients": native, "multi_model_clients": inventory.discover_all(),
+                          "api_services": api,
                           "runtime": {"path": RUNTIME_PATH, "sha256": RUNTIME_SHA256}}, indent=2))
         return 0
     parser = argparse.ArgumentParser(description=__doc__)

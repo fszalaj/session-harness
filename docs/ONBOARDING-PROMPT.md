@@ -34,21 +34,26 @@ length, triggers and actual functions; consolidate duplication without losing
 behavior. Do not edit vendor-managed skills or silently discard conflicts.
 
 Preserve backups before changes. Merge personal policy before applying the
-installer; backups alone do not keep rules active. Prefer existing project
+installer; backups alone do not keep rules active. Use the existing code graph before code, README or documentation changes,
+checking measured blind spots in source. Prefer existing project
 knowledge and graph tools, including knowledge-gateway if available, without
 adding a mandatory backend. Document the reading order and durable handoff path.
 Discover installed clients, current selectable models and supported effort without
 version pins or assumptions based on a subscription name. Separate advertised
 catalogs, account-selectable options and verified execution; retain unknowns.
 Preserve persisted quota strategies, reserves, grants, mode and history until I
-authorize migration. New ledgers use fixed 20 percentage points/day and reserve 0;
+authorize migration. New ledgers use adaptive allocation and reserve 0;
 there is no mandatory 10% floor. For a full-utilization target I select, configure
 adaptive per-pool budgets with reserve 0 from actual reset metadata. Otherwise
 retain the existing policy or new-ledger defaults.
 
+On Windows, install the timezone dependency and use explicit --link-mode copy
+when symlinks are unavailable. Preserve checked-copy drift and backups; use
+PowerShell 7.3+ or the Python launcher, not a cmd.exe interpolation wrapper.
+
 Review editable calendar preferences with me: working days (all seven by default),
 IANA timezone (UTC for a new ledger), inclusive reset cutoff (08:30 by default),
-fallback reserve and service/pool overrides. Show `ai-session budget calendar
+fallback strategy, fixed daily limit, reserve and service/pool overrides. Show `ai-session budget calendar
 --workdays all --reset-cutoff 08:30 --timezone UTC`; working days also accept
 `weekdays` or a list such as `mon,tue,thu`. Timezone can initialize a new ledger but
 must match an existing ledger to preserve dated history. `ai-session budget defaults
@@ -62,6 +67,19 @@ Show `ai-session budget`, `ai-session budget add SERVICE 5` and
 policy, not an invented renewal date. Calendar rules and grants cannot create
 provider headroom or bypass missing evidence.
 
+Include explicit API support for OpenAI, Anthropic, Gemini, xAI/Grok, DeepSeek,
+Moonshot/Kimi, Z.ai/GLM and OpenRouter. Read references/api-and-spend.md within the
+skill. Inventory existing key presence without exposing values. Do not assume a
+subscription supplies an API key or that catalog order ranks model strength.
+If I authorize paid use, establish my total monthly amount/currency and optional
+service caps with `ai-session spend`; preserve separate monetary and subscription
+modes. Show `spend status`, `spend add`, `api models` and bounded `api run`.
+Missing monetary authorization leaves paid execution disabled. Native extra credits
+retain their units; record verified monetary receipts under extra:SERVICE when
+applicable. Never buy credits, enable automatic reload or invent dollar conversion.
+Report missing paid-eligibility controls honestly, including native Codex and
+Antigravity limitations. Keep account evidence and personal setup out of public files.
+
 Continue the same task through compaction by default: checkpoint at 60% context,
 reduce new context at 75%, use native compaction at 85% when available, then resume.
 These thresholds are advisory; Markdown cannot invoke the client's native compact
@@ -73,6 +91,9 @@ project, restart or report the required restart, and verify actual discovery and
 idempotence. Report instruction loading, skill discovery, model access and protected
 execution separately. Copilot/Cursor instruction compatibility does not establish
 working review, quota or manager adapters; Gemini CLI is not an Antigravity adapter.
+After every push, check README/docs/skills against published code, synchronize
+configured local consumers and reinstall maintained profiles. Store consumer paths
+and setup privately; do not publish consumer repositories without authorization.
 Keep the existing explicit quota-mode choice; otherwise use strict mode unless I
 opt into observed-threshold stopping with possible in-flight overshoot. Do not change billing, authentication,
 repository visibility or publish anything. Report changes, checks, rollback paths

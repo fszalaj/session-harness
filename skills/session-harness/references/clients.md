@@ -155,3 +155,20 @@ Install only user-owned shared skills through profile links. Bundled system skil
 and plugin caches remain managed by their installer, because direct cache edits
 disappear on upgrades and can break discovery. Audit their routing when relevant
 to a task; do not load an unrelated plugin's skill merely because it is installed.
+
+
+## Explicit APIs and platform boundaries
+
+For OpenAI, Anthropic, Gemini, xAI/Grok, DeepSeek, Kimi/Moonshot, Z.ai/GLM and
+OpenRouter direct text requests, follow [API and money setup](api-and-spend.md).
+These routes use separate credentials and explicit monetary caps. They do not
+consume a native subscription allowance or become an automatic fallback.
+Z.ai catalog discovery and generic model-specific API effort controls are unsupported.
+
+Native quota discovery does not establish safe paid-credit eligibility. Current
+Codex and Antigravity readers cannot prove paid use is disabled and their protected
+native routes are blocked. Claude requires explicit disabled paid controls with
+no unknown purchase/reload state. Enabled native paid credits remain unsupported.
+
+Core accounting/API and checked profile installation target Windows as well as
+Unix. Native Antigravity Windows quota is unsupported; see [platforms](platforms.md).

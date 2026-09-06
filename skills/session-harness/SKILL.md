@@ -1,6 +1,6 @@
 ---
 name: session-harness
-description: Coordinate substantive work across Codex, Claude and Antigravity, with installed-client/model discovery and adaptive quota/context safeguards. Detect the active session, resolve current models, have the strongest session model plan and manage, obtain two independent provider reviews, and delegate implementation at appropriate effort. Skip orchestration for trivial edits and leaf assignments.
+description: Coordinate substantive work across coding clients and explicitly configured API providers. Discover current models, have the strongest session model manage, obtain two independent provider reviews, and delegate bounded work with quota, money and context safeguards. Skip orchestration for trivial edits and leaf assignments.
 ---
 
 # Session harness
@@ -14,9 +14,9 @@ independent review, not a replacement for the clients' permission controls.
 Read [usage and context](references/usage-and-context.md) before any model call,
 including manager continuation, native workers, external review and retries. The
 same account budgets apply across projects. Read the persisted budget strategy and
-reserve for every pool. New ledgers default to fixed 20 points/day and 0% reserve,
+reserve for every pool. New ledgers default to adaptive allocation and 0% reserve,
 UTC, all seven workdays and an 08:30 reset cutoff. Preserve existing configuration.
-An explicit adaptive policy distributes the balance across scheduled workdays
+Adaptive policy distributes the balance across scheduled workdays
 until the actual reset; a fresh reset due by tomorrow's local cutoff releases
 current headroom on a scheduled workday without predicting a refill. Honor existing settings and dated grants. See [budget controls](references/budgets.md)
 for daily additions and use-rest. Record fresh observations; unknown usage is not
@@ -36,6 +36,14 @@ billing services, start replacement workers or consume reset credits to bypass i
 The launcher and external review runner poll while their owned processes run;
 direct native sessions remain outside that process boundary.
 
+For an explicitly authorized API route or money/credit configuration, read
+[API and spend](references/api-and-spend.md). API budget and admission mode are
+separate from subscription percentages. A paid route requires a configured total
+monthly cap and per-request reservation; no automatic paid fallback is allowed.
+Native paid-credit execution remains unsupported, and missing eligibility controls
+can block a subscription adapter even when quota remains. On Windows installation
+or process work, read [platform support](references/platforms.md).
+
 ## 1. Establish the manager
 
 - If assigned a leaf task, or `SESSION_HARNESS_LEAF=1`, perform only that task.
@@ -52,7 +60,12 @@ direct native sessions remain outside that process boundary.
   catalogs, account-selectable models and verified entitlement are different states.
   Grok/xAI, DeepSeek, Kimi/Moonshot and GLM/Z.ai can appear through multi-model
   clients; never infer an installed application or paid route from a model name.
-  Additional clients require verified quota, selection and execution adapters.
+  Use `harness.py api models SERVICE` for an explicitly selected API catalog.
+  Direct API text routes cover OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi,
+  Z.ai and OpenRouter; Z.ai catalog discovery remains unsupported. Additional
+  native clients require verified quota, selection and execution adapters.
+  For Copilot, Cursor or another host, establish session identity from its native
+  controls rather than supplying an unsupported `discover --session` value.
   Use auto-detection only when identity is unknown; installed
   binaries do not identify the current session. Conflicting evidence stays unknown.
 - Prefer the current session's advertised model/effort capabilities over another
@@ -99,7 +112,7 @@ provider guidance when capability or successor relationships remain uncertain.
 | Role | Model and effort | Ownership |
 | --- | --- | --- |
 | Manager/planner | Strongest current session model, highest supported effort | Plan, reconciliation, integration, final verification |
-| Two plan reviewers | Strong current models from the other two providers, high or highest supported effort for difficult plans | Independent findings on the same plan |
+| Two plan reviewers | Strong current models from two other distinct provider families, high or highest supported effort for difficult plans | Independent findings on the same plan |
 | Investigator | Current suitable model, low/medium | Bounded evidence gathering, no edits |
 | Implementer | Current suitable model, medium; high for hard changes | One non-overlapping file/task scope |
 | Verifier | Current suitable model, high | Independent diff/test review, no self-approval |
@@ -115,10 +128,14 @@ findings using evidence; majority voting does not erase a concrete defect.
    plan artifact or private run directory, not a new committed progress log.
 2. Hash the exact review packet. Include sufficient relevant code/contracts inline,
    sanitize secrets and personal data, and omit irrelevant conversation history.
-3. Give the same packet separately to the other two provider families. For Codex
+3. Give the same packet separately to two other distinct provider families. For Codex
    manager use Claude + Gemini; for Claude use Codex + Gemini; for Antigravity/Gemini
    use Codex + Claude. A Claude model accessed through Antigravity is still Claude.
-   Reviewers do not see each other's verdict before their first response.
+   Other managers, including Grok, DeepSeek, Kimi and GLM, use the same rule:
+   select two available different families, excluding the manager's family. An
+   API route requires its explicit money policy and records actual effort as
+   unsupported when the adapter cannot select it. Reviewers do not see each
+   other's verdict before their first response.
 4. Request `approve`, `revise` or `blocked`, with concrete findings, severity,
    evidence, missing assumptions and required checks. A completed process is not
    approval. Do not ask for private reasoning traces.
@@ -165,6 +182,10 @@ independent work is exhausted; this skill does not require routine plan approval
 - Checkpoint durable decisions and resumable state through the project's knowledge
   workflow. Record completed/pending tasks, exact plan digest, reviews, selected
   versus observed models, checks and remaining blockers before compaction/handoff.
+- Before documentation changes, use the project code graph and inspect measured
+  blind spots. After each push, verify docs/README/skill against code and synchronize
+  configured local consumers from the published source. Keep consumer paths,
+  private setup details and session evidence out of public commits.
 - Reinstall the shared profile after changing its maintained sources. Profile
   links target a verified immutable local snapshot, so branch changes cannot break
   other clients. Compare the runtime path/hash when project and profile skills coexist.

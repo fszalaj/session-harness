@@ -2,17 +2,19 @@
 import errno
 import math
 import os
-import pty
 import select
 import signal
 import struct
 import subprocess
 import tempfile
 import sys
-import termios
 import time
-import tty
-import fcntl
+
+if os.name == "posix":
+    import pty
+    import termios
+    import tty
+    import fcntl
 
 
 class Stop(RuntimeError):
@@ -25,7 +27,7 @@ class Stop(RuntimeError):
                  "reserve_floor", "reset_needs_fresh_evidence", "stale_pool",
                  "exact_request_bound_unavailable", "invalid_ledger", "quota_refresh_failed",
                  "quota_admission_denied", "unsupported_quota_refresh",
-                 "unknown_adaptive_reset", "unknown_window", "budget_anchor_missing", "native_growth_limit", "not_work_day"}
+                 "unknown_adaptive_reset", "unknown_window", "budget_anchor_missing", "native_growth_limit", "not_work_day", "credit_metadata_invalid", "credit_metadata_unverified", "native_paid_execution_unsupported"}
         self.reasons = tuple(dict.fromkeys(reason.rsplit(":", 1)[-1] for reason in reasons
                                          if isinstance(reason, str) and reason.rsplit(":", 1)[-1] in known)) or ("quota_admission_denied",)
         super().__init__("Quota supervision stopped: " + ", ".join(self.reasons))
@@ -168,6 +170,9 @@ def run_terminal(argv, env, service, *, check=None, interval=15, grace=1.0):
     """Relay a PTY and stop its entire owned group when observation denies work."""
     if not math.isfinite(grace) or grace < 0:
         raise ValueError("Cleanup grace must be nonnegative and finite")
+    if os.name == 'nt':
+        from platform_runtime import terminal
+        return terminal(argv, env, service, check=check, interval=interval, grace=grace)
     watch = Watch(service, check=check, interval=interval)
     watch.start()
     stdin, stdout = sys.stdin.fileno(), sys.stdout.fileno()

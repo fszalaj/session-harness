@@ -1,15 +1,17 @@
 import os
-import fcntl
 from pathlib import Path
-import pty
 import signal
 import subprocess
 import sys
 import tempfile
-import termios
 import time
 import unittest
 from unittest.mock import Mock, patch
+
+if os.name == "posix":
+    import fcntl
+    import pty
+    import termios
 
 import supervision
 
@@ -47,6 +49,7 @@ class WatchTests(unittest.TestCase):
             Watch("codex", broken).start()
 
 
+@unittest.skipUnless(os.name == "posix", "POSIX terminal/kernel contract; Windows has native job tests")
 class DarwinSignalTests(unittest.TestCase):
     def test_eperm_is_ignored_only_for_verified_zombie_group(self):
         for platform, exited, zombies, allowed in (("darwin", True, True, True),
@@ -97,6 +100,7 @@ class DarwinSignalTests(unittest.TestCase):
                 self.assertEqual(supervision._zombie_only_group(123), expected)
 
 
+@unittest.skipUnless(os.name == "posix", "POSIX terminal/kernel contract; Windows has native job tests")
 class TerminalTests(unittest.TestCase):
     def assert_descriptor_flags_restored(self, fd, before):
         after = fcntl.fcntl(fd, fcntl.F_GETFL)

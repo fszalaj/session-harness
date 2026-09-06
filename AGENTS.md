@@ -1,7 +1,7 @@
 # Session harness maintenance
 
 Use `skills/session-harness/SKILL.md` for substantive work. This is a generic
-subscription-client harness; do not add application-specific policies or data.
+coding-client and explicit API harness; do not add application-specific policies or data.
 `CLAUDE.md` and `GEMINI.md` link here. Read only relevant references.
 
 - Preserve user files and settings. Never commit credentials, quota ledgers, private
@@ -17,3 +17,9 @@ subscription-client harness; do not add application-specific policies or data.
   capability boundaries. Simulated tests are not evidence of provider guarantees.
 - Existing application instructions outrank generic defaults. Keep updates explicit,
   reversible and reviewable; do not change authentication or paid-usage preferences.
+
+- Use the code graph before code and documentation changes; inspect measured blind
+  spots in source. After every push, verify README/docs/skills and synchronize
+  configured local consumers. Keep their paths and setup out of public commits.
+- API dispatch requires explicit money authorization; preserve liabilities after
+  ambiguous failures. Never convert unknown credits or enable paid fallback.

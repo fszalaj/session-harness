@@ -63,7 +63,6 @@ class NativeTests(unittest.TestCase):
                      lambda d: d["rate_limits"]["limits"].append(copy.deepcopy(d["rate_limits"]["limits"][0])),
                      lambda d: d["rate_limits"]["limits"][0].update(kind="unknown"),
                      lambda d: d["rate_limits"].update(new_pool={}),
-                     lambda d: d["rate_limits"]["extra_usage"].update(is_enabled=True),
                      lambda d: d["rate_limits"]["model_scoped"].clear(),
                      lambda d: d["rate_limits"]["five_hour"].update(utilization=99),
                      lambda d: d["session"].update(total_cost_usd=1),
@@ -89,11 +88,7 @@ class NativeTests(unittest.TestCase):
         self.assertTrue(result["complete"])
         self.assertIsNone(pools["native:nimbus_quill"]["resets_at"])
         self.assertEqual(33.125, pools["native:future_quota"]["used_percent"])
-        for mutation in (lambda d: d["spend"].update(enabled=True),
-                         lambda d: d["spend"]["used"].update(amount_minor=1),
-                         lambda d: d["spend"].update(balance={}),
-                         lambda d: d["spend"].update(can_purchase_credits=True),
-                         lambda d: d["nimbus_quill"].update(used_dollars=0),
+        for mutation in (lambda d: d["nimbus_quill"].update(used_dollars=0),
                          lambda d: d["future_quota"].update(unrecognized=True),
                          lambda d: d.update(member_dashboard_available={})):
             bad = copy.deepcopy(data)

@@ -336,10 +336,14 @@ class CalendarDefaultsTests(unittest.TestCase):
         self.assertEqual(0, ledger.policy["reserve"])
         self.assertEqual(20, ledger.policy["daily_limit"])
         self.assertEqual("strict", ledger.mode())
+        self.assertEqual("adaptive", ledger.budget_defaults()["default_strategy"])
 
     def test_legacy_policy_survives_reopen_and_defaults_override_future_partial_set(self):
         legacy = Ledger(self.path, timezone=ZONE, reserve=10)
+        with legacy._connect() as db:
+            db.execute("DELETE FROM state WHERE key='budget_v1'")
         reopened = Ledger(self.path)
+        self.assertEqual("fixed", reopened.budget_defaults()["default_strategy"])
         self.assertEqual(legacy.policy, reopened.policy)
         self.assertEqual(10, reopened.policy["reserve"])
         reopened.budget_defaults(reserve=0, now=self.now)
@@ -358,7 +362,7 @@ class CalendarDefaultsTests(unittest.TestCase):
         self.assertEqual(7, ledger.check("account", now=self.now)["pools"][0]["reserve_percent"])
         result = ledger.budget_reset("account", pool="weekly", now=self.now)["status"]
         self.assertEqual(0, result["pools"][0]["reserve_percent"])
-        self.assertEqual("fixed", result["pools"][0]["strategy"])
+        self.assertEqual("adaptive", result["pools"][0]["strategy"])
 
 
 if __name__ == "__main__":

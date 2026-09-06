@@ -35,7 +35,7 @@ successful review: validate the terminal provider event, model identity, absence
 of tool calls and actual review text. A simulator or same-provider reviewer must
 never satisfy a missing independent-provider result.
 
-## Bounded execution
+## Bounded native execution
 
 Set a per-review timeout suitable to packet size, usually 10 minutes. The inherited
 project ceiling is three hours total from that reviewer's first start, including
@@ -55,3 +55,12 @@ models need a concrete remedy; blind retry or older/paid fallback is not a remed
 Reviews are complete only when both independent providers have valid verdicts on
 the current packet. The manager resolves all material findings. A remaining
 blocker is explicit; it cannot be turned into PASS by majority vote or elapsed time.
+
+## Explicit API reviews
+
+Use `harness.py api run SERVICE` only with explicit monetary authorization and
+[API admission](api-and-spend.md). Its text stdin limit is 256 KiB and timeout is
+1 through 600 seconds. It uses bounded HTTPS transport and monetary reservations,
+not native quota polling or subprocess review sessions. Never automatically retry
+a paid POST. A timeout retains liability; repeating its ID returns accounting only.
+Check the actual returned review and provider family before accepting a verdict.

@@ -8,7 +8,7 @@ change private local policy without sending a model prompt or altering provider 
 ai-session budget
 ai-session budget codex
 ai-session budget calendar --workdays weekdays --reset-cutoff 08:30
-ai-session budget defaults --reserve 0
+ai-session budget defaults --strategy adaptive --reserve 0
 ai-session budget set codex --strategy adaptive --reserve 0
 ai-session budget add codex 5
 ai-session budget use-rest codex
@@ -55,15 +55,16 @@ Calendar updates are atomic and preserve daily counters and grants. An allocatio
 anchored under the previous calendar blocks until fresh quota metadata supplies a
 matching anchor. The calendar applies across services and projects in this ledger.
 
-`ai-session budget defaults --reserve 0` changes the global fallback reserve.
+`ai-session budget defaults --strategy adaptive --reserve 0` changes the fallback
+strategy and reserve; `--daily-limit` edits the fixed-strategy daily cap.
 Pool overrides win over service overrides, which win over that fallback. A new
-ledger has reserve 0; no mandatory 10% floor exists. Existing explicit settings
+ledger has adaptive allocation and reserve 0; no mandatory 10% floor exists. Existing explicit settings
 survive upgrades. To remove an old reserve, inspect `ai-session budget`, change the
 global fallback, and update every configured service and pool override that retains
 it, preserving each strategy and daily limit. For an adaptive service/pool:
 
 ```sh
-ai-session budget defaults --reserve 0
+ai-session budget defaults --strategy adaptive --reserve 0
 ai-session budget set codex --strategy adaptive --reserve 0
 ai-session budget set codex --pool EXACT_POOL_ID --strategy adaptive --reserve 0
 ```
@@ -80,8 +81,9 @@ reserve. Instructions loaded earlier in a session may describe an old policy.
 | Adaptive | Divide available long-window balance across eligible scheduled workdays until the actual reset. Verified short windows use the window strategy. |
 | Window | Permit actual native balance above the configured reserve, without separate daily pacing. Intended for renewable session windows or an explicit owner choice. |
 
-Choose adaptive explicitly to target full weekly/monthly utilization. Existing
-settings are never silently replaced. Reserve 0 removes the local reserve, not the
+New ledgers choose adaptive to target full weekly/monthly utilization. Legacy
+ledgers retain fixed fallback unless explicitly migrated; existing settings are
+never silently replaced. Reserve 0 removes the local reserve, not the
 provider exhaustion stop. Exactly 100% consumption is not guaranteed. Do useful
 authorized work only; never generate tasks merely to spend an allowance.
 

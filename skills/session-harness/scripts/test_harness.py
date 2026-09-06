@@ -202,6 +202,7 @@ class ExecutionTests(unittest.TestCase):
             self.assertEqual((0, "x" * 262144, "y" * 262144), result)
             watch.return_value.finish.assert_called_once()
 
+    @unittest.skipUnless(os.name == "posix", "POSIX process/link contract; Windows equivalents are separate")
     def test_final_quota_check_runs_after_cleanup_and_unregister(self):
         events = []
         original_killpg = os.killpg
@@ -219,6 +220,7 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(events[-1], ("finish", None))
         self.assertTrue(any(event[0] == "signal" for event in events))
 
+    @unittest.skipUnless(os.name == "posix", "POSIX process/link contract; Windows equivalents are separate")
     def test_group_signals_precede_reaping(self):
         proc = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"],
                                 start_new_session=True)
@@ -274,6 +276,7 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(raised.exception.status, "timeout")
         self.assertLess(time.monotonic() - start, 4)
 
+    @unittest.skipUnless(os.name == "posix", "POSIX process/link contract; Windows equivalents are separate")
     def test_timeout_terminates_descendants_in_exact_process_group(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "pids.json"
@@ -303,6 +306,7 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(lines, ["final event"])
         self.assertEqual(result[1], "final event")
 
+    @unittest.skipUnless(os.name == "posix", "POSIX process/link contract; Windows equivalents are separate")
     def test_sigterm_and_sighup_cleanup_detached_children(self):
         import signal
         for signum in (signal.SIGTERM, signal.SIGHUP):
@@ -481,6 +485,7 @@ class ReviewTests(unittest.TestCase):
             harness.check_agy_event(json.dumps({"event": "step_update", "step_update": {"step_type": "run_command"}}), "gemini-99.10-flash-high", "/tmp/fixture")
         self.assertEqual(raised.exception.status, "isolation_violation")
 
+    @unittest.skipUnless(os.name == "posix", "POSIX process/link contract; Windows equivalents are separate")
     def test_agy_cwd_accepts_same_directory_through_symlink(self):
         with tempfile.TemporaryDirectory() as directory:
             real = Path(directory) / "private-var"

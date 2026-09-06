@@ -10,6 +10,7 @@ import time
 import uuid
 
 import harness
+import credits
 
 
 class NativeQuotaError(ValueError):
@@ -115,23 +116,9 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
     rates = data["rate_limits"]
     allowed = {"five_hour", "seven_day", "seven_day_opus", "seven_day_sonnet", "limits",
                "model_scoped", "extra_usage", "spend", "member_dashboard_available"}
-    extra = rates["extra_usage"]
-    if not isinstance(extra, dict) or extra.get("is_enabled") is not False:
-        invalid()
+    credit_resources = credits.claude_resources(rates)
     if "member_dashboard_available" in rates and not isinstance(rates["member_dashboard_available"], bool):
         invalid()
-    if "spend" in rates:
-        spend = rates["spend"]
-        if not isinstance(spend, dict) or spend.get("enabled") is not False or spend.get("can_purchase_credits") is not False:
-            invalid()
-        number(spend["percent"], 0)
-        used = spend["used"]
-        number(used["amount_minor"], 0)
-        if (not isinstance(used["currency"], str) or not re.fullmatch(r"[A-Z]{3}", used["currency"])
-                or type(used["exponent"]) is not int or not 0 <= used["exponent"] <= 9):
-            invalid()
-        if any(spend[key] is not None for key in ("limit", "cap", "balance", "auto_reload")):
-            invalid()
     limits, scoped = rates["limits"], rates["model_scoped"]
     if not isinstance(limits, list) or not isinstance(scoped, list):
         invalid()
@@ -190,7 +177,9 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
             continue
         validate_native_limit(row, observed_at)
         add_pool(pools, "native:" + key, row["utilization"], row["resets_at"], observed_at)
-    return envelope("claude", pools, observed_at)
+    result = envelope("claude", pools, observed_at)
+    result["credit_resources"] = credit_resources
+    return result
 
 
 def antigravity_pools(groups, observed_at):
@@ -230,7 +219,7 @@ def read_snapshot(service):
     try:
         if service not in ("claude", "antigravity"):
             invalid()
-        executable = shutil.which("claude" if service == "claude" else "agy")
+        executable = harness.platform_runtime.which("claude" if service == "claude" else "agy")
         if executable is None:
             invalid()
         if service == "antigravity":
@@ -246,9 +235,22 @@ def read_snapshot(service):
                     dict(type="control_request", request_id=request_ids[1], request=dict(subtype="get_usage", skip_behaviors=True))]
         stdin = ("\n".join(json.dumps(row) for row in requests) + "\n").encode()
         with tempfile.TemporaryDirectory(prefix="session-harness-quota-") as directory:
+            from pathlib import Path
+            import os
+            debug = Path(directory) / 'native-debug.log'
+            if os.name == 'nt':
+                from windows_security import prepare_private_file
+                prepare_private_file(debug)
+                argv[argv.index('--debug-file') + 1] = str(debug)
             observed_at = time.time()
             code, stdout, stderr = harness.run(argv, stdin=stdin, timeout=15, cwd=directory,
                                                env=harness.child_env(leaf=True))
+            if os.name == 'nt':
+                with debug.open('rb') as stream:
+                    diagnostics = stream.read(256 * 1024 + 1)
+                if len(diagnostics) > 256 * 1024:
+                    invalid()
+                stderr += diagnostics.decode('utf-8', 'strict')
         if code or time.time() - observed_at > 15 or time.time() < observed_at:
             invalid()
         return claude_snapshot(stdout, stderr, request_ids, observed_at)

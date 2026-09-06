@@ -22,6 +22,7 @@ MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 
+@unittest.skipUnless(os.name == "posix", "POSIX symlink/mode contract; checked-copy tests run on Windows")
 class ProfileInstallationTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="agent-profile-test-")
@@ -273,16 +274,24 @@ class RepositoryProfileContractTests(unittest.TestCase):
         for name in ("CLAUDE.md", "GEMINI.md"):
             entrypoint = repo / name
             with self.subTest(entrypoint=name):
+                if os.name == 'nt' and not entrypoint.is_symlink():
+                    self.assertEqual(entrypoint.read_text().strip(), 'AGENTS.md')
+                    continue
                 self.assertTrue(entrypoint.is_symlink(), "Edit AGENTS.md without replacing the client symlink")
                 self.assertFalse(Path(os.readlink(entrypoint)).is_absolute(), "Repository links must survive relocation")
                 self.assertEqual(entrypoint.resolve(strict=True), canonical.resolve(strict=True))
         skill_link = repo / ".agents/skills"
-        self.assertTrue(skill_link.is_symlink())
-        self.assertEqual(skill_link.resolve(strict=True), (repo / ".claude/skills").resolve(strict=True))
+        if os.name == 'nt' and not skill_link.is_symlink():
+            self.assertIn(skill_link.read_text().strip(), {'../.claude/skills', '../skills'})
+        else:
+            self.assertTrue(skill_link.is_symlink())
+            self.assertEqual(skill_link.resolve(strict=True), (repo / ".claude/skills").resolve(strict=True))
         profile = repo / "profile"
         if not profile.is_dir():
             profile = repo / "infra/host/agent-profile"
-        for source in (profile / "AGENTS.md", repo / ".claude/skills/session-harness/SKILL.md"):
+        skill = repo / 'skills/session-harness'
+        if not skill.is_dir(): skill = repo / '.claude/skills/session-harness'
+        for source in (profile / "AGENTS.md", skill / "SKILL.md"):
             self.assertTrue(source.is_file(), f"Missing canonical installation source: {source}")
             self.assertTrue(source.read_text().strip(), f"Empty canonical installation source: {source}")
 
@@ -305,6 +314,76 @@ class RepositoryProfileContractTests(unittest.TestCase):
                 effort = metadata.get("effort", "").strip().strip("\"'")
                 self.assertEqual(model, "inherit", "Inherit the runtime-selected model instead of pinning it")
                 self.assertIn(effort, {"low", "medium", "high"})
+
+
+class CheckedCopyTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory(prefix='profile copy ')
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.home = self.root / 'home'; self.home.mkdir()
+        self.repo = self.root / 'source'
+        (self.repo / 'profile').mkdir(parents=True)
+        (self.repo / 'profile/AGENTS.md').write_text('# User rules\n')
+        self.skill = self.repo / 'skills/session-harness'
+        (self.skill / 'scripts').mkdir(parents=True)
+        (self.skill / 'SKILL.md').write_text('name: session-harness\n')
+        (self.skill / 'scripts/harness.py').write_text('import json,sys; print(json.dumps(sys.argv[1:]))')
+        (self.repo / 'LICENSE').write_text('Apache License 2.0')
+        (self.repo / 'NOTICE').write_text('Copyright Example')
+
+    def install(self):
+        result, internal = MODULE.plan_install(self.home, self.repo, True, 'copy')
+        MODULE.apply_install(result, internal)
+        return result
+
+    def test_real_copy_install_idempotence_legal_and_source_removal(self):
+        result = self.install()
+        self.assertTrue(result['changes'])
+        target = self.home / '.codex/skills/session-harness'
+        self.assertFalse(target.is_symlink())
+        self.assertEqual((target / 'LICENSE').read_text(), 'Apache License 2.0')
+        self.assertEqual((self.home / '.codex/AGENTS.md').read_text(), '# User rules\n')
+        again, _ = MODULE.plan_install(self.home, self.repo, True, 'copy')
+        self.assertEqual(again['changes'], [])
+        backups = list((self.home / '.local/state/session-harness/backups').iterdir())
+        self.install()
+        self.assertEqual(list((self.home / '.local/state/session-harness/backups').iterdir()), backups)
+        shutil.rmtree(self.repo)
+        entry = self.home / ('.local/bin/ai-session.py' if os.name == 'nt' else '.local/bin/ai-session')
+        args = ['', 'a b', 'λ', '"quotes"', '&|<>%!', '`literal`']
+        output = subprocess.check_output([sys.executable, str(entry), 'inventory', *args], text=True)
+        self.assertEqual(json.loads(output), ['inventory', *args])
+
+    def test_modified_copy_is_preserved(self):
+        self.install()
+        target = self.home / '.codex/AGENTS.md'; target.write_text('local edit')
+        with self.assertRaisesRegex(MODULE.InstallationError, 'modified'):
+            MODULE.plan_install(self.home, self.repo, True, 'copy')
+        self.assertEqual(target.read_text(), 'local edit')
+
+    def test_source_upgrade_removes_only_unchanged_managed_files(self):
+        obsolete = self.skill / 'old.txt'; obsolete.write_text('old')
+        self.install(); obsolete.unlink()
+        result = self.install()
+        self.assertTrue(any(row['action'] == 'delete' for row in result['changes']))
+        self.assertFalse((self.home / '.agents/skills/session-harness/old.txt').exists())
+
+    def test_preview_race_preserves_modified_destination(self):
+        result, internal = MODULE.plan_install(self.home, self.repo, True, 'copy')
+        path = self.home / '.codex/AGENTS.md'; path.parent.mkdir(); path.write_text('racing edit')
+        with self.assertRaises(MODULE.InstallationError): MODULE.apply_install(result, internal)
+        self.assertEqual(path.read_text(), 'racing edit')
+
+    @unittest.skipUnless(os.name == 'nt', 'Native PowerShell argument preservation')
+    def test_powershell_launcher_preserves_empty_quotes_and_metacharacters(self):
+        self.install()
+        pwsh = shutil.which('pwsh')
+        self.assertIsNotNone(pwsh, 'Windows CI must provide PowerShell 7.3+')
+        launcher = self.home / '.local/bin/ai-session.ps1'
+        output = subprocess.check_output([pwsh, '-NoProfile', '-File', str(launcher), 'inventory',
+                                          '', 'a b', '"quoted"', '&|<>%!', 'λ'], text=True, encoding='utf-8')
+        self.assertEqual(json.loads(output), ['inventory', '', 'a b', '"quoted"', '&|<>%!', 'λ'])
 
 
 if __name__ == "__main__":

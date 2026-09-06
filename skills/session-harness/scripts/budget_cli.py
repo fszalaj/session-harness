@@ -15,6 +15,7 @@ def display(result):
     schedule = settings["calendar"]
     days = ",".join(WEEKDAYS[d] for d in schedule["workdays"])
     print(f"Calendar: {settings['timezone']} | workdays {days} | reset cutoff {schedule['reset_cutoff']}")
+    print(f"Default strategy: {result['defaults']['default_strategy']} | fixed daily limit: {result['defaults']['default_daily_limit']:g} pp")
     print(f"Default reserve: {result['defaults']['default_reserve']:g}% (explicit service/pool settings take precedence)")
     for status in result["services"]:
         zone = ZoneInfo(status["policy"]["timezone"])
@@ -66,6 +67,8 @@ def parser_for(action):
         parser.add_argument("--reset-cutoff", help="Inclusive next-day reset cutoff, HH:MM in the ledger timezone")
         parser.add_argument("--timezone", help="IANA zone for a new ledger; an existing ledger must already match")
     if action == "defaults":
+        parser.add_argument("--strategy", choices=("adaptive", "fixed", "window"))
+        parser.add_argument("--daily-limit", type=float)
         parser.add_argument("--reserve", type=float, help="Shared fallback reserve; explicit service/pool settings win")
     if action in {"set", "reset", "add"}:
         parser.add_argument("--pool", help="Exact pool ID; omitted means current service scope")
@@ -90,7 +93,7 @@ def main(argv=None):
               "ai-session budget set SERVICE --strategy adaptive --reserve 0 [--pool ID]\n"
               "ai-session budget set SERVICE --strategy fixed --daily-limit 20 --reserve 0\n"
               "ai-session budget calendar --workdays all --reset-cutoff 08:30 [--timezone IANA_ZONE]\n"
-              "ai-session budget defaults --reserve 0\n"
+              "ai-session budget defaults --strategy adaptive --reserve 0 [--daily-limit 20]\n"
               "ai-session budget add SERVICE 5 [--pool ID] [--id RETRY_ID]\n"
               "ai-session budget use-rest SERVICE [--id RETRY_ID]\n"
               "ai-session budget reset SERVICE [--pool ID]\n\n"
@@ -104,7 +107,7 @@ def main(argv=None):
         change = None
         refresh_failures = set()
         if (action == "calendar" and (args.workdays is not None or args.reset_cutoff is not None)
-                or action == "defaults" and args.reserve is not None):
+                or action == "defaults" and any(v is not None for v in (args.reserve, args.strategy, args.daily_limit))):
             for service in ledger.budget_services():
                 try:
                     refreshed = usage.refresh(service, ledger=ledger)
@@ -115,7 +118,7 @@ def main(argv=None):
         if action == "calendar":
             change = ledger.budget_calendar(workdays=args.workdays, reset_cutoff=args.reset_cutoff)
         elif action == "defaults":
-            change = ledger.budget_defaults(reserve=args.reserve)
+            change = ledger.budget_defaults(reserve=args.reserve, strategy=args.strategy, daily_limit=args.daily_limit)
         elif action == "set":
             change = ledger.budget_set(args.service, args.strategy, reserve=args.reserve,
                                        daily_limit=args.daily_limit, pool=args.pool)

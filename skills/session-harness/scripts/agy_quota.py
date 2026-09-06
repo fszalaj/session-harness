@@ -3,7 +3,6 @@ import http.client
 import json
 import os
 from pathlib import Path
-import pty
 import re
 import selectors
 import shutil
@@ -16,6 +15,9 @@ import time
 import threading
 
 import harness
+
+if os.name == "posix":
+    import pty
 
 MAX_RESPONSE = 256 * 1024
 ENDPOINT = "/exa.language_server_pb.LanguageServerService/RetrieveUserQuotaSummary"
@@ -184,6 +186,8 @@ def drain_terminal(master, stop, overflow):
 
 
 def read_snapshot(executable):
+    if os.name == 'nt':
+        raise ValueError('Native Antigravity quota is unsupported on Windows')
     """Never reuse another process, send terminal input, or fall back to cached usage."""
     proc = None
     registered = False

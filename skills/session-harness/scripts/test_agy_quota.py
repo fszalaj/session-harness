@@ -1,3 +1,4 @@
+import os
 """Offline tests of the private native force-refresh endpoint and process lifecycle."""
 import copy
 import json
@@ -80,6 +81,7 @@ class AgyTests(unittest.TestCase):
                         agy.refresh_owned_port(12345, 2)
                 connection.close.assert_called_once()
 
+    @unittest.skipUnless(os.name == "posix", "Native Antigravity quota is unsupported on Windows")
     def test_linux_ports_filter_only_owned_socket_inodes_and_listeners(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -111,6 +113,7 @@ class AgyTests(unittest.TestCase):
             patch.object(agy, "refresh_owned_port", side_effect=refresh),
             patch.object(agy.time, "time", return_value=NOW)]
 
+    @unittest.skipUnless(os.name == "posix", "Native Antigravity quota is unsupported on Windows")
     def test_private_launch_no_terminal_writes_and_cleanup(self):
         from contextlib import ExitStack
         proc, patches = self.lifecycle([{12345}, {12345}], [json.dumps(payload())])
@@ -129,6 +132,7 @@ class AgyTests(unittest.TestCase):
         self.assertTrue(all(call.args[0] == proc.pid for call in ports.call_args_list))
         self.assertLessEqual(refreshed.call_args.args[1], 15)
 
+    @unittest.skipUnless(os.name == "posix", "Native Antigravity quota is unsupported on Windows")
     def test_failures_and_ambiguous_or_lost_ownership_cleanup_without_retry(self):
         from contextlib import ExitStack
         cases = [( [set(range(1, 10))], []), ([{12345}, set()], []),
@@ -145,6 +149,7 @@ class AgyTests(unittest.TestCase):
             mocks[3].assert_called_once_with(proc)
             self.assertLessEqual(mocks[5].call_count, 1)
 
+    @unittest.skipUnless(os.name == "posix", "Native Antigravity quota is unsupported on Windows")
     def test_two_owned_ports_tls_discrimination_and_no_backend_retry(self):
         from contextlib import ExitStack
         proc, patches = self.lifecycle([{12344, 12345}] * 3,
@@ -161,6 +166,7 @@ class AgyTests(unittest.TestCase):
         self.assertEqual(1, mocks[5].call_count)
         mocks[2].assert_called_once_with(proc)
 
+    @unittest.skipUnless(os.name == "posix", "Native Antigravity quota is unsupported on Windows")
     def test_transient_startup_retry_same_port_and_persistent_failure_blocks(self):
         from contextlib import ExitStack
         for outcomes, succeeds in (([agy.BackendNotReady(), json.dumps(payload())], True),
@@ -177,6 +183,7 @@ class AgyTests(unittest.TestCase):
             self.assertTrue(all(call.args[0] == 12345 for call in mocks[5].call_args_list))
             mocks[2].assert_called_once_with(proc)
 
+    @unittest.skipUnless(os.name == "posix", "Native Antigravity quota is unsupported on Windows")
     def test_late_tls_listener_is_rediscovered(self):
         from contextlib import ExitStack
         proc, patches = self.lifecycle([{12344}] * 3 + [{12344, 12345}],
@@ -220,6 +227,7 @@ class AgyTests(unittest.TestCase):
             proc.stdin.close()
             proc.stdout.close()
 
+    @unittest.skipUnless(os.name == "posix", "Native Antigravity quota is unsupported on Windows")
     def test_deadline_cleanup_before_request(self):
         from contextlib import ExitStack
         proc, patches = self.lifecycle([], [])

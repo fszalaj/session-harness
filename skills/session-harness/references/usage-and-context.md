@@ -6,9 +6,8 @@ Use all applicable quota windows, including model-specific and monthly pools.
 
 ## Admission
 
-Read the persisted per-service/pool policy. New ledgers default to fixed 20
-percentage points/day, reserve 0, UTC, all seven workdays and an 08:30 cutoff.
-Existing policies are preserved. Explicit adaptive policies distribute long-window
+Read the persisted per-service/pool policy. New ledgers default to adaptive allocation, reserve 0, UTC, all seven workdays and an 08:30 cutoff.
+Existing policies are preserved. Adaptive policies distribute long-window
 balance across scheduled workdays until the actual reset; reserve 0 targets full use.
 Fresh evidence of a reset due by tomorrow's local cutoff releases current headroom
 on a scheduled workday, without predicting renewal. There is no mandatory 10% floor.
@@ -29,6 +28,12 @@ private ledger persists the explicitly selected mode. Enable observed mode only 
 the user accepts those limits; honor that choice in later sessions without asking again.
 The public default stays strict. Configuration changes never erase daily counts.
 
+For explicit API routes, use [money admission](api-and-spend.md) with a separate
+monthly total cap and per-request liability. Native paid-credit controls must also
+be verified; missing or enabled eligibility blocks protected native inference.
+Current Codex and Antigravity credit telemetry cannot establish paid-use disablement.
+A money cap does not automatically authorize native credits.
+
 ## Observations and daily history
 
 - Refresh Codex through `account/rateLimits/read` and Copilot through
@@ -42,7 +47,9 @@ The public default stays strict. Configuration changes never erase daily counts.
 - Statusline capture remains monitoring input. Its receipt time does not prove a
   backend refresh; repeating a redraw must not manufacture fresh headroom.
 - Persist only service/pool identifiers, observation times, percentages, reset
-  instants and daily deltas. No credentials, emails, prompt text or transcripts.
+  instants, daily deltas and sanitized native credit resources. No credentials,
+  emails, prompt text or transcripts. Money records additionally retain digests,
+  reservations, charges and evidence references.
 - Preserve a quota pool even when its backend omits the reset schedule. Store
   `resets_at: null` as unknown, retain percentage/daily accounting and require fresh
   observations. A later schedule never creates allowance. Observed balance recovery
@@ -91,8 +98,10 @@ processes and must not be killed by name to implement a stop.
 
 ## Process supervision
 
-Manager launches use an owned pseudo-terminal process group. External review calls
-use their isolated subprocess group. Both check before inference, poll every 15
+POSIX manager launches use an owned pseudo-terminal process group; Windows uses
+a gated kill-on-close job and bounded pipes (see [platforms](platforms.md)). Native external review calls
+use their isolated subprocess group or Windows job. Explicit API requests use
+[monetary reservation and transport deadlines](api-and-spend.md), not this polling loop. Both check before inference, poll every 15
 seconds and check after completion. A denied or unavailable observation terminates
 the owned group and restores the terminal; it does not kill unrelated processes.
 Each poll performs native metadata work and may contact the provider. Rate limiting

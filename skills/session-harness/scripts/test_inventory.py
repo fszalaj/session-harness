@@ -113,6 +113,7 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(inventory.child_env(env),
                          {'PATH': '/bin', 'COPILOT_HOME': '/native/home', 'HOME': '/home/user'})
 
+    @unittest.skipUnless(os.name == "posix", "POSIX executable fixture; Windows RPC/job coverage is separate")
     def test_rpc_timeout_cleans_owned_child(self):
         with tempfile.TemporaryDirectory() as temp:
             child_pid = Path(temp) / 'child.pid'

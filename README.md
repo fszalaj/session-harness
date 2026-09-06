@@ -1,43 +1,20 @@
 # Session harness
 
-Portable instructions, model discovery, independent review and conservative usage
-accounting for subscribed coding clients. The active session's strongest current
-model plans and manages; native workers from the same model family normally do the
-implementation at medium/high effort. The other two model families review the plan.
+Shared instructions, current-model discovery, independent plan review and usage
+accounting for coding assistants. The strongest available model of the active
+session's provider manages; bounded workers normally use medium effort. Two other
+provider families review the same plan independently. Model versions are resolved
+at runtime, never pinned in policy.
 
-**Strict mode is the public default and blocks inference when an exact bound cannot
-be enforced.** Subscription counters can lag and a response can cross a threshold
-before it is reported. An explicit local opt-in to observed-threshold mode accepts
-that in-flight overshoot; it does not create a hard cap. New ledgers default to
-**20 percentage points/day per pool** and **0% reserve**, with a UTC calendar,
-all seven workdays and an 08:30 reset cutoff. Existing settings are preserved. Explicit adaptive budgets
-can target **100% utilization** by distributing the balance until each real reset;
-daily grants let the owner add headroom without erasing usage.
-Missing or unreliable quota evidence still blocks admission. Processes started
-outside the harness, including an already-running manager, are outside its control.
-
-Start with the [copy-paste onboarding prompt](docs/ONBOARDING-PROMPT.md) and
-[practical onboarding guide](docs/ONBOARDING.md). They cover existing instructions,
-owned skills, backups, project integration and verification before installation.
-
-See [provider validation and its limits](docs/PROVIDER-VALIDATION.md) for real
-native protocol requirements and the distinction between deterministic tests and
-actual provider execution.
-
-## Relationship to knowledge-gateway
-
-Session harness coordinates models, independent reviews, execution and usage
-admission. A knowledge-gateway deployment can provide durable project knowledge
-and a code graph. These are complementary responsibilities; knowledge-gateway is
-not a required dependency. Existing local documentation, a vault or another graph
-backend can serve the same project integration points.
+Start with the [onboarding prompt](docs/ONBOARDING-PROMPT.md) or
+[installation guide](docs/ONBOARDING.md). These include consolidation of existing
+`AGENTS.md`, client aliases and user-owned skills without discarding unique rules.
 
 ## Install
 
-Requires macOS or Linux, Python 3.11+, Git and the clients you already use.
-The clone example also uses GitHub CLI; Git can clone the same repository URL. Install
-and authenticate vendor clients separately through their normal subscription flows.
-Do not put API keys, OAuth tokens or usage records in this repository.
+Python 3.11+, Git, and the clients you choose to use are required. Core accounting,
+API requests and profile installation support Linux, macOS and Windows. Native
+client execution has the narrower capabilities listed below.
 
 ```sh
 gh repo clone fszalaj/session-harness
@@ -47,180 +24,163 @@ python3 scripts/install-agent-profile.py --launcher
 python3 scripts/install-agent-profile.py --launcher --apply
 ```
 
-Audit and merge existing personal rules first: backups alone do not keep replaced
-rules active. See the onboarding guide. The first install command is a preview. The second installs verified immutable
-snapshots under `~/.local/share/session-harness/releases/`, links client instructions
-and skills to shared personal targets, and installs `~/.local/bin/ai-session`.
-Existing replacements have private backups; unrelated settings and skills remain.
-Restart clients to load the new definitions. Add `~/.local/bin` to PATH if needed.
+The first installer invocation previews changes. Merge existing personal rules
+before applying; backups alone do not keep replaced rules active. The installer
+creates verified immutable snapshots, a manifest and private backups. Unrelated
+settings and skills are preserved. Restart clients after installation.
+
+On Windows, use `python` in place of `python3`, install timezone data with
+`python -m pip install -r requirements-windows.txt`, and add `--link-mode copy`
+to both installer invocations if symlinks are unavailable. Copy mode maintains
+checked views of the same canonical source and refuses to overwrite subsequent
+user edits. It is explicit, never a silent symlink fallback. PowerShell 7.3+ users
+can run the installed `ai-session.ps1`; other shells can call `ai-session.py` with
+Python. Add the reported launcher directory to PATH. See
+[Windows boundaries](skills/session-harness/references/platforms.md).
+
+## Subscription budgets
 
 ```sh
-python3 skills/session-harness/scripts/harness.py inventory
-python3 skills/session-harness/scripts/harness.py usage refresh codex --initialize
-python3 skills/session-harness/scripts/harness.py usage status codex
-python3 skills/session-harness/scripts/harness.py usage check codex
-```
-
-After explicitly accepting observed-mode limitations, persist that local choice:
-
-```sh
-python3 skills/session-harness/scripts/quota.py configure --mode observed
-```
-
-The setting lives in the private ledger, applies across local projects, and survives
-reinstallation. `--mode strict` restores strict admission without resetting usage.
-
-`--initialize` explicitly starts prospective observation for a previously unseen
-pool. It does not reconstruct earlier daily usage, erase history, or bypass strict
-admission. A failed `check` exits 2. `status` and `refresh` can succeed while their
-JSON reports `allowed: false`; a successful metadata command is not permission.
-
-`ai-session codex`, `ai-session claude` and `ai-session antigravity` dynamically
-select model/effort, then enforce admission before launching. Strict mode reports unsupported quota
-bounds. Observed mode requires explicit local configuration and fresh admissible
-evidence; it can still block a client whose quota report is incomplete. Dry-run launch
-is available with `harness.py launch <client>` and does not invoke a model.
-
-Owned launch/review processes are checked before, every 15 seconds during execution,
-and after completion. Denial terminates their process group and restores the terminal.
-Polling and refresh latency can delay a stop; detached sessions and other computers
-remain outside that boundary. Codex, Claude and Antigravity have native quota
-readers; unsupported or changed native protocols still block admission.
-
-## Easy budget controls
-
-```sh
+ai-session inventory
 ai-session budget
 ai-session budget calendar --workdays weekdays --reset-cutoff 08:30
-ai-session budget defaults --reserve 0
-ai-session budget set codex --strategy adaptive --reserve 0
-ai-session budget add codex 5
-ai-session budget use-rest codex
+ai-session budget defaults --strategy adaptive --reserve 0
+ai-session budget set claude --strategy adaptive --reserve 0
+ai-session budget add claude 5
+ai-session budget use-rest claude
 ```
 
-Use the appropriate service name. Each pool keeps its own balance, daily allocation
-and reset forecast. Adaptive pacing uses scheduled workdays; a fresh reset due by
-tomorrow's local cutoff releases current native headroom on a scheduled workday.
-It does not predict a refill. Existing service/pool overrides outrank global defaults;
-set their reserves explicitly when migrating. Grants expire at local midnight; reuse the printed `--id` for
-idempotent retries. They change local permission, not the provider allowance or
-admission mode. See [adaptive budgets and reset research](skills/session-harness/references/budgets.md)
-for weekly/monthly pacing, unknown schedules, early renewals and JSON output.
+New ledgers use **adaptive allocation, zero reserve, UTC, all seven workdays and
+an inclusive 08:30 reset cutoff**. Existing settings survive upgrades, including
+legacy fixed limits. Service/pool overrides outrank global defaults. Fixed pacing
+is available with `--strategy fixed --daily-limit 20`. Calendar, defaults and grants
+are private and shared across local projects; project instructions refer to them
+instead of duplicating personal settings.
 
-## What each client supports
+Adaptive allocation divides each pool's balance over scheduled workdays until its
+actual reset. On a working day, a fresh reset due by tomorrow's local cutoff makes
+all current headroom available, subject to the configured reserve. It never invents
+a refill. Unknown schedules require an explicit policy. Grants expire at local
+midnight; reuse their printed `--id` when retrying. See
+[budget controls and reset sources](skills/session-harness/references/budgets.md).
 
-| Client/service | Model evidence | Quota evidence | Protected inference |
-| --- | --- | --- | --- |
-| Codex | Account-visible `model/list` | `account/rateLimits/read`, all returned windows | Observed-mode launch/review supervision; strict blocked |
-| Claude Code | Native initialize selectable options/efforts; rolling `best`, actual ID on execution | Native control read, global/scoped/additional pools, successful backend-read evidence | Observed-mode launch/review supervision; strict blocked |
-| Antigravity | Account-visible `agy models` | Owned native localhost endpoint with forced backend refresh, all grouped pools | Observed-mode launch/review supervision; strict blocked |
-| Copilot | Metadata-only `models.list` | Metadata-only `account.getQuota` | Inventory adapter; execution unverified and blocked |
-| Cursor | `agent models` selectable catalog; account access unverified | No verified personal CLI quota endpoint | Inventory adapter; execution unverified and blocked |
-| Kimi, OpenCode, Aider, Continue, Gemini CLI | Installed-client registry; unsupported metadata stays explicit | No verified quota adapter | Execution blocked |
-| Ollama | Local installed models, forced loopback | Local inventory is not a subscription allowance | Execution adapter unverified |
+**Strict admission is the default and blocks inference without enforceable cost
+bounds.** Explicit observed mode accepts delayed counters and possible in-flight
+overshoot; it does not create an exact provider cap. Configure it privately with
+`python3 skills/session-harness/scripts/quota.py configure --mode observed` only
+when that tradeoff is authorized. No mandatory 10% floor exists. A quota stop
+cannot be bypassed by switching services or accounts.
 
-Installed, authenticated, account-visible and successfully invoked are separate
-states. Grok/xAI, DeepSeek, Kimi/Moonshot and GLM/Z.ai are recognized model
-families, often accessed through another client. An advertised catalog never proves
-subscription entitlement; no API authentication or paid fallback is enabled.
-Copilot's bundled help list is not account access. Model IDs are not pinned;
-ambiguous generation or capability relationships require current provider evidence.
-Copilot and Cursor can host several vendors. A Claude model in Copilot consumes
-Copilot quota; it does not debit a separately subscribed Claude account. It still
-counts as Anthropic for independent-review family selection.
+Use `ai-session usage refresh SERVICE --initialize` to explicitly begin prospective
+observation, then `ai-session usage check SERVICE`. Initialization cannot reconstruct
+previous use. Metadata commands may succeed while reporting `allowed: false`.
+Missing, stale or incomplete evidence blocks admission. Owned native processes are
+checked before, during and after execution; existing parent sessions, other devices
+and processes launched outside the harness remain outside its control.
 
-Native same-family workers are explicitly supported: OpenAI for an OpenAI manager,
-Anthropic for an Anthropic manager, Google for a Google manager. A configured native
-role can override spawn effort or inherit a configured subagent default, so verify
-effective model/effort instead of assuming inheritance. Keep one writer per scope.
+## API money and extra credits
 
-## Instructions and skill discovery
+Direct, text-only routes exist for **OpenAI, Anthropic, Gemini, xAI/Grok, DeepSeek,
+Moonshot/Kimi, Z.ai/GLM and OpenRouter**. API usage is separate from subscription
+quota. Installation enables no billing and sets no API allowance.
 
-Repository `CLAUDE.md` and `GEMINI.md` link to `AGENTS.md`. Gemini CLI still defaults
-to `GEMINI.md`; Antigravity CLI, Cursor and Copilot CLI support project `AGENTS.md`.
-Copilot IDE/GitHub support varies by feature. See the [client instruction map](skills/session-harness/references/instructions.md)
-for official sources, scoped rules, settings and global-path differences. Instruction
-compatibility does not imply a working execution adapter. Installed personal links:
+```sh
+ai-session spend set total --monthly 50 --currency USD --mode observed
+ai-session spend set api:xai --monthly 10 --currency USD --mode observed
+ai-session spend status
+ai-session spend add total 5 --id extra-this-month
+ai-session api models xai
+ai-session api run xai --model ACCOUNT_MODEL --max-output-tokens 1000 --reserve-cost 0.25 < plan.txt
+```
 
-| Consumer | Path |
-| --- | --- |
-| Shared policy | `~/.agents/AGENTS.md` |
-| Codex | `~/.codex/AGENTS.md` |
-| Claude | `~/.claude/CLAUDE.md` |
-| Antigravity / default Gemini CLI | `~/.gemini/GEMINI.md` |
-| Copilot | `~/.copilot/copilot-instructions.md` |
-| Shared skill | `~/.agents/skills/session-harness` |
+These are examples of explicit paid authorization, not installation defaults. Use
+an existing key through the selected provider's environment variable. Catalogs do
+not prove entitlement or rank model strength. Z.ai has no verified catalog route;
+its general API requires an explicitly selected model. Model-specific API effort
+controls remain unsupported until their capability can be verified.
 
-Client skill directories also link to the shared skill, including Copilot and
-Cursor. Cursor global User Rules live in its UI; this installer does not invent
-a globally loaded `~/.cursor/AGENTS.md`. Remote/cloud workers need their own setup.
-Custom `CODEX_HOME`, `CLAUDE_CONFIG_DIR` and `COPILOT_HOME` values are rejected
-before installation when they differ from the selected home's default directories.
-Configure those instruction paths explicitly; the installer never silently writes
-a different profile. Runtime inventory preserves the native authentication paths.
+A total monthly cap is mandatory; optional service caps apply simultaneously.
+Money defaults to strict mode, independently of subscription mode. Current API
+routes require explicit monetary observed mode because a reservation is an
+estimate, not a provider-enforced maximum charge. The ledger reserves before
+sending, retains unresolved liabilities across months, never automatically retries
+a paid request, and records an actual overrun even when it exceeds the cap.
+Topups do not clear an overrun requiring reconciliation. Exact receipts and
+estimated token costs are reported separately. Other routes need fresh explicit
+model prices before dispatch. See [API and money setup](skills/session-harness/references/api-and-spend.md).
 
-For any project, follow [AI onboarding](docs/ONBOARDING.md). Preserve its existing
-`AGENTS.md` and conventions. A repository-linked copy wins over a personal copy;
-otherwise use the installed skill. Same-name entries can coexist. Compare runtime
-path/hash and reinstall after changing maintained sources.
+Native extra-credit balances retain their reported units. Unknown credits are
+never converted to dollars or quota percentages. Monetary caps and verified
+receipt imports support `extra:SERVICE` scopes; **native paid-credit execution is
+not verified**. Enabled extras, automatic purchase/reload, or missing eligibility
+controls block protected native inference. No setting, purchase or fallback is
+activated by the harness.
 
-## Usage history, resets and context
+## Capability map
 
-The private SQLite ledger lives under
-`$XDG_STATE_HOME/session-harness/quota/ledger.sqlite3`, normally
-`~/.local/state/session-harness/quota/ledger.sqlite3`. It is shared across local
-projects and sessions, with a persisted timezone, daily pool counters and reset
-history. It is not a distributed account lock across computers. Provider counters
-can include use from other devices; never claim complete multi-device admission.
+| Client/service | Discovery and accounting | Protected execution |
+| --- | --- | --- |
+| Codex | Account model catalog, quota windows, native credit metadata | Native adapter exists; currently blocked because the credit schema does not establish paid-use disablement |
+| Claude Code | Native selectable models/efforts, complete usage and extra-credit controls | Observed native launch/review when fresh quota and explicit disabled paid controls pass |
+| Antigravity | Account model catalog and native quota groups on supported Unix platforms | Native adapter exists; currently blocked because paid-credit eligibility telemetry is unavailable |
+| Copilot | Metadata-only models/quota and reported overage controls | Native execution unverified and blocked |
+| Cursor | Selectable model catalog; no verified personal quota API | Native execution unverified and blocked |
+| Kimi CLI, OpenCode, Aider, Continue, Gemini CLI | Installed-client inventory; unsupported metadata stays explicit | No protected native adapter |
+| Ollama | Installed model inventory | Localhost does not prove local compute; cloud routing and execution remain unverified |
+| Eight direct API services above | Explicit metadata commands, money caps and cost evidence | Explicit paid text requests; no tools, streaming or automatic retries |
 
-Check the configured ledger timezone before initializing observation; the current
-default for a new ledger is `UTC`. Existing timezone settings are preserved;
-`budget calendar --timezone IANA` initializes or validates the timezone and cannot
-rewrite established history. Known reset instants are stored as UTC timestamps.
-A provider may omit a reset schedule; that pool remains tracked with an explicit
-unknown date, without inventing renewal or disabling its budget.
-Provider resets never refund daily consumption. A usage drop or changed reset is
-recorded, not assumed to mean unused daily budget. The clock reaching a reset is
-not proof of renewal. Missing or stale pools block admission. In observed mode,
-fresh complete reports can resume after gaps while preserving the daily lower bound
-and marking historical coverage partial. Earlier unobserved use is not reconstructed.
-Strict mode keeps the uncertainty block.
+A model family is distinct from its hosting client and billing service. A Claude
+model through Copilot counts as Anthropic for review independence and consumes
+Copilot allowance. The same model through an API has separate API accounting.
+Inventory and instruction compatibility do not establish protected execution.
+See [validation procedures](docs/PROVIDER-VALIDATION.md); synthetic fixtures are
+not live provider evidence.
 
-Native statusline capture stores allowlisted reports only. Receipt time is not a
-verified backend refresh, so cached redraws cannot authorize inference. See
-[usage and context policy](skills/session-harness/references/usage-and-context.md)
-for capture commands and the limits of native hooks.
+## Instructions, knowledge and context
 
-At 60% context usage, prepare a checkpoint. At 75%, reduce unnecessary context and
-avoid large new work. At 85%, use native compaction to continue the same task when
-supported. These are advisory thresholds; Markdown cannot trigger compaction or
-switch the running model. Start a new session for an unrelated task, a required
-model change or unrecoverable context. Neither approach guarantees quota savings.
-Use actual context metadata, not cumulative token or billing totals. Checkpoints
-carry the plan digest, owned files, tests, pending decisions and quota stop reason.
-Refresh persisted quota policy before stopping; report the actual reserve instead
-of a threshold remembered from instructions loaded earlier in the session.
+`CLAUDE.md` and `GEMINI.md` point to repository `AGENTS.md`. Gemini CLI defaults to
+`GEMINI.md`; Antigravity, Cursor and Copilot CLI support project `AGENTS.md`.
+Copilot IDE/GitHub behavior varies by feature. The
+[client instruction map](skills/session-harness/references/instructions.md) documents
+native paths, scoped rules and supported imports.
 
-## Verify and maintain
+The shared personal targets are `~/.agents/AGENTS.md` and
+`~/.agents/skills/session-harness`; supported client paths link there, or use checked
+copies in explicit copy mode. Cursor global User Rules require its UI. Local
+installation does not configure cloud workers. Unsupported custom client homes
+are rejected before installation instead of silently writing another profile.
 
-`python3 scripts/test.py` runs deterministic tests without inference. Report the
-platform and checks actually run; local results do not establish cross-platform
-or live provider support.
-Read [official sources](skills/session-harness/references/sources.md)
-and installed CLI help when adapting an integration. Record actual observed models
-and capabilities; simulations and completed processes are not review approval.
+Use an existing knowledge layer and code graph for project context and dependency
+checks, including before documentation changes. Knowledge-gateway is an optional
+provider of those capabilities; session-harness coordinates work and usage. It
+does not replace project knowledge or require that backend.
 
-Deterministic tests do not prove live provider execution, independent model review,
-or exact quota guarantees. Report actual capabilities and checks separately
-from deterministic coverage. Installation does not change paid-usage settings.
+For the same task, prefer native compaction with a durable checkpoint. At 60%
+context use, checkpoint; at 75%, reduce new context; at 85%, compact when supported.
+These are advisory thresholds: Markdown cannot compact or switch a running model.
+A new session suits a different task, a required model change or failed recovery.
+Neither approach guarantees quota savings.
 
-Licensed under the [Apache License, Version 2.0](LICENSE). Copyright 2026 Filip
-Szalaj. See [NOTICE](NOTICE) for retained notices. Referenced third-party material
-retains its stated license. The installer includes LICENSE and NOTICE in the
-profile snapshot and installed skill. See also
+## Verify and update
+
+`python3 scripts/test.py` runs deterministic contracts without credentials or paid
+inference. GitHub Actions runs the suite on standard public Linux, macOS and Windows
+runners, with read-only permissions and no artifact/cache uploads. These standard
+public runners are [free](https://docs.github.com/en/billing/concepts/product-billing/github-actions);
+larger runners have separate billing and are not used.
+
+After every push, check README, docs, skill references and commands against the
+published source, synchronize any configured local consumers, reinstall maintained
+profiles and verify a second installer preview reports no changes. Keep consumer
+paths and account evidence in private records. Preserve unrelated changes; do not
+publish consumer repositories without authorization.
+
+The private SQLite ledger normally resides at
+`~/.local/state/session-harness/quota/ledger.sqlite3` and respects `XDG_STATE_HOME`.
+It is shared locally, not a distributed account lock. Never commit it, credentials,
+review packets, personal setup details or live session reports. For rollback,
+restore only manifest-listed paths from private backups and preserve newer user edits.
+
+Licensed under [Apache 2.0](LICENSE), copyright 2026 Filip Szalaj. Retain [NOTICE](NOTICE)
+when redistributing; the installer includes both legal files in snapshots. See
 [contributing](CONTRIBUTING.md) and [security](SECURITY.md).
-
-For rollback, use the install manifest and restore only its listed paths. Preserve
-symlink text when restoring links; do not dereference relative backup links. Keep
-old snapshots until no managed link references them. Never delete whole vendor
-configuration directories to uninstall this skill.

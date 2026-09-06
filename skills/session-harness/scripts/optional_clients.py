@@ -1,6 +1,7 @@
 """Optional clients with conservative metadata provenance and no inference."""
 import re
 import shutil
+import platform_runtime
 import tempfile
 
 import harness
@@ -26,7 +27,7 @@ def discover(service, executable=None, timeout=15):
     if service not in inventory.CLIENTS or service in {'copilot', 'cursor'}:
         raise ValueError('Unsupported optional client')
     executable = executable or next((path for name in inventory.CLIENTS[service]
-                                     if (path := shutil.which(name))), None)
+                                     if (path := platform_runtime.which(name))), None)
     result = inventory.base_record(service, executable)
     if not executable:
         return result

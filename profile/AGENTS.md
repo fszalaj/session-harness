@@ -1,7 +1,7 @@
 # Shared personal instructions
 
 This is the canonical personal policy for supported coding clients.
-Their profile instruction files are symlinks to this file. Repository instructions
+Their profile instruction files link to this file or use checked copies. Repository instructions
 add project-specific context; explicit current user instructions take precedence.
 It is installed as a verified local snapshot, independent of repository branch changes.
 
@@ -33,7 +33,7 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
 - Resolve models at runtime from the account-visible catalog and current documented
   aliases. Never pin version IDs, invent a `latest` alias or assume a model exists
   because it appeared in a previous conversation or on another subscription.
-- The other two provider families independently review the same plan before
+- Two other distinct provider families independently review the same plan before
   implementation. They have equal standing; reconcile every material finding.
 - Choose execution roles, models and effort for the task. Use current generations,
   normally medium effort, low for simple gathering and high for difficult work.
@@ -52,12 +52,12 @@ claim maximum-model execution if the client could not select it.
 
 Before inference, read the shared ledger and its persisted per-pool budget strategy,
 reserve, calendar and dated grants through the skill. New ledgers default to
-20 points/day, reserve 0, UTC, all seven workdays and an 08:30 reset cutoff; existing
+adaptive allocation, reserve 0, UTC, all seven workdays and an 08:30 reset cutoff; existing
 settings are preserved. Adaptive budgets divide available balance across scheduled
 workdays. A fresh reset due by tomorrow's local cutoff can release current headroom
 on a scheduled workday, without predicting a refill. Use `ai-session budget` to
 inspect policy, `budget calendar` for workdays/cutoff and `budget defaults` for the
-fallback reserve. Service/pool overrides take precedence. There is no mandatory 10%
+fallback strategy, fixed daily limit and reserve. Service/pool overrides take precedence. There is no mandatory 10%
 floor. Refresh persisted policy before a stop and report the actual reserve instead
 of a threshold from instructions loaded earlier.
 Manager, reviewers, workers and retries share budgets across projects. Preserve
@@ -67,15 +67,20 @@ bounds; explicitly enabled observed mode accepts reported thresholds and possibl
 in-flight overshoot. Preserve that choice across sessions. Do not bypass a stop through
 another service or account. Save a compact handoff instead.
 
-Use existing subscription authentication. Do not enable API fallback, new billing
-or extra usage settings. Respect current account quotas and report unavailable
+Use existing authentication. Explicit API use requires a configured monetary
+budget and the skill's API admission procedure. Do not enable automatic paid
+fallback, new billing, purchases or extra usage settings. Native credit units remain
+distinct from money; unsupported paid eligibility cannot authorize inference. Respect current account quotas and report unavailable
 providers accurately. Client-specific setup and reasoning controls belong in the
 skill's references, not duplicated here.
 
 ## Context discipline
 
 Read applicable repository instructions and only relevant skills/references. Use
-project memory before rediscovering architecture; use its graph if provided.
+project memory before rediscovering architecture; use its graph before code or
+documentation changes when provided. After each push, check documentation, README
+and skills, synchronize configured local consumers and reinstall maintained profiles.
+Keep consumer paths, personal setup and session evidence out of public commits.
 At 60% context use, checkpoint; at 75%, reduce irrelevant context and avoid large
 new work; at 85%, prefer native compaction for the same task. These are advisory
 thresholds: Markdown cannot trigger compaction or switch the running model. Use a

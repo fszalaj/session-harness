@@ -37,8 +37,9 @@ def parse_workdays(value):
 
 
 def fallback_policy(config, base):
-    return {"strategy": "fixed", "reserve": config.get("default_reserve", base["reserve"]),
-            "daily_limit": base["daily_limit"]}
+    return {"strategy": config.get("default_strategy", "fixed"),
+            "reserve": config.get("default_reserve", base["reserve"]),
+            "daily_limit": config.get("default_daily_limit", base["daily_limit"])}
 
 
 def numeric(value, name):
@@ -119,6 +120,7 @@ def validate_state(state):
     if type(state["version"]) is not int or state["version"] != 1 or type(state["revision"]) is not int or state["revision"] < 0:
         raise ValueError("invalid budget version")
     calendar(state)
+    validate_policy(fallback_policy(state, {"reserve": 0, "daily_limit": 20}))
     if "default_reserve" in state and not 0 <= numeric(state["default_reserve"], "default reserve") < 100:
         raise ValueError("invalid default reserve")
     for service, pools in state.get("deadline_states", {}).items():

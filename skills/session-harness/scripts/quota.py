@@ -14,6 +14,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 import budget_policy as budgets
+import credits
 
 
 def default_path():
@@ -34,13 +35,17 @@ class Ledger:
         defaults = dict(timezone="UTC", daily_limit=20, reserve=0,
                         max_age=120, max_gap=300)
         self.path = Path(path or default_path())
-        self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        os.chmod(self.path.parent, 0o700)
-        if self.path.is_symlink():
-            raise ValueError("ledger must not be a symlink")
-        fd = os.open(self.path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
-        os.close(fd)
-        os.chmod(self.path, 0o600)
+        if os.name == 'nt':
+            from windows_security import prepare_private_file
+            prepare_private_file(self.path)
+        else:
+            self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            os.chmod(self.path.parent, 0o700)
+            if self.path.is_symlink():
+                raise ValueError("ledger must not be a symlink")
+            fd = os.open(self.path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+            os.close(fd)
+            os.chmod(self.path, 0o600)
         with self._connect() as db:
             db.execute("CREATE TABLE IF NOT EXISTS state (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
             db.execute("BEGIN IMMEDIATE")
@@ -64,6 +69,10 @@ class Ledger:
                 raise ValueError("invalid quota policy")
             self.policy = policy
             db.execute("INSERT OR IGNORE INTO state VALUES ('policy', ?)", (json.dumps(policy),))
+            if row is None:
+                config = budgets.empty_state()
+                config["default_strategy"] = "adaptive"
+                self._save_budgets(db, config)
 
     @contextmanager
     def _connect(self):
@@ -162,23 +171,24 @@ class Ledger:
                 self._save_budgets(db, config)
             return {"calendar": new, "timezone": self.policy["timezone"], "revision": config["revision"]}
 
-    def budget_defaults(self, reserve=None, now=None):
+    def budget_defaults(self, reserve=None, now=None, strategy=None, daily_limit=None):
         now = number(time.time() if now is None else now, "now")
-        if reserve is not None and not 0 <= number(reserve, "reserve") < 100:
-            raise ValueError("reserve must be at least 0 and less than 100")
+        changed = any(value is not None for value in (reserve, strategy, daily_limit))
         with self._connect() as db:
-            db.execute("BEGIN IMMEDIATE" if reserve is not None else "BEGIN DEFERRED")
+            db.execute("BEGIN IMMEDIATE" if changed else "BEGIN DEFERRED")
             config = self._budgets(db)
-            old = budgets.fallback_policy(config, self.policy)["reserve"]
-            if reserve is not None and reserve != old:
-                config["default_reserve"] = reserve
+            old = budgets.fallback_policy(config, self.policy)
+            new = budgets.validate_policy({"strategy": old["strategy"] if strategy is None else strategy,
+                "reserve": old["reserve"] if reserve is None else reserve,
+                "daily_limit": old["daily_limit"] if daily_limit is None else daily_limit})
+            if new != old:
+                config.update({"default_" + key: value for key, value in new.items()})
                 config["revision"] += 1
-                config["audit"].append({"action": "defaults", "at": now, "reserve": reserve,
+                config["audit"].append({"action": "defaults", "at": now, **new,
                                         "revision": config["revision"]})
                 self._reanchor_fresh(db, config, now)
                 self._save_budgets(db, config)
-            return {"default_reserve": budgets.fallback_policy(config, self.policy)["reserve"],
-                    "revision": config["revision"]}
+            return {**{"default_" + key: value for key, value in new.items()}, "revision": config["revision"]}
 
     def budget_set(self, service, strategy, reserve=None, daily_limit=None, pool=None, now=None):
         return self._budget_configure(service, strategy, reserve, daily_limit, pool, now)
@@ -354,6 +364,7 @@ class Ledger:
                         or item["window_source"] not in budgets.WINDOW_SOURCES or "window_minutes" not in item):
                     raise ValueError("invalid native window provenance")
                 clean[pool]["window_source"] = item["window_source"]
+        resources = credits.validate_resources(snapshot.get("credit_resources", credits.missing(service)), service)
         day = self._day(observed)
         with self._connect() as db:
             db.execute("BEGIN IMMEDIATE")
@@ -395,7 +406,7 @@ class Ledger:
                 state["pools"][pool] = dict(current, observed_at=observed)
             missing = sorted(set(state["pools"]) - set(clean))
             state.update(observed_at=observed, source=source,
-                         complete=snapshot["complete"], missing_pools=missing)
+                         complete=snapshot["complete"], missing_pools=missing, credit_resources=resources)
             if self._fresh(state, now):
                 for pool, value in clean.items():
                     budgets.anchor_pool(config, service, pool, state["pools"][pool], daily[pool],
@@ -435,6 +446,8 @@ class Ledger:
             if type(state["complete"]) is not bool or not state["pools"]:
                 raise ValueError("invalid stored completeness")
             result.update(observed_at=observed, source=state["source"], reset_history=state["resets"])
+            result["credit_resources"] = credits.validate_resources(state.get("credit_resources", credits.missing(service)), service)
+            reasons.extend(credits.native_reasons(service, result["credit_resources"]))
             if now < observed or now - observed > self.policy["max_age"]:
                 reasons.append("stale_or_future_snapshot")
             if not state["complete"] or state["missing_pools"]:

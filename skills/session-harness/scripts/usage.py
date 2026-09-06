@@ -11,6 +11,7 @@ import sys
 import time
 
 from quota import Ledger
+import credits
 
 
 def epoch(value):
@@ -51,7 +52,9 @@ def codex_snapshot(payload, now=None):
         if row.get("spendControlReached") is True:
             pools.append(dict(pool=f"{key}:spend_control", used_percent=100,
                               resets_at=(time.time() if now is None else now) + 1))
-    return snapshot("codex", pools, "codex.account/rateLimits/read", complete, now)
+    result = snapshot("codex", pools, "codex.account/rateLimits/read", complete, now)
+    result["credit_resources"] = credits.codex_resources(rows)
+    return result
 
 
 def client_snapshot(service, payload, now=None):
@@ -87,6 +90,7 @@ def client_snapshot(service, payload, now=None):
     else:
         raise ValueError("This client has no verified statusline quota contract")
     result = snapshot(service, pools, f"{service}.native_report", False, now)
+    result["credit_resources"] = credits.missing(service)
     result["reported_pools_complete"] = complete
     result["freshness"] = "client_receipt_only_backend_time_unverified"
     metadata = payload.get("quota_observation")
@@ -117,7 +121,9 @@ def copilot_snapshot(rows, now=None, complete=False):
             raise ValueError("Invalid remaining percentage")
         pools.append(dict(pool=row["pool"], used_percent=100 - remaining,
                           resets_at=epoch(row["resetDate"])))
-    return snapshot("copilot", pools, "copilot.account.getQuota", complete, now)
+    result = snapshot("copilot", pools, "copilot.account.getQuota", complete, now)
+    result["credit_resources"] = credits.copilot_resources(rows)
+    return result
 
 
 def refresh(service, *, ledger=None, initialize=False):
@@ -150,7 +156,8 @@ def refresh(service, *, ledger=None, initialize=False):
         result["allowed_by_observed_threshold"] = False
         result["reasons"].append("unsupported_quota_refresh")
         return result
-    return ledger.record(observed, initialize=initialize)
+    observed.setdefault("credit_resources", credits.missing(service))
+    return credits.gate(ledger.record(observed, initialize=initialize), service)
 
 
 def context_status(payload):
@@ -178,7 +185,7 @@ def require_admission(service, *, ledger=None):
             result["allowed"] = False
             if "exact_request_bound_unavailable" not in result["reasons"]:
                 result["reasons"].append("exact_request_bound_unavailable")
-        return result
+        return credits.gate(result, service)
     except Exception:
         return dict(allowed=False, exact_cap_supported=False, reasons=["quota_refresh_failed"])
 
@@ -214,6 +221,7 @@ def main(argv=None):
                 result["context"] = context_status(payload)
             else:
                 result = ledger.check(args.service)
+            credits.gate(result, args.service)
         if args.action == "hook":
             if not result.get("allowed"):
                 print(json.dumps({"decision": "block", "reason": "Session harness: " + ", ".join(result["reasons"])}))

@@ -6,6 +6,7 @@ import math
 import os
 import re
 import selectors
+import platform_runtime
 import shutil
 import subprocess
 import time
@@ -152,20 +153,23 @@ class MetadataRPC:
     """Bounded JSON-RPC metadata transport for Copilot CLI."""
     def __init__(self, executable, timeout=15):
         self.timeout, self.buffer, self.serial = timeout, b'', 0
-        self.process = subprocess.Popen([executable, '--headless', '--stdio', '--no-auto-update',
+        self.process = platform_runtime.spawn([executable, '--headless', '--stdio', '--no-auto-update',
                                          '--log-level', 'none'], stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=0,
                                         start_new_session=True, env=child_env())
         harness.register_process(self.process)
-        self.selector = selectors.DefaultSelector()
-        self.selector.register(self.process.stdout, selectors.EVENT_READ)
+        self.reader = platform_runtime.Reader(self.process.stdout) if os.name == 'nt' else None
+        self.selector = None if self.reader else selectors.DefaultSelector()
+        if self.selector: self.selector.register(self.process.stdout, selectors.EVENT_READ)
 
     def request(self, method):
         if method not in METHODS:
             raise ValueError('Only inventory metadata methods are allowed')
         self.serial += 1
         data = json.dumps({'jsonrpc': '2.0', 'id': self.serial, 'method': method, 'params': {}}).encode()
-        self.process.stdin.write(b'Content-Length: ' + str(len(data)).encode() + b'\r\n\r\n' + data)
+        frame = b'Content-Length: ' + str(len(data)).encode() + b'\r\n\r\n' + data
+        if self.reader: platform_runtime.write(self.process.stdin, frame, self.timeout)
+        else: self.process.stdin.write(frame)
         deadline = time.monotonic() + self.timeout
         while time.monotonic() < deadline:
             if b'\r\n\r\n' in self.buffer:
@@ -186,8 +190,9 @@ class MetadataRPC:
                             raise ValueError('Metadata method unavailable')
                         return message.get('result', {})
                     continue
-            if self.selector.select(max(0, deadline - time.monotonic())):
-                chunk = os.read(self.process.stdout.fileno(), 65536)
+            chunk = self.reader.read(min(.1, max(0, deadline - time.monotonic()))) if self.reader else None
+            if chunk is not None or (self.selector and self.selector.select(max(0, deadline - time.monotonic()))):
+                if self.selector: chunk = os.read(self.process.stdout.fileno(), 65536)
                 if not chunk:
                     raise ValueError('Metadata process exited')
                 self.buffer += chunk
@@ -196,11 +201,12 @@ class MetadataRPC:
         raise TimeoutError('Metadata deadline exceeded')
 
     def close(self):
-        self.selector.close()
+        if self.selector: self.selector.close()
         try:
             harness.stop_group(self.process)
         finally:
             harness.unregister_process(self.process)
+            if self.reader: self.reader.close()
             self.process.stdin.close()
             self.process.stdout.close()
 
@@ -215,7 +221,7 @@ def base_record(service, executable):
 
 
 def discover_copilot(executable=None, timeout=15):
-    executable = executable or shutil.which('copilot')
+    executable = executable or platform_runtime.which('copilot')
     result = base_record('copilot', executable)
     if not executable:
         return result
@@ -265,7 +271,7 @@ def parse_cursor_models(text):
 
 
 def discover_cursor(executable=None, timeout=15):
-    executable = executable or shutil.which('cursor-agent') or shutil.which('agent')
+    executable = executable or platform_runtime.which('cursor-agent') or platform_runtime.which('agent')
     result = base_record('cursor', executable)
     if not executable:
         return result

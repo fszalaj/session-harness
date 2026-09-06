@@ -15,3 +15,8 @@ Use vendor subscription authentication and keep private runtime state outside th
 repository. Strict admission cannot authorize inference without enforceable bounds;
 observed-threshold mode accepts possible overshoot and requires explicit local
 opt-in. Processes started outside the harness are outside its process control.
+
+Explicit API routes use existing selected-service keys only after separate monetary
+authorization. Keys remain in memory; fixed HTTPS origins, no redirects/proxies,
+bounded bodies and sanitized diagnostics limit credential exposure. API requests
+have no automatic retry. Follow the maintained API/money procedure.

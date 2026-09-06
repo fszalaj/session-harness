@@ -8,6 +8,7 @@ import unittest
 from unittest.mock import patch
 
 import harness
+import credits
 import usage
 from quota import Ledger
 
@@ -158,17 +159,23 @@ class UsageTests(unittest.TestCase):
             with self.subTest(service=service), tempfile.TemporaryDirectory() as directory:
                 ledger = Ledger(Path(directory) / "quota.db")
                 ledger.set_mode("observed")
+                ledger.budget_set(service, "fixed", now=100)
                 def observed(at, amount):
-                    return usage.snapshot(service, [
+                    result = usage.snapshot(service, [
                         {"pool": "session", "used_percent": amount, "resets_at": 9999},
                         {"pool": "weekly", "used_percent": amount, "resets_at": 99999},
                     ], "native-test", now=at)
+                    if service == "claude":
+                        result["credit_resources"] = credits.claude_resources({"extra_usage": {"is_enabled": False}})
+                    return result
                 with patch("native_quota.read_snapshot", side_effect=[observed(100, 10), observed(101, 30)]) as reader:
                     with patch("quota.time.time", return_value=100):
                         first = usage.refresh(service, ledger=ledger, initialize=True)
                     with patch("quota.time.time", return_value=101):
                         second = usage.refresh(service, ledger=ledger)
-                self.assertTrue(first["allowed"])
+                self.assertEqual(service == "claude", first["allowed"])
+                if service == "antigravity":
+                    self.assertIn("credit_metadata_unverified", first["reasons"])
                 self.assertFalse(second["allowed"])
                 self.assertEqual([pool["daily_consumed"] for pool in second["pools"]], [20, 20])
                 self.assertEqual(reader.call_count, 2)
@@ -194,7 +201,9 @@ class UsageTests(unittest.TestCase):
             ledger = Ledger(Path(directory) / "quota.db")
             ledger.set_mode("observed")
             data = usage.client_snapshot("claude", raw, now=100)
-            self.assertTrue(ledger.record(data, now=100)["allowed"])
+            result = ledger.record(data, now=100)
+            self.assertFalse(result["allowed"])
+            self.assertIn("credit_metadata_unverified", result["reasons"])
             redraw = usage.client_snapshot("claude", raw, now=300)
             self.assertEqual(redraw["observed_at"], 100)
             with self.assertRaises(ValueError):
@@ -215,9 +224,11 @@ class UsageTests(unittest.TestCase):
             ledger.set_mode("observed")
             data = usage.snapshot("claude", [{"pool": "weekly", "used_percent": 20,
                                               "resets_at": 9999}], "test", now=100)
+            data["credit_resources"] = credits.claude_resources({"extra_usage": {"is_enabled": False}})
             ledger.record(data, now=100)
             fresh = usage.snapshot("claude", [{"pool": "weekly", "used_percent": 21,
                                                "resets_at": 9999}], "test", now=101)
+            fresh["credit_resources"] = credits.claude_resources({"extra_usage": {"is_enabled": False}})
             with patch("quota.time.time", return_value=101), patch("native_quota.read_snapshot", return_value=fresh):
                 self.assertTrue(usage.require_admission("claude", ledger=ledger)["allowed"])
             with patch("quota.time.time", return_value=222), patch("native_quota.read_snapshot", return_value=fresh):

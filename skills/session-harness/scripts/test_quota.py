@@ -42,6 +42,7 @@ class QuotaTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.path = Path(self.tmp.name) / "private/ledger.sqlite3"
         self.ledger = Ledger(self.path, timezone="Europe/Warsaw", reserve=10)
+        self.ledger.budget_defaults(strategy="fixed", now=0)
 
     def record(self, timestamp=1000, used=64, **kwargs):
         return self.ledger.record(snapshot(timestamp, used, **kwargs), now=timestamp, initialize=True)

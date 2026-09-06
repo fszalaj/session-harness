@@ -1,0 +1,2 @@
+# Windows does not ship the IANA timezone database used by zoneinfo.
+tzdata>=2025.2

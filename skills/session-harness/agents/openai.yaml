@@ -1,6 +1,6 @@
 interface:
   display_name: "Session harness"
   short_description: "Dynamic models, independent reviews and scoped agents"
-  default_prompt: "Use $session-harness to plan this work with the strongest session model, obtain independent reviews from the other two providers, and delegate implementation at suitable effort."
+  default_prompt: "Use $session-harness to plan this work with the strongest session model, obtain independent reviews from the two other provider families, and delegate implementation at suitable effort."
 policy:
   allow_implicit_invocation: true
