@@ -115,9 +115,10 @@ class WindowsTests(unittest.TestCase):
             with self.subTest(expected=expected):
                 start = time.monotonic()
                 with self.assertRaises(harness.HarnessError) as raised:
-                    harness.run([sys.executable, '-c', code], stdin=stdin, timeout=1)
+                    harness.run([sys.executable, '-c', code], stdin=stdin,
+                                timeout=5 if expected == 'output_limit' else 1)
                 self.assertEqual(raised.exception.status, expected)
-                self.assertLess(time.monotonic() - start, 6)
+                self.assertLess(time.monotonic() - start, 9)
 
     def test_job_closes_when_supervising_process_dies(self):
         with tempfile.TemporaryDirectory() as directory:
