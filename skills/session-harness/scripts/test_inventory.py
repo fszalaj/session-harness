@@ -126,6 +126,13 @@ class InventoryTests(unittest.TestCase):
             script.chmod(0o700)
             rpc = inventory.MetadataRPC(str(script), timeout=0.3)
             try:
+                # Wait for the fixture to own its child before exercising the timeout: interpreter
+                # start-up alone exceeds 0.3 s on some hosts (0.35-0.47 s measured on macOS with a
+                # Homebrew Python), and racing it would kill the client before child.pid exists.
+                deadline = time.monotonic() + 10
+                while not child_pid.exists() and time.monotonic() < deadline:
+                    time.sleep(0.01)
+                self.assertTrue(child_pid.exists(), 'mock client never reported its child')
                 with self.assertRaises(TimeoutError):
                     rpc.request('status.get')
             finally:
