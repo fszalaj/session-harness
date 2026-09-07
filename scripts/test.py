@@ -12,12 +12,19 @@ tests = sorted((skill / "scripts").glob("test_*.py"))
 if not tests:
     raise SystemExit("Harness tests are missing")
 tests.append(ROOT / "scripts/install-agent-profile.test.py")
+if (ROOT / "skills/session-harness").is_dir():
+    tests.append(ROOT / "scripts/code_graph.test.py")
 failures = []
 for test in tests:
     print(test.relative_to(ROOT), flush=True)
     result = subprocess.run([sys.executable, str(test)], cwd=ROOT)
     if result.returncode:
         failures.append(test.relative_to(ROOT))
+
+if (ROOT / "skills/session-harness").is_dir():
+    result = subprocess.run([sys.executable, str(ROOT / "scripts/code_graph.py"), "check"], cwd=ROOT)
+    if result.returncode:
+        failures.append(Path("docs/code-graph.json"))
 
 if failures:
     print("Failed test files:", flush=True)

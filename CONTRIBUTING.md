@@ -10,6 +10,10 @@ Keep changes scoped and preserve user files, authentication and unrelated client
 settings. Discover models at runtime. Separate observed telemetry from enforceable
 provider guarantees, and keep strict admission as the default.
 
+Query the [code graph](docs/CODE-GRAPH.md) before source or documentation changes.
+After Python changes, stage new source paths and rebuild the committed snapshot;
+CI verifies its contents against a fresh build. Untracked files are excluded.
+
 Run `python3 scripts/test.py` and relevant focused checks. Tests must not require
 paid inference or real account credentials. Explain the problem, resulting behavior,
 validation and remaining capability limits in the pull request. Update relevant

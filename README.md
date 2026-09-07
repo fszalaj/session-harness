@@ -230,6 +230,18 @@ checks, including before documentation changes. Knowledge-gateway is an optional
 provider of those capabilities; session-harness coordinates work and usage. It
 does not replace project knowledge or require that backend.
 
+For developing this repository, a [committed code graph](docs/code-graph.json)
+is ready immediately after cloning. Queries need only Python and Git:
+
+```sh
+python scripts/code_graph.py find Ledger
+python scripts/code_graph.py importers skills/session-harness/scripts/quota.py
+python scripts/code_graph.py check
+```
+
+See [graph coverage and rebuilding](docs/CODE-GRAPH.md). CI rejects an outdated
+snapshot. Generation uses static source analysis and makes no model calls.
+
 For the same task, prefer native compaction with a durable checkpoint. At 60%
 context use, checkpoint; at 75%, reduce new context; at 85%, compact when supported.
 These are advisory thresholds: Markdown cannot compact or switch a running model.

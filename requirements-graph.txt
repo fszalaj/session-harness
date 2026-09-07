@@ -1,0 +1,3 @@
+# Optional contributor tooling; queries and freshness checks use the standard library.
+knowledge-gateway[graph-slim]==0.11.0
+networkx==3.6.1
