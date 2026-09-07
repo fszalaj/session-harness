@@ -1,19 +1,21 @@
 {
-  "content_sha256": "995b3452483f9f6229258513713f38a30154939d1290a469530c776678141ac0",
+  "content_sha256": "2e6ce6e25b39b8122285f61f94d5693bde1faf89d8a047ed37ad856cddb3b3b4",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 1603,
+    "edge_count": 1697,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 918,
+    "node_count": 954,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
       "scripts/code_graph.py": "fa7c041129167808a7a3cc44fed5534c57ba31da2bf42cddc470f549e3fd58b3",
       "scripts/code_graph.test.py": "5baef7e0c95ef579828bfbceab61c7b3792c05c160714378bdfe6580ce40d423",
-      "scripts/install-agent-profile.py": "f15878d825527095f4647eaecf99728d18fcfd35125a35345db548bed820dfb8",
-      "scripts/install-agent-profile.test.py": "41b72933353f12a982878f7ea12a4296cd36aa00f08360e948fe372d1b9d8b0b",
-      "scripts/test.py": "541e6a9fce210a5685dfaa47205dbe78a938c53720d8775180c2ea1feaab6429",
+      "scripts/install-agent-profile.py": "29fbcde01f158c43258e727d90c8625b2386631441de0e3b783cf03ac3b9aafe",
+      "scripts/install-agent-profile.test.py": "3fcdfc3f9cdeb785063c4e94beaae2168516ce2af9664a26d4dcb7293101e688",
+      "scripts/release.py": "711b3c849d21285dd7932338e1ed145e9e5a1566dfc7c6d7e3f0876f424c53db",
+      "scripts/release.test.py": "c0cabc31299955487c013852d4d1956b4c05c785ac7dd78927a360960027dcaa",
+      "scripts/test.py": "ea279177805e95a35922f421f8e167cadf0d275cbcb851535aa9a4e8550fe38a",
       "skills/session-harness/scripts/agy_quota.py": "21e1f1d597b6e76acdcfa36c22437e9689a5b115ea83538508966a217e25829e",
       "skills/session-harness/scripts/api_execution.py": "e8baf738b118fec39a04a3d1798acd5b4964c4bf22ab11dc5d8e33154b1f6b65",
       "skills/session-harness/scripts/api_providers.py": "274cea4c40c494a18895ba346af9c7ec16ff8f191486157a04df4692302cb687",
@@ -24,12 +26,13 @@
       "skills/session-harness/scripts/claude_models.py": "a0184dfb93b40b53305cf8acec153de72cfc297d0c6554fcbb33716fcb9c7a2b",
       "skills/session-harness/scripts/coordination.py": "eee7466c418411e81e7172ebe816f6973d7b7e992448797d4eed2c806475ccbf",
       "skills/session-harness/scripts/credits.py": "1f7a2b5de81cd7a88bec954f81d167a06e26e0890e1c9384afb35bf579bc4465",
-      "skills/session-harness/scripts/harness.py": "4fd7e7ff9363b93f679432e045238dcb98d2db539ebe15276723f99481819513",
+      "skills/session-harness/scripts/harness.py": "00586580f65477c1270cb1c95e8135174e27b25988ee6e158c940c06015fa368",
       "skills/session-harness/scripts/inventory.py": "a25b6663c9b00b95202ade571daf574b5264bd69292d00fb84402aecdd9640a3",
       "skills/session-harness/scripts/native_quota.py": "ecda56527babe591c8f21e83ab6891bebd9ad070be10e3de16b7ccc859035dca",
       "skills/session-harness/scripts/optional_clients.py": "6a8192702eb2f0a7b9722a5352e6dcbcd628456ed3bbf2f75cc1217ed36e496c",
       "skills/session-harness/scripts/platform_runtime.py": "ad507d0542b283953041c1eb2e1e5bde0b4f9d59b6f568d9e6ff3af79ffc1f62",
       "skills/session-harness/scripts/quota.py": "63b9104699487a0539e1ef22ec3bfdc3bdfaba94fd2ac6a5696379bf20dfe0c3",
+      "skills/session-harness/scripts/releases.py": "a39ac18c4d862dc7d553b17f12b500d4ff7805e89d698f277483cc07c464a053",
       "skills/session-harness/scripts/setup_environment.py": "1159f9d7014f78c10e889ea10ade002a3c702ad1831b6e86fb65a1f27b921a9e",
       "skills/session-harness/scripts/spend.py": "f808ea30f9f3ae7d141065f6c968dea5a3db26053670f4aa6cc069d20d2b1600",
       "skills/session-harness/scripts/spend_cli.py": "60271671526d4443f48c8e1661ec88f1b90b2b4b0d399c11c316434096b2b086",
@@ -50,6 +53,7 @@
       "skills/session-harness/scripts/test_optional_clients.py": "39bc13b222daf9636301b2df66f648d1c860dad0218ca553bfb9051b0d938766",
       "skills/session-harness/scripts/test_platform_runtime.py": "361f83baa81bce13abe74186090be8ae90bcf49d519a24f68b233842a9204df5",
       "skills/session-harness/scripts/test_quota.py": "03a3a79e920b81e41f306568c630558b43a51346d33a3cb5528fb9477a044ebd",
+      "skills/session-harness/scripts/test_releases.py": "927f2f81587848eaace2782fe6c910053d8c435ab1a2698a217fadb467505cb8",
       "skills/session-harness/scripts/test_setup_admission.py": "a1eac325a60b7435d170ad8261f505a55551cc4aa8e3f36b531b9cf6fe0161b6",
       "skills/session-harness/scripts/test_setup_environment.py": "01d028ca74a0a78a98101c46113b2a26591979b66544e95365b2cafca013d2c8",
       "skills/session-harness/scripts/test_spend.py": "89219080c1b1561e61c74d4a9f1d98fa2237f849e11ceede30c20cb050747d52",
@@ -371,6 +375,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "module:scripts/install-agent-profile.py",
+      "target": "pyfunc:scripts/install-agent-profile.py:installation_state_path"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:scripts/install-agent-profile.py",
       "target": "pyfunc:scripts/install-agent-profile.py:kind"
     },
     {
@@ -419,6 +429,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "module:scripts/install-agent-profile.py",
+      "target": "pyfunc:scripts/install-agent-profile.py:read_installation_state"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:scripts/install-agent-profile.py",
       "target": "pyfunc:scripts/install-agent-profile.py:release_hash"
     },
     {
@@ -426,6 +442,12 @@
       "relation": "defines",
       "source": "module:scripts/install-agent-profile.py",
       "target": "pyfunc:scripts/install-agent-profile.py:release_sources"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:scripts/install-agent-profile.py",
+      "target": "pyfunc:scripts/install-agent-profile.py:save_installation_state"
     },
     {
       "confidence": "EXTRACTED",
@@ -552,6 +574,126 @@
       "relation": "defines",
       "source": "module:scripts/install-agent-profile.test.py",
       "target": "pyclass:scripts/install-agent-profile.test.py:RepositoryProfileContractTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:argparse"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:posixpath"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:re"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:stat"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.py",
+      "target": "extmodule:zipfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:scripts/release.py",
+      "target": "pyfunc:scripts/release.py:build"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:scripts/release.py",
+      "target": "pyfunc:scripts/release.py:main"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:importlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:scripts/release.test.py",
+      "target": "extmodule:zipfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:scripts/release.test.py",
+      "target": "pyclass:scripts/release.test.py:BuildTests"
     },
     {
       "confidence": "EXTRACTED",
@@ -1745,6 +1887,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/harness.py",
+      "target": "module:skills/session-harness/scripts/releases.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/harness.py",
       "target": "module:skills/session-harness/scripts/setup_environment.py"
     },
     {
@@ -2604,6 +2752,144 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/quota.py",
       "target": "pyfunc:skills/session-harness/scripts/quota.py:number"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:__future__"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:argparse"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:io"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:re"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:stat"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:sys"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:urllib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "extmodule:zipfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:current_version"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:download_release"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:fetch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:installation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:main"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:release_metadata"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:unpack"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:update"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:version"
     },
     {
       "confidence": "EXTRACTED",
@@ -4222,6 +4508,78 @@
     {
       "confidence": "EXTRACTED",
       "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:io"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:stat"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "extmodule:zipfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "module:skills/session-harness/scripts/releases.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_releases.py",
+      "target": "pyfunc:skills/session-harness/scripts/test_releases.py:archive"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_setup_admission.py",
       "target": "extmodule:contextlib"
     },
@@ -4925,6 +5283,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:scripts/install-agent-profile.test.py:CheckedCopyTests",
+      "target": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:scripts/install-agent-profile.test.py:CheckedCopyTests",
       "target": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status"
     },
     {
@@ -5033,6 +5397,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:scripts/install-agent-profile.test.py:ProfileInstallationTests",
+      "target": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_private_policy_survives_upgrades_and_missing_policy_blocks"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:scripts/install-agent-profile.test.py:ProfileInstallationTests",
       "target": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_real_directory_conflict_fails_before_any_managed_change"
     },
     {
@@ -5046,6 +5416,12 @@
       "relation": "defines",
       "source": "pyclass:scripts/install-agent-profile.test.py:ProfileInstallationTests",
       "target": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_survives_source_removal_and_excludes_unrelated_files"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:scripts/install-agent-profile.test.py:ProfileInstallationTests",
+      "target": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_update_and_rollback_keep_private_policy_and_accounting"
     },
     {
       "confidence": "EXTRACTED",
@@ -5070,6 +5446,12 @@
       "relation": "defines",
       "source": "pyclass:scripts/install-agent-profile.test.py:RepositoryProfileContractTests",
       "target": "pymethod:scripts/install-agent-profile.test.py:RepositoryProfileContractTests.test_shared_entrypoints_and_native_roles_keep_the_profile_contract"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:scripts/release.test.py:BuildTests",
+      "target": "pymethod:scripts/release.test.py:BuildTests.test_committed_only_portable_and_deterministic"
     },
     {
       "confidence": "EXTRACTED",
@@ -7450,6 +7832,60 @@
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.metadata"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_checksums_and_asset_urls"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_concurrent_update_is_refused"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_failed_download_preserves_private_state_and_releases_lock"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_metadata_rejects_mutable_draft_prerelease_and_wrong_tag"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_only_exact_stable_versions"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_safe_archive_extracts_and_rejects_wrong_contents"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_symlink_and_size_bounds"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_unsafe_archive_names_and_duplicate_paths_are_rejected"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_setup_admission.py:SetupAdmissionTests",
       "target": "pymethod:skills/session-harness/scripts/test_setup_admission.py:SetupAdmissionTests.complete"
     },
@@ -8242,6 +8678,18 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:main",
+      "target": "pyfunc:scripts/install-agent-profile.py:read_installation_state"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:main",
+      "target": "pyfunc:scripts/install-agent-profile.py:save_installation_state"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:scripts/install-agent-profile.py:plan_copy",
       "target": "pyfunc:scripts/install-agent-profile.py:copy_state_path"
     },
@@ -8338,6 +8786,42 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:read_installation_state",
+      "target": "pyfunc:scripts/install-agent-profile.py:installation_state_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:read_installation_state",
+      "target": "pyfunc:scripts/install-agent-profile.py:windows_security"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:save_installation_state",
+      "target": "pyfunc:scripts/install-agent-profile.py:file_digest"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:save_installation_state",
+      "target": "pyfunc:scripts/install-agent-profile.py:installation_state_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:save_installation_state",
+      "target": "pyfunc:scripts/install-agent-profile.py:read_installation_state"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:save_installation_state",
+      "target": "pyfunc:scripts/install-agent-profile.py:set_permissions"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:scripts/install-agent-profile.py:set_permissions",
       "target": "pyfunc:scripts/install-agent-profile.py:windows_security"
     },
@@ -8346,6 +8830,12 @@
       "relation": "calls",
       "source": "pyfunc:scripts/install-agent-profile.py:verify_release",
       "target": "pyfunc:scripts/install-agent-profile.py:windows_security"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/release.py:main",
+      "target": "pyfunc:scripts/release.py:build"
     },
     {
       "confidence": "INFERRED",
@@ -9520,6 +10010,84 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:download_release",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:fetch"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:download_release",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:unpack"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:download_release",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:version"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:current_version"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:installation"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:release_metadata"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:update"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:version"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:release_metadata",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:fetch"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:release_metadata",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:version"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:update",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:download_release"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:update",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:installation"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/releases.py:update",
+      "target": "pyfunc:skills/session-harness/scripts/releases.py:version"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/setup_environment.py:_confirm",
       "target": "pyfunc:skills/session-harness/scripts/setup_environment.py:_ask"
     },
@@ -9758,6 +10326,9 @@
       "id": "extmodule:pathlib"
     },
     {
+      "id": "extmodule:posixpath"
+    },
+    {
       "id": "extmodule:pty"
     },
     {
@@ -9833,6 +10404,9 @@
       "id": "extmodule:uuid"
     },
     {
+      "id": "extmodule:zipfile"
+    },
+    {
       "id": "extmodule:zoneinfo"
     },
     {
@@ -9861,6 +10435,20 @@
       "id": "module:scripts/install-agent-profile.test.py",
       "label": "scripts/install-agent-profile.test.py",
       "source_file": "scripts/install-agent-profile.test.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:scripts/release.py",
+      "label": "scripts/release.py",
+      "source_file": "scripts/release.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:scripts/release.test.py",
+      "label": "scripts/release.test.py",
+      "source_file": "scripts/release.test.py",
       "type": "module"
     },
     {
@@ -9980,6 +10568,13 @@
       "id": "module:skills/session-harness/scripts/quota.py",
       "label": "skills/session-harness/scripts/quota.py",
       "source_file": "skills/session-harness/scripts/quota.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/releases.py",
+      "label": "skills/session-harness/scripts/releases.py",
+      "source_file": "skills/session-harness/scripts/releases.py",
       "type": "module"
     },
     {
@@ -10124,6 +10719,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_releases.py",
+      "label": "skills/session-harness/scripts/test_releases.py",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/test_setup_admission.py",
       "label": "skills/session-harness/scripts/test_setup_admission.py",
       "source_file": "skills/session-harness/scripts/test_setup_admission.py",
@@ -10199,7 +10801,7 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:CheckedCopyTests",
       "label": "CheckedCopyTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L346",
+      "source_location": "L390",
       "type": "class"
     },
     {
@@ -10207,7 +10809,7 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:ProfileInstallationTests",
       "label": "ProfileInstallationTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L27",
+      "source_location": "L28",
       "type": "class"
     },
     {
@@ -10215,7 +10817,15 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:RepositoryProfileContractTests",
       "label": "RepositoryProfileContractTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L291",
+      "source_location": "L335",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:scripts/release.test.py:BuildTests",
+      "label": "BuildTests",
+      "source_file": "scripts/release.test.py",
+      "source_location": "L15",
       "type": "class"
     },
     {
@@ -10572,6 +11182,14 @@
     },
     {
       "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "label": "ReleaseTests",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L28",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
       "id": "pyclass:skills/session-harness/scripts/test_setup_admission.py:SetupAdmissionTests",
       "label": "SetupAdmissionTests",
       "source_file": "skills/session-harness/scripts/test_setup_admission.py",
@@ -10719,7 +11337,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:_apply_copy_locked",
       "label": "_apply_copy_locked",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L202",
+      "source_location": "L207",
       "type": "function"
     },
     {
@@ -10727,7 +11345,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:apply_copy",
       "label": "apply_copy",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L177",
+      "source_location": "L182",
       "type": "function"
     },
     {
@@ -10735,7 +11353,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:apply_install",
       "label": "apply_install",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L467",
+      "source_location": "L479",
       "type": "function"
     },
     {
@@ -10743,7 +11361,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:copy_state_path",
       "label": "copy_state_path",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L106",
+      "source_location": "L111",
       "type": "function"
     },
     {
@@ -10751,7 +11369,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:file_digest",
       "label": "file_digest",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L110",
+      "source_location": "L115",
       "type": "function"
     },
     {
@@ -10767,7 +11385,15 @@
       "id": "pyfunc:scripts/install-agent-profile.py:install_release",
       "label": "install_release",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L332",
+      "source_location": "L344",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:scripts/install-agent-profile.py:installation_state_path",
+      "label": "installation_state_path",
+      "source_file": "scripts/install-agent-profile.py",
+      "source_location": "L544",
       "type": "function"
     },
     {
@@ -10791,7 +11417,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:launcher_files",
       "label": "launcher_files",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L92",
+      "source_location": "L97",
       "type": "function"
     },
     {
@@ -10807,7 +11433,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:main",
       "label": "main",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L532",
+      "source_location": "L584",
       "type": "function"
     },
     {
@@ -10815,7 +11441,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:plan_copy",
       "label": "plan_copy",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L114",
+      "source_location": "L119",
       "type": "function"
     },
     {
@@ -10823,7 +11449,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:plan_install",
       "label": "plan_install",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L369",
+      "source_location": "L381",
       "type": "function"
     },
     {
@@ -10831,7 +11457,15 @@
       "id": "pyfunc:scripts/install-agent-profile.py:private_backup_run",
       "label": "private_backup_run",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L446",
+      "source_location": "L458",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:scripts/install-agent-profile.py:read_installation_state",
+      "label": "read_installation_state",
+      "source_file": "scripts/install-agent-profile.py",
+      "source_location": "L548",
       "type": "function"
     },
     {
@@ -10839,7 +11473,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:release_hash",
       "label": "release_hash",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L299",
+      "source_location": "L311",
       "type": "function"
     },
     {
@@ -10847,7 +11481,15 @@
       "id": "pyfunc:scripts/install-agent-profile.py:release_sources",
       "label": "release_sources",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L252",
+      "source_location": "L257",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:scripts/install-agent-profile.py:save_installation_state",
+      "label": "save_installation_state",
+      "source_file": "scripts/install-agent-profile.py",
+      "source_location": "L562",
       "type": "function"
     },
     {
@@ -10855,7 +11497,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:set_permissions",
       "label": "set_permissions",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L85",
+      "source_location": "L90",
       "type": "function"
     },
     {
@@ -10863,7 +11505,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:verify_release",
       "label": "verify_release",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L307",
+      "source_location": "L319",
       "type": "function"
     },
     {
@@ -10871,7 +11513,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:windows_security",
       "label": "windows_security",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L73",
+      "source_location": "L78",
       "type": "function"
     },
     {
@@ -10879,7 +11521,23 @@
       "id": "pyfunc:scripts/install-agent-profile.py:write_manifest",
       "label": "write_manifest",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L459",
+      "source_location": "L471",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:scripts/release.py:build",
+      "label": "build",
+      "source_file": "scripts/release.py",
+      "source_location": "L16",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:scripts/release.py:main",
+      "label": "main",
+      "source_file": "scripts/release.py",
+      "source_location": "L59",
       "type": "function"
     },
     {
@@ -12060,6 +12718,78 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:current_version",
+      "label": "current_version",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L29",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:download_release",
+      "label": "download_release",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L99",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:fetch",
+      "label": "fetch",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L34",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:installation",
+      "label": "installation",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L123",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:main",
+      "label": "main",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L167",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:release_metadata",
+      "label": "release_metadata",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L46",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:unpack",
+      "label": "unpack",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L59",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:update",
+      "label": "update",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L139",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/releases.py:version",
+      "label": "version",
+      "source_file": "skills/session-harness/scripts/releases.py",
+      "source_location": "L23",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/setup_environment.py:_ask",
       "label": "_ask",
       "source_file": "skills/session-harness/scripts/setup_environment.py",
@@ -12308,6 +13038,14 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/test_releases.py:archive",
+      "label": "archive",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L16",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/test_spend.py:complete_setup",
       "label": "complete_setup",
       "source_file": "skills/session-harness/scripts/test_spend.py",
@@ -12543,7 +13281,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.install",
       "label": "CheckedCopyTests.install",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L362",
+      "source_location": "L406",
       "type": "method"
     },
     {
@@ -12551,7 +13289,15 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.setUp",
       "label": "CheckedCopyTests.setUp",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L347",
+      "source_location": "L391",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
+      "label": "CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
+      "source_file": "scripts/install-agent-profile.test.py",
+      "source_location": "L411",
       "type": "method"
     },
     {
@@ -12559,7 +13305,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "label": "CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L385",
+      "source_location": "L441",
       "type": "method"
     },
     {
@@ -12567,7 +13313,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_modified_copy_is_preserved",
       "label": "CheckedCopyTests.test_modified_copy_is_preserved",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L396",
+      "source_location": "L452",
       "type": "method"
     },
     {
@@ -12575,7 +13321,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "label": "CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L417",
+      "source_location": "L473",
       "type": "method"
     },
     {
@@ -12583,7 +13329,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "label": "CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L410",
+      "source_location": "L466",
       "type": "method"
     },
     {
@@ -12591,7 +13337,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "label": "CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L367",
+      "source_location": "L423",
       "type": "method"
     },
     {
@@ -12599,7 +13345,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "label": "CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L403",
+      "source_location": "L459",
       "type": "method"
     },
     {
@@ -12607,7 +13353,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.run_installer",
       "label": "ProfileInstallationTests.run_installer",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "type": "method"
     },
     {
@@ -12615,7 +13361,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.setUp",
       "label": "ProfileInstallationTests.setUp",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L28",
+      "source_location": "L29",
       "type": "method"
     },
     {
@@ -12623,7 +13369,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_apply_links_canonical_files_and_preserves_unrelated_configuration",
       "label": "ProfileInstallationTests.test_apply_links_canonical_files_and_preserves_unrelated_configuration",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L76",
+      "source_location": "L77",
       "type": "method"
     },
     {
@@ -12631,7 +13377,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_broken_and_live_symlinks_keep_their_literal_backup_targets",
       "label": "ProfileInstallationTests.test_broken_and_live_symlinks_keep_their_literal_backup_targets",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L118",
+      "source_location": "L119",
       "type": "method"
     },
     {
@@ -12639,7 +13385,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_concurrent_managed_change_is_preserved",
       "label": "ProfileInstallationTests.test_concurrent_managed_change_is_preserved",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L213",
+      "source_location": "L215",
       "type": "method"
     },
     {
@@ -12647,7 +13393,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_corrupted_existing_release_is_not_overwritten_or_relinked",
       "label": "ProfileInstallationTests.test_corrupted_existing_release_is_not_overwritten_or_relinked",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L280",
+      "source_location": "L322",
       "type": "method"
     },
     {
@@ -12655,7 +13401,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_custom_client_homes_fail_before_profile_mutation",
       "label": "ProfileInstallationTests.test_custom_client_homes_fail_before_profile_mutation",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L53",
+      "source_location": "L54",
       "type": "method"
     },
     {
@@ -12663,7 +13409,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_dry_run_preserves_files_and_creates_nothing",
       "label": "ProfileInstallationTests.test_dry_run_preserves_files_and_creates_nothing",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "type": "method"
     },
     {
@@ -12671,7 +13417,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_exact_file_backup_is_private_and_repeat_is_idempotent",
       "label": "ProfileInstallationTests.test_exact_file_backup_is_private_and_repeat_is_idempotent",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L97",
+      "source_location": "L98",
       "type": "method"
     },
     {
@@ -12679,7 +13425,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_inaccessible_parent_and_missing_source_fail_without_mutation",
       "label": "ProfileInstallationTests.test_inaccessible_parent_and_missing_source_fail_without_mutation",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L154",
+      "source_location": "L155",
       "type": "method"
     },
     {
@@ -12687,7 +13433,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_native_definitions_and_launcher_forward_arguments_without_a_shell",
       "label": "ProfileInstallationTests.test_native_definitions_and_launcher_forward_arguments_without_a_shell",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L165",
+      "source_location": "L166",
       "type": "method"
     },
     {
@@ -12695,7 +13441,15 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_new_conflict_uses_a_distinct_backup_without_overwriting_history",
       "label": "ProfileInstallationTests.test_new_conflict_uses_a_distinct_backup_without_overwriting_history",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L134",
+      "source_location": "L135",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_private_policy_survives_upgrades_and_missing_policy_blocks",
+      "label": "ProfileInstallationTests.test_private_policy_survives_upgrades_and_missing_policy_blocks",
+      "source_file": "scripts/install-agent-profile.test.py",
+      "source_location": "L282",
       "type": "method"
     },
     {
@@ -12703,7 +13457,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_real_directory_conflict_fails_before_any_managed_change",
       "label": "ProfileInstallationTests.test_real_directory_conflict_fails_before_any_managed_change",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L145",
+      "source_location": "L146",
       "type": "method"
     },
     {
@@ -12711,7 +13465,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_reinstall_preserves_environment_setup_and_ledger_bytes",
       "label": "ProfileInstallationTests.test_reinstall_preserves_environment_setup_and_ledger_bytes",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L191",
+      "source_location": "L193",
       "type": "method"
     },
     {
@@ -12719,7 +13473,15 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_survives_source_removal_and_excludes_unrelated_files",
       "label": "ProfileInstallationTests.test_release_survives_source_removal_and_excludes_unrelated_files",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L225",
+      "source_location": "L227",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_update_and_rollback_keep_private_policy_and_accounting",
+      "label": "ProfileInstallationTests.test_release_update_and_rollback_keep_private_policy_and_accounting",
+      "source_file": "scripts/install-agent-profile.test.py",
+      "source_location": "L296",
       "type": "method"
     },
     {
@@ -12727,7 +13489,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_source_change_creates_a_new_release_and_preserves_the_old_release",
       "label": "ProfileInstallationTests.test_source_change_creates_a_new_release_and_preserves_the_old_release",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L270",
+      "source_location": "L272",
       "type": "method"
     },
     {
@@ -12735,7 +13497,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_standalone_legal_artifacts_and_incomplete_source_protection",
       "label": "ProfileInstallationTests.test_standalone_legal_artifacts_and_incomplete_source_protection",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L255",
+      "source_location": "L257",
       "type": "method"
     },
     {
@@ -12743,7 +13505,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.write",
       "label": "ProfileInstallationTests.write",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L41",
+      "source_location": "L42",
       "type": "method"
     },
     {
@@ -12751,7 +13513,15 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:RepositoryProfileContractTests.test_shared_entrypoints_and_native_roles_keep_the_profile_contract",
       "label": "RepositoryProfileContractTests.test_shared_entrypoints_and_native_roles_keep_the_profile_contract",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L292",
+      "source_location": "L336",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:scripts/release.test.py:BuildTests.test_committed_only_portable_and_deterministic",
+      "label": "BuildTests.test_committed_only_portable_and_deterministic",
+      "source_file": "scripts/release.test.py",
+      "source_location": "L16",
       "type": "method"
     },
     {
@@ -15920,6 +16690,78 @@
       "label": "QuotaTests.test_unreported_reset_schedule_preserves_budget_and_reserve",
       "source_file": "skills/session-harness/scripts/test_quota.py",
       "source_location": "L118",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.metadata",
+      "label": "ReleaseTests.metadata",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L29",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_checksums_and_asset_urls",
+      "label": "ReleaseTests.test_checksums_and_asset_urls",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L72",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_concurrent_update_is_refused",
+      "label": "ReleaseTests.test_concurrent_update_is_refused",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L95",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_failed_download_preserves_private_state_and_releases_lock",
+      "label": "ReleaseTests.test_failed_download_preserves_private_state_and_releases_lock",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L85",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_metadata_rejects_mutable_draft_prerelease_and_wrong_tag",
+      "label": "ReleaseTests.test_metadata_rejects_mutable_draft_prerelease_and_wrong_tag",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L41",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_only_exact_stable_versions",
+      "label": "ReleaseTests.test_only_exact_stable_versions",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L35",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_safe_archive_extracts_and_rejects_wrong_contents",
+      "label": "ReleaseTests.test_safe_archive_extracts_and_rejects_wrong_contents",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L48",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_symlink_and_size_bounds",
+      "label": "ReleaseTests.test_symlink_and_size_bounds",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L60",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_unsafe_archive_names_and_duplicate_paths_are_rejected",
+      "label": "ReleaseTests.test_unsafe_archive_names_and_duplicate_paths_are_rejected",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L55",
       "type": "method"
     },
     {

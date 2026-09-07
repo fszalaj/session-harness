@@ -21,3 +21,7 @@ documentation when changing installation, discovery or usage policy.
 
 Do not include private usage records, account identifiers, transcripts or review
 packets. Report security issues through [SECURITY.md](SECURITY.md).
+
+Publish versioned releases using [the release procedure](docs/RELEASES.md). Keep
+release tags immutable and consumers on explicit versions; do not rewrite a
+published release to ship a correction.

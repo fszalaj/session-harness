@@ -938,9 +938,12 @@ def main(argv=None):
     if os.environ.get(LEAF_MARKER):
         print(json.dumps({"status": "recursion_blocked"}))
         return 2
-    if arguments and arguments[0] == "setup":
+    if arguments and arguments[0] in {"setup", "configure"}:
         import setup_environment
         return setup_environment.main(arguments[1:])
+    if arguments and arguments[0] in {"version", "update"}:
+        import releases
+        return releases.main(arguments)
     if arguments and arguments[0] == "hooks":
         import claude_gate
         return claude_gate.main(arguments[1:])
@@ -972,7 +975,7 @@ def main(argv=None):
                           "api_services": api,
                           "runtime": {"path": RUNTIME_PATH, "sha256": RUNTIME_SHA256}}, indent=2))
         return 0
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, epilog="Management: configure, version, update, budget, usage, coordination, hooks, inventory, api, spend. Use COMMAND --help for options.")
     sub = parser.add_subparsers(dest="command", required=True)
     discover_parser = sub.add_parser("discover", help="Read CLI catalogs without model inference")
     discover_parser.add_argument("--session", choices=("auto", *PROVIDERS), default="auto")

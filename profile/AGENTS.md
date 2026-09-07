@@ -92,7 +92,10 @@ skill's references, not duplicated here.
 Read applicable repository instructions and only relevant skills/references. Use
 project memory before rediscovering architecture; use its graph before code or
 documentation changes when provided. After each push, check documentation, README
-and skills, synchronize configured local consumers and reinstall maintained profiles.
+and skills and configured consumers against their selected release. Use
+`ai-session configure` for guided settings and `ai-session update` for explicit
+release updates; preserve registered private policy and accounting. Do not move
+maintained profiles to development main silently.
 Keep consumer paths, personal setup and session evidence out of public commits.
 At 60% context use, checkpoint; at 75%, reduce irrelevant context and avoid large
 new work; at 85%, prefer native compaction for the same task. These are advisory

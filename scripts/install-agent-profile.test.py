@@ -15,6 +15,7 @@ import sys
 import tempfile
 import tomllib
 import unittest
+from unittest.mock import patch
 
 
 INSTALLER = Path(__file__).with_name("install-agent-profile.py")
@@ -184,6 +185,7 @@ class ProfileInstallationTests(unittest.TestCase):
         self.assertEqual(json.loads(completed.stdout), ["launch", "codex", "--execute", "--", "resume", "--last"])
         for arguments in (["inventory"], ["budget", "add", "codex", "5", "--id", payload],
                           ["usage", "status", "claude"], ["setup", "--status"], ["setup"],
+                          ["configure", "--status"], ["version"], ["update", "--check"],
                           ["discover", "--session", "claude"], ["review", "codex"], ["--help"], ["-h"]):
             completed = subprocess.run([str(launcher), *arguments], capture_output=True, text=True, check=True)
             self.assertEqual(json.loads(completed.stdout), arguments)
@@ -277,15 +279,57 @@ class ProfileInstallationTests(unittest.TestCase):
         backup = Path(second["backup_root"]) / ".agents/AGENTS.md"
         self.assertEqual(os.readlink(backup), str(Path(first["release_root"]) / "AGENTS.md"))
 
+    def test_private_policy_survives_upgrades_and_missing_policy_blocks(self):
+        policy = self.home / "owner.md"
+        self.write(policy, "# Owner rules\nKeep my workflow.\n")
+        self.run_installer("--apply", "--launcher", "--personal-policy", str(policy))
+        self.instructions.write_text("# Upgraded base\n")
+        self.run_installer("--apply", "--launcher")
+        self.assertIn("Keep my workflow.", (self.home / ".agents/AGENTS.md").read_text())
+        state = MODULE.read_installation_state(self.home)
+        self.assertEqual(state["personal_policy"], str(policy))
+        before = (self.home / ".agents/AGENTS.md").resolve()
+        policy.unlink()
+        self.run_installer("--apply", "--launcher", expected=1)
+        self.assertEqual(before, (self.home / ".agents/AGENTS.md").resolve())
+
+    def test_release_update_and_rollback_keep_private_policy_and_accounting(self):
+        scripts = INSTALLER.parents[1] / "skills/session-harness/scripts"
+        if not scripts.is_dir():
+            scripts = INSTALLER.parents[1] / ".claude/skills/session-harness/scripts"
+        spec = importlib.util.spec_from_file_location("test_release_updater", scripts / "releases.py")
+        updater = importlib.util.module_from_spec(spec); spec.loader.exec_module(updater)
+        self.write(self.skill / "VERSION", "0.1.0\n")
+        policy = self.home / "personal.md"; self.write(policy, "Private owner instructions.\n")
+        self.run_installer("--apply", "--launcher", "--personal-policy", str(policy))
+        ledger = self.home / ".local/state/session-harness/quota.sqlite3"
+        self.write(ledger, "existing setup, budgets, grants, history")
+        destination = self.repo / "scripts/install-agent-profile.py"
+        destination.parent.mkdir(); shutil.copy2(INSTALLER, destination)
+        self.write(self.repo / "RELEASE.json", "{}")
+        for selected in ("0.2.0", "0.1.0"):
+            self.write(self.skill / "VERSION", selected + "\n")
+            self.instructions.write_text("# Base " + selected + "\n")
+            previous = updater.installation(self.home)
+            with patch.object(updater, "download_release", return_value=self.repo):
+                result = updater.update(self.home, {"tag_name": "v" + selected}, previous)
+            self.assertEqual(result["version"], selected)
+            self.assertIn("Private owner instructions.", (self.home / ".agents/AGENTS.md").read_text())
+            self.assertIn(selected, (self.home / ".agents/AGENTS.md").read_text())
+            self.assertEqual(ledger.read_text(), "existing setup, budgets, grants, history")
+            self.assertEqual(updater.installation(self.home)["source"], "release")
+
     def test_corrupted_existing_release_is_not_overwritten_or_relinked(self):
         first = self.run_installer("--apply")
+        state_before = MODULE.installation_state_path(self.home).read_bytes()
         corrupted = Path(first["release_root"]) / "AGENTS.md"
         corrupted.chmod(0o644)
         corrupted.write_text("Unexpected changed release\n")
         result = self.run_installer("--apply", expected=1)
         self.assertIn("Installed release was modified", result["error"])
         self.assertEqual(corrupted.read_text(), "Unexpected changed release\n")
-        self.assertFalse((self.home / ".local/state/session-harness").exists())
+        self.assertEqual(MODULE.installation_state_path(self.home).read_bytes(), state_before)
+        self.assertFalse((self.home / ".local/state/session-harness/backups").exists())
 
 
 class RepositoryProfileContractTests(unittest.TestCase):
@@ -363,6 +407,18 @@ class CheckedCopyTests(unittest.TestCase):
         result, internal = MODULE.plan_install(self.home, self.repo, True, 'copy')
         MODULE.apply_install(result, internal)
         return result
+
+    def test_copy_upgrade_preserves_registered_personal_policy(self):
+        policy = self.home / 'personal.md'; policy.write_text('Private owner rules.\n')
+        command = [sys.executable, str(INSTALLER), '--repo', str(self.repo), '--home', str(self.home),
+                   '--link-mode', 'copy', '--launcher', '--apply']
+        first = subprocess.run([*command, '--personal-policy', str(policy)], capture_output=True, text=True)
+        self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
+        (self.repo / 'profile/AGENTS.md').write_text('# Updated base\n')
+        again = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual(again.returncode, 0, again.stdout + again.stderr)
+        self.assertEqual((self.home / '.codex/AGENTS.md').read_text(), '# Updated base\n\n\n---\n\nPrivate owner rules.\n')
+        self.assertEqual(MODULE.read_installation_state(self.home)['personal_policy'], str(policy))
 
     def test_real_copy_install_idempotence_legal_and_source_removal(self):
         result = self.install()

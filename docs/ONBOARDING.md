@@ -54,23 +54,23 @@ skills only when their discovery and functions remain covered. Preserve local
 modifications and a mapping of old entry points. Do not modify vendor-managed
 system skills or plugin caches. Avoid a broad rewrite of unrelated skills.
 
-The installer snapshots `profile/AGENTS.md` and the maintained harness sources; it
-does not semantically merge existing rules. If personal rules differ, prepare a
-private maintained source copy, merge those rules into its `profile/AGENTS.md`,
-and use `--repo /absolute/path/to/private-source` for both preview and apply.
-Keep personal additions out of a public upstream commit. An existing skill
-directory at a managed destination must be preserved and reconciled before
-installation; do not delete it to clear the installer check.
+The installer snapshots the generic profile and harness sources. Save unique personal
+rules in a private Markdown addendum outside the upstream checkout, then pass
+`--personal-policy /absolute/path/to/personal.md` to preview and apply. Subsequent
+updates reuse that registered file automatically. The installer does not semantically
+merge conflicting policies. An existing skill directory at a managed destination
+must be preserved and reconciled before installation.
 
 ## 3. Test, preview and install globally
 
+Use a published release tag from [README.md](../README.md), rather than tracking `main`.
 From the selected harness checkout:
 
 ```sh
 python3 scripts/test.py
 python3 scripts/install-agent-profile.py --launcher
 python3 scripts/install-agent-profile.py --launcher --apply
-ai-session setup
+ai-session configure
 ```
 
 `ai-session setup` is the owner's explicit environment authorization. Run it
@@ -87,8 +87,8 @@ PowerShell 7.3+ supports the installed `.ps1` launcher; Python can invoke
 `ai-session.py` directly. Copy mode checks drift instead of overwriting user edits.
 Read [platform support](../skills/session-harness/references/platforms.md).
 
-Use the same optional `--repo` on both installer commands when using a private
-merged source. Review preview replacements before applying; installation requested
+Use the same optional `--personal-policy` on both installer commands. `--repo`
+selects the release source checkout when it differs from the installer location. Review preview replacements before applying; installation requested
 by the user covers reversible installation, with unresolved policy conflicts
 handled first. The installer records private backups and a manifest, creates
 verified snapshots, links personal instructions and skills, and installs the
@@ -109,7 +109,9 @@ Keep application rules in the project's `AGENTS.md`. Add a short reference such 
 > the other two provider families when supported. Leaf assignments and trivial
 > tasks do not restart orchestration. Preserve this project's rules.
 
-A project-owned copy is appropriate when the repository needs reviewed, versioned
+Prefer the installed release for projects that need no harness customization. Run
+`ai-session update --check` to inspect releases and `ai-session update` for a confirmed
+update; see [release management](RELEASES.md). A project-owned copy is appropriate when the repository needs reviewed, versioned
 customization. Select one canonical skill directory, link client discovery paths
 where supported, and identify its source and update procedure. Do not copy this
 repository's maintenance policy over another project's `AGENTS.md`.
@@ -221,9 +223,9 @@ UI where documented. File existence and symlink resolution alone are insufficien
 Leave a concise durable record of selected scope, preserved rules, changed skills,
 knowledge/graph integration, tests, restart needs, quota mode and unresolved items.
 Keep private paths/account evidence in private notes. After every push, verify
-README/docs/skills against published code and synchronize configured local consumers
-without publishing their repositories or private setup. Update maintained sources
-and reinstall for future changes; do not edit immutable snapshots in place.
+README/docs/skills and configured consumers against their selected release without
+publishing consumer repositories or private setup. Use explicit release updates;
+do not follow development main or edit immutable snapshots in place.
 
 Rollback uses the manifest to restore only changed paths from private backups.
 Restore symlink text without dereferencing relative links. Preserve new user edits

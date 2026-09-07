@@ -17,12 +17,12 @@ API requests and profile installation support Linux, macOS and Windows. Native
 client execution has the narrower capabilities listed below.
 
 ```sh
-gh repo clone fszalaj/session-harness
+git clone --branch v0.1.0 --depth 1 https://github.com/fszalaj/session-harness.git
 cd session-harness
 python3 scripts/test.py
 python3 scripts/install-agent-profile.py --launcher
 python3 scripts/install-agent-profile.py --launcher --apply
-ai-session setup
+ai-session configure
 ```
 
 `ai-session setup` records the private environment authorization: which native
@@ -38,10 +38,43 @@ setup, budget changes or profile reinstallation never erase budgets, grants or
 history. Noninteractive use needs explicit options, `--mode` and `--yes`; an agent
 must not complete setup on the owner's behalf.
 
-The first installer invocation previews changes. Merge existing personal rules
-before applying; backups alone do not keep replaced rules active. The installer
-creates verified immutable snapshots, a manifest and private backups. Unrelated
-settings and skills are preserved. Restart clients after installation.
+The first installer invocation previews changes. Put unique personal rules in a
+private Markdown file and pass `--personal-policy /absolute/path/to/personal.md`
+to preview and apply. The installer appends those rules to the generic policy and
+remembers that path for updates. Keep it outside this public checkout. Backups
+alone do not keep replaced rules active. Unrelated settings and skills are preserved.
+Restart clients after installation.
+
+## Configure and update
+
+```sh
+ai-session configure             # Guided configuration; Enter keeps current choices
+ai-session configure --status    # Inspect authorized services without changing them
+ai-session version
+ai-session update --check        # Check the latest published release
+ai-session update                # Show the version and ask before installing
+ai-session update --version 0.1.0 --apply  # Pin or return to an exact release
+ai-session claude                # Start a protected session after configuration
+ai-session codex
+```
+
+`configure` is the interactive `setup` command under an easier name. It asks about
+services, APIs, working days, reset cutoff, quota mode and the shared authority;
+existing choices remain the defaults. API selection requires a monthly money budget.
+Use `ai-session budget add SERVICE 5` for an extra allowance today, or
+`ai-session budget use-rest SERVICE` for the remaining available balance.
+
+Updates select published immutable releases, verify SHA-256 checksums and install
+local snapshots. They preserve private policy, environment authorization, budgets,
+grants, usage history and unrelated client settings. Nothing updates in the
+background or follows `main`. Restart clients after updating; already-running
+sessions retain their selected runtime. Rollback uses the same exact-version
+command and does not rewind accounting. See [releases and updates](docs/RELEASES.md).
+
+Most projects need only a short `AGENTS.md` reference to the installed skill. A
+single explicit update then serves those projects. A project with a maintained
+vendored copy keeps its own reviewed version and update procedure; a global update
+does not replace it. Keep application conventions in the project's `AGENTS.md`.
 
 On Windows, use `python` in place of `python3`, install timezone data with
 `python -m pip install -r requirements-windows.txt`, and add `--link-mode copy`
@@ -256,13 +289,13 @@ runners, with read-only permissions and no artifact/cache uploads. These standar
 public runners are [free](https://docs.github.com/en/billing/concepts/product-billing/github-actions);
 larger runners have separate billing and are not used.
 
-The launcher forwards `setup`, `budget`, `inventory`, `usage`, `api`, `spend`,
-`discover`, `review` and `--help` unchanged; any other first argument launches
-that provider. After every push, check README, docs, skill references and commands against the
-published source, synchronize any configured local consumers, reinstall maintained
-profiles and verify a second installer preview reports no changes. Keep consumer
-paths and account evidence in private records. Preserve unrelated changes; do not
-publish consumer repositories without authorization.
+The launcher forwards management commands (`configure`, `setup`, `version`, `update`,
+`budget`, `inventory`, `usage`, `api`, `spend`, `coordination`, `hooks`, `discover`,
+`review`) unchanged; a provider name launches that provider. After every push, check
+README/docs/skills and configured consumers against their selected release. Upgrade
+maintained profiles explicitly when a release is published and verify a second
+installer preview reports no changes. Keep consumer paths and account evidence
+private. Do not publish consumer repositories without authorization.
 
 The private SQLite ledger normally resides at
 `~/.local/state/session-harness/quota/ledger.sqlite3` and respects `XDG_STATE_HOME`.

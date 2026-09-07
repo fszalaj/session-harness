@@ -4,7 +4,8 @@ Use this prompt with a coding assistant that can inspect your local files. Name 
 harness checkout and target project when they are not already clear.
 
 ```text
-Onboard session-harness globally and into this project. Read its README and
+Onboard the latest published stable session-harness release globally and into this project.
+Use a fixed release tag, never a moving main branch for a maintained installation. Read its README and
 docs/ONBOARDING.md and skills/session-harness/references/instructions.md. Identify
 the hosting client and installed clients I use: Codex, Claude Code, Gemini CLI,
 Antigravity, GitHub Copilot (CLI, IDE or GitHub) and Cursor (local or cloud), plus
@@ -33,8 +34,9 @@ Audit relevant user/project-owned skills for necessity,
 length, triggers and actual functions; consolidate duplication without losing
 behavior. Do not edit vendor-managed skills or silently discard conflicts.
 
-Preserve backups before changes. Merge personal policy before applying the
-installer; backups alone do not keep rules active. Use the existing code graph before code, README or documentation changes,
+Preserve backups before changes. Keep unique personal policy in a private Markdown
+addendum outside the public checkout and register it with --personal-policy during
+installation; updates must retain it. Backups alone do not keep rules active. Use the existing code graph before code, README or documentation changes,
 checking measured blind spots in source. Prefer existing project
 knowledge and graph tools, including knowledge-gateway if available, without
 adding a mandatory backend. Document the reading order and durable handoff path.
@@ -88,13 +90,16 @@ context recovery, with a handoff when continuing work.
 
 Run deterministic tests and an install preview, install globally, integrate the
 project, restart or report the required restart, and verify actual discovery and
-idempotence. Then walk me through `ai-session setup` interactively so I authorize
+idempotence. Then walk me through `ai-session configure` interactively so I authorize
 which native and API services may run inference; never complete it with --yes on
 my behalf, and report `environment_setup_required` as the next step if I defer it. Report instruction loading, skill discovery, model access and protected
 execution separately. Copilot/Cursor instruction compatibility does not establish
 working review, quota or manager adapters; Gemini CLI is not an Antigravity adapter.
-After every push, check README/docs/skills against published code, synchronize
-configured local consumers and reinstall maintained profiles. Store consumer paths
+Show ai-session version, update --check, interactive update and an exact-version
+rollback. Prefer a shared installed release plus a short project AGENTS.md reference;
+keep explicitly vendored customizations on their own reviewed version. After every
+push, check README/docs/skills and configured consumers against their selected release.
+Do not silently move maintained profiles to development main. Store consumer paths
 and setup privately; do not publish consumer repositories without authorization.
 Keep the existing explicit quota-mode choice; otherwise use strict mode unless I
 opt into observed-threshold stopping with possible in-flight overshoot. Do not change billing, authentication,

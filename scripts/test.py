@@ -13,7 +13,7 @@ if not tests:
     raise SystemExit("Harness tests are missing")
 tests.append(ROOT / "scripts/install-agent-profile.test.py")
 if (ROOT / "skills/session-harness").is_dir():
-    tests.append(ROOT / "scripts/code_graph.test.py")
+    tests.extend([ROOT / "scripts/code_graph.test.py", ROOT / "scripts/release.test.py"])
 failures = []
 for test in tests:
     print(test.relative_to(ROOT), flush=True)

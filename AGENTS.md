@@ -20,7 +20,8 @@ coding-client and explicit API harness; do not add application-specific policies
 
 - Use the code graph before code and documentation changes; inspect measured blind
   spots in source. After every push, verify README/docs/skills and synchronize
-  configured local consumers. Keep their paths and setup out of public commits.
+  configured local consumers against their selected release; development commits
+  do not automatically upgrade maintained profiles. Keep their paths and setup out of public commits.
 - Query the committed graph with `python scripts/code_graph.py find SYMBOL`,
   `imports FILE` or `importers FILE`. Run `check` to verify freshness; after Python
   changes, stage new source paths and run `build`. See `docs/CODE-GRAPH.md`.

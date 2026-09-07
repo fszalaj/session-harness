@@ -9,9 +9,14 @@ Use the active client's native agent controls, with the local CLI helper for
 provider discovery and isolated reviews. This is a manager/worker workflow with
 independent review, not a replacement for the clients' permission controls.
 
+Installed release maintenance uses `ai-session version`, `ai-session update --check`
+and the confirmed `ai-session update`. An exact `--version X.Y.Z --apply` also supports
+rollback. Preserve private policy and usage history. Updates never follow `main`;
+project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
+
 ## 0. Check resources before dispatch
 
-Run `ai-session setup` before inference. For multiple computers, select one trusted
+Run `ai-session configure` (alias: `setup`) before inference. For multiple computers, select one trusted
 SSH quota authority on every participating client; local ledgers are not a shared
 account lock. Use `ai-session coordination status`. Default ownership is one active
 session per service. Never clone a ledger or delete an owner row to bypass a stop.

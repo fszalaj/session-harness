@@ -54,9 +54,14 @@ def launcher_content(runtime: Path) -> bytes:
         '"""Launch the current provider through the shared session harness."""\n'
         "import os\n"
         "import sys\n\n"
+        f"python = {sys.executable!r}\n"
+        "if os.name != 'nt' and sys.executable != python:\n"
+        "    os.execv(python, [python, *sys.argv])\n"
         f"runtime = {str(runtime)!r}\n"
         "args = sys.argv[1:]\n"
-        "if args and args[0] in {'setup', 'coordination', 'hooks', 'budget', 'inventory', 'usage', 'api', 'spend', 'discover', 'review', '--help', '-h'}:\n"
+        "if not args:\n"
+        "    forwarded = ['--help']\n"
+        "elif args[0] in {'setup', 'configure', 'version', 'update', 'coordination', 'hooks', 'budget', 'inventory', 'usage', 'api', 'spend', 'discover', 'review', '--help', '-h'}:\n"
         "    forwarded = args\n"
         "else:\n"
         "    forwarded = ['launch', *args[:1], '--execute', *args[1:]]\n"
@@ -111,8 +116,8 @@ def file_digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def plan_copy(home, repo, include_launcher):
-    payload, native = release_sources(repo)
+def plan_copy(home, repo, include_launcher, personal_policy=None):
+    payload, native = release_sources(repo, personal_policy)
     source_hash = release_hash(payload)
     release = home / '.local/share/session-harness/releases' / source_hash
     state_path = copy_state_path(home)
@@ -249,7 +254,7 @@ def _apply_copy_locked(result, internal):
         write_manifest(run, result)
 
 
-def release_sources(repo: Path) -> tuple[dict, list]:
+def release_sources(repo: Path, personal_policy: Path | None = None) -> tuple[dict, list]:
     profile = repo / "profile"
     skill = repo / "skills/session-harness"
     legal_root = repo
@@ -293,6 +298,13 @@ def release_sources(repo: Path) -> tuple[dict, list]:
             raise InstallationError(f"Snapshot source must be a regular file: {path}")
         mode = 0o555 if path.stat().st_mode & 0o111 else 0o444
         payload[relative] = {"content": path.read_bytes(), "mode": mode}
+    if personal_policy is not None:
+        if not personal_policy.is_file() or personal_policy.is_symlink():
+            raise InstallationError("Personal policy must be a regular private Markdown file")
+        extra = personal_policy.read_bytes()
+        if len(extra) > 128 * 1024:
+            raise InstallationError("Personal policy is too large; move detail to on-demand references")
+        payload["AGENTS.md"]["content"] += b"\n\n---\n\n" + extra
     return payload, native
 
 
@@ -366,17 +378,17 @@ def install_release(result: dict, payload: dict) -> None:
             shutil.rmtree(staging)
 
 
-def plan_install(home: Path, repo: Path, include_launcher: bool, link_mode="symlink") -> tuple[dict, dict]:
+def plan_install(home: Path, repo: Path, include_launcher: bool, link_mode="symlink", personal_policy=None) -> tuple[dict, dict]:
     for variable, directory in [("CODEX_HOME", ".codex"), ("CLAUDE_CONFIG_DIR", ".claude"),
                                 ("COPILOT_HOME", ".copilot")]:
         override = os.environ.get(variable)
         if override and Path(override).expanduser().resolve() != (home / directory).resolve():
             raise InstallationError(f"Custom {variable} is unsupported by this installer; preserve it and configure its instruction links explicitly")
     if link_mode == 'copy':
-        return plan_copy(home, repo, include_launcher)
+        return plan_copy(home, repo, include_launcher, personal_policy)
     if link_mode != 'symlink':
         raise InstallationError('Link mode must be symlink or copy')
-    payload, native = release_sources(repo)
+    payload, native = release_sources(repo, personal_policy)
     source_hash = release_hash(payload)
     release = home / ".local/share/session-harness/releases" / source_hash
     if release.exists() or release.is_symlink():
@@ -529,6 +541,46 @@ def apply_install(result: dict, internal: dict) -> None:
             write_manifest(backup_run, result)
 
 
+def installation_state_path(home):
+    return home / ".local/state/session-harness/installation.json"
+
+
+def read_installation_state(home):
+    path = installation_state_path(home)
+    if WINDOWS:
+        windows_security().reject_reparse(path)
+    if path.is_symlink():
+        raise InstallationError("Installation state must not be a symlink")
+    if not path.exists():
+        return {}
+    value = json.loads(path.read_text())
+    if not isinstance(value, dict) or value.get("schema") != 1:
+        raise InstallationError("Unknown installation state; preserve and reconcile it first")
+    return value
+
+
+def save_installation_state(home, repo, result, personal_policy, link_mode, include_launcher):
+    version_path = repo / "skills/session-harness/VERSION"
+    if not version_path.exists():
+        version_path = repo / ".claude/skills/session-harness/VERSION"
+    state = dict(schema=1, version=version_path.read_text().strip() if version_path.exists() else "unversioned",
+                 source="release" if (repo / "RELEASE.json").is_file() else "checkout",
+                 source_hash=result["source_hash"], link_mode=link_mode, launcher=include_launcher,
+                 personal_policy=str(personal_policy) if personal_policy else None,
+                 instructions_sha256=file_digest(home / ".agents/AGENTS.md"))
+    path = installation_state_path(home)
+    if read_installation_state(home) == state:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    temporary = path.with_name(".installation-" + uuid.uuid4().hex)
+    try:
+        temporary.write_text(json.dumps(state, indent=2) + "\n")
+        set_permissions(temporary, 0o600)
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--home", type=Path, default=Path.home(), help="Profile home (default: current home)")
@@ -537,17 +589,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--apply", action="store_true", help="Apply the previewed links with private backups")
     parser.add_argument("--link-mode", choices=("symlink", "copy"), default="symlink",
                         help="Explicit checked-copy mode supports homes without symlink privileges")
+    parser.add_argument("--personal-policy", type=Path, help="Private Markdown addendum, preserved across updates")
     parser.add_argument("--launcher", action="store_true", help="Also install ~/.local/bin/ai-session")
     args = parser.parse_args(argv)
     result = {"mode": "apply" if args.apply else "dry-run"}
     try:
         home = args.home.expanduser().resolve()
         repo = args.repo.expanduser().resolve()
-        plan, internal = plan_install(home, repo, args.launcher, args.link_mode)
+        previous = read_installation_state(home)
+        personal_policy = args.personal_policy or previous.get("personal_policy")
+        personal_policy = Path(personal_policy).expanduser().absolute() if personal_policy else None
+        plan, internal = plan_install(home, repo, args.launcher, args.link_mode, personal_policy)
         result.update(plan)
         if args.apply:
             apply_install(result, internal)
-    except (InstallationError, OSError) as error:
+            save_installation_state(home, repo, result, personal_policy, args.link_mode, args.launcher)
+    except (InstallationError, OSError, ValueError) as error:
         result["error"] = str(error)
         print(json.dumps(result, indent=2))
         return 1
