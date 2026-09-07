@@ -117,6 +117,7 @@ def download_release(metadata, destination):
     advertised = assets[name].get("digest")
     if advertised and advertised != "sha256:" + digest:
         raise ValueError("GitHub asset digest mismatch")
+    metadata['_verified_archive_sha256'] = digest
     return unpack(data, destination, selected)
 
 

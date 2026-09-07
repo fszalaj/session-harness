@@ -205,15 +205,26 @@ def require_admission(service, *, ledger=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("refresh", "status", "check", "capture", "context", "hook"))
+    parser.add_argument("action", choices=("refresh", "status", "check", "capture", "context", "hook", "credit-policy"))
     parser.add_argument("service", nargs="?", choices=("codex", "claude", "antigravity", "copilot", "cursor"))
     parser.add_argument("--initialize", action="store_true", help="Explicit prospective first baseline; prior daily use stays unknown")
     parser.add_argument("--db")
     parser.add_argument("--timezone", default=None)
     parser.add_argument("--renderer", help="Existing trusted statusline command; forward its original input/output")
+    policy = parser.add_mutually_exclusive_group()
+    policy.add_argument("--auto-top-up", choices=("disabled",), help="Record the owner's explicit account setting confirmation")
+    policy.add_argument("--revoke-credit-policy", action="store_true", help="Remove the account's owner confirmation")
     args = parser.parse_args(argv)
     raw = None
     try:
+        if args.action == "credit-policy":
+            if args.service != "codex" or args.db:
+                parser.error("credit-policy supports the current Codex account only")
+            print(json.dumps(credits.configure_codex_policy(disabled=args.auto_top_up == "disabled",
+                                                           revoke=args.revoke_credit_policy), indent=2))
+            return 0
+        if args.auto_top_up or args.revoke_credit_policy:
+            parser.error("credit policy options require the credit-policy action")
         if args.action in {"capture", "context"}:
             raw = sys.stdin.buffer.read(256 * 1024 + 1)
             if len(raw) > 256 * 1024:

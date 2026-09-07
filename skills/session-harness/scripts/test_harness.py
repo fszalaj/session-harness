@@ -182,6 +182,21 @@ class DiscoveryTests(unittest.TestCase):
         self.assertNotIn("private", json.dumps(result))
         probe.assert_not_called()
 
+    def test_claude_concrete_catalog_supersedes_unresolved_aliases(self):
+        help_text = "--effort <level> Effort (low, medium, high, max)\n--safe-mode --tools --strict-mcp-config --disable-slash-commands --no-session-persistence --permission-mode --mcp-config"
+        auth = {"loggedIn": True, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max"}
+        models = [{"id": name, "account_selectable": True,
+                   "native_controls": {"reasoning_efforts": ["low", "medium", "high", "max"]}}
+                  for name in ["best", "sonnet", "claude-opus-99-9", "claude-fable-99-10[1m]"]]
+        with patch.object(harness, "checked", side_effect=[help_text, json.dumps(auth)]), \
+                patch("claude_models.discover", return_value={"models": models, "status": "client_selectable_metadata"}):
+            result = harness.discover_claude("mock-claude")
+        self.assertEqual("claude-fable-99-10[1m]", result["planner"]["model"])
+        self.assertEqual("max", result["planner"]["effort"])
+        self.assertEqual("claude-fable-99-10[1m]", result["worker"]["model"])
+        self.assertEqual("medium", result["worker"]["effort"])
+        self.assertFalse(result["entitlement_verified"])
+
 
 class ExecutionTests(unittest.TestCase):
     def test_bounded_slow_quota_poll_resumes_pipe_drain(self):

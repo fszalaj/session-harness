@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- Carry the existing verified client repairs: account-bound Codex confirmation of
+  disabled automatic credit top-up, sparse disabled Antigravity credit settings,
+  and concrete current Claude catalog selection. No paid fallback is enabled.
+
+- Add explicitly enabled automatic immutable stable updates on macOS and Linux,
+  with configurable cadence, scheduler status, newer-version comparison and disable.
+- Coordinate idle activation with an account-wide maintenance reservation; retain
+  locks on ambiguous failures and provide explicit stopped-updater recovery.
+- Verify local overlays and managed installation paths, preserve private policy
+  and accounting, and roll back known profile changes after activation failure.
+- Document optional shared-host activation hooks, scheduler delivery boundaries,
+  release integrity and recovery. Existing installations remain opted out.
+
 ## 0.1.2
 
 - Separate configurable session capacity from shared quota, with four sessions for

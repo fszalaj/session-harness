@@ -1,17 +1,17 @@
 {
-  "content_sha256": "5877ffa5ce25f94ce8c4f58c3a7d45a8302a23be535ded6b47ad96c7a057b7fd",
+  "content_sha256": "114418fd533bf3f279f6ae60b4c624ebdefad3cc95878e4a77cfbe50caebc755",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 1777,
+    "edge_count": 2058,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 997,
+    "node_count": 1130,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
       "scripts/code_graph.py": "fa7c041129167808a7a3cc44fed5534c57ba31da2bf42cddc470f549e3fd58b3",
       "scripts/code_graph.test.py": "5baef7e0c95ef579828bfbceab61c7b3792c05c160714378bdfe6580ce40d423",
-      "scripts/install-agent-profile.py": "29fbcde01f158c43258e727d90c8625b2386631441de0e3b783cf03ac3b9aafe",
+      "scripts/install-agent-profile.py": "31640f6d227c2bd27a5bbdc93f67d48def51727035a90ed4cc5a584eae22dba9",
       "scripts/install-agent-profile.test.py": "3fcdfc3f9cdeb785063c4e94beaae2168516ce2af9664a26d4dcb7293101e688",
       "scripts/release.py": "711b3c849d21285dd7932338e1ed145e9e5a1566dfc7c6d7e3f0876f424c53db",
       "scripts/release.test.py": "c0cabc31299955487c013852d4d1956b4c05c785ac7dd78927a360960027dcaa",
@@ -20,20 +20,23 @@
       "skills/session-harness/scripts/api_execution.py": "e8baf738b118fec39a04a3d1798acd5b4964c4bf22ab11dc5d8e33154b1f6b65",
       "skills/session-harness/scripts/api_providers.py": "274cea4c40c494a18895ba346af9c7ec16ff8f191486157a04df4692302cb687",
       "skills/session-harness/scripts/api_transport.py": "3e06e183260978018619b8b2fe4d4dfa3d0a0961273e360cfb687789f884546c",
+      "skills/session-harness/scripts/auto_install.py": "d706fea12603b9e9d0179ad93a9ba1c352948d7c3940df8316c0a6741f4e713c",
+      "skills/session-harness/scripts/auto_scheduler.py": "b8f8bd43374bb6206eee6804f94a43f8bfc6e3d9e5f8de29dc5fcff6b3062563",
+      "skills/session-harness/scripts/auto_update.py": "e239364ffb34a1bd1d9ee3e08c837bcaabcc5a569ebce2ed867302ccf5df1706",
       "skills/session-harness/scripts/budget_cli.py": "a6f6d39897920b29247e9cac91678e30a3050939d0ae38fd8492c3d29b60a68f",
       "skills/session-harness/scripts/budget_policy.py": "1d436917270dd50ad553b5d87f76b5219d8f67f39d822312f402822cc9553906",
       "skills/session-harness/scripts/claude_gate.py": "609f38ba5dae2527b787304e90151b97ac91d5a3c2605d40e0e9041be8dc41e1",
       "skills/session-harness/scripts/claude_models.py": "a0184dfb93b40b53305cf8acec153de72cfc297d0c6554fcbb33716fcb9c7a2b",
-      "skills/session-harness/scripts/coordination.py": "5a43759572c638ac481acf2fa3f8545ddf2e459a368cc8a12d6a0c1ece62abd8",
-      "skills/session-harness/scripts/credits.py": "1f7a2b5de81cd7a88bec954f81d167a06e26e0890e1c9384afb35bf579bc4465",
-      "skills/session-harness/scripts/harness.py": "00586580f65477c1270cb1c95e8135174e27b25988ee6e158c940c06015fa368",
+      "skills/session-harness/scripts/coordination.py": "0bda8defcf7fac4f2a60387cbf258b60a1f9a6c75a6ec87b754795edfdab6acf",
+      "skills/session-harness/scripts/credits.py": "a8c7562ee61997f2ada6322eb6369c9d8129c4a805615afaea3bc11f954c918c",
+      "skills/session-harness/scripts/harness.py": "cc0175ee63f8cec42779826bd517a35a8d99e63bcbcde7ac21fedd9f960efaa3",
       "skills/session-harness/scripts/inventory.py": "a25b6663c9b00b95202ade571daf574b5264bd69292d00fb84402aecdd9640a3",
       "skills/session-harness/scripts/native_quota.py": "ecda56527babe591c8f21e83ab6891bebd9ad070be10e3de16b7ccc859035dca",
       "skills/session-harness/scripts/optional_clients.py": "6a8192702eb2f0a7b9722a5352e6dcbcd628456ed3bbf2f75cc1217ed36e496c",
       "skills/session-harness/scripts/platform_runtime.py": "ad507d0542b283953041c1eb2e1e5bde0b4f9d59b6f568d9e6ff3af79ffc1f62",
       "skills/session-harness/scripts/quota.py": "63b9104699487a0539e1ef22ec3bfdc3bdfaba94fd2ac6a5696379bf20dfe0c3",
       "skills/session-harness/scripts/quota_refresh.py": "f813b187f8178310015fea2664f42f49ef1b2c84a34438bf56ff0048894fb262",
-      "skills/session-harness/scripts/releases.py": "1edd8b4bb014dd92f60cd1a46422e764ebf2bcd1afa6a791175d4882cd265e88",
+      "skills/session-harness/scripts/releases.py": "9b465697065360e3d03771421532d8fa87488bdcfdd1f46efb8ee0a6e9eafded",
       "skills/session-harness/scripts/setup_environment.py": "97f4304112f1dbf61b8e4420372599f97436c44f424d37bd99747b191ad230d3",
       "skills/session-harness/scripts/spend.py": "f808ea30f9f3ae7d141065f6c968dea5a3db26053670f4aa6cc069d20d2b1600",
       "skills/session-harness/scripts/spend_cli.py": "60271671526d4443f48c8e1661ec88f1b90b2b4b0d399c11c316434096b2b086",
@@ -42,15 +45,17 @@
       "skills/session-harness/scripts/test_api_execution.py": "b420773d3b2d3d05558e6e73580ffe7b6c6387206c53194301f8d99aea898d88",
       "skills/session-harness/scripts/test_api_providers.py": "4cef0d2d8b14547e4aa08e7e564ec3a7df1bdc76c3ac254cef3c5865d90fd7df",
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
+      "skills/session-harness/scripts/test_auto_update.py": "a29db6d1192c5eeae27bef83a2acf95ebbeed665ee169466c1cf475c95f31aeb",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "56f5522d46e76201981426d222144ccc07e680cdc2d5ba2f827c38cb0b7a7cf3",
       "skills/session-harness/scripts/test_budget_unknown_reset.py": "5120bb55cba23b45ec3f5d6f37d9559aed33027c5798d3b333c51b789de94643",
       "skills/session-harness/scripts/test_claude_models.py": "22d0c1d7ebb3dc409b6eb5c07f4ed4d3beff36def13e18568b375defda8b237e",
       "skills/session-harness/scripts/test_coordination.py": "3d3b58600b8aa3d75733061410c748b6131b2fd986287f6b7d9dbc4c297acd7b",
-      "skills/session-harness/scripts/test_credits.py": "d30eaf738690b17c90fa16b3f29f24d7346c56bf88466235a7d062c23f9797a2",
-      "skills/session-harness/scripts/test_harness.py": "96b820e9ffb9a804a311634f431342abdfc532b7a5303d51ff986cb28073af1c",
+      "skills/session-harness/scripts/test_credits.py": "f3ca4f9e9988932b45ba9be7cc7640093ba9c20fa01833fb45a231c083455e50",
+      "skills/session-harness/scripts/test_harness.py": "12dc956fa17b805e04490a0cf4272e0e53efc51e4bf86e28525c9fe3179c7df2",
       "skills/session-harness/scripts/test_inventory.py": "3d460c6cfe3c679e600ee4be1fc9b2980f906551a259e3b6ce70d89979c6957c",
+      "skills/session-harness/scripts/test_maintenance.py": "25b1b96761f7e4d614af5cceb4eb79c54b51c729d43173b1de2d29ba88a8ca76",
       "skills/session-harness/scripts/test_native_quota.py": "88dbbdec4498d9437b5b8e30891984362aec08cd377065fb7a6244f50ba359a7",
       "skills/session-harness/scripts/test_optional_clients.py": "39bc13b222daf9636301b2df66f648d1c860dad0218ca553bfb9051b0d938766",
       "skills/session-harness/scripts/test_platform_runtime.py": "361f83baa81bce13abe74186090be8ae90bcf49d519a24f68b233842a9204df5",
@@ -62,8 +67,8 @@
       "skills/session-harness/scripts/test_spend.py": "89219080c1b1561e61c74d4a9f1d98fa2237f849e11ceede30c20cb050747d52",
       "skills/session-harness/scripts/test_spend_pacing.py": "a9fd80c394f38a3a4337fd1e79c5d4eb8f916a549ea3234825eed5e95db34012",
       "skills/session-harness/scripts/test_supervision.py": "05dfbe2e13c39490cdb57072d00b5fdd790afbdb0d52f1ea9e1eb5c6d68eeda9",
-      "skills/session-harness/scripts/test_usage.py": "b743ea1e9abb2a046aaaa96fa0b127b600663733de1eda2048f3ed0a2ceb3db1",
-      "skills/session-harness/scripts/usage.py": "4fe06b937ca7d43c441ce115a2c7a8b0b74693e74d04e9502b3e7c96f9b52b57",
+      "skills/session-harness/scripts/test_usage.py": "1090af40fd6c8ce108de3598b3cdf8008f1b0ec0c71d0c79ee6bb01ca407840a",
+      "skills/session-harness/scripts/usage.py": "fb8e771646c691e1e0ca85d8fd621a114d546db9ef67de944bfe0d023056fa47",
       "skills/session-harness/scripts/windows_security.py": "0bbfc63ebae207aba1ac61a806f49b24f0677c449a6b409cbe0b21f9f774fe00"
     }
   },
@@ -1211,6 +1216,462 @@
     {
       "confidence": "EXTRACTED",
       "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:base64"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:importlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:re"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:stat"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:sys"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:uuid"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "module:skills/session-harness/scripts/releases.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:atomic"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:backup"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:baseline"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:expected_paths"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:footprint"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:installer"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:plan_install"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:read_json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:register"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:registered"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:restore"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:save"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:sha"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:snapshot"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:state_path"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_candidate_launcher"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_footprint"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "extmodule:plistlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "extmodule:sys"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "module:skills/session-harness/scripts/auto_update.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:command"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:definitions"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:environment"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:install"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:platform"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:status"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:uninstall"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:argparse"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:contextlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:signal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:sqlite3"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:sys"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:time"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "extmodule:uuid"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "module:skills/session-harness/scripts/auto_install.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "module:skills/session-harness/scripts/auto_scheduler.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "module:skills/session-harness/scripts/coordination.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "module:skills/session-harness/scripts/quota.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "module:skills/session-harness/scripts/releases.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyclass:skills/session-harness/scripts/auto_update.py:AmbiguousActivation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:authority_status"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:config"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:disable"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:enable"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:existing_ledger"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:hook_call"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:journal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:main"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:record"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:recover"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:run"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:save_config"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/auto_update.py",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:status"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
       "source": "module:skills/session-harness/scripts/budget_cli.py",
       "target": "extmodule:argparse"
     },
@@ -1566,6 +2027,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/coordination.py",
+      "target": "extmodule:math"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coordination.py",
       "target": "extmodule:os"
     },
     {
@@ -1614,7 +2081,31 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/coordination.py",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coordination.py",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance_status"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coordination.py",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_sessions"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coordination.py",
       "target": "pyfunc:skills/session-harness/scripts/coordination.py:_settings"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coordination.py",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_validate_maintenance"
     },
     {
       "confidence": "EXTRACTED",
@@ -1680,6 +2171,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/credits.py",
       "target": "extmodule:pathlib"
     },
     {
@@ -1693,6 +2190,18 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/credits.py",
       "target": "extmodule:stat"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "extmodule:time"
     },
     {
       "confidence": "EXTRACTED",
@@ -1716,13 +2225,43 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_account_fingerprint"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_owner_policy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/credits.py",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_resources"
     },
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_subscription_only"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:configure_codex_policy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/credits.py",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:copilot_resources"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:credit_policy_path"
     },
     {
       "confidence": "EXTRACTED",
@@ -1753,6 +2292,12 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/credits.py",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:native_reasons"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/credits.py",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:private_json"
     },
     {
       "confidence": "EXTRACTED",
@@ -1867,6 +2412,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/harness.py",
       "target": "module:skills/session-harness/scripts/api_providers.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/harness.py",
+      "target": "module:skills/session-harness/scripts/auto_update.py"
     },
     {
       "confidence": "EXTRACTED",
@@ -3647,6 +4198,114 @@
     {
       "confidence": "EXTRACTED",
       "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:contextlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:plistlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:shutil"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:sys"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "module:skills/session-harness/scripts/auto_install.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "module:skills/session-harness/scripts/auto_scheduler.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "module:skills/session-harness/scripts/auto_update.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "module:skills/session-harness/scripts/coordination.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "module:skills/session-harness/scripts/quota.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "module:skills/session-harness/scripts/releases.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_auto_update.py",
+      "target": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_budget_calendar.py",
       "target": "extmodule:contextlib"
     },
@@ -4092,6 +4751,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_credits.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_credits.py",
       "target": "extmodule:pathlib"
     },
     {
@@ -4141,6 +4806,12 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/test_credits.py",
       "target": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_credits.py",
+      "target": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests"
     },
     {
       "confidence": "EXTRACTED",
@@ -4345,6 +5016,78 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/test_inventory.py",
       "target": "pyclass:skills/session-harness/scripts/test_inventory.py:InventoryTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:concurrent"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:contextlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:io"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:multiprocessing"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "module:skills/session-harness/scripts/coordination.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "module:skills/session-harness/scripts/quota.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_maintenance.py",
+      "target": "pyfunc:skills/session-harness/scripts/test_maintenance.py:race_operation"
     },
     {
       "confidence": "EXTRACTED",
@@ -6491,6 +7234,270 @@
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_launchd_install_uninstall_loads_and_removes_only_owned_plist"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_launchd_keeps_absolute_argument_boundaries"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_systemd_escapes_paths_and_rejects_control_characters"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_systemd_install_uninstall_preserves_changed_definitions"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.assert_timeout_retains_maintenance"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.assert_unconfirmed_hook_exit_retains_maintenance"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.enabled"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.hook_processes"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.install"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.network"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.overlay"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.run_update"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.source"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.state_rows"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_acquire_lost_acknowledgement_retains_recorded_owner_for_recovery"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_activation_hook_failure_rolls_back_profile_and_receipts"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_activation_timeout_retains_maintenance_and_update_lock"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_busy_native_owner_defers_without_touching_owner"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_changed_authority_requires_explicit_reenable"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_disable_during_active_update_does_not_stop_scheduler_or_owner"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_disabled_default_never_checks_release_or_admission"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_empty_ledger_is_not_initialized_by_maintenance"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_enable_requires_loaded_scheduler_and_disable_unloads"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_hook_timeout_with_unconfirmed_process_exit_retains_maintenance"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_incoming_installer_without_auto_update_route_preserves_current_installation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_managed_link_drift_is_preserved_and_defers"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_missing_ledger_never_creates_replacement_accounting"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_newer_only_and_cadence_prevent_download_or_maintenance"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_overlay_conflict_keeps_current_installation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_partial_installer_failure_restores_changed_instructions_and_old_receipt"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_does_not_remove_nonempty_lock_evidence"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_of_stopped_empty_lock_retains_prior_journal_and_accounting"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_refuses_authority_maintenance_even_when_local_is_idle"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_refuses_local_maintenance_and_preserves_evidence"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_registered_overlay_absorbed_when_release_matches"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_registered_overlay_carries_forward"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_signaled_hook_exit_retains_maintenance_without_rollback"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_snapshot_bytes_drift_defers_before_download"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_temporary_failure_hook_exit_retains_maintenance_without_rollback"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_unregistered_installation_cannot_enable_or_auto_reconcile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_upgrade_then_second_run_preserves_private_policy_and_ledger"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.writable_cleanup"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_budget_calendar.py:CalendarDefaultsTests",
       "target": "pymethod:skills/session-harness/scripts/test_budget_calendar.py:CalendarDefaultsTests.setUp"
     },
@@ -7176,7 +8183,7 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
-      "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_absent_key_and_file_are_unknown"
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_absent_key_and_file_use_documented_disabled_default"
     },
     {
       "confidence": "EXTRACTED",
@@ -7200,13 +8207,103 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_invalid_state_recovers_and_encoding_is_checked"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
       "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_malformed_controls_fail_closed"
     },
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_non_directory_parent_and_permission_errors_deny"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
       "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_refresh_attaches_setting_without_changing_native_quota_evidence"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_sparse_persistence_preserves_disabled_admission"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_symlink_and_read_errors_are_not_defaults"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_symlink_swap_after_lstat_is_rejected"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.confirm"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_cli_records_only_explicit_confirmation_and_supports_revoke"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_confirmation_allows_zero_credits_without_changing_native_metadata"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_corrupt_future_symlink_and_public_policy_are_denied"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_policy_cannot_clear_quota_strict_or_setup_denials"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_positive_unknown_conflicting_and_malformed_credits_still_block"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_revocation_restores_gate_without_other_state_writes"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_switching_account_or_api_auth_invalidates_confirmation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.write_auth"
     },
     {
       "confidence": "EXTRACTED",
@@ -7261,6 +8358,12 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests",
       "target": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_read_only_usage_output_has_only_normalized_credit_data"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_credits.py:CreditMetadataTests",
+      "target": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.setUp"
     },
     {
       "confidence": "EXTRACTED",
@@ -7363,6 +8466,12 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_harness.py:DiscoveryTests",
       "target": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_claude_auth_output_excludes_personal_account_fields"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_harness.py:DiscoveryTests",
+      "target": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_claude_concrete_catalog_supersedes_unresolved_aliases"
     },
     {
       "confidence": "EXTRACTED",
@@ -7813,6 +8922,66 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_inventory.py:InventoryTests",
       "target": "pymethod:skills/session-harness/scripts/test_inventory.py:InventoryTests.test_vendor_and_generation_are_scoped"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_acquire_idempotent_exact_release_and_stale_attention"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_all_services_make_busy_and_preserve_owners"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_corrupt_state_fails_closed"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_held_maintenance_denies_without_setup_or_quota_inference"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_recovery_cli_and_status_surface_state"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_remote_metadata_without_setup_and_no_old_authority_fallback"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_second_concurrent_contender_is_busy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_separate_process_admit_race_excludes_maintenance"
     },
     {
       "confidence": "EXTRACTED",
@@ -9437,6 +10606,396 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:backup",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:backup",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:save"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:baseline",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:installer"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:baseline",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:read_json"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:expected_paths",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:footprint"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:expected_paths",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:sha"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:footprint",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:sha"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:baseline"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:plan_install"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:sha"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:state_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_candidate_launcher"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:atomic"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:baseline"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:footprint"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:save"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:sha"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:snapshot"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:state_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:registered",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:read_json"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:registered",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:snapshot"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:registered",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:state_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:registered",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_footprint"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:restore",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:save",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:atomic"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_candidate_launcher",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:state_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_footprint",
+      "target": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:command",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:environment"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:definitions",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:platform"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:install",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:command"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:install",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:definitions"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:install",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:platform"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:install",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:status",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:command"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:status",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:platform"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:uninstall",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:command"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:uninstall",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:definitions"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:uninstall",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:platform"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:uninstall",
+      "target": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:disable",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:disable",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:save_config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:enable",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:authority_status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:enable",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:enable",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:existing_ledger"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:enable",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:save_config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:disable"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:enable"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:recover"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:run"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:recover",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:authority_status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:recover",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:existing_ledger"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:recover",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:journal"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:recover",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:record"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:authority_status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:existing_ledger"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:hook_call"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:journal"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:record"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:status",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:authority_status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:status",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:status",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:existing_ledger"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/auto_update.py:status",
+      "target": "pyfunc:skills/session-harness/scripts/auto_update.py:journal"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/budget_cli.py:main",
       "target": "pyfunc:skills/session-harness/scripts/budget_cli.py:display"
     },
@@ -9665,8 +11224,20 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_validate_maintenance"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/coordination.py:_settings",
       "target": "pyfunc:skills/session-harness/scripts/coordination.py:validate_settings"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:configure",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance"
     },
     {
       "confidence": "INFERRED",
@@ -9684,6 +11255,12 @@
       "confidence": "INFERRED",
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/coordination.py:dispatch",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_validate_maintenance"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:dispatch",
       "target": "pyfunc:skills/session-harness/scripts/coordination.py:local"
     },
     {
@@ -9691,6 +11268,24 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/coordination.py:dispatch",
       "target": "pyfunc:skills/session-harness/scripts/coordination.py:settings"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:local",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:local",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance_status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:local",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_sessions"
     },
     {
       "confidence": "INFERRED",
@@ -9739,6 +11334,24 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/coordination.py:main",
       "target": "pyfunc:skills/session-harness/scripts/coordination.py:settings"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:session_status",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:session_status",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance_status"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coordination.py:session_status",
+      "target": "pyfunc:skills/session-harness/scripts/coordination.py:_sessions"
     },
     {
       "confidence": "INFERRED",
@@ -9797,6 +11410,30 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:codex_account_fingerprint",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:private_json"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:codex_owner_policy",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_account_fingerprint"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:codex_owner_policy",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:credit_policy_path"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:codex_owner_policy",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:private_json"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/credits.py:codex_resources",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:decimal_amount"
     },
@@ -9823,6 +11460,30 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/credits.py:codex_resources",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:validate_resources"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:codex_subscription_only",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_owner_policy"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:configure_codex_policy",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_account_fingerprint"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:configure_codex_policy",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_owner_policy"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:configure_codex_policy",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:credit_policy_path"
     },
     {
       "confidence": "INFERRED",
@@ -9858,6 +11519,12 @@
       "confidence": "INFERRED",
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/credits.py:gate",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:configure_codex_policy"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:gate",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:native_reasons"
     },
     {
@@ -9871,6 +11538,12 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/credits.py:native_reasons",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:antigravity_resources"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/credits.py:native_reasons",
+      "target": "pyfunc:skills/session-harness/scripts/credits.py:codex_subscription_only"
     },
     {
       "confidence": "INFERRED",
@@ -9990,7 +11663,19 @@
       "confidence": "INFERRED",
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/harness.py:discover_claude",
+      "target": "pyfunc:skills/session-harness/scripts/harness.py:generation"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/harness.py:discover_claude",
       "target": "pyfunc:skills/session-harness/scripts/harness.py:select_effort"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/harness.py:discover_claude",
+      "target": "pyfunc:skills/session-harness/scripts/harness.py:select_models"
     },
     {
       "confidence": "INFERRED",
@@ -10081,6 +11766,12 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/harness.py:review",
       "target": "pyfunc:skills/session-harness/scripts/harness.py:codex_review_argv"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/harness.py:review",
+      "target": "pyfunc:skills/session-harness/scripts/harness.py:generation"
     },
     {
       "confidence": "INFERRED",
@@ -10743,6 +12434,9 @@
       "id": "extmodule:ast"
     },
     {
+      "id": "extmodule:base64"
+    },
+    {
       "id": "extmodule:calendar"
     },
     {
@@ -10807,6 +12501,9 @@
     },
     {
       "id": "extmodule:pathlib"
+    },
+    {
+      "id": "extmodule:plistlib"
     },
     {
       "id": "extmodule:posixpath"
@@ -10971,6 +12668,27 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/auto_install.py",
+      "label": "skills/session-harness/scripts/auto_install.py",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/auto_scheduler.py",
+      "label": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/auto_update.py",
+      "label": "skills/session-harness/scripts/auto_update.py",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/budget_cli.py",
       "label": "skills/session-harness/scripts/budget_cli.py",
       "source_file": "skills/session-harness/scripts/budget_cli.py",
@@ -11125,6 +12843,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_auto_update.py",
+      "label": "skills/session-harness/scripts/test_auto_update.py",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/test_budget_calendar.py",
       "label": "skills/session-harness/scripts/test_budget_calendar.py",
       "source_file": "skills/session-harness/scripts/test_budget_calendar.py",
@@ -11184,6 +12909,13 @@
       "id": "module:skills/session-harness/scripts/test_inventory.py",
       "label": "skills/session-harness/scripts/test_inventory.py",
       "source_file": "skills/session-harness/scripts/test_inventory.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_maintenance.py",
+      "label": "skills/session-harness/scripts/test_maintenance.py",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
       "type": "module"
     },
     {
@@ -11382,10 +13114,18 @@
     },
     {
       "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/auto_update.py:AmbiguousActivation",
+      "label": "AmbiguousActivation",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L87",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
       "id": "pyclass:skills/session-harness/scripts/harness.py:CodexRPC",
       "label": "CodexRPC",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L328",
+      "source_location": "L329",
       "type": "class"
     },
     {
@@ -11510,6 +13250,22 @@
     },
     {
       "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
+      "label": "AutoSchedulerTests",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L503",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
+      "label": "AutoUpdateTests",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L25",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
       "id": "pyclass:skills/session-harness/scripts/test_budget_calendar.py:CalendarDefaultsTests",
       "label": "CalendarDefaultsTests",
       "source_file": "skills/session-harness/scripts/test_budget_calendar.py",
@@ -11577,7 +13333,15 @@
       "id": "pyclass:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests",
       "label": "AntigravitySettingsTests",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L251",
+      "source_location": "L365",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests",
+      "label": "CodexOwnerPolicyTests",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L161",
       "type": "class"
     },
     {
@@ -11585,7 +13349,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests",
       "label": "CreditIntegrationTests",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L153",
+      "source_location": "L267",
       "type": "class"
     },
     {
@@ -11593,7 +13357,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_credits.py:CreditMetadataTests",
       "label": "CreditMetadataTests",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L23",
+      "source_location": "L24",
       "type": "class"
     },
     {
@@ -11609,7 +13373,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:ExecutionTests",
       "label": "ExecutionTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L186",
+      "source_location": "L201",
       "type": "class"
     },
     {
@@ -11625,7 +13389,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests",
       "label": "QuotaProcessIntegrationTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L502",
+      "source_location": "L517",
       "type": "class"
     },
     {
@@ -11633,7 +13397,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:ReviewTests",
       "label": "ReviewTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L379",
+      "source_location": "L394",
       "type": "class"
     },
     {
@@ -11650,6 +13414,14 @@
       "label": "InventoryTests",
       "source_file": "skills/session-harness/scripts/test_inventory.py",
       "source_location": "L14",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests",
+      "label": "MaintenanceTests",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L23",
       "type": "class"
     },
     {
@@ -12302,6 +14074,318 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:atomic",
+      "label": "atomic",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L22",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:backup",
+      "label": "backup",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L231",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:baseline",
+      "label": "baseline",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L115",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:expected_paths",
+      "label": "expected_paths",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L268",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:footprint",
+      "label": "footprint",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L87",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path",
+      "label": "inspect_path",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L77",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:installer",
+      "label": "installer",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L97",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:plan_install",
+      "label": "plan_install",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L107",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare",
+      "label": "prepare",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L181",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:read_json",
+      "label": "read_json",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L36",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
+      "label": "register",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L129",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:registered",
+      "label": "registered",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L171",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:restore",
+      "label": "restore",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L245",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:save",
+      "label": "save",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L46",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:sha",
+      "label": "sha",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L18",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:snapshot",
+      "label": "snapshot",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L50",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:state_path",
+      "label": "state_path",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L42",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_candidate_launcher",
+      "label": "verify_candidate_launcher",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L216",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_footprint",
+      "label": "verify_footprint",
+      "source_file": "skills/session-harness/scripts/auto_install.py",
+      "source_location": "L91",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:command",
+      "label": "command",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_location": "L30",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:definitions",
+      "label": "definitions",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_location": "L35",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:environment",
+      "label": "environment",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_location": "L20",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:install",
+      "label": "install",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_location": "L74",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:platform",
+      "label": "platform",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_location": "L12",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:status",
+      "label": "status",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_location": "L60",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_scheduler.py:uninstall",
+      "label": "uninstall",
+      "source_file": "skills/session-harness/scripts/auto_scheduler.py",
+      "source_location": "L96",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:authority_status",
+      "label": "authority_status",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L63",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:config",
+      "label": "config",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L23",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:disable",
+      "label": "disable",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L150",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:enable",
+      "label": "enable",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L119",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:existing_ledger",
+      "label": "existing_ledger",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L46",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:hook_call",
+      "label": "hook_call",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L91",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:journal",
+      "label": "journal",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L41",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:main",
+      "label": "main",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L302",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:record",
+      "label": "record",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L57",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:recover",
+      "label": "recover",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L162",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:run",
+      "label": "run",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L173",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:save_config",
+      "label": "save_config",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L37",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/auto_update.py:status",
+      "label": "status",
+      "source_file": "skills/session-harness/scripts/auto_update.py",
+      "source_location": "L72",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/budget_cli.py:display",
       "label": "display",
       "source_file": "skills/session-harness/scripts/budget_cli.py",
@@ -12534,10 +14618,42 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance",
+      "label": "_maintenance",
+      "source_file": "skills/session-harness/scripts/coordination.py",
+      "source_location": "L44",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance_status",
+      "label": "_maintenance_status",
+      "source_file": "skills/session-harness/scripts/coordination.py",
+      "source_location": "L49",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coordination.py:_sessions",
+      "label": "_sessions",
+      "source_file": "skills/session-harness/scripts/coordination.py",
+      "source_location": "L54",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:_settings",
       "label": "_settings",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L25",
+      "source_location": "L26",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coordination.py:_validate_maintenance",
+      "label": "_validate_maintenance",
+      "source_file": "skills/session-harness/scripts/coordination.py",
+      "source_location": "L34",
       "type": "function"
     },
     {
@@ -12545,7 +14661,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:configure",
       "label": "configure",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L33",
+      "source_location": "L60",
       "type": "function"
     },
     {
@@ -12553,7 +14669,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:dispatch",
       "label": "dispatch",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L111",
+      "source_location": "L160",
       "type": "function"
     },
     {
@@ -12561,7 +14677,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:local",
       "label": "local",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L68",
+      "source_location": "L97",
       "type": "function"
     },
     {
@@ -12569,7 +14685,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L135",
+      "source_location": "L203",
       "type": "function"
     },
     {
@@ -12577,7 +14693,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:session_status",
       "label": "session_status",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L57",
+      "source_location": "L87",
       "type": "function"
     },
     {
@@ -12585,7 +14701,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:settings",
       "label": "settings",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L52",
+      "source_location": "L82",
       "type": "function"
     },
     {
@@ -12593,7 +14709,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:validate_settings",
       "label": "validate_settings",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "type": "function"
     },
     {
@@ -12601,7 +14717,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:antigravity_resources",
       "label": "antigravity_resources",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L193",
+      "source_location": "L308",
       "type": "function"
     },
     {
@@ -12609,7 +14725,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:antigravity_settings_path",
       "label": "antigravity_settings_path",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L189",
+      "source_location": "L304",
       "type": "function"
     },
     {
@@ -12617,7 +14733,23 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:claude_resources",
       "label": "claude_resources",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L89",
+      "source_location": "L204",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/credits.py:codex_account_fingerprint",
+      "label": "codex_account_fingerprint",
+      "source_file": "skills/session-harness/scripts/credits.py",
+      "source_location": "L55",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/credits.py:codex_owner_policy",
+      "label": "codex_owner_policy",
+      "source_file": "skills/session-harness/scripts/credits.py",
+      "source_location": "L65",
       "type": "function"
     },
     {
@@ -12625,7 +14757,23 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:codex_resources",
       "label": "codex_resources",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L133",
+      "source_location": "L248",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/credits.py:codex_subscription_only",
+      "label": "codex_subscription_only",
+      "source_file": "skills/session-harness/scripts/credits.py",
+      "source_location": "L115",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/credits.py:configure_codex_policy",
+      "label": "configure_codex_policy",
+      "source_file": "skills/session-harness/scripts/credits.py",
+      "source_location": "L83",
       "type": "function"
     },
     {
@@ -12633,7 +14781,15 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:copilot_resources",
       "label": "copilot_resources",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L157",
+      "source_location": "L272",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/credits.py:credit_policy_path",
+      "label": "credit_policy_path",
+      "source_file": "skills/session-harness/scripts/credits.py",
+      "source_location": "L23",
       "type": "function"
     },
     {
@@ -12641,7 +14797,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:decimal_amount",
       "label": "decimal_amount",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L19",
+      "source_location": "L134",
       "type": "function"
     },
     {
@@ -12649,7 +14805,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:flag",
       "label": "flag",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L34",
+      "source_location": "L149",
       "type": "function"
     },
     {
@@ -12657,7 +14813,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:gate",
       "label": "gate",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L253",
+      "source_location": "L379",
       "type": "function"
     },
     {
@@ -12665,7 +14821,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:missing",
       "label": "missing",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L48",
+      "source_location": "L163",
       "type": "function"
     },
     {
@@ -12673,7 +14829,15 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:native_reasons",
       "label": "native_reasons",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L227",
+      "source_location": "L351",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/credits.py:private_json",
+      "label": "private_json",
+      "source_file": "skills/session-harness/scripts/credits.py",
+      "source_location": "L28",
       "type": "function"
     },
     {
@@ -12681,7 +14845,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:resource",
       "label": "resource",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L40",
+      "source_location": "L155",
       "type": "function"
     },
     {
@@ -12689,7 +14853,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:validate_resources",
       "label": "validate_resources",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L54",
+      "source_location": "L169",
       "type": "function"
     },
     {
@@ -12697,7 +14861,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:cached_codex",
       "label": "cached_codex",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L411",
+      "source_location": "L412",
       "type": "function"
     },
     {
@@ -12705,7 +14869,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:check_agy_event",
       "label": "check_agy_event",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L770",
+      "source_location": "L780",
       "type": "function"
     },
     {
@@ -12713,7 +14877,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:check_codex_line",
       "label": "check_codex_line",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L724",
+      "source_location": "L734",
       "type": "function"
     },
     {
@@ -12753,7 +14917,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_item_error",
       "label": "codex_item_error",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L713",
+      "source_location": "L723",
       "type": "function"
     },
     {
@@ -12761,7 +14925,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_models",
       "label": "codex_models",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L388",
+      "source_location": "L389",
       "type": "function"
     },
     {
@@ -12769,7 +14933,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_review_argv",
       "label": "codex_review_argv",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L641",
+      "source_location": "L651",
       "type": "function"
     },
     {
@@ -12777,7 +14941,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_review_capability",
       "label": "codex_review_capability",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L430",
+      "source_location": "L431",
       "type": "function"
     },
     {
@@ -12793,7 +14957,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_agy",
       "label": "discover_agy",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L510",
+      "source_location": "L511",
       "type": "function"
     },
     {
@@ -12801,7 +14965,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_claude",
       "label": "discover_claude",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L527",
+      "source_location": "L528",
       "type": "function"
     },
     {
@@ -12809,7 +14973,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_codex",
       "label": "discover_codex",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L442",
+      "source_location": "L443",
       "type": "function"
     },
     {
@@ -12817,7 +14981,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_provider",
       "label": "discover_provider",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L569",
+      "source_location": "L579",
       "type": "function"
     },
     {
@@ -12841,7 +15005,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:launch_plan",
       "label": "launch_plan",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L583",
+      "source_location": "L593",
       "type": "function"
     },
     {
@@ -12849,7 +15013,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L936",
+      "source_location": "L950",
       "type": "function"
     },
     {
@@ -12865,7 +15029,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:parse_agy_catalog",
       "label": "parse_agy_catalog",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L489",
+      "source_location": "L490",
       "type": "function"
     },
     {
@@ -12881,7 +15045,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:require_quota",
       "label": "require_quota",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L855",
+      "source_location": "L865",
       "type": "function"
     },
     {
@@ -12889,7 +15053,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:review",
       "label": "review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L862",
+      "source_location": "L872",
       "type": "function"
     },
     {
@@ -12897,7 +15061,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:review_agy",
       "label": "review_agy",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L823",
+      "source_location": "L833",
       "type": "function"
     },
     {
@@ -12905,7 +15069,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:review_metadata",
       "label": "review_metadata",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L848",
+      "source_location": "L858",
       "type": "function"
     },
     {
@@ -12921,7 +15085,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:select_effort",
       "label": "select_effort",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L277",
+      "source_location": "L278",
       "type": "function"
     },
     {
@@ -12929,7 +15093,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:select_models",
       "label": "select_models",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L289",
+      "source_location": "L290",
       "type": "function"
     },
     {
@@ -12953,7 +15117,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:validate_agy_review",
       "label": "validate_agy_review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L807",
+      "source_location": "L817",
       "type": "function"
     },
     {
@@ -12961,7 +15125,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:validate_claude_review",
       "label": "validate_claude_review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L607",
+      "source_location": "L617",
       "type": "function"
     },
     {
@@ -12969,7 +15133,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:validate_codex_review",
       "label": "validate_codex_review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L673",
+      "source_location": "L683",
       "type": "function"
     },
     {
@@ -12977,7 +15141,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:verify_codex_sandbox",
       "label": "verify_codex_sandbox",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L658",
+      "source_location": "L668",
       "type": "function"
     },
     {
@@ -13305,7 +15469,7 @@
       "id": "pyfunc:skills/session-harness/scripts/releases.py:installation",
       "label": "installation",
       "source_file": "skills/session-harness/scripts/releases.py",
-      "source_location": "L123",
+      "source_location": "L124",
       "type": "function"
     },
     {
@@ -13313,7 +15477,7 @@
       "id": "pyfunc:skills/session-harness/scripts/releases.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/releases.py",
-      "source_location": "L167",
+      "source_location": "L168",
       "type": "function"
     },
     {
@@ -13337,7 +15501,7 @@
       "id": "pyfunc:skills/session-harness/scripts/releases.py:update",
       "label": "update",
       "source_file": "skills/session-harness/scripts/releases.py",
-      "source_location": "L139",
+      "source_location": "L140",
       "type": "function"
     },
     {
@@ -13537,7 +15701,7 @@
       "id": "pyfunc:skills/session-harness/scripts/test_credits.py:money",
       "label": "money",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L19",
+      "source_location": "L20",
       "type": "function"
     },
     {
@@ -13546,6 +15710,14 @@
       "label": "model",
       "source_file": "skills/session-harness/scripts/test_harness.py",
       "source_location": "L21",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/test_maintenance.py:race_operation",
+      "label": "race_operation",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L16",
       "type": "function"
     },
     {
@@ -14169,7 +16341,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.__init__",
       "label": "CodexRPC.__init__",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L329",
+      "source_location": "L330",
       "type": "method"
     },
     {
@@ -14177,7 +16349,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.close",
       "label": "CodexRPC.close",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L377",
+      "source_location": "L378",
       "type": "method"
     },
     {
@@ -14185,7 +16357,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.notify",
       "label": "CodexRPC.notify",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L341",
+      "source_location": "L342",
       "type": "method"
     },
     {
@@ -14193,7 +16365,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.request",
       "label": "CodexRPC.request",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L346",
+      "source_location": "L347",
       "type": "method"
     },
     {
@@ -15174,6 +17346,358 @@
     },
     {
       "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.setUp",
+      "label": "AutoSchedulerTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L504",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_launchd_install_uninstall_loads_and_removes_only_owned_plist",
+      "label": "AutoSchedulerTests.test_launchd_install_uninstall_loads_and_removes_only_owned_plist",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L529",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_launchd_keeps_absolute_argument_boundaries",
+      "label": "AutoSchedulerTests.test_launchd_keeps_absolute_argument_boundaries",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L512",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_systemd_escapes_paths_and_rejects_control_characters",
+      "label": "AutoSchedulerTests.test_systemd_escapes_paths_and_rejects_control_characters",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L520",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_systemd_install_uninstall_preserves_changed_definitions",
+      "label": "AutoSchedulerTests.test_systemd_install_uninstall_preserves_changed_definitions",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L540",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.assert_timeout_retains_maintenance",
+      "label": "AutoUpdateTests.assert_timeout_retains_maintenance",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L399",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.assert_unconfirmed_hook_exit_retains_maintenance",
+      "label": "AutoUpdateTests.assert_unconfirmed_hook_exit_retains_maintenance",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L373",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.enabled",
+      "label": "AutoUpdateTests.enabled",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L83",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.hook_processes",
+      "label": "AutoUpdateTests.hook_processes",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L102",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.install",
+      "label": "AutoUpdateTests.install",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L78",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.network",
+      "label": "AutoUpdateTests.network",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L88",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.overlay",
+      "label": "AutoUpdateTests.overlay",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L242",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.run_update",
+      "label": "AutoUpdateTests.run_update",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L95",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.setUp",
+      "label": "AutoUpdateTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L26",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.source",
+      "label": "AutoUpdateTests.source",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L61",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.state_rows",
+      "label": "AutoUpdateTests.state_rows",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L114",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_acquire_lost_acknowledgement_retains_recorded_owner_for_recovery",
+      "label": "AutoUpdateTests.test_acquire_lost_acknowledgement_retains_recorded_owner_for_recovery",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L303",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_activation_hook_failure_rolls_back_profile_and_receipts",
+      "label": "AutoUpdateTests.test_activation_hook_failure_rolls_back_profile_and_receipts",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L354",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_activation_timeout_retains_maintenance_and_update_lock",
+      "label": "AutoUpdateTests.test_activation_timeout_retains_maintenance_and_update_lock",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L418",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_busy_native_owner_defers_without_touching_owner",
+      "label": "AutoUpdateTests.test_busy_native_owner_defers_without_touching_owner",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L293",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_changed_authority_requires_explicit_reenable",
+      "label": "AutoUpdateTests.test_changed_authority_requires_explicit_reenable",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L144",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_disable_during_active_update_does_not_stop_scheduler_or_owner",
+      "label": "AutoUpdateTests.test_disable_during_active_update_does_not_stop_scheduler_or_owner",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L424",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_disabled_default_never_checks_release_or_admission",
+      "label": "AutoUpdateTests.test_disabled_default_never_checks_release_or_admission",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L118",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_empty_ledger_is_not_initialized_by_maintenance",
+      "label": "AutoUpdateTests.test_empty_ledger_is_not_initialized_by_maintenance",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L135",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_enable_requires_loaded_scheduler_and_disable_unloads",
+      "label": "AutoUpdateTests.test_enable_requires_loaded_scheduler_and_disable_unloads",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L489",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_hook_timeout_with_unconfirmed_process_exit_retains_maintenance",
+      "label": "AutoUpdateTests.test_hook_timeout_with_unconfirmed_process_exit_retains_maintenance",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L421",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_incoming_installer_without_auto_update_route_preserves_current_installation",
+      "label": "AutoUpdateTests.test_incoming_installer_without_auto_update_route_preserves_current_installation",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L197",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_managed_link_drift_is_preserved_and_defers",
+      "label": "AutoUpdateTests.test_managed_link_drift_is_preserved_and_defers",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L231",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_missing_ledger_never_creates_replacement_accounting",
+      "label": "AutoUpdateTests.test_missing_ledger_never_creates_replacement_accounting",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L125",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_newer_only_and_cadence_prevent_download_or_maintenance",
+      "label": "AutoUpdateTests.test_newer_only_and_cadence_prevent_download_or_maintenance",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L156",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_overlay_conflict_keeps_current_installation",
+      "label": "AutoUpdateTests.test_overlay_conflict_keeps_current_installation",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L282",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_partial_installer_failure_restores_changed_instructions_and_old_receipt",
+      "label": "AutoUpdateTests.test_partial_installer_failure_restores_changed_instructions_and_old_receipt",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L321",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_does_not_remove_nonempty_lock_evidence",
+      "label": "AutoUpdateTests.test_recovery_does_not_remove_nonempty_lock_evidence",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L478",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_of_stopped_empty_lock_retains_prior_journal_and_accounting",
+      "label": "AutoUpdateTests.test_recovery_of_stopped_empty_lock_retains_prior_journal_and_accounting",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L464",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_refuses_authority_maintenance_even_when_local_is_idle",
+      "label": "AutoUpdateTests.test_recovery_refuses_authority_maintenance_even_when_local_is_idle",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L452",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_refuses_local_maintenance_and_preserves_evidence",
+      "label": "AutoUpdateTests.test_recovery_refuses_local_maintenance_and_preserves_evidence",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L439",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_registered_overlay_absorbed_when_release_matches",
+      "label": "AutoUpdateTests.test_registered_overlay_absorbed_when_release_matches",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L273",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_registered_overlay_carries_forward",
+      "label": "AutoUpdateTests.test_registered_overlay_carries_forward",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L263",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_signaled_hook_exit_retains_maintenance_without_rollback",
+      "label": "AutoUpdateTests.test_signaled_hook_exit_retains_maintenance_without_rollback",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L396",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_snapshot_bytes_drift_defers_before_download",
+      "label": "AutoUpdateTests.test_snapshot_bytes_drift_defers_before_download",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L217",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_temporary_failure_hook_exit_retains_maintenance_without_rollback",
+      "label": "AutoUpdateTests.test_temporary_failure_hook_exit_retains_maintenance_without_rollback",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L393",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_unregistered_installation_cannot_enable_or_auto_reconcile",
+      "label": "AutoUpdateTests.test_unregistered_installation_cannot_enable_or_auto_reconcile",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L251",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_upgrade_then_second_run_preserves_private_policy_and_ledger",
+      "label": "AutoUpdateTests.test_upgrade_then_second_run_preserves_private_policy_and_ledger",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L169",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.writable_cleanup",
+      "label": "AutoUpdateTests.writable_cleanup",
+      "source_file": "skills/session-harness/scripts/test_auto_update.py",
+      "source_location": "L56",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
       "id": "pymethod:skills/session-harness/scripts/test_budget_calendar.py:CalendarDefaultsTests.setUp",
       "label": "CalendarDefaultsTests.setUp",
       "source_file": "skills/session-harness/scripts/test_budget_calendar.py",
@@ -16081,15 +18605,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.setUp",
       "label": "AntigravitySettingsTests.setUp",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L252",
+      "source_location": "L366",
       "type": "method"
     },
     {
       "file_type": "python",
-      "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_absent_key_and_file_are_unknown",
-      "label": "AntigravitySettingsTests.test_absent_key_and_file_are_unknown",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_absent_key_and_file_use_documented_disabled_default",
+      "label": "AntigravitySettingsTests.test_absent_key_and_file_use_documented_disabled_default",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L271",
+      "source_location": "L385",
       "type": "method"
     },
     {
@@ -16097,7 +18621,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_disabled_setting_cannot_make_missing_quota_admissible",
       "label": "AntigravitySettingsTests.test_disabled_setting_cannot_make_missing_quota_admissible",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L301",
+      "source_location": "L461",
       "type": "method"
     },
     {
@@ -16105,7 +18629,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_explicit_false_has_local_provenance_and_no_invented_balances",
       "label": "AntigravitySettingsTests.test_explicit_false_has_local_provenance_and_no_invented_balances",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L260",
+      "source_location": "L374",
       "type": "method"
     },
     {
@@ -16113,7 +18637,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_gate_rereads_settings_and_never_reuses_disabled_evidence",
       "label": "AntigravitySettingsTests.test_gate_rereads_settings_and_never_reuses_disabled_evidence",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L289",
+      "source_location": "L449",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_invalid_state_recovers_and_encoding_is_checked",
+      "label": "AntigravitySettingsTests.test_invalid_state_recovers_and_encoding_is_checked",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L431",
       "type": "method"
     },
     {
@@ -16121,7 +18653,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_malformed_controls_fail_closed",
       "label": "AntigravitySettingsTests.test_malformed_controls_fail_closed",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L279",
+      "source_location": "L438",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_non_directory_parent_and_permission_errors_deny",
+      "label": "AntigravitySettingsTests.test_non_directory_parent_and_permission_errors_deny",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L424",
       "type": "method"
     },
     {
@@ -16129,7 +18669,111 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_refresh_attaches_setting_without_changing_native_quota_evidence",
       "label": "AntigravitySettingsTests.test_refresh_attaches_setting_without_changing_native_quota_evidence",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L309",
+      "source_location": "L469",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_sparse_persistence_preserves_disabled_admission",
+      "label": "AntigravitySettingsTests.test_sparse_persistence_preserves_disabled_admission",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L397",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_symlink_and_read_errors_are_not_defaults",
+      "label": "AntigravitySettingsTests.test_symlink_and_read_errors_are_not_defaults",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L405",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_symlink_swap_after_lstat_is_rejected",
+      "label": "AntigravitySettingsTests.test_symlink_swap_after_lstat_is_rejected",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L414",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.confirm",
+      "label": "CodexOwnerPolicyTests.confirm",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L180",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.setUp",
+      "label": "CodexOwnerPolicyTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L162",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_cli_records_only_explicit_confirmation_and_supports_revoke",
+      "label": "CodexOwnerPolicyTests.test_cli_records_only_explicit_confirmation_and_supports_revoke",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L256",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_confirmation_allows_zero_credits_without_changing_native_metadata",
+      "label": "CodexOwnerPolicyTests.test_confirmation_allows_zero_credits_without_changing_native_metadata",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L183",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_corrupt_future_symlink_and_public_policy_are_denied",
+      "label": "CodexOwnerPolicyTests.test_corrupt_future_symlink_and_public_policy_are_denied",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L237",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_policy_cannot_clear_quota_strict_or_setup_denials",
+      "label": "CodexOwnerPolicyTests.test_policy_cannot_clear_quota_strict_or_setup_denials",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L227",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_positive_unknown_conflicting_and_malformed_credits_still_block",
+      "label": "CodexOwnerPolicyTests.test_positive_unknown_conflicting_and_malformed_credits_still_block",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L213",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_revocation_restores_gate_without_other_state_writes",
+      "label": "CodexOwnerPolicyTests.test_revocation_restores_gate_without_other_state_writes",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L206",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.test_switching_account_or_api_auth_invalidates_confirmation",
+      "label": "CodexOwnerPolicyTests.test_switching_account_or_api_auth_invalidates_confirmation",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L197",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CodexOwnerPolicyTests.write_auth",
+      "label": "CodexOwnerPolicyTests.write_auth",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L176",
       "type": "method"
     },
     {
@@ -16137,7 +18781,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_claude_malformed_credit_block_keeps_percentage_evidence_but_denies",
       "label": "CreditIntegrationTests.test_claude_malformed_credit_block_keeps_percentage_evidence_but_denies",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L240",
+      "source_location": "L354",
       "type": "method"
     },
     {
@@ -16145,7 +18789,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_codex_snapshot_keeps_separate_credits_and_never_reset_redemptions",
       "label": "CreditIntegrationTests.test_codex_snapshot_keeps_separate_credits_and_never_reset_redemptions",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L171",
+      "source_location": "L285",
       "type": "method"
     },
     {
@@ -16153,7 +18797,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_copilot_snapshot_retains_overage_resource_for_unlimited_pool",
       "label": "CreditIntegrationTests.test_copilot_snapshot_retains_overage_resource_for_unlimited_pool",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L180",
+      "source_location": "L294",
       "type": "method"
     },
     {
@@ -16161,7 +18805,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_disabled_claude_nonzero_historical_spend_is_reported",
       "label": "CreditIntegrationTests.test_disabled_claude_nonzero_historical_spend_is_reported",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L163",
+      "source_location": "L277",
       "type": "method"
     },
     {
@@ -16169,7 +18813,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_enabled_claude_metadata_no_longer_crashes_percentage_parser",
       "label": "CreditIntegrationTests.test_enabled_claude_metadata_no_longer_crashes_percentage_parser",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L154",
+      "source_location": "L268",
       "type": "method"
     },
     {
@@ -16177,7 +18821,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_enabled_credit_guard_denies_even_when_refresh_claims_headroom",
       "label": "CreditIntegrationTests.test_enabled_credit_guard_denies_even_when_refresh_claims_headroom",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L189",
+      "source_location": "L303",
       "type": "method"
     },
     {
@@ -16185,7 +18829,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_ledger_preserves_resources_and_omission_cannot_reuse_disabled_evidence",
       "label": "CreditIntegrationTests.test_ledger_preserves_resources_and_omission_cannot_reuse_disabled_evidence",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L223",
+      "source_location": "L337",
       "type": "method"
     },
     {
@@ -16193,7 +18837,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_missing_credit_guard_denies_native_even_in_observed_mode",
       "label": "CreditIntegrationTests.test_missing_credit_guard_denies_native_even_in_observed_mode",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L202",
+      "source_location": "L316",
       "type": "method"
     },
     {
@@ -16201,7 +18845,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditIntegrationTests.test_read_only_usage_output_has_only_normalized_credit_data",
       "label": "CreditIntegrationTests.test_read_only_usage_output_has_only_normalized_credit_data",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L211",
+      "source_location": "L325",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.setUp",
+      "label": "CreditMetadataTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_credits.py",
+      "source_location": "L25",
       "type": "method"
     },
     {
@@ -16209,7 +18861,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_antigravity_missing_eligibility_is_explicit",
       "label": "CreditMetadataTests.test_antigravity_missing_eligibility_is_explicit",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L135",
+      "source_location": "L142",
       "type": "method"
     },
     {
@@ -16217,7 +18869,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_codex_preserves_credit_units_without_currency_or_eligibility",
       "label": "CreditMetadataTests.test_codex_preserves_credit_units_without_currency_or_eligibility",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L102",
+      "source_location": "L108",
       "type": "method"
     },
     {
@@ -16225,7 +18877,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_codex_zero_balance_does_not_prove_purchase_is_disabled",
       "label": "CreditMetadataTests.test_codex_zero_balance_does_not_prove_purchase_is_disabled",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L113",
+      "source_location": "L119",
       "type": "method"
     },
     {
@@ -16233,7 +18885,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_copilot_overage_and_controls_remain_server_defined",
       "label": "CreditMetadataTests.test_copilot_overage_and_controls_remain_server_defined",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L118",
+      "source_location": "L125",
       "type": "method"
     },
     {
@@ -16241,7 +18893,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_copilot_unknown_overage_or_malformed_flags_do_not_admit",
       "label": "CreditMetadataTests.test_copilot_unknown_overage_or_malformed_flags_do_not_admit",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L130",
+      "source_location": "L137",
       "type": "method"
     },
     {
@@ -16249,7 +18901,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_decimal_credit_amounts_round_trip_as_strings",
       "label": "CreditMetadataTests.test_decimal_credit_amounts_round_trip_as_strings",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L45",
+      "source_location": "L51",
       "type": "method"
     },
     {
@@ -16257,7 +18909,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_disabled_claude_can_report_subscription_only_without_purchase_inference",
       "label": "CreditMetadataTests.test_disabled_claude_can_report_subscription_only_without_purchase_inference",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L24",
+      "source_location": "L30",
       "type": "method"
     },
     {
@@ -16265,7 +18917,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_enabled_claude_preserves_currency_and_scale_without_dividing",
       "label": "CreditMetadataTests.test_enabled_claude_preserves_currency_and_scale_without_dividing",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L52",
+      "source_location": "L58",
       "type": "method"
     },
     {
@@ -16273,7 +18925,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_legacy_claude_missing_scale_retains_native_units",
       "label": "CreditMetadataTests.test_legacy_claude_missing_scale_retains_native_units",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L64",
+      "source_location": "L70",
       "type": "method"
     },
     {
@@ -16281,7 +18933,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_legacy_explicit_scale_is_preserved",
       "label": "CreditMetadataTests.test_legacy_explicit_scale_is_preserved",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L72",
+      "source_location": "L78",
       "type": "method"
     },
     {
@@ -16289,7 +18941,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_missing_claude_or_malformed_money_is_sanitized_and_denied",
       "label": "CreditMetadataTests.test_missing_claude_or_malformed_money_is_sanitized_and_denied",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L87",
+      "source_location": "L93",
       "type": "method"
     },
     {
@@ -16297,7 +18949,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_nonfinite_negative_boolean_and_oversized_money_is_rejected",
       "label": "CreditMetadataTests.test_nonfinite_negative_boolean_and_oversized_money_is_rejected",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L97",
+      "source_location": "L103",
       "type": "method"
     },
     {
@@ -16305,7 +18957,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_persisted_contract_rejects_unknown_fields_and_forged_support",
       "label": "CreditMetadataTests.test_persisted_contract_rejects_unknown_fields_and_forged_support",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L140",
+      "source_location": "L147",
       "type": "method"
     },
     {
@@ -16313,7 +18965,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_present_claude_spend_requires_explicit_disabled_purchase",
       "label": "CreditMetadataTests.test_present_claude_spend_requires_explicit_disabled_purchase",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L31",
+      "source_location": "L37",
       "type": "method"
     },
     {
@@ -16321,7 +18973,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_purchase_reload_or_conflicting_enablement_deny_disabled_claude",
       "label": "CreditMetadataTests.test_purchase_reload_or_conflicting_enablement_deny_disabled_claude",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L78",
+      "source_location": "L84",
       "type": "method"
     },
     {
@@ -16338,6 +18990,14 @@
       "label": "DiscoveryTests.test_claude_auth_output_excludes_personal_account_fields",
       "source_file": "skills/session-harness/scripts/test_harness.py",
       "source_location": "L164",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_claude_concrete_catalog_supersedes_unresolved_aliases",
+      "label": "DiscoveryTests.test_claude_concrete_catalog_supersedes_unresolved_aliases",
+      "source_file": "skills/session-harness/scripts/test_harness.py",
+      "source_location": "L185",
       "type": "method"
     },
     {
@@ -16393,7 +19053,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_bounded_slow_quota_poll_resumes_pipe_drain",
       "label": "ExecutionTests.test_bounded_slow_quota_poll_resumes_pipe_drain",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L187",
+      "source_location": "L202",
       "type": "method"
     },
     {
@@ -16401,7 +19061,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_catalog_access_is_not_subscription_proof_for_codex_or_claude",
       "label": "ExecutionTests.test_catalog_access_is_not_subscription_proof_for_codex_or_claude",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L359",
+      "source_location": "L374",
       "type": "method"
     },
     {
@@ -16409,7 +19069,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_env_preserves_auth_paths_and_removes_api_overrides",
       "label": "ExecutionTests.test_env_preserves_auth_paths_and_removes_api_overrides",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L250",
+      "source_location": "L265",
       "type": "method"
     },
     {
@@ -16417,7 +19077,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_failure_classification_never_becomes_review_approval",
       "label": "ExecutionTests.test_failure_classification_never_becomes_review_approval",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L337",
+      "source_location": "L352",
       "type": "method"
     },
     {
@@ -16425,7 +19085,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_final_quota_check_runs_after_cleanup_and_unregister",
       "label": "ExecutionTests.test_final_quota_check_runs_after_cleanup_and_unregister",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L208",
+      "source_location": "L223",
       "type": "method"
     },
     {
@@ -16433,7 +19093,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_group_signals_precede_reaping",
       "label": "ExecutionTests.test_group_signals_precede_reaping",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L226",
+      "source_location": "L241",
       "type": "method"
     },
     {
@@ -16441,7 +19101,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_input_size_is_bounded",
       "label": "ExecutionTests.test_input_size_is_bounded",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L347",
+      "source_location": "L362",
       "type": "method"
     },
     {
@@ -16449,7 +19109,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_invalid_utf8_is_rejected_before_provider_dispatch",
       "label": "ExecutionTests.test_invalid_utf8_is_rejected_before_provider_dispatch",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L352",
+      "source_location": "L367",
       "type": "method"
     },
     {
@@ -16457,7 +19117,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_launch_forwards_resume_arguments_as_argv",
       "label": "ExecutionTests.test_launch_forwards_resume_arguments_as_argv",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L366",
+      "source_location": "L381",
       "type": "method"
     },
     {
@@ -16465,7 +19125,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_launch_rejects_forwarded_selection_overrides",
       "label": "ExecutionTests.test_launch_rejects_forwarded_selection_overrides",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L371",
+      "source_location": "L386",
       "type": "method"
     },
     {
@@ -16473,7 +19133,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_literal_stdin_is_not_shell_code",
       "label": "ExecutionTests.test_literal_stdin_is_not_shell_code",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L300",
+      "source_location": "L315",
       "type": "method"
     },
     {
@@ -16481,7 +19141,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_real_subprocess_timeout_reaps_process",
       "label": "ExecutionTests.test_real_subprocess_timeout_reaps_process",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L274",
+      "source_location": "L289",
       "type": "method"
     },
     {
@@ -16489,7 +19149,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_recursion_guard_precedes_discovery",
       "label": "ExecutionTests.test_recursion_guard_precedes_discovery",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L268",
+      "source_location": "L283",
       "type": "method"
     },
     {
@@ -16497,7 +19157,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_sigterm_and_sighup_cleanup_detached_children",
       "label": "ExecutionTests.test_sigterm_and_sighup_cleanup_detached_children",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L312",
+      "source_location": "L327",
       "type": "method"
     },
     {
@@ -16505,7 +19165,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_stdout_callback_receives_final_line_without_newline",
       "label": "ExecutionTests.test_stdout_callback_receives_final_line_without_newline",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L305",
+      "source_location": "L320",
       "type": "method"
     },
     {
@@ -16513,7 +19173,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_timeout_terminates_descendants_in_exact_process_group",
       "label": "ExecutionTests.test_timeout_terminates_descendants_in_exact_process_group",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L282",
+      "source_location": "L297",
       "type": "method"
     },
     {
@@ -16521,7 +19181,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_unsupported_provider_cannot_launch_leaf",
       "label": "ExecutionTests.test_unsupported_provider_cannot_launch_leaf",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L342",
+      "source_location": "L357",
       "type": "method"
     },
     {
@@ -16529,7 +19189,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_vertex_adc_overrides_removed_without_redirecting_audited_profiles",
       "label": "ExecutionTests.test_vertex_adc_overrides_removed_without_redirecting_audited_profiles",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L261",
+      "source_location": "L276",
       "type": "method"
     },
     {
@@ -16625,7 +19285,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.setUp",
       "label": "QuotaProcessIntegrationTests.setUp",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L503",
+      "source_location": "L518",
       "type": "method"
     },
     {
@@ -16633,7 +19293,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_closed_output_does_not_disable_running_quota_checks",
       "label": "QuotaProcessIntegrationTests.test_closed_output_does_not_disable_running_quota_checks",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L527",
+      "source_location": "L542",
       "type": "method"
     },
     {
@@ -16641,7 +19301,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_denial_never_starts_review_process",
       "label": "QuotaProcessIntegrationTests.test_denial_never_starts_review_process",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L520",
+      "source_location": "L535",
       "type": "method"
     },
     {
@@ -16649,7 +19309,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_review_process_checks_quota_before_and_after_execution",
       "label": "QuotaProcessIntegrationTests.test_review_process_checks_quota_before_and_after_execution",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L512",
+      "source_location": "L527",
       "type": "method"
     },
     {
@@ -16657,7 +19317,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_terminal_launch_uses_supervisor",
       "label": "QuotaProcessIntegrationTests.test_terminal_launch_uses_supervisor",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L569",
+      "source_location": "L584",
       "type": "method"
     },
     {
@@ -16665,7 +19325,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.stream",
       "label": "ReviewTests.stream",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L380",
+      "source_location": "L395",
       "type": "method"
     },
     {
@@ -16673,7 +19333,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_accepts_only_substantive_isolated_result",
       "label": "ReviewTests.test_accepts_only_substantive_isolated_result",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L386",
+      "source_location": "L401",
       "type": "method"
     },
     {
@@ -16681,7 +19341,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_agy_cwd_accepts_same_directory_through_symlink",
       "label": "ReviewTests.test_agy_cwd_accepts_same_directory_through_symlink",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L491",
+      "source_location": "L506",
       "type": "method"
     },
     {
@@ -16689,7 +19349,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_agy_restricted_review_requires_exact_model_leaf_and_response",
       "label": "ReviewTests.test_agy_restricted_review_requires_exact_model_leaf_and_response",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L471",
+      "source_location": "L486",
       "type": "method"
     },
     {
@@ -16697,7 +19357,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_agy_tool_step_aborts_before_final_response",
       "label": "ReviewTests.test_agy_tool_step_aborts_before_final_response",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L485",
+      "source_location": "L500",
       "type": "method"
     },
     {
@@ -16705,7 +19365,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_claude_artifact_boundary_and_transmitted_prompt_hashes",
       "label": "ReviewTests.test_claude_artifact_boundary_and_transmitted_prompt_hashes",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L391",
+      "source_location": "L406",
       "type": "method"
     },
     {
@@ -16713,7 +19373,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_error_diagnostic_redacts_credentials",
       "label": "ReviewTests.test_codex_error_diagnostic_redacts_credentials",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L459",
+      "source_location": "L474",
       "type": "method"
     },
     {
@@ -16721,7 +19381,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_error_item_is_diagnostic_not_tool_use",
       "label": "ReviewTests.test_codex_error_item_is_diagnostic_not_tool_use",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L452",
+      "source_location": "L467",
       "type": "method"
     },
     {
@@ -16729,7 +19389,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_restricted_arguments_preserve_sandbox_and_disable_integrations",
       "label": "ReviewTests.test_codex_restricted_arguments_preserve_sandbox_and_disable_integrations",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L427",
+      "source_location": "L442",
       "type": "method"
     },
     {
@@ -16737,7 +19397,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_review_distinguishes_requested_and_observed_model",
       "label": "ReviewTests.test_codex_review_distinguishes_requested_and_observed_model",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L437",
+      "source_location": "L452",
       "type": "method"
     },
     {
@@ -16745,7 +19405,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_tool_events_and_unknown_events_fail_closed",
       "label": "ReviewTests.test_codex_tool_events_and_unknown_events_fail_closed",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L447",
+      "source_location": "L462",
       "type": "method"
     },
     {
@@ -16753,7 +19413,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_expected_codex_restriction_notice_is_not_review_success",
       "label": "ReviewTests.test_expected_codex_restriction_notice_is_not_review_success",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L465",
+      "source_location": "L480",
       "type": "method"
     },
     {
@@ -16761,7 +19421,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_final_error_is_not_success",
       "label": "ReviewTests.test_final_error_is_not_success",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L420",
+      "source_location": "L435",
       "type": "method"
     },
     {
@@ -16769,7 +19429,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_tool_event_rejects_even_with_empty_init",
       "label": "ReviewTests.test_tool_event_rejects_even_with_empty_init",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L409",
+      "source_location": "L424",
       "type": "method"
     },
     {
@@ -16777,7 +19437,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_tools_or_mcp_reject_review",
       "label": "ReviewTests.test_tools_or_mcp_reject_review",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L403",
+      "source_location": "L418",
       "type": "method"
     },
     {
@@ -16785,7 +19445,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_truncated_stream_is_schema_error",
       "label": "ReviewTests.test_truncated_stream_is_schema_error",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L415",
+      "source_location": "L430",
       "type": "method"
     },
     {
@@ -16938,6 +19598,86 @@
       "label": "InventoryTests.test_vendor_and_generation_are_scoped",
       "source_file": "skills/session-harness/scripts/test_inventory.py",
       "source_location": "L15",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.dispatch",
+      "label": "MaintenanceTests.dispatch",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L29",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.setUp",
+      "label": "MaintenanceTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L24",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_acquire_idempotent_exact_release_and_stale_attention",
+      "label": "MaintenanceTests.test_acquire_idempotent_exact_release_and_stale_attention",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L32",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_all_services_make_busy_and_preserve_owners",
+      "label": "MaintenanceTests.test_all_services_make_busy_and_preserve_owners",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L62",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_corrupt_state_fails_closed",
+      "label": "MaintenanceTests.test_corrupt_state_fails_closed",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L97",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_held_maintenance_denies_without_setup_or_quota_inference",
+      "label": "MaintenanceTests.test_held_maintenance_denies_without_setup_or_quota_inference",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L52",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_recovery_cli_and_status_surface_state",
+      "label": "MaintenanceTests.test_recovery_cli_and_status_surface_state",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L127",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_remote_metadata_without_setup_and_no_old_authority_fallback",
+      "label": "MaintenanceTests.test_remote_metadata_without_setup_and_no_old_authority_fallback",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L107",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_second_concurrent_contender_is_busy",
+      "label": "MaintenanceTests.test_second_concurrent_contender_is_busy",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L92",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_maintenance.py:MaintenanceTests.test_separate_process_admit_race_excludes_maintenance",
+      "label": "MaintenanceTests.test_separate_process_admit_race_excludes_maintenance",
+      "source_file": "skills/session-harness/scripts/test_maintenance.py",
+      "source_location": "L74",
       "type": "method"
     },
     {
@@ -18241,7 +20981,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_usage.py:UsageTests.test_backend_metadata_requires_explicit_provenance",
       "label": "UsageTests.test_backend_metadata_requires_explicit_provenance",
       "source_file": "skills/session-harness/scripts/test_usage.py",
-      "source_location": "L231",
+      "source_location": "L230",
       "type": "method"
     },
     {
@@ -18281,7 +21021,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_usage.py:UsageTests.test_context_uses_actual_window_percentage_not_token_spend",
       "label": "UsageTests.test_context_uses_actual_window_percentage_not_token_spend",
       "source_file": "skills/session-harness/scripts/test_usage.py",
-      "source_location": "L256",
+      "source_location": "L255",
       "type": "method"
     },
     {
@@ -18305,7 +21045,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_usage.py:UsageTests.test_explicit_backend_observation_retains_time_and_cannot_be_redrawn_fresh",
       "label": "UsageTests.test_explicit_backend_observation_retains_time_and_cannot_be_redrawn_fresh",
       "source_file": "skills/session-harness/scripts/test_usage.py",
-      "source_location": "L213",
+      "source_location": "L212",
       "type": "method"
     },
     {
@@ -18313,7 +21053,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_usage.py:UsageTests.test_failed_native_refresh_never_admits_using_old_headroom",
       "label": "UsageTests.test_failed_native_refresh_never_admits_using_old_headroom",
       "source_file": "skills/session-harness/scripts/test_usage.py",
-      "source_location": "L199",
+      "source_location": "L198",
       "type": "method"
     },
     {
@@ -18361,7 +21101,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_usage.py:UsageTests.test_observed_admission_and_polling_use_persisted_mode_without_inference",
       "label": "UsageTests.test_observed_admission_and_polling_use_persisted_mode_without_inference",
       "source_file": "skills/session-harness/scripts/test_usage.py",
-      "source_location": "L239",
+      "source_location": "L238",
       "type": "method"
     },
     {

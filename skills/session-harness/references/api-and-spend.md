@@ -141,9 +141,35 @@ verified adapter can establish billing eligibility and associate charges with
 requests, paid native execution is unsupported. Claude can establish subscription-
 only eligibility from explicit disabled controls. Antigravity's documented
 `useG1Credits` CLI setting is read from `~/.gemini/antigravity-cli/settings.json`
-as local fallback-control evidence: explicit `false` admits with fresh quota,
-while missing, `true` or malformed values block. Codex readers cannot establish
-that state and its protected native route remains blocked.
+as local fallback-control evidence: explicit `false`, or the [documented disabled
+default](https://antigravity.google/docs/cli/reference) for an absent file/key,
+admits with fresh quota. Enabled, unreadable or malformed settings block. Defaults
+have separate source provenance and do not supply account balance or purchase
+metadata. Codex does not report automatic top-up controls. Its owner may record an
+explicit disabled-setting confirmation for the current ChatGPT account:
+
+```sh
+ai-session usage credit-policy codex --auto-top-up disabled
+ai-session usage credit-policy codex
+ai-session usage credit-policy codex --revoke-credit-policy
+```
+
+Only record confirmation after the owner states the setting is disabled; never
+infer it from a zero balance or finish confirmation autonomously. The private
+record binds a hash of the current authenticated account and survives sessions
+and updates. It is owner evidence, not a provider-reported billing control.
+Admission additionally requires fresh account credit metadata showing zero balance,
+no credits and no unlimited credits, plus every ordinary subscription quota check.
+Scoped rows without credit metadata may use the same account-wide confirmation;
+conflicting, positive or invalid credit data still blocks. Account changes and
+revocation invalidate the record. Revoke it before enabling top-up or changing the
+billing policy. Paid native execution remains unsupported. On a coordinated setup,
+record this once on the authority; team members must not create separate policies.
+This confirmation adapter currently requires a POSIX authority with file-backed
+ChatGPT authentication; Windows clients can use that authority through coordination.
+The declaration remains effective until revoked or the account changes, matching
+the owner-controlled setting. It cannot detect a later website change automatically;
+observed mode and the owner's obligation to revoke before enabling top-up remain explicit.
 Unknown purchase/reload controls cannot authorize spending in either mode.
 Never change those settings automatically to clear a stop.
 

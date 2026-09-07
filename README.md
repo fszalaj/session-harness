@@ -66,10 +66,30 @@ Use `ai-session budget add SERVICE 5` for an extra allowance today, or
 
 Updates select published immutable releases, verify SHA-256 checksums and install
 local snapshots. They preserve private policy, environment authorization, budgets,
-grants, usage history and unrelated client settings. Nothing updates in the
-background or follows `main`. Restart clients after updating; already-running
+grants, usage history and unrelated client settings. Background updates require
+explicit opt-in and never follow `main`. Restart clients after updating; already-running
 sessions retain their selected runtime. Rollback uses the same exact-version
 command and does not rewind accounting. See [releases and updates](docs/RELEASES.md).
+
+The development build adds `ai-session auto-update` (not included in v0.1.2):
+
+```sh
+ai-session auto-update register  # Verify the installed files against their published baseline
+ai-session auto-update enable --interval-hours 24
+ai-session auto-update status
+ai-session auto-update disable
+```
+
+The flag defaults to off. macOS uses a user LaunchAgent; Linux uses a user systemd
+timer. Checks run hourly and obey the selected interval. Installation waits until
+the shared authority has no protected sessions, then holds a maintenance lock
+against new admissions. Local overlays are carried only when their original files
+are unchanged, or retired when the release includes identical fixes; conflicts
+defer installation. Windows and checked-copy profiles keep explicit updates.
+See [automatic maintenance and recovery](docs/AUTO-UPDATE.md), including login,
+network and crash-recovery limits. Downloads use HTTPS and same-origin checksums,
+not an independent publisher signature. Updating makes no model calls and never
+changes provider billing or automatic credit top-up.
 
 Most projects need only a short `AGENTS.md` reference to the installed skill. A
 single explicit update then serves those projects. A project with a maintained

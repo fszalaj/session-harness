@@ -1,6 +1,7 @@
 """Share account budgets with independently configurable native session capacity."""
 import argparse
 import json
+import math
 import os
 import re
 import subprocess
@@ -30,12 +31,41 @@ def _settings(db):
     return validate_settings(value)
 
 
+def _validate_maintenance(value):
+    if (not isinstance(value, dict) or set(value) != {'owner', 'started'} or
+            not isinstance(value['owner'], str) or
+            not re.fullmatch(r'[A-Za-z0-9_.:-]{1,128}', value['owner']) or
+            type(value['started']) not in (int, float) or
+            not math.isfinite(value['started']) or value['started'] < 0):
+        raise ValueError('invalid maintenance state; explicit recovery required')
+    return value
+
+
+def _maintenance(db):
+    row = db.execute("SELECT value FROM state WHERE key='maintenance_v1'").fetchone()
+    return _validate_maintenance(json.loads(row[0])) if row else None
+
+
+def _maintenance_status(value):
+    return {'maintenance_version': 1, 'maintenance': value,
+            'maintenance_attention': value is not None and time.time() - value['started'] > 900}
+
+
+def _sessions(db):
+    exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='native_sessions'").fetchone()
+    return [dict(service=r[0], owner=r[1], started=r[2]) for r in
+            db.execute('SELECT service,owner,started FROM native_sessions ORDER BY service,started')] if exists else []
+
+
 def configure(ledger, authority=None, max_sessions=None):
     with ledger._connect() as db:
         db.execute('BEGIN IMMEDIATE')
         previous = _settings(db)
+        maintenance = _maintenance(db)
         value = validate_settings({'authority': previous['authority'] if authority is None else authority,
                                    'max_sessions': previous['max_sessions'] if max_sessions is None else max_sessions})
+        if maintenance is not None and previous['authority'] != value['authority']:
+            raise ValueError('release maintenance before changing authority')
         if previous == value:
             return value
         exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='native_sessions'").fetchone()
@@ -58,10 +88,9 @@ def session_status(ledger):
     with ledger._connect() as db:
         db.execute('BEGIN DEFERRED')
         policy = _settings(db)
-        exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='native_sessions'").fetchone()
-        rows = [dict(service=r[0], owner=r[1], started=r[2]) for r in
-                db.execute('SELECT service,owner,started FROM native_sessions ORDER BY service,started')] if exists else []
-    return {**policy, 'allowed': False, 'status': 'session_status', 'sessions': rows,
+        rows = _sessions(db)
+        maintenance = _maintenance(db)
+    return {**policy, **_maintenance_status(maintenance), 'allowed': False, 'status': 'session_status', 'sessions': rows,
             'active_sessions': {service: sum(r['service'] == service for r in rows) for service in SERVICES}}
 
 
@@ -72,6 +101,9 @@ def local(action, service, owner, ledger):
     if policy['authority'] != 'local':
         raise ValueError('authority must terminate locally; forwarding chains are forbidden')
     if action == 'check':
+        with ledger._connect() as db:
+            if _maintenance(db) is not None:
+                return {'allowed': False, 'reasons': ['account_maintenance']}
         import usage
         return usage.require_admission(service, ledger=ledger)
     if action == 'status':
@@ -85,8 +117,25 @@ def local(action, service, owner, ledger):
         if action == 'release':
             db.execute('DELETE FROM native_sessions WHERE service=? AND owner=?', (service, owner))
             return {'allowed': False, 'status': 'released'}
+        maintenance = _maintenance(db)
+        if action == 'maintenance-release':
+            if maintenance is not None and maintenance['owner'] != owner:
+                raise ValueError('maintenance owner mismatch')
+            db.execute("DELETE FROM state WHERE key='maintenance_v1'")
+            return {'allowed': False, 'status': 'maintenance_released', **_maintenance_status(None)}
+        if action == 'maintenance-acquire':
+            rows = _sessions(db)
+            if rows or (maintenance is not None and maintenance['owner'] != owner):
+                return {'allowed': False, 'status': 'maintenance_busy', 'sessions': rows,
+                        **_maintenance_status(maintenance)}
+            if maintenance is None:
+                maintenance = {'owner': owner, 'started': time.time()}
+                db.execute("INSERT INTO state VALUES ('maintenance_v1', ?)", (json.dumps(maintenance),))
+            return {'allowed': False, 'status': 'maintenance_acquired', **_maintenance_status(maintenance)}
         if action != 'admit':
             raise ValueError('invalid coordination action')
+        if maintenance is not None:
+            return {'allowed': False, 'reasons': ['account_maintenance']}
         ledger._require_setup(db, 'native', service)
         existing = db.execute('SELECT owner FROM native_sessions WHERE service=?', (service,)).fetchall()
         present = (owner,) in existing
@@ -113,7 +162,7 @@ def dispatch(action, service, owner, ledger=None):
     policy = settings(ledger)
     if policy['authority'] == 'local':
         return local(action, service, owner, ledger)
-    if action not in ('release', 'status'):
+    if action not in ('release', 'status', 'maintenance-acquire', 'maintenance-release'):
         ledger.require_setup('native', service)
     from platform_runtime import which
     executable = which('ssh')
@@ -129,6 +178,25 @@ def dispatch(action, service, owner, ledger=None):
     response = json.loads(result.stdout)
     if not isinstance(response, dict) or type(response.get('allowed')) is not bool:
         raise ValueError('invalid authority response')
+    if action == 'status' and response.get('maintenance_version') is not None:
+        if (type(response['maintenance_version']) is not int or response['maintenance_version'] != 1 or
+                'maintenance' not in response or type(response.get('maintenance_attention')) is not bool):
+            raise ValueError('invalid authority maintenance status')
+        if response['maintenance'] is not None:
+            _validate_maintenance(response['maintenance'])
+    if action in ('maintenance-acquire', 'maintenance-release'):
+        expected = ('maintenance_acquired', 'maintenance_busy') if action == 'maintenance-acquire' else ('maintenance_released',)
+        if (response['allowed'] is not False or type(response.get('maintenance_version')) is not int or
+                response['maintenance_version'] != 1 or response.get('status') not in expected or
+                'maintenance' not in response):
+            raise ValueError('authority must support maintenance; no local fallback')
+        state = response['maintenance']
+        if state is not None:
+            _validate_maintenance(state)
+        if response['status'] == 'maintenance_acquired' and (state is None or state['owner'] != owner):
+            raise ValueError('invalid authority maintenance owner')
+        if response['status'] == 'maintenance_released' and state is not None:
+            raise ValueError('invalid authority maintenance release')
     return response
 
 
@@ -144,6 +212,9 @@ def main(argv=None):
     release.add_argument('--service', choices=SERVICES, required=True)
     release.add_argument('--owner', required=True)
     release.add_argument('--confirm-stopped', action='store_true', required=True)
+    maintenance_release = sub.add_parser('maintenance-release')
+    maintenance_release.add_argument('--owner', required=True)
+    maintenance_release.add_argument('--confirm-stopped', action='store_true', required=True)
     args = parser.parse_args(argv)
     try:
         ledger = Ledger()
@@ -159,6 +230,8 @@ def main(argv=None):
             if args.authority is None and args.max_sessions is None:
                 raise ValueError('set requires --authority or --max-sessions')
             result = configure(ledger, args.authority, args.max_sessions)
+        elif args.action == 'maintenance-release':
+            result = dispatch('maintenance-release', 'claude', args.owner, ledger)
         elif args.action == 'release':
             result = dispatch('release', args.service, args.owner, ledger)
         else:
@@ -169,6 +242,12 @@ def main(argv=None):
                 raise ValueError('authority must support session status')
             result = {**settings(ledger), 'local_sessions': local_status['sessions'],
                       'authority_sessions': authority_status['sessions'],
+                      'local_maintenance_version': local_status['maintenance_version'],
+                      'local_maintenance': local_status['maintenance'],
+                      'local_maintenance_attention': local_status['maintenance_attention'],
+                      'authority_maintenance_version': authority_status.get('maintenance_version'),
+                      'authority_maintenance': authority_status.get('maintenance'),
+                      'authority_maintenance_attention': authority_status.get('maintenance_attention'),
                       'authority_max_sessions': authority_status['max_sessions'],
                       'active_sessions': authority_status['active_sessions']}
             result['boundary'] = 'One configured authority per account; clients outside it remain uncontrolled.'

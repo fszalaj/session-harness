@@ -55,6 +55,13 @@ Verify the effective effort instead of assuming a spawn argument won.
 
 ## Claude Code
 
+Prefer concrete account-selectable model IDs when the initialize catalog supplies
+them. Select the newest numeric generation and advertised effort; do not let an
+unresolved `best` or `sonnet` alias override a visible newer generation. When no
+current cheaper concrete tier is available, use the selected current model at
+medium effort for execution. A concrete review verifies the returned actual model;
+alias-only catalogs remain explicitly unresolved until native session evidence.
+
 Use documented versionless aliases after checking the installed CLI and current
 subscription coverage. `best` chooses the strongest eligible model; the actual
 model must be recorded from runtime metadata. An initialize-only native control
@@ -122,8 +129,18 @@ windows per group and reject HTTP failures or incomplete responses. Close only
 the owned process group after reading.
 
 Admission additionally reads the documented `useG1Credits` setting from the CLI
-settings file: only an explicit `false` counts as disabled paid fallback. The
-harness never writes that file.
+settings file. Explicit `false` and the documented default for an absent file/key
+disable paid fallback. The CLI [persists only nondefault settings](https://antigravity.google/docs/cli/settings),
+so it can remove explicit `false` at startup. The harness distinguishes
+`antigravity.cli_defaults` from `antigravity.cli_settings` evidence, rereads the
+effective control at admission, and rejects enabled, unreadable or malformed settings.
+It never writes that file or infers account balances from a local setting.
+`metadata_status: reported` means the control was resolved; its source distinguishes
+documented defaults from an explicit file value. An interrupted read denies that
+check and can recover on the next successful refresh. If the CLI reports enabled
+credits, disable `useG1Credits` in its settings before using subscription-only mode.
+When upgrading the CLI, revalidate its documented default and sparse persistence;
+they are part of this adapter's provider contract.
 
 A successful headless `/usage` response alone is insufficient: it can accompany
 cache refresh failures. Require a successful forced backend response; reject errors
@@ -172,10 +189,12 @@ These routes use separate credentials and explicit monetary caps. They do not
 consume a native subscription allowance or become an automatic fallback.
 Z.ai catalog discovery and generic model-specific API effort controls are unsupported.
 
-Native quota discovery does not establish safe paid-credit eligibility. Current
-Codex and Antigravity readers cannot prove paid use is disabled and their protected
-native routes are blocked. Claude requires explicit disabled paid controls with
-no unknown purchase/reload state. Enabled native paid credits remain unsupported.
+Native quota discovery is separate from paid-credit eligibility. Codex supports a
+private owner confirmation that automatic top-up is disabled for the authenticated
+account, combined with fresh zero-credit evidence and unchanged quota admission.
+Antigravity uses its verified disabled CLI setting/default. Claude requires disabled
+paid controls. Enabled native paid credits remain unsupported. See
+[API and spend](api-and-spend.md) for confirmation and revocation commands.
 
 Core accounting/API and checked profile installation target Windows as well as
 Unix. Native Antigravity Windows quota is unsupported; see [platforms](platforms.md).

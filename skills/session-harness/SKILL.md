@@ -13,6 +13,10 @@ Installed release maintenance uses `ai-session version`, `ai-session update --ch
 and the confirmed `ai-session update`. An exact `--version X.Y.Z --apply` also supports
 rollback. Preserve private policy and usage history. Updates never follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
+Development `ai-session auto-update` adds an explicit opt-in for automatic stable
+updates on macOS/Linux. Keep it disabled unless the owner selects it. Respect idle
+maintenance, local overlay conflicts and private accounting; do not steal a lock
+to make an update proceed. This command is not in published v0.1.2.
 
 ## 0. Check resources before dispatch
 

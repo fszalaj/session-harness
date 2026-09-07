@@ -184,14 +184,13 @@ class UsageTests(unittest.TestCase):
                     if service == "claude":
                         result["credit_resources"] = credits.claude_resources({"extra_usage": {"is_enabled": False}})
                     return result
-                with patch("native_quota.read_snapshot", side_effect=[observed(100, 10), observed(101, 30)]) as reader:
+                with patch("native_quota.read_snapshot", side_effect=[observed(100, 10), observed(101, 30)]) as reader, \
+                        patch("credits.antigravity_settings_path", return_value=Path(directory) / "settings.json"):
                     with patch("quota.time.time", return_value=100):
                         first = usage.refresh(service, ledger=ledger, initialize=True)
                     with patch("quota.time.time", return_value=101):
                         second = usage.refresh(service, ledger=ledger)
-                self.assertEqual(service == "claude", first["allowed"])
-                if service == "antigravity":
-                    self.assertIn("credit_metadata_unverified", first["reasons"])
+                self.assertTrue(first["allowed"])
                 self.assertFalse(second["allowed"])
                 self.assertEqual([pool["daily_consumed"] for pool in second["pools"]], [20, 20])
                 self.assertEqual(reader.call_count, 2)

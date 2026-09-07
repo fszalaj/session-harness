@@ -2,9 +2,12 @@
 from decimal import Decimal, InvalidOperation
 import hashlib
 import json
+import os
 from pathlib import Path
 import stat
 import re
+import tempfile
+import time
 
 
 SERVICES = {"claude", "codex", "copilot", "antigravity"}
@@ -13,7 +16,119 @@ AMOUNTS = ("balance", "used", "limit", "cap")
 SOURCES = {"claude": "claude.native_usage", "codex": "codex.account/rateLimits/read",
            "copilot": "copilot.account.getQuota", "antigravity": "antigravity.native_usage"}
 AGY_SETTINGS_SOURCE = "antigravity.cli_settings"
+AGY_DEFAULTS_SOURCE = "antigravity.cli_defaults"
 CONTROLS = {"useG1Credits", "tokenBasedBilling", "hasQuota", "usageAllowedWithExhaustedQuota", "overageAllowedWithExhaustedQuota"}
+
+
+def credit_policy_path():
+    root = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
+    return root / "session-harness/native-credit-policy/codex.json"
+
+
+def private_json(path):
+    original = path.lstat()
+    if not stat.S_ISREG(original.st_mode):
+        raise ValueError("Credit evidence must be a regular file")
+    if os.name != "nt" and (original.st_uid != os.getuid() or original.st_mode & 0o077):
+        raise ValueError("Credit evidence must be private to its owner")
+    fd = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0))
+    with os.fdopen(fd, "rb") as stream:
+        opened = os.fstat(stream.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (original.st_dev, original.st_ino):
+            raise ValueError("Credit evidence changed during read")
+        raw = stream.read(65537)
+    if len(raw) > 65536:
+        raise ValueError("Credit evidence is too large")
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate credit evidence key")
+            result[key] = value
+        return result
+    value = json.loads(raw, object_pairs_hook=unique)
+    if not isinstance(value, dict):
+        raise ValueError("Credit evidence must be an object")
+    return value
+
+
+def codex_account_fingerprint():
+    path = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "auth.json"
+    data = private_json(path)
+    account = data.get("tokens", {}).get("account_id")
+    if (data.get("auth_mode") != "chatgpt" or data.get("OPENAI_API_KEY")
+            or not isinstance(account, str) or not account or len(account) > 512):
+        raise ValueError("A current ChatGPT account is required")
+    return hashlib.sha256(("codex-account:" + account).encode()).hexdigest()
+
+
+def codex_owner_policy():
+    if os.name == "nt":
+        return None
+    try:
+        value = private_json(credit_policy_path())
+        if (set(value) != {"version", "service", "source", "account_fingerprint", "auto_top_up", "confirmed_at"}
+                or type(value["version"]) is not int or value["version"] != 1
+                or value["service"] != "codex" or value["source"] != "owner_confirmation"
+                or value["auto_top_up"] is not False
+                or type(value["confirmed_at"]) not in (int, float)
+                or not 0 < value["confirmed_at"] <= time.time() + 60
+                or value["account_fingerprint"] != codex_account_fingerprint()):
+            raise ValueError("Invalid or account-mismatched credit policy")
+        return value
+    except (OSError, ValueError, TypeError, AttributeError, UnicodeError, RecursionError):
+        return None
+
+
+def configure_codex_policy(*, disabled=False, revoke=False):
+    if disabled and revoke:
+        raise ValueError("Choose confirmation or revocation")
+    path = credit_policy_path()
+    if revoke:
+        path.unlink(missing_ok=True)
+    elif disabled:
+        if os.name == "nt":
+            raise ValueError("Owner confirmation requires a POSIX file-backed account authority")
+        value = dict(version=1, service="codex", source="owner_confirmation",
+                     account_fingerprint=codex_account_fingerprint(), auto_top_up=False,
+                     confirmed_at=time.time())
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if os.name != "nt":
+            os.chmod(path.parent, 0o700)
+        fd, temporary = tempfile.mkstemp(prefix=".policy-", dir=path.parent)
+        try:
+            with os.fdopen(fd, "w") as stream:
+                json.dump(value, stream)
+                stream.write("\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, path)
+        finally:
+            Path(temporary).unlink(missing_ok=True)
+    value = codex_owner_policy()
+    return {"service": "codex", "source": "owner_confirmation" if value else None,
+            "auto_top_up": False if value else None,
+            "confirmed_at": value["confirmed_at"] if value else None,
+            "account_matches": bool(value), "paid_execution_supported": False}
+
+
+def codex_subscription_only(rows):
+    if not codex_owner_policy() or not rows:
+        return False
+    reported = [row for row in rows if row["metadata_status"] == "reported"]
+    if not reported:
+        return False
+    for row in rows:
+        if (row["metadata_status"] == "invalid" or row["native_controls"]
+                or any(row[key] is True for key in ("enabled", "auto_reload", "can_purchase"))):
+            return False
+        if row["metadata_status"] == "reported":
+            if (row["has_credits"] is not False or row["unlimited"] is not False
+                    or row["balance"] is None or Decimal(row["balance"]) != 0):
+                return False
+        elif any(row[key] is not None for key in FLAGS + AMOUNTS):
+            return False
+    return True
 
 
 def decimal_amount(value):
@@ -59,7 +174,7 @@ def validate_resources(rows, service):
     for row in rows:
         if (not isinstance(row, dict) or set(row) != expected or row["service"] != service
                 or service not in SERVICES or row["scope"] != "extra:" + service
-                or row["source"] not in ({SOURCES[service], AGY_SETTINGS_SOURCE}
+                or row["source"] not in ({SOURCES[service], AGY_SETTINGS_SOURCE, AGY_DEFAULTS_SOURCE}
                                          if service == "antigravity" else {SOURCES[service]})
                 or not isinstance(row["resource_id"], str)
                 or not re.fullmatch(re.escape(service) + r":[0-9a-f]{24}", row["resource_id"])
@@ -191,13 +306,24 @@ def antigravity_settings_path():
 
 
 def antigravity_resources():
-    """Report the local fallback control without inventing account credit metadata."""
+    """Resolve the sparse CLI setting without inventing account credit metadata."""
     result = resource("antigravity", AGY_SETTINGS_SOURCE, identity="cli_settings", status="missing")
     try:
         path = antigravity_settings_path()
-        if not stat.S_ISREG(path.lstat().st_mode):
+        try:
+            original = path.lstat()
+        except FileNotFoundError:
+            result.update(source=AGY_DEFAULTS_SOURCE, enabled=False, metadata_status="reported",
+                          native_controls={"useG1Credits": False})
+            return [result]
+        if not stat.S_ISREG(original.st_mode):
             raise ValueError("Settings must be a regular file")
-        with path.open("rb") as handle:
+        fd = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0))
+        with os.fdopen(fd, "rb") as handle:
+            opened = os.fstat(handle.fileno())
+            if (not stat.S_ISREG(opened.st_mode)
+                    or (opened.st_dev, opened.st_ino) != (original.st_dev, original.st_ino)):
+                raise ValueError("Settings changed during read")
             raw = handle.read(256 * 1024 + 1)
         if len(raw) > 256 * 1024:
             raise ValueError("Settings exceed size bound")
@@ -212,13 +338,11 @@ def antigravity_resources():
         if not isinstance(data, dict):
             raise ValueError("Settings must be an object")
         if "useG1Credits" not in data:
-            return [result]
-        enabled = data["useG1Credits"]
+            result["source"] = AGY_DEFAULTS_SOURCE
+        enabled = data.get("useG1Credits", False)
         if type(enabled) is not bool:
             raise ValueError("Credit control must be boolean")
         result.update(enabled=enabled, metadata_status="reported", native_controls={"useG1Credits": enabled})
-    except FileNotFoundError:
-        pass
     except (OSError, ValueError, UnicodeError, RecursionError):
         result["metadata_status"] = "invalid"
     return [result]
@@ -231,6 +355,8 @@ def native_reasons(service, rows):
         validate_resources(rows, service)
     except (ValueError, TypeError):
         return ["credit_metadata_invalid"]
+    if service == "codex" and codex_subscription_only(rows):
+        return []
     if service == "antigravity":
         current = antigravity_resources()[0]
         if current["metadata_status"] == "invalid":
@@ -239,7 +365,7 @@ def native_reasons(service, rows):
             return ["credit_metadata_unverified"]
         if current["enabled"] is not False:
             return ["native_paid_execution_unsupported"]
-        if any(row["source"] != AGY_SETTINGS_SOURCE
+        if any(row["source"] not in {AGY_SETTINGS_SOURCE, AGY_DEFAULTS_SOURCE}
                or row["native_controls"] != {"useG1Credits": False} for row in rows):
             return ["credit_metadata_unverified"]
     if not rows or any(row["metadata_status"] != "reported" for row in rows):
@@ -256,4 +382,6 @@ def gate(result, service):
         result["allowed"] = False
         result["allowed_by_observed_threshold"] = False
         result.setdefault("reasons", []).extend(reason for reason in reasons if reason not in result.get("reasons", []))
+    elif service == "codex":
+        result["credit_policy"] = configure_codex_policy()
     return result

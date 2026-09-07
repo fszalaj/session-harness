@@ -117,7 +117,12 @@ Keep application rules in the project's `AGENTS.md`. Add a short reference such 
 
 Prefer the installed release for projects that need no harness customization. Run
 `ai-session update --check` to inspect releases and `ai-session update` for a confirmed
-update; see [release management](RELEASES.md). A project-owned copy is appropriate when the repository needs reviewed, versioned
+update; see [release management](RELEASES.md). The development build also offers
+explicitly enabled [automatic maintenance](AUTO-UPDATE.md): register reviewed local
+overlays, choose `auto-update enable --interval-hours 24`, and verify actual scheduler
+delivery and maintenance-aware authority entry points. Keep it off unless the owner
+chooses it; do not equate this flag with provider billing auto top-up. This feature
+is not included in v0.1.2. A project-owned copy is appropriate when the repository needs reviewed, versioned
 customization. Select one canonical skill directory, link client discovery paths
 where supported, and identify its source and update procedure. Do not copy this
 repository's maintenance policy over another project's `AGENTS.md`.

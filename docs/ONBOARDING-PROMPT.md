@@ -105,7 +105,12 @@ my behalf, and report `environment_setup_required` as the next step if I defer i
 execution separately. Copilot/Cursor instruction compatibility does not establish
 working review, quota or manager adapters; Gemini CLI is not an Antigravity adapter.
 Show ai-session version, update --check, interactive update and an exact-version
-rollback. Prefer a shared installed release plus a short project AGENTS.md reference;
+rollback. When the installed version supports auto-update, explain its default-off
+flag, registration, enable/status/disable commands and idle maintenance behavior.
+Enable only if I choose it; verify actual scheduler delivery, noninteractive SSH
+and shared authority compatibility. Preserve local overlays and document conflict
+and crash recovery. The development feature is not included in v0.1.2.
+Prefer a shared installed release plus a short project AGENTS.md reference;
 keep explicitly vendored customizations on their own reviewed version. After every
 push, check README/docs/skills and configured consumers against their selected release.
 Do not silently move maintained profiles to development main. Store consumer paths

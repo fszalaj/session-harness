@@ -4,6 +4,7 @@ import copy
 from decimal import Decimal
 import io
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -21,6 +22,11 @@ def money(amount, currency="USD", exponent=2):
 
 
 class CreditMetadataTests(unittest.TestCase):
+    def setUp(self):
+        absent = patch.object(credits, "codex_owner_policy", return_value=None)
+        absent.start()
+        self.addCleanup(absent.stop)
+
     def test_disabled_claude_can_report_subscription_only_without_purchase_inference(self):
         rows = credits.claude_resources({"extra_usage": {"is_enabled": False}})
         self.assertEqual([], credits.native_reasons("claude", rows))
@@ -115,6 +121,7 @@ class CreditMetadataTests(unittest.TestCase):
         self.assertTrue(credits.native_reasons("codex", rows))
         self.assertTrue(credits.native_reasons("codex", credits.codex_resources({"main": {}})))
 
+
     def test_copilot_overage_and_controls_remain_server_defined(self):
         rows = credits.copilot_resources([{"pool": "premium", "overage": 0.125,
                   "overageAllowedWithExhaustedQuota": True, "usageAllowedWithExhaustedQuota": True,
@@ -148,6 +155,113 @@ class CreditMetadataTests(unittest.TestCase):
                 credits.validate_resources(changed, "claude")
         with self.assertRaises(ValueError):
             credits.validate_resources(rows + rows, "claude")
+
+
+@unittest.skipIf(os.name == "nt", "Owner confirmation currently uses a POSIX authority")
+class CodexOwnerPolicyTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.root = Path(self.directory.name)
+        self.path = self.root / "policy/codex.json"
+        self.auth = self.root / "auth.json"
+        self.write_auth("test-account")
+        for item in (patch.object(credits, "credit_policy_path", return_value=self.path),
+                     patch.dict(os.environ, {"CODEX_HOME": str(self.root)})):
+            item.start()
+            self.addCleanup(item.stop)
+        self.rows = credits.codex_resources({"account": {"credits": {
+            "hasCredits": False, "unlimited": False, "balance": "0"}}, "model": {}})
+
+    def write_auth(self, account):
+        self.auth.write_text(json.dumps({"auth_mode": "chatgpt", "tokens": {"account_id": account}}))
+        self.auth.chmod(0o600)
+
+    def confirm(self):
+        return credits.configure_codex_policy(disabled=True)
+
+    def test_confirmation_allows_zero_credits_without_changing_native_metadata(self):
+        before = copy.deepcopy(self.rows)
+        self.assertTrue(credits.native_reasons("codex", self.rows))
+        result = self.confirm()
+        self.assertTrue(result["account_matches"])
+        self.assertEqual([], credits.native_reasons("codex", self.rows))
+        self.assertEqual(before, self.rows)
+        self.assertNotIn("test-account", self.path.read_text())
+        self.assertIsNone(self.rows[0]["auto_reload"])
+        self.rows[0]["balance"] = "0.00"
+        self.assertEqual([], credits.native_reasons("codex", self.rows))
+        if os.name != "nt":
+            self.assertEqual(0o600, self.path.stat().st_mode & 0o777)
+
+    def test_switching_account_or_api_auth_invalidates_confirmation(self):
+        self.confirm()
+        self.write_auth("other-account")
+        self.assertTrue(credits.native_reasons("codex", self.rows))
+        self.auth.write_text(json.dumps({"auth_mode": "apikey", "OPENAI_API_KEY": "test-only"}))
+        self.assertIsNone(credits.codex_owner_policy())
+        with self.assertRaises(ValueError):
+            self.confirm()
+
+    def test_revocation_restores_gate_without_other_state_writes(self):
+        self.confirm()
+        result = credits.configure_codex_policy(revoke=True)
+        self.assertFalse(result["account_matches"])
+        self.assertFalse(self.path.exists())
+        self.assertTrue(credits.native_reasons("codex", self.rows))
+
+    def test_positive_unknown_conflicting_and_malformed_credits_still_block(self):
+        self.confirm()
+        for change in ({"balance": "1"}, {"has_credits": True}, {"unlimited": True},
+                       {"balance": None}, {"has_credits": None}, {"auto_reload": True},
+                       {"can_purchase": True}, {"enabled": True}, {"metadata_status": "invalid"}):
+            with self.subTest(change=change):
+                rows = copy.deepcopy(self.rows)
+                rows[0].update(change)
+                self.assertTrue(credits.native_reasons("codex", rows))
+        self.assertTrue(credits.native_reasons("codex", self.rows[1:]))
+        rows = copy.deepcopy(self.rows)
+        rows[1]["has_credits"] = True
+        self.assertTrue(credits.native_reasons("codex", rows))
+
+    def test_policy_cannot_clear_quota_strict_or_setup_denials(self):
+        self.confirm()
+        for reason in ("daily_budget_exhausted", "exact_request_bound_unavailable", "environment_setup_required", "stale_pool"):
+            result = credits.gate({"allowed": False, "allowed_by_observed_threshold": False,
+                                   "reasons": [reason], "credit_resources": self.rows}, "codex")
+            self.assertFalse(result["allowed"])
+            self.assertFalse(result["allowed_by_observed_threshold"])
+            self.assertEqual([reason], result["reasons"])
+            self.assertEqual("owner_confirmation", result["credit_policy"]["source"])
+
+    def test_corrupt_future_symlink_and_public_policy_are_denied(self):
+        self.confirm()
+        value = json.loads(self.path.read_text())
+        for change in ({"confirmed_at": float("nan")}, {"confirmed_at": credits.time.time() + 3600},
+                       {"auto_top_up": True}, {"version": True}, {"source": "backend"}, {"extra": 1}):
+            self.path.write_text(json.dumps({**value, **change}))
+            self.assertIsNone(credits.codex_owner_policy())
+        self.path.write_text('{"version":1,"version":1}')
+        self.assertIsNone(credits.codex_owner_policy())
+        self.path.write_text(json.dumps(value))
+        if os.name != "nt":
+            self.path.chmod(0o644)
+            self.assertIsNone(credits.codex_owner_policy())
+            self.path.chmod(0o600)
+            target = self.path.with_suffix(".other")
+            self.path.rename(target)
+            self.path.symlink_to(target)
+            self.assertIsNone(credits.codex_owner_policy())
+
+    def test_cli_records_only_explicit_confirmation_and_supports_revoke(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(0, usage.main(["credit-policy", "codex"]))
+            self.assertFalse(self.path.exists())
+            self.assertEqual(0, usage.main(["credit-policy", "codex", "--auto-top-up", "disabled"]))
+            self.assertTrue(self.path.exists())
+            self.assertEqual(0, usage.main(["credit-policy", "codex", "--revoke-credit-policy"]))
+            self.assertFalse(self.path.exists())
+
 
 
 class CreditIntegrationTests(unittest.TestCase):
@@ -268,17 +382,63 @@ class AntigravitySettingsTests(unittest.TestCase):
         self.assertNotIn("private-value", json.dumps(rows))
         self.assertEqual(rows, credits.validate_resources(rows, "antigravity"))
 
-    def test_absent_key_and_file_are_unknown(self):
+    def test_absent_key_and_file_use_documented_disabled_default(self):
         for content in (None, '{}'):
             if content is not None:
                 self.path.write_text(content)
             rows = credits.antigravity_resources()
-            self.assertEqual("missing", rows[0]["metadata_status"])
-            self.assertEqual(["credit_metadata_unverified"], credits.native_reasons("antigravity", rows))
+            self.assertEqual("reported", rows[0]["metadata_status"])
+            self.assertEqual("antigravity.cli_defaults", rows[0]["source"])
+            self.assertIs(rows[0]["enabled"], False)
+            self.assertIsNone(rows[0]["balance"])
+            self.assertIsNone(rows[0]["can_purchase"])
+            self.assertEqual([], credits.native_reasons("antigravity", rows))
+
+    def test_sparse_persistence_preserves_disabled_admission(self):
+        self.path.write_text('{"useG1Credits": false, "theme": "dark"}')
+        rows = credits.antigravity_resources()
+        self.path.write_text('{"theme": "dark"}')
+        self.assertEqual([], credits.native_reasons("antigravity", rows))
+        self.path.unlink()
+        self.assertEqual([], credits.native_reasons("antigravity", rows))
+
+    def test_symlink_and_read_errors_are_not_defaults(self):
+        self.path.symlink_to(self.path.with_name("absent"))
+        self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
+        self.path.unlink()
+        self.path.write_text('{}')
+        for error in (PermissionError(), FileNotFoundError()):
+            with patch("credits.os.open", side_effect=error):
+                self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
+
+    def test_symlink_swap_after_lstat_is_rejected(self):
+        self.path.write_text('{}')
+        original = self.path.lstat()
+        self.path.unlink()
+        target = self.path.with_name('other.json')
+        target.write_text('{"useG1Credits":false}')
+        self.path.symlink_to(target)
+        with patch.object(Path, "lstat", return_value=original):
+            self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
+
+    def test_non_directory_parent_and_permission_errors_deny(self):
+        self.path.write_text('file')
+        with patch("credits.antigravity_settings_path", return_value=self.path / 'settings.json'):
+            self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
+        with patch.object(Path, "lstat", side_effect=PermissionError()):
+            self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
+
+    def test_invalid_state_recovers_and_encoding_is_checked(self):
+        for raw in (b'{', b'\xff'):
+            self.path.write_bytes(raw)
+            self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
+            self.path.write_bytes(b'\xef\xbb\xbf{}')
+            self.assertEqual([], credits.native_reasons("antigravity", credits.antigravity_resources()))
 
     def test_malformed_controls_fail_closed(self):
         for content in ('{"useG1Credits": null}', '{"useG1Credits": 0}',
                         '{"useG1Credits": "false"}', '[]', '{',
+                        '{} {}', '{} trailing',
                         '{"useG1Credits":true,"useG1Credits":false}', ' ' * (256 * 1024 + 1)):
             with self.subTest(content=content[:50]):
                 self.path.write_text(content)
@@ -290,7 +450,7 @@ class AntigravitySettingsTests(unittest.TestCase):
         self.path.write_text('{"useG1Credits": false}')
         rows = credits.antigravity_resources()
         for content, reason in (('{"useG1Credits":true}', "native_paid_execution_unsupported"),
-                                ('{}', "credit_metadata_unverified"), ('{', "credit_metadata_invalid")):
+                                ('{', "credit_metadata_invalid")):
             self.path.write_text(content)
             result = credits.gate({"allowed": True, "allowed_by_observed_threshold": True,
                                    "reasons": [], "credit_resources": rows}, "antigravity")

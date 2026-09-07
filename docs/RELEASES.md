@@ -27,7 +27,9 @@ history is dated in that timezone.
 it only reports the command to apply. Scripts must name an exact `--version` with
 `--apply`; `--check` never installs. The same command selects an older release for
 rollback. A missing release, download failure, invalid archive or checksum mismatch
-stops before installation. Updates need HTTPS access to GitHub; public downloads
+stops before installation. Optional development `auto-update` commands provide an
+explicitly enabled background path; see [automatic maintenance](AUTO-UPDATE.md).
+Updates need HTTPS access to GitHub; public downloads
 need no GitHub token. They make no model calls.
 
 Release archives include a committed-source manifest, installer, generic profile,

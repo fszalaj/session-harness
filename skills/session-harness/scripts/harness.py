@@ -267,10 +267,11 @@ def detect_session(explicit="auto", env=None, ancestry=None):
 
 
 def generation(model_id, family):
-    match = re.match(r"^" + re.escape(family) + r"-(\d+(?:\.\d+)*)(?:-|$)", model_id)
+    match = (re.fullmatch(r"claude-[a-z]+-(\d+(?:[-.]\d+)*)(?:\[1m\])?", model_id)
+             if family == "claude" else re.match(r"^" + re.escape(family) + r"-(\d+(?:\.\d+)*)(?:-|$)", model_id))
     if not match:
         return None
-    parts = tuple(int(part) for part in match.group(1).split("."))
+    parts = tuple(int(part) for part in re.split(r"[-.]", match.group(1)))
     return parts + (0,) * max(0, 4 - len(parts))
 
 
@@ -554,13 +555,22 @@ def discover_claude(executable, offline=False):
         metadata = claude_models.discover(executable, authenticated=True)
     worker_alias = "sonnet" if any(model.get("id") == "sonnet" and model.get("account_selectable")
                                    for model in metadata["models"]) else "best"
-    return {"status": "alias_resolution_required", "source": "official dynamic aliases and installed CLI help",
-            "models": metadata["models"], "model_metadata_status": metadata["status"],
+    planner = {"model": "best", "effort": select_effort(supported, "planner"),
+               "basis": "Unresolved provider alias; verify the actual session model."}
+    worker = {"model": worker_alias, "effort": select_effort(supported, "worker"),
+              "basis": "Unresolved worker alias; verify the actual session model."}
+    concrete = [{"id": model["id"], "rank": rank,
+                 "description": model.get("description", ""),
+                 "efforts": model["native_controls"]["reasoning_efforts"]}
+                for rank, model in enumerate(metadata["models"])
+                if model.get("account_selectable") is True and generation(model["id"], "claude") is not None]
+    if concrete:
+        planner, worker = select_models(concrete, "claude")
+    return {"status": "available" if concrete else "alias_resolution_required", "source": "official dynamic aliases and installed CLI help",
+            "models": [dict(model, efforts=model["native_controls"]["reasoning_efforts"])
+                       for model in metadata["models"]], "model_metadata_status": metadata["status"],
             "entitlement_verified": False, "resolved_model": None,
-            "supported_efforts": supported, "planner": {"model": "best", "effort": select_effort(supported, "planner"),
-                                       "basis": "provider latest strongest alias; actual ID must be verified from session init"},
-            "worker": {"model": worker_alias, "effort": select_effort(supported, "worker"),
-                       "basis": "Account-selectable current Sonnet alias when advertised; otherwise strongest at nonmax effort. Verify resolved tier identity."},
+            "supported_efforts": supported, "planner": planner, "worker": worker,
             "auth": auth,
             "review": {"status": "available" if isolation else "unsupported_capability",
                        "reason": "safe-mode, zero tools, strict empty MCP; validate stream before accepting result"}}
@@ -926,6 +936,10 @@ def review(provider, artifact, timeout, capability, effort=None):
         stdout = checked(argv, stdin=prompt, timeout=timeout, cwd=directory, env=child_env(leaf=True),
                          quota_service="claude")
     response = validate_claude_review(stdout)
+    expected = choice["model"].removesuffix("[1m]")
+    actual = response["actual_model"].removesuffix("[1m]")
+    if generation(expected, "claude") is not None and actual != expected and not re.fullmatch(re.escape(expected) + r"-\d{8}", actual):
+        raise HarnessError("model_unavailable", "Claude did not confirm the selected concrete catalog model.")
     response.update({"provider": provider, "requested_model": choice["model"], "requested_effort": choice["effort"]})
     response.update({"prompt_sha256": hashlib.sha256(prompt).hexdigest(),
                      "stdin_sha256": hashlib.sha256(prompt).hexdigest(),
@@ -944,6 +958,9 @@ def main(argv=None):
     if arguments and arguments[0] in {"version", "update"}:
         import releases
         return releases.main(arguments)
+    if arguments and arguments[0] == "auto-update":
+        import auto_update
+        return auto_update.main(arguments[1:])
     if arguments and arguments[0] == "hooks":
         import claude_gate
         return claude_gate.main(arguments[1:])
