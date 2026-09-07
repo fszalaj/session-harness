@@ -18,8 +18,11 @@ project-owned copies require their own synchronization. See [release maintenance
 
 Run `ai-session configure` (alias: `setup`) before inference. For multiple computers, select one trusted
 SSH quota authority on every participating client; local ledgers are not a shared
-account lock. Use `ai-session coordination status`. Default ownership is one active
-session per service. Never clone a ledger or delete an owner row to bypass a stop.
+account lock. Use `ai-session coordination status`. New configurations allow four
+sessions per service; preserve existing explicit capacity. All owners and their
+native workers share one budget. `account_session_busy` is a capacity stop, not
+quota exhaustion. Read [session coordination](references/coordination.md) for teams,
+capacity changes and recovery. Never clone a ledger or delete a live owner to bypass a stop.
 Claude command hooks (`ai-session hooks --install --apply`) enforce supported prompt
 and tool boundaries without model calls. Missing authority connectivity blocks.
 Direct unhooked sessions and streaming text remain outside exact enforcement.

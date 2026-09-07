@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2
+
+- Separate configurable session capacity from shared quota, with four sessions for
+  new configurations and preservation of existing explicit choices. The wizard and
+  capacity-only CLI support 1..32; increases preserve active owners and accounting.
+- Explain occupied capacity in Claude hooks and show actual authority occupancy.
+- Serialize native backend observations across processes to prevent out-of-order
+  accounting. Failed new admissions release their own slot without touching others.
+- Update onboarding, team/account guidance and recovery instructions together.
+
 ## 0.1.1
 
 - Fix adaptive admission for native weekly pools that report usage but no reset

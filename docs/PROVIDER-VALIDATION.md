@@ -48,7 +48,7 @@ of a successful review.
   self-signed TLS do not eliminate malicious local port rebinding.
 - Synchronous metadata polling consumes the execution timeout. Parent sessions,
   unconfigured computers and detached processes are outside the owned-process boundary.
-  Configured SSH clients share the authority ledger and one session owner per service;
+  Configured SSH clients share the authority ledger with separate owners up to its capacity;
   account matching and existing SSH trust must be verified during private setup.
 - Antigravity review restrictions do not provide full filesystem isolation. A
   visible tool registry does not establish tool use; inspect actual events.
@@ -83,6 +83,10 @@ release an uncertain owner. Claude hook denial must stop the supported event wit
 `continue: false`, never ask a model to retry. Preserve unrelated settings when
 installing hooks, and verify a second preview is empty. Test cap decreases, small
 topups and calendar cycles after daily exhaustion; they must not refund debit.
+Test concurrent backend observations from separate processes against one daily cap,
+live capacity increases, refusal of unsafe decreases and preservation of explicit
+existing limits. Distinct account authorities must remain independent. Capacity
+errors must identify concurrency rather than claiming quota exhaustion.
 
 Review protocols default to medium effort and 16 KiB packets. Confirm native effort
 from the actual catalog; fixtures cannot establish the current cheapest tier.

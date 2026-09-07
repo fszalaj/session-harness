@@ -311,6 +311,7 @@ class AntigravitySettingsTests(unittest.TestCase):
         observed = usage.snapshot("antigravity", [], "antigravity.native_usage", complete=False)
         with patch("native_quota.read_snapshot", return_value=observed), patch("usage.Ledger") as factory:
             ledger = factory.return_value
+            ledger.path = self.path.with_name('fixture-ledger.sqlite3')
             ledger.record.side_effect = lambda value, **kw: dict(value, allowed=False, reasons=["missing_quota"])
             result = usage.refresh("antigravity", ledger=ledger)
         self.assertFalse(result["complete"])

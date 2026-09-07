@@ -17,7 +17,7 @@ API requests and profile installation support Linux, macOS and Windows. Native
 client execution has the narrower capabilities listed below.
 
 ```sh
-git clone --branch v0.1.1 --depth 1 https://github.com/fszalaj/session-harness.git
+git clone --branch v0.1.2 --depth 1 https://github.com/fszalaj/session-harness.git
 cd session-harness
 python3 scripts/test.py
 python3 scripts/install-agent-profile.py --launcher
@@ -53,13 +53,13 @@ ai-session configure --status    # Inspect authorized services without changing 
 ai-session version
 ai-session update --check        # Check the latest published release
 ai-session update                # Show the version and ask before installing
-ai-session update --version 0.1.1 --apply  # Pin or return to an exact release
+ai-session update --version 0.1.2 --apply  # Pin or return to an exact release
 ai-session claude                # Start a protected session after configuration
 ai-session codex
 ```
 
 `configure` is the interactive `setup` command under an easier name. It asks about
-services, APIs, working days, reset cutoff, quota mode and the shared authority;
+services, APIs, working days, reset cutoff, quota mode, shared authority and session capacity;
 existing choices remain the defaults. API selection requires a monthly money budget.
 Use `ai-session budget add SERVICE 5` for an extra allowance today, or
 `ai-session budget use-rest SERVICE` for the remaining available balance.
@@ -109,12 +109,29 @@ ai-session coordination set --authority user@host
 Install the harness on every participating machine. SSH must already work with
 host-key verification and noninteractive authentication. All native admission and
 session ownership then go through that authority; failure blocks, without local
-fallback. Edit quota budgets on the authority. Default concurrency is **one owned
-session per billing service**; its native leaf workers share its consumption.
-Closing the owned process releases it. Crashes retain ownership until you confirm
-it stopped and run `coordination release --service SERVICE --owner ID --confirm-stopped`.
-The same `coordination set` command accepts `--max-sessions 1..4`; more concurrency
-increases observed overshoot exposure. It never multiplies daily allowance.
+fallback. Edit quota budgets and session capacity on the authority. New configurations
+allow **four sessions per billing service**; existing choices, including one, remain
+unchanged. All sessions and native workers share the same daily allowance. For example,
+four sessions spending 3 points each consume 12 points from their common pool.
+
+```sh
+ai-session coordination status
+ai-session coordination set --max-sessions 8
+```
+
+Capacity accepts 1..32 and can increase while sessions are running; omitting
+`--authority` keeps the current authority. The configuration wizard also asks for
+this value. `account_session_busy` means those places are occupied, not that quota
+is exhausted. Close an unused session or deliberately increase capacity on the
+authority. A crashed session requires confirmation that it stopped before release.
+See [multiple sessions and teams](skills/session-harness/references/coordination.md).
+
+Different provider accounts need separate authorities and ledgers. Sharing a project
+does not make its contributors share quota. People deliberately using one account
+must route admission to that account's authority. Backend refreshes serialize per
+ledger/service so concurrent sessions cannot record responses out of order; model
+execution can still overlap. More concurrent work increases possible observed-mode
+overshoot and never multiplies the quota budget.
 
 Claude's optional command hooks merge with existing settings, make private backups,
 and stop supported prompt/tool events on denial without asking another model to

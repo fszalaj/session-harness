@@ -180,9 +180,12 @@ These interfaces do not make a Markdown threshold an automatic client action.
 
 ## Multiple sessions and machines
 
-`coordination.py` serializes owned native sessions in the same SQLite transaction.
-One owner per billing service is the default; native workers within that owner share
-its aggregate provider counters. Owner records never expire just because time passes.
+`coordination.py` admits owners atomically up to the configured session capacity.
+New configurations allow four owners per billing service; existing explicit values
+are preserved. All owners and their native workers share the aggregate provider
+counters and daily allowance. Native backend refreshes serialize per ledger/service,
+including direct refresh commands, to retain observation order. Model work may overlap.
+Owner records never expire just because time passes.
 After a crash, confirm the process stopped before explicitly releasing its owner ID.
 
 `ai-session setup --authority user@host` selects one already-trusted SSH authority.
@@ -192,6 +195,12 @@ unknown host keys, authentication failure and malformed responses fail closed.
 Budget edits belong on the authority. Never put SQLite on an unreliable network
 filesystem or copy ledgers between active machines. Remote monetary dispatch is
 unsupported; run API requests at the monetary authority instead.
+
+Capacity is editable through `ai-session configure` or
+`ai-session coordination set --max-sessions NUMBER` on the authority. Increasing it
+does not alter quota, grants or active owners. Different accounts use separate
+authorities; repository membership is not an account identity. See
+[coordination and recovery](coordination.md) before responding to `account_session_busy`.
 
 `ai-session hooks --install --apply` merges deterministic Claude command hooks for
 prompt submission and tool boundaries, plus owner release at completion. It preserves

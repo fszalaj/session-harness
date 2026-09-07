@@ -27,6 +27,14 @@ def evaluate(payload):
         return {}
     result = coordination.dispatch('admit', 'claude', owner)
     if result.get('allowed') is not True:
+        if 'account_session_busy' in result.get('reasons', []):
+            return {'continue': False, 'stopReason':
+                    f"Session harness: Claude session capacity reached ({result.get('active_sessions', '?')}/"
+                    f"{result.get('max_sessions', '?')}). This is a concurrency limit, not exhausted quota. "
+                    "Run `ai-session coordination status`; close an unused session or change "
+                    "`ai-session coordination set --max-sessions NUMBER` on the account authority. "
+                    "All sessions still share the same quota budget. "
+                    "Release a crashed session only after confirming it has stopped."}
         return {'continue': False, 'stopReason': 'Session harness stopped this turn: ' +
                 ', '.join(result.get('reasons', ['quota_admission_denied']))}
     return {}

@@ -75,11 +75,17 @@ ai-session configure
 
 `ai-session setup` is the owner's explicit environment authorization. Run it
 interactively with the owner: it selects the native and API services allowed to
-run inference, confirms timezone, working days, reset cutoff and quota mode, and
+run inference, confirms timezone, working days, reset cutoff, quota mode and session capacity, and
 for API services requires a positive monthly total and money mode. Until it is
 complete, launch, review and API dispatch return `environment_setup_required`.
 Repeating setup, reinstalling or changing budgets keeps accounting history. Do
 not complete it noninteractively on the owner's behalf.
+
+New configurations allow four sessions per service; all share the account budget.
+Existing explicit capacity is retained. Use `ai-session coordination status` to
+inspect actual authority occupancy and `ai-session coordination set --max-sessions 8`
+on that authority to change it. Different accounts have separate authorities; joining
+the same repository does not merge their quotas. See [session coordination](../skills/session-harness/references/coordination.md).
 
 On Windows, use `python`, install `requirements-windows.txt`, and add
 `--link-mode copy` to both installer commands when symlinks are unavailable.

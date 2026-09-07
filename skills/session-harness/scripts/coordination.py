@@ -1,4 +1,4 @@
-"""Serialize protected account sessions locally or through one explicit SSH authority."""
+"""Share account budgets with independently configurable native session capacity."""
 import argparse
 import json
 import os
@@ -10,35 +10,59 @@ import time
 from quota import Ledger
 
 SERVICES = ('codex', 'claude', 'antigravity')
+DEFAULT_MAX_SESSIONS = 4
+MAX_SESSIONS = 32
 
 
-def configure(ledger, authority, max_sessions=1):
-    if (type(max_sessions) is not int or not 1 <= max_sessions <= 4 or
+def validate_settings(value):
+    authority, maximum = value.get('authority'), value.get('max_sessions')
+    if (type(maximum) is not int or not 1 <= maximum <= MAX_SESSIONS or
             not isinstance(authority, str) or not re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.@-]{0,252}', authority)):
         raise ValueError('invalid authority or session count')
-    value = {'authority': authority, 'max_sessions': max_sessions}
-    if settings(ledger) == value:
-        return value
+    return value
+
+
+def _settings(db):
+    row = db.execute("SELECT value FROM state WHERE key='coordination_v1'").fetchone()
+    value = json.loads(row[0]) if row else {'authority': 'local', 'max_sessions': DEFAULT_MAX_SESSIONS}
+    if not isinstance(value, dict):
+        raise ValueError('invalid coordination settings')
+    return validate_settings(value)
+
+
+def configure(ledger, authority=None, max_sessions=None):
     with ledger._connect() as db:
         db.execute('BEGIN IMMEDIATE')
+        previous = _settings(db)
+        value = validate_settings({'authority': previous['authority'] if authority is None else authority,
+                                   'max_sessions': previous['max_sessions'] if max_sessions is None else max_sessions})
+        if previous == value:
+            return value
         exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='native_sessions'").fetchone()
-        if exists and db.execute('SELECT 1 FROM native_sessions LIMIT 1').fetchone():
-            raise ValueError('finish active sessions before changing authority')
+        if exists:
+            counts = [r[0] for r in db.execute('SELECT COUNT(*) FROM native_sessions GROUP BY service')]
+            if counts and previous['authority'] != value['authority']:
+                raise ValueError('finish active sessions before changing authority')
+            if counts and max(counts) > value['max_sessions']:
+                raise ValueError('requested capacity is below active session count; finish sessions first')
         db.execute("INSERT OR REPLACE INTO state VALUES ('coordination_v1', ?)", (json.dumps(value),))
     return value
 
 
 def settings(ledger):
     with ledger._connect() as db:
-        row = db.execute("SELECT value FROM state WHERE key='coordination_v1'").fetchone()
-    value = json.loads(row[0]) if row else {'authority': 'local', 'max_sessions': 1}
-    if (not isinstance(value, dict) or type(value.get('max_sessions')) is not int
-            or not 1 <= value['max_sessions'] <= 4):
-        raise ValueError('invalid coordination settings')
-    host = value.get('authority')
-    if not isinstance(host, str) or (host != 'local' and not re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.@-]{0,252}', host)):
-        raise ValueError('invalid SSH authority')
-    return value
+        return _settings(db)
+
+
+def session_status(ledger):
+    with ledger._connect() as db:
+        db.execute('BEGIN DEFERRED')
+        policy = _settings(db)
+        exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='native_sessions'").fetchone()
+        rows = [dict(service=r[0], owner=r[1], started=r[2]) for r in
+                db.execute('SELECT service,owner,started FROM native_sessions ORDER BY service,started')] if exists else []
+    return {**policy, 'allowed': False, 'status': 'session_status', 'sessions': rows,
+            'active_sessions': {service: sum(r['service'] == service for r in rows) for service in SERVICES}}
 
 
 def local(action, service, owner, ledger):
@@ -50,8 +74,13 @@ def local(action, service, owner, ledger):
     if action == 'check':
         import usage
         return usage.require_admission(service, ledger=ledger)
+    if action == 'status':
+        return session_status(ledger)
     with ledger._connect() as db:
         db.execute('BEGIN IMMEDIATE')
+        policy = _settings(db)
+        if policy['authority'] != 'local':
+            raise ValueError('authority changed before admission')
         db.execute('CREATE TABLE IF NOT EXISTS native_sessions (service TEXT, owner TEXT, started REAL, PRIMARY KEY(service,owner))')
         if action == 'release':
             db.execute('DELETE FROM native_sessions WHERE service=? AND owner=?', (service, owner))
@@ -62,13 +91,20 @@ def local(action, service, owner, ledger):
         existing = db.execute('SELECT owner FROM native_sessions WHERE service=?', (service,)).fetchall()
         present = (owner,) in existing
         if not present and len(existing) >= policy['max_sessions']:
-            return {'allowed': False, 'reasons': ['account_session_busy']}
+            return {'allowed': False, 'reasons': ['account_session_busy'],
+                    'active_sessions': len(existing), 'max_sessions': policy['max_sessions'],
+                    'next_step': 'ai-session coordination status',
+                    'capacity_command': 'ai-session coordination set --max-sessions NUMBER',
+                    'capacity_scope': 'Configure on the account authority; quota budgets are unchanged.'}
         if not present:
             db.execute('INSERT INTO native_sessions VALUES (?,?,?)', (service, owner, time.time()))
     import usage
-    result = usage.require_admission(service, ledger=ledger)
-    if not result.get('allowed') and not present:
-        local('release', service, owner, ledger)
+    result = None
+    try:
+        result = usage.require_admission(service, ledger=ledger)
+    finally:
+        if not present and (not isinstance(result, dict) or not result.get('allowed')):
+            local('release', service, owner, ledger)
     return result
 
 
@@ -77,7 +113,7 @@ def dispatch(action, service, owner, ledger=None):
     policy = settings(ledger)
     if policy['authority'] == 'local':
         return local(action, service, owner, ledger)
-    if action != 'release':
+    if action not in ('release', 'status'):
         ledger.require_setup('native', service)
     from platform_runtime import which
     executable = which('ssh')
@@ -102,8 +138,8 @@ def main(argv=None):
     sub.add_parser('serve')
     sub.add_parser('status')
     config = sub.add_parser('set')
-    config.add_argument('--authority', required=True, help='local or existing trusted SSH user@host')
-    config.add_argument('--max-sessions', type=int, default=1)
+    config.add_argument('--authority', help='local or existing trusted SSH user@host; omitted preserves current authority')
+    config.add_argument('--max-sessions', type=int, help='Concurrent sessions per service, 1..32; does not change quota')
     release = sub.add_parser('release')
     release.add_argument('--service', choices=SERVICES, required=True)
     release.add_argument('--owner', required=True)
@@ -120,20 +156,29 @@ def main(argv=None):
                 raise ValueError('invalid coordination request')
             result = local(**packet, ledger=ledger)
         elif args.action == 'set':
+            if args.authority is None and args.max_sessions is None:
+                raise ValueError('set requires --authority or --max-sessions')
             result = configure(ledger, args.authority, args.max_sessions)
         elif args.action == 'release':
             result = dispatch('release', args.service, args.owner, ledger)
         else:
-            result = settings(ledger)
-            with ledger._connect() as db:
-                exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='native_sessions'").fetchone()
-                result['local_sessions'] = [dict(service=r[0], owner=r[1], started=r[2]) for r in
-                    db.execute('SELECT service,owner,started FROM native_sessions')] if exists else []
+            local_status = session_status(ledger)
+            authority_status = (local_status if local_status['authority'] == 'local'
+                                else dispatch('status', 'claude', 'status', ledger))
+            if authority_status.get('status') != 'session_status':
+                raise ValueError('authority must support session status')
+            result = {**settings(ledger), 'local_sessions': local_status['sessions'],
+                      'authority_sessions': authority_status['sessions'],
+                      'authority_max_sessions': authority_status['max_sessions'],
+                      'active_sessions': authority_status['active_sessions']}
             result['boundary'] = 'One configured authority per account; clients outside it remain uncontrolled.'
         print(json.dumps(result))
         return 0
-    except Exception:
-        print(json.dumps({'allowed': False, 'reasons': ['coordination_unavailable']}))
+    except Exception as exc:
+        result = {'allowed': False, 'reasons': ['coordination_unavailable']}
+        if args.action == 'set' and isinstance(exc, ValueError):
+            result['message'] = str(exc)
+        print(json.dumps(result))
         return 2
 
 

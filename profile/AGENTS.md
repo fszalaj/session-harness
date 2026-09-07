@@ -58,7 +58,9 @@ Before inference, complete `ai-session setup`. For multiple computers, configure
 trusted SSH authority with `ai-session coordination set --authority user@host`;
 independent local ledgers do not share a daily budget. Claude's optional command hooks
 stop supported prompt/tool events without another model call. Default account
-ownership allows one protected session per service; its native workers share usage.
+capacity is four protected sessions per service for new configurations; preserve
+existing choices. All sessions and native workers share usage. Change capacity with
+`ai-session coordination set --max-sessions NUMBER` on the account authority.
 Give workers fresh bounded packets, not full-history forks. Keep execution at medium
 effort and gathering at low. Ordinary reviews use medium, with high only for a concrete
 risk. Do not start maximum-effort sessions for routine execution, docs, or polling.

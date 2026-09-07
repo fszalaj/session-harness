@@ -28,6 +28,7 @@ class CoordinationTests(unittest.TestCase):
         return coordination.dispatch('admit', 'claude', owner, self.ledger)
 
     def test_parallel_sessions_have_one_winner_and_no_timeout_refund(self):
+        coordination.configure(self.ledger, max_sessions=1)
         with patch('usage.require_admission', return_value={'allowed': True}):
             with ThreadPoolExecutor(2) as workers:
                 results = list(workers.map(self.admit, ['session-a', 'session-b']))
@@ -44,6 +45,94 @@ class CoordinationTests(unittest.TestCase):
             self.assertFalse(self.admit('a')['allowed'])
         with patch('usage.require_admission', return_value={'allowed': True}):
             self.assertTrue(self.admit('b')['allowed'])
+
+    def test_parallel_capacity_is_separate_from_shared_account_budget(self):
+        with patch('usage.require_admission', return_value={'allowed': True}):
+            with ThreadPoolExecutor(6) as workers:
+                results = list(workers.map(self.admit, ['session-' + str(i) for i in range(6)]))
+        self.assertEqual(4, sum(r['allowed'] for r in results))
+        stopped = next(r for r in results if not r['allowed'])
+        self.assertEqual((4, 4), (stopped['active_sessions'], stopped['max_sessions']))
+        with patch('usage.require_admission', return_value={'allowed': False, 'reasons': ['daily_limit']}):
+            for index, result in enumerate(results):
+                if result['allowed']:
+                    self.assertEqual(['daily_limit'], self.admit('session-' + str(index))['reasons'])
+
+    def test_capacity_can_increase_live_without_changing_accounting_or_owners(self):
+        coordination.configure(self.ledger, max_sessions=1)
+        with patch('usage.require_admission', return_value={'allowed': True}):
+            self.admit('first')
+            before = coordination.session_status(self.ledger)['sessions']
+            with self.ledger._connect() as db:
+                accounting = db.execute("SELECT key,value FROM state WHERE key!='coordination_v1' ORDER BY key").fetchall()
+            coordination.configure(self.ledger, max_sessions=8)
+            self.assertEqual(before, coordination.session_status(self.ledger)['sessions'])
+            self.assertTrue(self.admit('second')['allowed'])
+            with self.ledger._connect() as db:
+                self.assertEqual(accounting, db.execute("SELECT key,value FROM state WHERE key!='coordination_v1' ORDER BY key").fetchall())
+            with self.assertRaises(ValueError):
+                coordination.configure(self.ledger, authority='another@example.test')
+            with self.assertRaises(ValueError):
+                coordination.configure(self.ledger, max_sessions=1)
+        self.assertEqual(8, coordination.settings(self.ledger)['max_sessions'])
+
+    def test_explicit_existing_single_session_and_omitted_fields_are_preserved(self):
+        coordination.configure(self.ledger, 'owner@example.test', 1)
+        self.assertEqual({'authority': 'owner@example.test', 'max_sessions': 1}, coordination.configure(self.ledger))
+        self.assertEqual('owner@example.test', coordination.configure(self.ledger, max_sessions=8)['authority'])
+        self.assertEqual(8, coordination.configure(self.ledger, authority='local')['max_sessions'])
+
+    def test_separate_account_authorities_have_independent_capacity(self):
+        other = Ledger(self.home / 'another-account.db')
+        other.complete_setup(services=['claude'], api_services=[], source='test')
+        coordination.configure(self.ledger, max_sessions=1)
+        coordination.configure(other, max_sessions=1)
+        with patch('usage.require_admission', return_value={'allowed': True}):
+            self.assertTrue(self.admit('first')['allowed'])
+            self.assertFalse(self.admit('second')['allowed'])
+            self.assertTrue(coordination.dispatch('admit', 'claude', 'second', other)['allowed'])
+
+    def test_backend_exception_releases_only_new_owner(self):
+        with patch('usage.require_admission', side_effect=RuntimeError('fixture')):
+            with self.assertRaises(RuntimeError):
+                self.admit('new')
+        self.assertEqual([], coordination.session_status(self.ledger)['sessions'])
+        with patch('usage.require_admission', return_value={'allowed': True}):
+            self.admit('existing')
+        with patch('usage.require_admission', side_effect=RuntimeError('fixture')):
+            with self.assertRaises(RuntimeError):
+                self.admit('existing')
+        self.assertEqual('existing', coordination.session_status(self.ledger)['sessions'][0]['owner'])
+
+    def test_capacity_cli_does_not_require_authority_and_reports_invalid_decrease(self):
+        with redirect_stdout(StringIO()):
+            self.assertEqual(0, coordination.main(['set', '--max-sessions', '8']))
+        self.assertEqual(8, coordination.settings(self.ledger)['max_sessions'])
+        for limit in ('0', '33'):
+            with redirect_stdout(StringIO()):
+                self.assertEqual(2, coordination.main(['set', '--max-sessions', limit]))
+        self.assertEqual(8, coordination.settings(self.ledger)['max_sessions'])
+
+    def test_status_reads_actual_authority_sessions_without_inference(self):
+        coordination.configure(self.ledger, 'owner@example.test', 8)
+        authority = {'allowed': False, 'status': 'session_status', 'max_sessions': 12,
+                     'active_sessions': {'claude': 1}, 'sessions': [{'service': 'claude', 'owner': 'remote'}]}
+        output = StringIO()
+        with patch('coordination.dispatch', return_value=authority) as dispatch, redirect_stdout(output):
+            self.assertEqual(0, coordination.main(['status']))
+        result = json.loads(output.getvalue())
+        self.assertEqual(12, result['authority_max_sessions'])
+        self.assertEqual('remote', result['authority_sessions'][0]['owner'])
+        dispatch.assert_called_once_with('status', 'claude', 'status', unittest.mock.ANY)
+
+    def test_busy_hook_explains_capacity_without_recommending_quota_bypass(self):
+        with patch('coordination.dispatch', return_value={'allowed': False, 'reasons': ['account_session_busy'],
+                                                         'active_sessions': 1, 'max_sessions': 1}):
+            result = claude_gate.evaluate({'hook_event_name': 'UserPromptSubmit', 'session_id': 'second'})
+        self.assertFalse(result['continue'])
+        self.assertIn('(1/1)', result['stopReason'])
+        self.assertIn('coordination set --max-sessions', result['stopReason'])
+        self.assertIn('same quota budget', result['stopReason'])
 
     def test_missing_setup_cannot_acquire(self):
         self.ledger.reset_setup()

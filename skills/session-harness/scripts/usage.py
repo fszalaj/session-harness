@@ -128,6 +128,12 @@ def copilot_snapshot(rows, now=None, complete=False):
 
 def refresh(service, *, ledger=None, initialize=False):
     ledger = ledger or Ledger()
+    from quota_refresh import serialized
+    with serialized(ledger, service):
+        return _refresh(service, ledger=ledger, initialize=initialize)
+
+
+def _refresh(service, *, ledger, initialize=False):
     if service == "codex":
         import harness
         executable = shutil.which("codex")

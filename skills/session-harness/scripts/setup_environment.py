@@ -26,6 +26,7 @@ def parser():
     result.add_argument("--cutoff", help="Reset cutoff HH:MM")
     result.add_argument("--mode", choices=("strict", "observed"))
     result.add_argument("--authority", help="local for one machine, or trusted SSH user@host for a shared quota authority")
+    result.add_argument("--max-sessions", type=int, help="Concurrent sessions per service, 1..32; existing value is preserved")
     result.add_argument("--monthly-budget", help="Positive monthly total API budget")
     result.add_argument("--currency", choices=("USD",), default="USD")
     result.add_argument("--money-mode", choices=("strict", "observed"))
@@ -81,7 +82,7 @@ def main(argv=None, *, input_stream=None, output_stream=None):
         if ledger and not args.reset:
             status = ledger.setup_status()
         changes = (args.services, args.api_services, args.timezone, args.workdays, args.cutoff,
-                   args.mode, args.monthly_budget, args.money_mode, args.authority)
+                   args.mode, args.monthly_budget, args.money_mode, args.authority, args.max_sessions)
         if (args.status or args.reset) and any(value is not None for value in changes):
             raise ValueError("status/reset cannot be combined with configuration changes")
         if args.status:
@@ -107,6 +108,7 @@ def main(argv=None, *, input_stream=None, output_stream=None):
             "workdays": ",".join(WEEKDAYS[day] for day in calendar["workdays"]),
             "cutoff": calendar["reset_cutoff"], "mode": ledger.mode() if ledger else "strict",
             "authority": coordination.settings(ledger)["authority"] if ledger else "local",
+            "max_sessions": coordination.settings(ledger)["max_sessions"] if ledger else coordination.DEFAULT_MAX_SESSIONS,
         }
         output.write("Setup authorizes selected routes only; keys and model catalogs do not authorize spending.\n"
                      "Strict native mode requires enforceable bounds. Observed mode permits in-flight overshoot.\n")
@@ -114,7 +116,8 @@ def main(argv=None, *, input_stream=None, output_stream=None):
                   "api_services": "API services (" + ",".join(SERVICES) + "; none to clear)",
                   "timezone": "Timezone", "workdays": "Workdays", "cutoff": "Reset cutoff",
                   "mode": "Native quota mode (strict/observed)",
-                  "authority": "Quota authority (local for one machine, or trusted SSH user@host)"}
+                  "authority": "Quota authority (local for one machine, or trusted SSH user@host)",
+                  "max_sessions": "Concurrent sessions per service (1..32, shared quota budget)"}
         values = {}
         for key, fallback in defaults.items():
             value = getattr(args, key)
@@ -138,6 +141,8 @@ def main(argv=None, *, input_stream=None, output_stream=None):
             raise ValueError("native mode must be strict or observed")
         if not re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.@-]{0,252}', values["authority"]):
             raise ValueError("invalid quota authority")
+        values['max_sessions'] = int(values['max_sessions'])
+        coordination.validate_settings({'authority': values['authority'], 'max_sessions': values['max_sessions']})
         if apis and values["authority"] != "local":
             raise ValueError("API money dispatch must run on the authority machine; remote money admission is unsupported")
         monthly, money_mode = args.monthly_budget, args.money_mode
@@ -159,18 +164,21 @@ def main(argv=None, *, input_stream=None, output_stream=None):
         elif monthly is not None or money_mode is not None:
             raise ValueError("money options require selected API services")
         preview = dict(services=native, api_services=apis, timezone=values["timezone"],
-                       calendar=schedule, mode=values["mode"], authority=values["authority"])
+                       calendar=schedule, mode=values["mode"], authority=values["authority"],
+                       max_sessions=values['max_sessions'])
         if apis:
             preview["money"] = dict(monthly_budget=monthly, currency=args.currency, mode=money_mode)
         output.write(json.dumps(preview, sort_keys=True) + "\n")
         if not _confirm(args, stream, output):
             output.write("Setup cancelled; authorization was not changed.\n")
             return 130
+        if values['authority'] != 'local':
+            output.write('The remote authority enforces its own session capacity; configure capacity there.\n')
         ledger = ledger or Ledger(path, timezone=values["timezone"])
+        coordination.configure(ledger, values["authority"], values['max_sessions'])
         ledger.reset_setup()
         ledger.budget_calendar(workdays=schedule["workdays"], reset_cutoff=schedule["reset_cutoff"])
         ledger.set_mode(values["mode"])
-        coordination.configure(ledger, values["authority"], coordination.settings(ledger)["max_sessions"])
         if apis:
             SpendLedger(ledger=ledger).configure("total", monthly, code=args.currency, mode=money_mode)
         result = ledger.complete_setup(services=native, api_services=apis,

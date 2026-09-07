@@ -65,7 +65,7 @@ class SetupTests(unittest.TestCase):
                              (123450000000, "strict"))
 
     def test_interactive_eof_and_rejection_make_no_new_ledger(self):
-        for answers in ("", "codex\n\n\n\n\nstrict\nlocal\nno\n", "codex\n\n\n\n\nstrict\n"):
+        for answers in ("", "codex\n\n\n\n\nstrict\nlocal\n4\nno\n", "codex\n\n\n\n\nstrict\n"):
             with self.subTest(answers=answers):
                 self.assertEqual(self.run_setup(answers=answers)[0], 130)
                 self.assertFalse(self.path.exists())
@@ -79,7 +79,7 @@ class SetupTests(unittest.TestCase):
         money.configure("total", "20", mode="observed")
         money.add("total", "5", grant_id="existing-addition")
         ledger.complete_setup(services=["claude"], api_services=["xai"], source="cli")
-        code, _ = self.run_setup(answers="\n" * 9 + "yes\n")
+        code, _ = self.run_setup(answers="\n" * 10 + "yes\n")
         self.assertEqual(code, 0)
         self.assertEqual(ledger.mode(), "observed")
         self.assertEqual(ledger.budget_calendar()["calendar"], {"workdays": [1, 3], "reset_cutoff": "10:45"})
@@ -97,6 +97,20 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertFalse(ledger.setup_status()["complete"])
         self.assertEqual(ledger.mode(), "observed")
+
+    def test_interactive_capacity_is_visible_and_existing_choice_is_preserved(self):
+        code, output = self.run_setup(answers='claude\nnone\n\n\n\nobserved\nlocal\n8\nyes\n')
+        self.assertEqual(0, code)
+        self.assertIn('Concurrent sessions per service', output)
+        self.assertEqual(8, setup.coordination.settings(Ledger(self.path))['max_sessions'])
+        self.assertEqual(0, self.run_setup('--services', 'claude', '--mode', 'observed', '--yes')[0])
+        self.assertEqual(8, setup.coordination.settings(Ledger(self.path))['max_sessions'])
+
+    def test_invalid_capacity_does_not_revoke_existing_setup(self):
+        ledger = Ledger(self.path)
+        ledger.complete_setup(services=['claude'], api_services=[], source='test')
+        self.assertEqual(2, self.run_setup('--services', 'codex', '--mode', 'observed', '--max-sessions', '0', '--yes')[0])
+        self.assertEqual(['claude'], ledger.setup_status()['services'])
 
     def test_status_missing_ledger_is_read_only(self):
         code, output = self.run_setup("--status")

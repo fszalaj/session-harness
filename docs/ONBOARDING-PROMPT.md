@@ -49,6 +49,13 @@ there is no mandatory 10% floor. For a full-utilization target I select, configu
 adaptive per-pool budgets with reserve 0 from actual reset metadata. Otherwise
 retain the existing policy or new-ledger defaults.
 
+Ask about simultaneous sessions in the configuration wizard. New configurations
+allow four per service; preserve existing choices unless I request a change.
+Show `ai-session coordination status` and `ai-session coordination set --max-sessions 8`.
+Change capacity on the account authority without changing the shared quota allowance.
+Different accounts require separate authorities; a common repository does not make
+its contributors share one account. Do not delete live owners to bypass contention.
+
 On Windows, install the timezone dependency and use explicit --link-mode copy
 when symlinks are unavailable. Preserve checked-copy drift and backups; use
 PowerShell 7.3+ or the Python launcher, not a cmd.exe interpolation wrapper.

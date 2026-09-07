@@ -13,7 +13,7 @@ ai-session configure --status
 ai-session version
 ai-session update --check
 ai-session update
-ai-session update --version 0.1.1 --apply
+ai-session update --version 0.1.2 --apply
 ```
 
 Configuration is guided: Enter keeps current settings and the final prompt confirms
@@ -72,6 +72,16 @@ Claude hook installation is separate and idempotent; review and apply a hook ref
 when release notes require it. Updates do not rewrite unrelated settings or hooks.
 
 ## Recovery
+
+### Claude reports account_session_busy
+
+This is a session-capacity stop. Check `ai-session coordination status`, then close
+an unused session or change capacity on the authority with
+`ai-session coordination set --max-sessions 8`. Starting with v0.1.2, increasing
+capacity works while sessions are active. Updates preserve an existing limit of one;
+they do not silently migrate it. All sessions continue to share the same quota budget.
+For crashed owners, confirm termination before release. See
+[session coordination](../skills/session-harness/references/coordination.md).
 
 ### Claude stops because a reset is unknown
 
