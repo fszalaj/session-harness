@@ -19,7 +19,12 @@ from quota import Ledger
 import releases
 
 
-ROOT = Path(__file__).resolve().parents[3]
+SKILL = Path(__file__).resolve().parents[1]
+ROOT = SKILL.parents[1]
+if ROOT.name == '.claude':
+    ROOT = ROOT.parent
+PROFILE = ROOT / 'profile' if (ROOT / 'profile').is_dir() else ROOT / 'infra/host/agent-profile'
+LEGAL = ROOT if (ROOT / 'profile').is_dir() else SKILL
 
 
 @unittest.skipIf(os.name == 'nt', 'Automatic updates require a macOS/Linux symlink profile')
@@ -61,14 +66,17 @@ class AutoUpdateTests(unittest.TestCase):
 
     def source(self, name, version):
         source = self.root / name
-        shutil.copytree(ROOT / 'profile', source / 'profile')
-        for relative in ('scripts/install-agent-profile.py', 'skills/session-harness/SKILL.md',
-                         'skills/session-harness/scripts/harness.py', 'LICENSE', 'NOTICE'):
+        shutil.copytree(PROFILE, source / 'profile')
+        sources = {'scripts/install-agent-profile.py': ROOT / 'scripts/install-agent-profile.py',
+                   'skills/session-harness/SKILL.md': SKILL / 'SKILL.md',
+                   'LICENSE': LEGAL / 'LICENSE', 'NOTICE': LEGAL / 'NOTICE'}
+        for relative, original in sources.items():
             target = source / relative
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(ROOT / relative, target)
+            shutil.copy2(original, target)
         runtime = source / 'skills/session-harness/scripts'
-        for script in (ROOT / 'skills/session-harness/scripts').glob('*.py'):
+        runtime.mkdir(parents=True)
+        for script in (SKILL / 'scripts').glob('*.py'):
             if not script.name.startswith('test_'):
                 shutil.copy2(script, runtime / script.name)
         (source / 'skills/session-harness/VERSION').write_text(version + '\n')

@@ -1,5 +1,5 @@
 {
-  "content_sha256": "8714f4a8c0d89cf0689fa837963fd88db7721cc46a3c974bb2facf9e7e0c8b28",
+  "content_sha256": "5331093108fb87a3360375aa6084530c9d5358af38ace76d1bdbc1db60c15a08",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
@@ -45,7 +45,7 @@
       "skills/session-harness/scripts/test_api_execution.py": "b420773d3b2d3d05558e6e73580ffe7b6c6387206c53194301f8d99aea898d88",
       "skills/session-harness/scripts/test_api_providers.py": "4cef0d2d8b14547e4aa08e7e564ec3a7df1bdc76c3ac254cef3c5865d90fd7df",
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
-      "skills/session-harness/scripts/test_auto_update.py": "22a13b8c82a2598f6f0b184aebac486e9cc6f087e7e08ffb15ead37e675aa746",
+      "skills/session-harness/scripts/test_auto_update.py": "12bea9d08b262c3e32e5f7f8545ee530f58308820cae763f332f093fc9179701",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "56f5522d46e76201981426d222144ccc07e680cdc2d5ba2f827c38cb0b7a7cf3",
@@ -13253,7 +13253,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
       "label": "AutoSchedulerTests",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L505",
+      "source_location": "L513",
       "type": "class"
     },
     {
@@ -13261,7 +13261,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests",
       "label": "AutoUpdateTests",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L26",
+      "source_location": "L31",
       "type": "class"
     },
     {
@@ -17349,7 +17349,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.setUp",
       "label": "AutoSchedulerTests.setUp",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L506",
+      "source_location": "L514",
       "type": "method"
     },
     {
@@ -17357,7 +17357,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_launchd_install_uninstall_loads_and_removes_only_owned_plist",
       "label": "AutoSchedulerTests.test_launchd_install_uninstall_loads_and_removes_only_owned_plist",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L531",
+      "source_location": "L539",
       "type": "method"
     },
     {
@@ -17365,7 +17365,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_launchd_keeps_absolute_argument_boundaries",
       "label": "AutoSchedulerTests.test_launchd_keeps_absolute_argument_boundaries",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L514",
+      "source_location": "L522",
       "type": "method"
     },
     {
@@ -17373,7 +17373,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_systemd_escapes_paths_and_rejects_control_characters",
       "label": "AutoSchedulerTests.test_systemd_escapes_paths_and_rejects_control_characters",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L522",
+      "source_location": "L530",
       "type": "method"
     },
     {
@@ -17381,7 +17381,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.test_systemd_install_uninstall_preserves_changed_definitions",
       "label": "AutoSchedulerTests.test_systemd_install_uninstall_preserves_changed_definitions",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L542",
+      "source_location": "L550",
       "type": "method"
     },
     {
@@ -17389,7 +17389,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.assert_timeout_retains_maintenance",
       "label": "AutoUpdateTests.assert_timeout_retains_maintenance",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L400",
+      "source_location": "L408",
       "type": "method"
     },
     {
@@ -17397,7 +17397,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.assert_unconfirmed_hook_exit_retains_maintenance",
       "label": "AutoUpdateTests.assert_unconfirmed_hook_exit_retains_maintenance",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L374",
+      "source_location": "L382",
       "type": "method"
     },
     {
@@ -17405,7 +17405,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.enabled",
       "label": "AutoUpdateTests.enabled",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L84",
+      "source_location": "L92",
       "type": "method"
     },
     {
@@ -17413,7 +17413,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.hook_processes",
       "label": "AutoUpdateTests.hook_processes",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L103",
+      "source_location": "L111",
       "type": "method"
     },
     {
@@ -17421,7 +17421,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.install",
       "label": "AutoUpdateTests.install",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L79",
+      "source_location": "L87",
       "type": "method"
     },
     {
@@ -17429,7 +17429,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.network",
       "label": "AutoUpdateTests.network",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L89",
+      "source_location": "L97",
       "type": "method"
     },
     {
@@ -17437,7 +17437,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.overlay",
       "label": "AutoUpdateTests.overlay",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L243",
+      "source_location": "L251",
       "type": "method"
     },
     {
@@ -17445,7 +17445,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.run_update",
       "label": "AutoUpdateTests.run_update",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L96",
+      "source_location": "L104",
       "type": "method"
     },
     {
@@ -17453,7 +17453,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.setUp",
       "label": "AutoUpdateTests.setUp",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L27",
+      "source_location": "L32",
       "type": "method"
     },
     {
@@ -17461,7 +17461,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.source",
       "label": "AutoUpdateTests.source",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L62",
+      "source_location": "L67",
       "type": "method"
     },
     {
@@ -17469,7 +17469,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.state_rows",
       "label": "AutoUpdateTests.state_rows",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L115",
+      "source_location": "L123",
       "type": "method"
     },
     {
@@ -17477,7 +17477,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_acquire_lost_acknowledgement_retains_recorded_owner_for_recovery",
       "label": "AutoUpdateTests.test_acquire_lost_acknowledgement_retains_recorded_owner_for_recovery",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L304",
+      "source_location": "L312",
       "type": "method"
     },
     {
@@ -17485,7 +17485,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_activation_hook_failure_rolls_back_profile_and_receipts",
       "label": "AutoUpdateTests.test_activation_hook_failure_rolls_back_profile_and_receipts",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L355",
+      "source_location": "L363",
       "type": "method"
     },
     {
@@ -17493,7 +17493,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_activation_timeout_retains_maintenance_and_update_lock",
       "label": "AutoUpdateTests.test_activation_timeout_retains_maintenance_and_update_lock",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L419",
+      "source_location": "L427",
       "type": "method"
     },
     {
@@ -17501,7 +17501,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_busy_native_owner_defers_without_touching_owner",
       "label": "AutoUpdateTests.test_busy_native_owner_defers_without_touching_owner",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L294",
+      "source_location": "L302",
       "type": "method"
     },
     {
@@ -17509,7 +17509,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_changed_authority_requires_explicit_reenable",
       "label": "AutoUpdateTests.test_changed_authority_requires_explicit_reenable",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L145",
+      "source_location": "L153",
       "type": "method"
     },
     {
@@ -17517,7 +17517,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_disable_during_active_update_does_not_stop_scheduler_or_owner",
       "label": "AutoUpdateTests.test_disable_during_active_update_does_not_stop_scheduler_or_owner",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L425",
+      "source_location": "L433",
       "type": "method"
     },
     {
@@ -17525,7 +17525,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_disabled_default_never_checks_release_or_admission",
       "label": "AutoUpdateTests.test_disabled_default_never_checks_release_or_admission",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L119",
+      "source_location": "L127",
       "type": "method"
     },
     {
@@ -17533,7 +17533,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_empty_ledger_is_not_initialized_by_maintenance",
       "label": "AutoUpdateTests.test_empty_ledger_is_not_initialized_by_maintenance",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L136",
+      "source_location": "L144",
       "type": "method"
     },
     {
@@ -17541,7 +17541,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_enable_requires_loaded_scheduler_and_disable_unloads",
       "label": "AutoUpdateTests.test_enable_requires_loaded_scheduler_and_disable_unloads",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L490",
+      "source_location": "L498",
       "type": "method"
     },
     {
@@ -17549,7 +17549,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_hook_timeout_with_unconfirmed_process_exit_retains_maintenance",
       "label": "AutoUpdateTests.test_hook_timeout_with_unconfirmed_process_exit_retains_maintenance",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L422",
+      "source_location": "L430",
       "type": "method"
     },
     {
@@ -17557,7 +17557,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_incoming_installer_without_auto_update_route_preserves_current_installation",
       "label": "AutoUpdateTests.test_incoming_installer_without_auto_update_route_preserves_current_installation",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L198",
+      "source_location": "L206",
       "type": "method"
     },
     {
@@ -17565,7 +17565,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_managed_link_drift_is_preserved_and_defers",
       "label": "AutoUpdateTests.test_managed_link_drift_is_preserved_and_defers",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L232",
+      "source_location": "L240",
       "type": "method"
     },
     {
@@ -17573,7 +17573,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_missing_ledger_never_creates_replacement_accounting",
       "label": "AutoUpdateTests.test_missing_ledger_never_creates_replacement_accounting",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L126",
+      "source_location": "L134",
       "type": "method"
     },
     {
@@ -17581,7 +17581,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_newer_only_and_cadence_prevent_download_or_maintenance",
       "label": "AutoUpdateTests.test_newer_only_and_cadence_prevent_download_or_maintenance",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L157",
+      "source_location": "L165",
       "type": "method"
     },
     {
@@ -17589,7 +17589,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_overlay_conflict_keeps_current_installation",
       "label": "AutoUpdateTests.test_overlay_conflict_keeps_current_installation",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L283",
+      "source_location": "L291",
       "type": "method"
     },
     {
@@ -17597,7 +17597,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_partial_installer_failure_restores_changed_instructions_and_old_receipt",
       "label": "AutoUpdateTests.test_partial_installer_failure_restores_changed_instructions_and_old_receipt",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L322",
+      "source_location": "L330",
       "type": "method"
     },
     {
@@ -17605,7 +17605,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_does_not_remove_nonempty_lock_evidence",
       "label": "AutoUpdateTests.test_recovery_does_not_remove_nonempty_lock_evidence",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L479",
+      "source_location": "L487",
       "type": "method"
     },
     {
@@ -17613,7 +17613,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_of_stopped_empty_lock_retains_prior_journal_and_accounting",
       "label": "AutoUpdateTests.test_recovery_of_stopped_empty_lock_retains_prior_journal_and_accounting",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L465",
+      "source_location": "L473",
       "type": "method"
     },
     {
@@ -17621,7 +17621,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_refuses_authority_maintenance_even_when_local_is_idle",
       "label": "AutoUpdateTests.test_recovery_refuses_authority_maintenance_even_when_local_is_idle",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L453",
+      "source_location": "L461",
       "type": "method"
     },
     {
@@ -17629,7 +17629,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_recovery_refuses_local_maintenance_and_preserves_evidence",
       "label": "AutoUpdateTests.test_recovery_refuses_local_maintenance_and_preserves_evidence",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L440",
+      "source_location": "L448",
       "type": "method"
     },
     {
@@ -17637,7 +17637,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_registered_overlay_absorbed_when_release_matches",
       "label": "AutoUpdateTests.test_registered_overlay_absorbed_when_release_matches",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L274",
+      "source_location": "L282",
       "type": "method"
     },
     {
@@ -17645,7 +17645,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_registered_overlay_carries_forward",
       "label": "AutoUpdateTests.test_registered_overlay_carries_forward",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L264",
+      "source_location": "L272",
       "type": "method"
     },
     {
@@ -17653,7 +17653,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_signaled_hook_exit_retains_maintenance_without_rollback",
       "label": "AutoUpdateTests.test_signaled_hook_exit_retains_maintenance_without_rollback",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L397",
+      "source_location": "L405",
       "type": "method"
     },
     {
@@ -17661,7 +17661,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_snapshot_bytes_drift_defers_before_download",
       "label": "AutoUpdateTests.test_snapshot_bytes_drift_defers_before_download",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L218",
+      "source_location": "L226",
       "type": "method"
     },
     {
@@ -17669,7 +17669,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_temporary_failure_hook_exit_retains_maintenance_without_rollback",
       "label": "AutoUpdateTests.test_temporary_failure_hook_exit_retains_maintenance_without_rollback",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L394",
+      "source_location": "L402",
       "type": "method"
     },
     {
@@ -17677,7 +17677,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_unregistered_installation_cannot_enable_or_auto_reconcile",
       "label": "AutoUpdateTests.test_unregistered_installation_cannot_enable_or_auto_reconcile",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L252",
+      "source_location": "L260",
       "type": "method"
     },
     {
@@ -17685,7 +17685,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.test_upgrade_then_second_run_preserves_private_policy_and_ledger",
       "label": "AutoUpdateTests.test_upgrade_then_second_run_preserves_private_policy_and_ledger",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L170",
+      "source_location": "L178",
       "type": "method"
     },
     {
@@ -17693,7 +17693,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoUpdateTests.writable_cleanup",
       "label": "AutoUpdateTests.writable_cleanup",
       "source_file": "skills/session-harness/scripts/test_auto_update.py",
-      "source_location": "L57",
+      "source_location": "L62",
       "type": "method"
     },
     {
