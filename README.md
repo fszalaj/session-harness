@@ -275,7 +275,7 @@ activated by the harness.
 | --- | --- | --- |
 | Codex | Account model catalog, quota windows, native credit metadata | Native adapter exists; currently blocked because the credit schema does not establish paid-use disablement |
 | Claude Code | Native selectable models/efforts, complete usage and extra-credit controls | Observed native launch/review when fresh quota and explicit disabled paid controls pass |
-| Antigravity | Account model catalog and native quota groups on supported Unix platforms | Observed native launch/review when fresh quota passes and the documented `useG1Credits` CLI setting is explicitly `false`; missing, `true` or malformed values block |
+| Antigravity | Account model catalog and native quota groups on supported Unix platforms | Observed native launch/review when fresh quota passes and `useG1Credits` is `false`, including its documented default for an absent file/key; enabled, unreadable or malformed settings and invalid parent paths block |
 | Copilot | Metadata-only models/quota and reported overage controls | Native execution unverified and blocked |
 | Cursor | Selectable model catalog; no verified personal quota API | Native execution unverified and blocked |
 | Kimi CLI, OpenCode, Aider, Continue, Gemini CLI | Installed-client inventory; unsupported metadata stays explicit | No protected native adapter |

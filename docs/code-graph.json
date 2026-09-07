@@ -1,5 +1,5 @@
 {
-  "content_sha256": "88c60d3837dac02aeb3785d9500ef10113bbd7bae7826c1cf40b9be6221af597",
+  "content_sha256": "39ee66c42f5f9241acf3241a2d72ccb5e9c53d1c8df49d82be1332c51dae74dc",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
@@ -28,7 +28,7 @@
       "skills/session-harness/scripts/claude_gate.py": "609f38ba5dae2527b787304e90151b97ac91d5a3c2605d40e0e9041be8dc41e1",
       "skills/session-harness/scripts/claude_models.py": "a0184dfb93b40b53305cf8acec153de72cfc297d0c6554fcbb33716fcb9c7a2b",
       "skills/session-harness/scripts/coordination.py": "0bda8defcf7fac4f2a60387cbf258b60a1f9a6c75a6ec87b754795edfdab6acf",
-      "skills/session-harness/scripts/credits.py": "a8c7562ee61997f2ada6322eb6369c9d8129c4a805615afaea3bc11f954c918c",
+      "skills/session-harness/scripts/credits.py": "9a57841b5faa96898b0e2cfae69ea5d836f0d03b7e0f130df474cce0cb2075d4",
       "skills/session-harness/scripts/harness.py": "5b5023d8d03a6de1fe2f2fdfd3a6ea8362485e89e16fa551e8a5fc8a95f52660",
       "skills/session-harness/scripts/inventory.py": "a25b6663c9b00b95202ade571daf574b5264bd69292d00fb84402aecdd9640a3",
       "skills/session-harness/scripts/native_quota.py": "ecda56527babe591c8f21e83ab6891bebd9ad070be10e3de16b7ccc859035dca",
@@ -52,7 +52,7 @@
       "skills/session-harness/scripts/test_budget_unknown_reset.py": "5120bb55cba23b45ec3f5d6f37d9559aed33027c5798d3b333c51b789de94643",
       "skills/session-harness/scripts/test_claude_models.py": "22d0c1d7ebb3dc409b6eb5c07f4ed4d3beff36def13e18568b375defda8b237e",
       "skills/session-harness/scripts/test_coordination.py": "3d3b58600b8aa3d75733061410c748b6131b2fd986287f6b7d9dbc4c297acd7b",
-      "skills/session-harness/scripts/test_credits.py": "f3ca4f9e9988932b45ba9be7cc7640093ba9c20fa01833fb45a231c083455e50",
+      "skills/session-harness/scripts/test_credits.py": "84c4d7f9d135f3bed9ca0a19065657ab9e8e7bf34cf98965395ee66c911568ef",
       "skills/session-harness/scripts/test_harness.py": "7a807de365996054eff245dc0d83e89f34ae12926705e5fa0578566fa6359b2e",
       "skills/session-harness/scripts/test_inventory.py": "3d460c6cfe3c679e600ee4be1fc9b2980f906551a259e3b6ce70d89979c6957c",
       "skills/session-harness/scripts/test_maintenance.py": "25b1b96761f7e4d614af5cceb4eb79c54b51c729d43173b1de2d29ba88a8ca76",
@@ -14825,7 +14825,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:gate",
       "label": "gate",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L379",
+      "source_location": "L387",
       "type": "function"
     },
     {
@@ -14841,7 +14841,7 @@
       "id": "pyfunc:skills/session-harness/scripts/credits.py:native_reasons",
       "label": "native_reasons",
       "source_file": "skills/session-harness/scripts/credits.py",
-      "source_location": "L351",
+      "source_location": "L359",
       "type": "function"
     },
     {
@@ -18633,7 +18633,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_disabled_setting_cannot_make_missing_quota_admissible",
       "label": "AntigravitySettingsTests.test_disabled_setting_cannot_make_missing_quota_admissible",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L461",
+      "source_location": "L463",
       "type": "method"
     },
     {
@@ -18649,7 +18649,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_gate_rereads_settings_and_never_reuses_disabled_evidence",
       "label": "AntigravitySettingsTests.test_gate_rereads_settings_and_never_reuses_disabled_evidence",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L449",
+      "source_location": "L451",
       "type": "method"
     },
     {
@@ -18657,7 +18657,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_invalid_state_recovers_and_encoding_is_checked",
       "label": "AntigravitySettingsTests.test_invalid_state_recovers_and_encoding_is_checked",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L431",
+      "source_location": "L433",
       "type": "method"
     },
     {
@@ -18665,7 +18665,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_malformed_controls_fail_closed",
       "label": "AntigravitySettingsTests.test_malformed_controls_fail_closed",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L438",
+      "source_location": "L440",
       "type": "method"
     },
     {
@@ -18681,7 +18681,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_credits.py:AntigravitySettingsTests.test_refresh_attaches_setting_without_changing_native_quota_evidence",
       "label": "AntigravitySettingsTests.test_refresh_attaches_setting_without_changing_native_quota_evidence",
       "source_file": "skills/session-harness/scripts/test_credits.py",
-      "source_location": "L469",
+      "source_location": "L471",
       "type": "method"
     },
     {
