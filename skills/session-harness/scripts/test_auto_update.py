@@ -22,6 +22,7 @@ import releases
 ROOT = Path(__file__).resolve().parents[3]
 
 
+@unittest.skipIf(os.name == 'nt', 'Automatic updates require a macOS/Linux symlink profile')
 class AutoUpdateTests(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
@@ -500,6 +501,7 @@ class AutoUpdateTests(unittest.TestCase):
             uninstall.assert_called_once()
 
 
+@unittest.skipIf(os.name == 'nt', 'Native automatic schedulers require macOS or Linux')
 class AutoSchedulerTests(unittest.TestCase):
     def setUp(self):
         directory = tempfile.TemporaryDirectory()
