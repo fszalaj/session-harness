@@ -73,6 +73,29 @@ when release notes require it. Updates do not rewrite unrelated settings or hook
 
 ## Recovery
 
+### Claude stops because a reset is unknown
+
+If a hook reports `unknown_adaptive_reset` and `budget_anchor_missing`, inspect
+the installed version and pool status from a terminal:
+
+```sh
+ai-session version
+ai-session update --check
+ai-session budget claude
+```
+
+Starting with v0.1.1, a verified native long-window duration supports conservative
+daily pacing even when the reset timestamp is absent. Update older installations
+with `ai-session update`, restart Claude to reload instructions, and retry the
+message. A project with a vendored skill must update its selected copy too.
+
+If both the reset and native duration are unknown, the pool still needs reliable
+metadata or an explicitly chosen fixed/window policy. A genuine daily-limit stop
+is separate. Do not disable the hook, delete accounting or assume a missing reset
+means unlimited usage. See [budget controls](../skills/session-harness/references/budgets.md).
+
+### Installation and updater recovery
+
 Installer previews and private backups describe replaced files. A failed download
 leaves the installed release intact; installation failures report their error and
 retain backups for inspection. File replacement is individually atomic, not an
@@ -86,6 +109,21 @@ unrelated to quota locks and session ownership. Keep old immutable snapshots for
 running sessions and recovery; automatic cleanup is deliberately absent.
 
 ## Maintainer publication
+
+For changes that affect setup, everyday commands, limits, updates or recovery,
+review the affected workflow from a new user's perspective before publication:
+
+- Follow the code graph to the implemented command and read its actual options.
+- Rewrite the matching README, onboarding prompt/guide and skill references;
+  replace obsolete commands and defaults rather than accumulating conflicting advice.
+- Include the entry command, required configuration, expected result and recovery
+  from relevant errors. Keep private environments and account evidence out of examples.
+- Check that examples work in supported shells and retain documented platform limits.
+- Explain upgrade or restart requirements in release notes. After the push, verify
+  docs and configured consumers against their selected versions; documentation-only
+  changes do not require replacing an unchanged installed runtime.
+
+For a runtime release:
 
 1. Update `skills/session-harness/VERSION`, release notes and the relevant README,
    onboarding, profile and skill instructions. Query the code graph before edits.

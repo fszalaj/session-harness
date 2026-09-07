@@ -17,6 +17,10 @@ coding-client and explicit API harness; do not add application-specific policies
   capability boundaries. Simulated tests are not evidence of provider guarantees.
 - Existing application instructions outrank generic defaults. Keep updates explicit,
   reversible and reviewable; do not change authentication or paid-usage preferences.
+- Ship usability changes with matching documentation. Rewrite affected user workflows,
+  commands and recovery steps in README, onboarding, skills and release notes;
+  remove obsolete guidance instead of only appending new sections. Verify examples
+  against the implemented CLI and distinguish released behavior from development.
 
 - Use the code graph before code and documentation changes; inspect measured blind
   spots in source. After every push, verify README/docs/skills and synchronize

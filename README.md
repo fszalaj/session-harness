@@ -120,6 +120,8 @@ Claude's optional command hooks merge with existing settings, make private backu
 and stop supported prompt/tool events on denial without asking another model to
 retry. Restart Claude after installation. A supervisor owns launched process groups;
 hooks alone cannot bound streaming text or control clients that ignore them.
+For a hook reporting an unknown reset, follow the
+[recovery steps](docs/RELEASES.md#claude-stops-because-a-reset-is-unknown).
 Direct sessions on machines without the shared authority remain outside protection.
 Cross-machine API dispatch is deliberately blocked: execute paid requests on the
 monetary authority machine, whose reservations and charges stay in one ledger.
