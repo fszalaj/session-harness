@@ -31,7 +31,14 @@ ranking; multiple candidates require explicit provider capability evidence. The
 helper refuses ambiguous manager ranking. Worker suggestions still require the
 manager to verify task fit, tools and cost.
 
-Use the exact runtime-selected ID and highest supported effort for the manager.
+Use the exact runtime-selected ID and highest supported standalone reasoning effort
+for the manager. Codex `ultra` combines maximum reasoning with automatic delegation;
+the harness selects `max` when advertised and owns delegation through its existing
+review, role and budget rules. If `max` is unavailable, select the highest advertised
+standalone level. The catalog still reports `ultra`; it is not a manager default.
+See [Codex models](https://learn.chatgpt.com/docs/models). Claude's `max` is a reasoning
+level, while `ultracode` is a separate orchestration mode. Effort labels across clients
+do not establish equal cost or quality, and this choice makes no savings guarantee.
 There is no invented `latest` alias. Launch resolves afresh; a persistent exact
 `model` in `config.toml` will age. Native sessions opened without the launcher must
 check their selected model before planning. Workers may use the same current model

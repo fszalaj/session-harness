@@ -163,7 +163,10 @@ Direct sessions on machines without the shared authority remain outside protecti
 Cross-machine API dispatch is deliberately blocked: execute paid requests on the
 monetary authority machine, whose reservations and charges stay in one ledger.
 
-Only the manager plans at maximum effort. Ordinary reviewers now use medium effort
+Only the manager plans at maximum effort. For Codex, `max` is selected over the composite
+`ultra` mode, which also enables automatic delegation. Claude uses its standalone
+`max`; models without `max` use their highest advertised standalone reasoning level.
+Ordinary reviewers use medium effort
 and a 16 KiB packet bound; high effort is an explicit escalation for a difficult
 review. The default review deadline is three minutes. Workers receive bounded tasks
 and fresh context, normally medium effort, low for gathering. Claude role files

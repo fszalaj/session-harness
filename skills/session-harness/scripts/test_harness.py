@@ -79,7 +79,19 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(worker["selection_status"], "task_fit_verification_required")
 
     def test_maximum_advertised_effort(self):
-        self.assertEqual(harness.select_effort(["low", "high", "ultra"], "planner"), "ultra")
+        self.assertEqual(harness.select_effort(["low", "high", "ultra"], "planner"), "high")
+
+    def test_codex_launch_keeps_delegation_with_harness_manager(self):
+        planner, worker = harness.select_models([model("gpt-99.10-test", efforts=["low", "medium", "high", "max", "ultra"])], "gpt")
+        result = harness.launch_plan("codex", "planner", {"executable": "codex", "planner": planner})
+        self.assertIn('model_reasoning_effort="max"', result["argv"])
+        self.assertIn('plan_mode_reasoning_effort="max"', result["argv"])
+        self.assertEqual(worker["effort"], "medium")
+
+    def test_orchestration_mode_alone_cannot_establish_reasoning_effort(self):
+        with self.assertRaises(harness.HarnessError) as raised:
+            harness.select_effort(["ultra"], "planner")
+        self.assertEqual(raised.exception.status, "unsupported_capability")
 
     def test_unknown_effort_does_not_silently_downgrade(self):
         with self.assertRaises(harness.HarnessError) as raised:

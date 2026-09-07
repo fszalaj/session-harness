@@ -280,7 +280,10 @@ def select_effort(supported, role):
         raise HarnessError("unsupported_capability", "Reasoning efforts are missing or unknown; refresh capability policy.")
     ordered = sorted(set(supported), key=EFFORTS.index)
     if role == "planner":
-        return ordered[-1]
+        reasoning = [effort for effort in ordered if effort != "ultra"]
+        if not reasoning:
+            raise HarnessError("unsupported_capability", "No advertised standalone reasoning effort; orchestration modes do not establish one.")
+        return reasoning[-1]
     choices = ordered[:-1]
     if not choices:
         raise HarnessError("unsupported_capability", "No advertised non-maximum worker effort.")

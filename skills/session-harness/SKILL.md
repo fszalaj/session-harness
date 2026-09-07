@@ -31,8 +31,11 @@ Claude command hooks (`ai-session hooks --install --apply`) enforce supported pr
 and tool boundaries without model calls. Missing authority connectivity blocks.
 Direct unhooked sessions and streaming text remain outside exact enforcement.
 
-Keep the manager's maximum effort for planning and reconciliation. Delegate execution
-with explicit current-tier model and medium effort; gathering normally uses low.
+Keep the manager's maximum effort for planning and reconciliation. Select the
+highest standalone reasoning level, such as `max`,
+and do not add Codex `ultra` or Claude `ultracode` automatic orchestration as a default.
+This is a control-policy choice, not a claim that identical labels are comparable.
+Delegate execution with explicit current-tier model and medium effort; gathering normally uses low.
 Use a fresh leaf packet (in native spawn APIs, no full-history fork). Include only
 objective, owned files, relevant contracts and acceptance. Target 2-4 KiB input and
 300 words back. Reuse a worker only for its bounded correction, not serial whole-repo
