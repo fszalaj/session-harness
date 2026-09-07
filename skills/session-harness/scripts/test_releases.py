@@ -21,7 +21,9 @@ def archive(extra=None, selected="0.1.0"):
     files.update(extra or {})
     with zipfile.ZipFile(buffer, "w") as bundle:
         for name, value in files.items():
-            bundle.writestr(f"session-harness-{selected}/" + name, value)
+            item = zipfile.ZipInfo()
+            item.filename = item.orig_filename = f"session-harness-{selected}/" + name
+            bundle.writestr(item, value)
     return buffer.getvalue()
 
 

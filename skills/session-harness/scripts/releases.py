@@ -64,7 +64,7 @@ def unpack(data, destination, selected):
         if len(archive.infolist()) > 10000:
             raise ValueError("Too many archive entries")
         for item in archive.infolist():
-            name = item.filename
+            name = item.orig_filename
             parts = PurePosixPath(name).parts
             mode = item.external_attr >> 16
             if (not parts or parts[0] != prefix or len(parts) < 2 or name.startswith("/")

@@ -1,5 +1,5 @@
 {
-  "content_sha256": "2e6ce6e25b39b8122285f61f94d5693bde1faf89d8a047ed37ad856cddb3b3b4",
+  "content_sha256": "9c9942aa62df1700d877c20ac2d2f2f21a41e6de489a0bb2c7ce810b1b06f8e0",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
@@ -32,7 +32,7 @@
       "skills/session-harness/scripts/optional_clients.py": "6a8192702eb2f0a7b9722a5352e6dcbcd628456ed3bbf2f75cc1217ed36e496c",
       "skills/session-harness/scripts/platform_runtime.py": "ad507d0542b283953041c1eb2e1e5bde0b4f9d59b6f568d9e6ff3af79ffc1f62",
       "skills/session-harness/scripts/quota.py": "63b9104699487a0539e1ef22ec3bfdc3bdfaba94fd2ac6a5696379bf20dfe0c3",
-      "skills/session-harness/scripts/releases.py": "a39ac18c4d862dc7d553b17f12b500d4ff7805e89d698f277483cc07c464a053",
+      "skills/session-harness/scripts/releases.py": "1edd8b4bb014dd92f60cd1a46422e764ebf2bcd1afa6a791175d4882cd265e88",
       "skills/session-harness/scripts/setup_environment.py": "1159f9d7014f78c10e889ea10ade002a3c702ad1831b6e86fb65a1f27b921a9e",
       "skills/session-harness/scripts/spend.py": "f808ea30f9f3ae7d141065f6c968dea5a3db26053670f4aa6cc069d20d2b1600",
       "skills/session-harness/scripts/spend_cli.py": "60271671526d4443f48c8e1661ec88f1b90b2b4b0d399c11c316434096b2b086",
@@ -53,7 +53,7 @@
       "skills/session-harness/scripts/test_optional_clients.py": "39bc13b222daf9636301b2df66f648d1c860dad0218ca553bfb9051b0d938766",
       "skills/session-harness/scripts/test_platform_runtime.py": "361f83baa81bce13abe74186090be8ae90bcf49d519a24f68b233842a9204df5",
       "skills/session-harness/scripts/test_quota.py": "03a3a79e920b81e41f306568c630558b43a51346d33a3cb5528fb9477a044ebd",
-      "skills/session-harness/scripts/test_releases.py": "927f2f81587848eaace2782fe6c910053d8c435ab1a2698a217fadb467505cb8",
+      "skills/session-harness/scripts/test_releases.py": "b964deebbc9d72ee7a64d262a6a1422e150a3315bc383b7afda7a3e2955fb7f3",
       "skills/session-harness/scripts/test_setup_admission.py": "a1eac325a60b7435d170ad8261f505a55551cc4aa8e3f36b531b9cf6fe0161b6",
       "skills/session-harness/scripts/test_setup_environment.py": "01d028ca74a0a78a98101c46113b2a26591979b66544e95365b2cafca013d2c8",
       "skills/session-harness/scripts/test_spend.py": "89219080c1b1561e61c74d4a9f1d98fa2237f849e11ceede30c20cb050747d52",
@@ -11185,7 +11185,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
       "label": "ReleaseTests",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L28",
+      "source_location": "L30",
       "type": "class"
     },
     {
@@ -16697,7 +16697,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.metadata",
       "label": "ReleaseTests.metadata",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L29",
+      "source_location": "L31",
       "type": "method"
     },
     {
@@ -16705,7 +16705,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_checksums_and_asset_urls",
       "label": "ReleaseTests.test_checksums_and_asset_urls",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L72",
+      "source_location": "L74",
       "type": "method"
     },
     {
@@ -16713,7 +16713,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_concurrent_update_is_refused",
       "label": "ReleaseTests.test_concurrent_update_is_refused",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L95",
+      "source_location": "L97",
       "type": "method"
     },
     {
@@ -16721,7 +16721,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_failed_download_preserves_private_state_and_releases_lock",
       "label": "ReleaseTests.test_failed_download_preserves_private_state_and_releases_lock",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L85",
+      "source_location": "L87",
       "type": "method"
     },
     {
@@ -16729,7 +16729,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_metadata_rejects_mutable_draft_prerelease_and_wrong_tag",
       "label": "ReleaseTests.test_metadata_rejects_mutable_draft_prerelease_and_wrong_tag",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L41",
+      "source_location": "L43",
       "type": "method"
     },
     {
@@ -16737,7 +16737,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_only_exact_stable_versions",
       "label": "ReleaseTests.test_only_exact_stable_versions",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L35",
+      "source_location": "L37",
       "type": "method"
     },
     {
@@ -16745,7 +16745,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_safe_archive_extracts_and_rejects_wrong_contents",
       "label": "ReleaseTests.test_safe_archive_extracts_and_rejects_wrong_contents",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L48",
+      "source_location": "L50",
       "type": "method"
     },
     {
@@ -16753,7 +16753,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_symlink_and_size_bounds",
       "label": "ReleaseTests.test_symlink_and_size_bounds",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L60",
+      "source_location": "L62",
       "type": "method"
     },
     {
@@ -16761,7 +16761,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_unsafe_archive_names_and_duplicate_paths_are_rejected",
       "label": "ReleaseTests.test_unsafe_archive_names_and_duplicate_paths_are_rejected",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L55",
+      "source_location": "L57",
       "type": "method"
     },
     {
