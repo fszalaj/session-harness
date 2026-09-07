@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1
+
+- Fix adaptive admission for native weekly pools that report usage but no reset
+  timestamp, including Claude model-scoped pools after balance recovery.
+- Pace over a verified full native window until a reset is reported, retaining
+  daily consumption, frozen allowances, grants, reserves and work calendars.
+- Distinguish conservative pacing from actual reset forecasts in budget status.
+  Unknown window lengths, stale metadata and strict admission still block.
+
 ## 0.1.0
 
 - First versioned release of the shared coding-session harness.

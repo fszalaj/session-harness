@@ -43,7 +43,10 @@ reserve for every pool. New ledgers default to adaptive allocation and 0% reserv
 UTC, all seven workdays and an 08:30 reset cutoff. Preserve existing configuration.
 Adaptive policy distributes the balance across scheduled workdays
 until the actual reset; a fresh reset due by tomorrow's local cutoff releases
-current headroom on a scheduled workday without predicting a refill. Honor existing settings and dated grants. See [budget controls](references/budgets.md)
+current headroom on a scheduled workday without predicting a refill. When the reset
+is absent, a verified native long-window duration allows conservative full-window
+pacing; keep the reset unknown and do not apply the cutoff release. Honor existing
+settings and dated grants. See [budget controls](references/budgets.md)
 for daily additions and use-rest. Record fresh observations; unknown usage is not
 zero and a reset forecast alone never creates headroom.
 

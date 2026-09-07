@@ -78,7 +78,7 @@ reserve. Instructions loaded earlier in a session may describe an old policy.
 | Strategy | Behavior |
 | --- | --- |
 | Fixed | Daily limit, initially 20 points, and the effective configured reserve. Provider renewal does not erase daily consumption. |
-| Adaptive | Divide available long-window balance across eligible scheduled workdays until the actual reset. Verified short windows use the window strategy. |
+| Adaptive | Divide available long-window balance across eligible scheduled workdays until the actual reset; if absent, pace over a verified full native window. Verified short windows use the window strategy. |
 | Window | Permit actual native balance above the configured reserve, without separate daily pacing. Intended for renewable session windows or an explicit owner choice. |
 
 New ledgers choose adaptive to target full weekly/monthly utilization. Legacy
@@ -112,8 +112,22 @@ All reported pools must pass independently. Do not add percentages from unrelate
 windows or assume a model-scoped pool is irrelevant without a verified mapping.
 Automatic short-window classification requires validated native duration evidence;
 a model name or a reset a few hours away does not establish the window length.
-Unknown reset schedules block adaptive allocation. Select an explicit fixed/window
-policy for that pool when authorized, or retain the block until reliable metadata exists.
+If the reset is absent but the adapter verifies a native long-window duration,
+adaptive pacing uses a conservative full-duration horizon starting today. It counts
+every scheduled date touched by that duration, without the reset cutoff. A seven-day
+window observed at midday can therefore span eight calendar dates. The daily anchor
+freezes that allocation; repeated reads, restarts and a newly reported reset cannot
+recredit it. A withdrawn reset or changed duration can tighten the remaining allowance.
+Only a fresh observed balance recovery can start a new balance epoch.
+
+This is a local pacing policy, not an assertion about when the provider will renew.
+`resets_at`, `forecast_days` and `workdays_remaining` remain unknown. Status exposes
+`pacing_source: native_window_duration` and `pacing_workdays` separately. The cutoff
+never releases balance from this fallback. Freshness, every pool, workdays, reserve,
+grants and strict-mode rules still apply. Verified durations must exceed one day and
+be at most 366 days; unclassified or unsupported windows remain blocked. When neither
+a reset nor a verified duration is available, select an explicit fixed/window policy
+only when authorized, or retain the block until reliable metadata exists.
 
 ## Resets and evidence
 

@@ -13,7 +13,7 @@ ai-session configure --status
 ai-session version
 ai-session update --check
 ai-session update
-ai-session update --version 0.1.0 --apply
+ai-session update --version 0.1.1 --apply
 ```
 
 Configuration is guided: Enter keeps current settings and the final prompt confirms

@@ -182,6 +182,11 @@ off have no automatic allowance; explicit `add` or `use-rest` grants can make ro
 for authorized work. Neither calendar rules nor grants invent provider headroom,
 waive missing evidence or prove that a reset has occurred.
 
+For an absent reset with a verified native long-window duration, adaptive pacing
+uses a full-duration horizon and keeps the reset unknown. It cannot activate the
+cutoff release. Without either kind of schedule evidence, an explicit fixed/window
+policy is needed; do not delete the pool or grant unlimited work to bypass the block.
+
 Read [budget controls](../skills/session-harness/references/budgets.md) for daily
 additions, actual reset horizons and unknown-window exceptions. Follow the maintained
 [usage policy](../skills/session-harness/references/usage-and-context.md) and CLI

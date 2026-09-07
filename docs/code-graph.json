@@ -1,11 +1,11 @@
 {
-  "content_sha256": "9c9942aa62df1700d877c20ac2d2f2f21a41e6de489a0bb2c7ce810b1b06f8e0",
+  "content_sha256": "b6113592571540c15000f4626ae41d5745cf946dcf5cf6b51a67ecf1dd7c0915",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 1697,
+    "edge_count": 1728,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 954,
+    "node_count": 972,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -20,8 +20,8 @@
       "skills/session-harness/scripts/api_execution.py": "e8baf738b118fec39a04a3d1798acd5b4964c4bf22ab11dc5d8e33154b1f6b65",
       "skills/session-harness/scripts/api_providers.py": "274cea4c40c494a18895ba346af9c7ec16ff8f191486157a04df4692302cb687",
       "skills/session-harness/scripts/api_transport.py": "3e06e183260978018619b8b2fe4d4dfa3d0a0961273e360cfb687789f884546c",
-      "skills/session-harness/scripts/budget_cli.py": "470dbe5efc82ac79dbad14ac057e2d7428e9c73365aa6c4eac4d4cae13353ff2",
-      "skills/session-harness/scripts/budget_policy.py": "31f229ac6a7b2ed5bd52ee4066ed35dc5d87d60365208ab8bca6649aaf56fef3",
+      "skills/session-harness/scripts/budget_cli.py": "a6f6d39897920b29247e9cac91678e30a3050939d0ae38fd8492c3d29b60a68f",
+      "skills/session-harness/scripts/budget_policy.py": "1d436917270dd50ad553b5d87f76b5219d8f67f39d822312f402822cc9553906",
       "skills/session-harness/scripts/claude_gate.py": "0f7cb1b259182504d0872c77df0e29292772b527ce399ef3ed217c1dcfc6421b",
       "skills/session-harness/scripts/claude_models.py": "a0184dfb93b40b53305cf8acec153de72cfc297d0c6554fcbb33716fcb9c7a2b",
       "skills/session-harness/scripts/coordination.py": "eee7466c418411e81e7172ebe816f6973d7b7e992448797d4eed2c806475ccbf",
@@ -44,6 +44,7 @@
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "56f5522d46e76201981426d222144ccc07e680cdc2d5ba2f827c38cb0b7a7cf3",
+      "skills/session-harness/scripts/test_budget_unknown_reset.py": "5120bb55cba23b45ec3f5d6f37d9559aed33027c5798d3b333c51b789de94643",
       "skills/session-harness/scripts/test_claude_models.py": "22d0c1d7ebb3dc409b6eb5c07f4ed4d3beff36def13e18568b375defda8b237e",
       "skills/session-harness/scripts/test_coordination.py": "89abf9767c0ca688f53eb2bb379e594fe59f8f16d20c8d2bdc4e55d166ca5203",
       "skills/session-harness/scripts/test_credits.py": "96297fd2d97575dae1d492f3d783762b275247b5334c977e15798e23d390d939",
@@ -1378,6 +1379,12 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/budget_policy.py",
       "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:numeric"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/budget_policy.py",
+      "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:pacing_forecast"
     },
     {
       "confidence": "EXTRACTED",
@@ -3814,6 +3821,78 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/test_budget_policy.py",
       "target": "pyfunc:skills/session-harness/scripts/test_budget_policy.py:stamp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "extmodule:contextlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "extmodule:io"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "module:skills/session-harness/scripts/budget_cli.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "module:skills/session-harness/scripts/budget_policy.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "module:skills/session-harness/scripts/claude_gate.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "module:skills/session-harness/scripts/credits.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "module:skills/session-harness/scripts/quota.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "module:skills/session-harness/scripts/test_budget_policy.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "target": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests"
     },
     {
       "confidence": "EXTRACTED",
@@ -6710,6 +6789,96 @@
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.record"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_actual_reset_appearance_preserves_today_cap"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_budget_display_distinguishes_pacing_from_a_reported_reset"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_deadline_withdrawal_tightens_full_balance_to_weekly_pacing"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_disappearing_reset_or_changed_duration_cannot_recredit_an_anchor"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_dst_uses_full_duration_and_never_the_reset_cutoff"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_hook_allows_paced_work_and_stops_at_its_cap"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_next_day_redistributes_without_a_fake_recovery"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_reads_restarts_repeated_refreshes_cannot_grow_the_daily_allowance"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_real_recovery_to_null_preserves_consumption_and_spent_grants"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_stale_or_incomplete_transition_cannot_use_old_large_anchor"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_unknown_reset_uses_full_window_without_predicting_refill"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_unknown_untrusted_and_expired_metadata_still_block"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "target": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_work_calendar_reserve_and_cutoff_are_respected"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
       "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_literal_auth_and_single_owned_initialize"
     },
@@ -9033,7 +9202,7 @@
       "confidence": "INFERRED",
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/budget_policy.py:allocation",
-      "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:forecast_days"
+      "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:pacing_forecast"
     },
     {
       "confidence": "INFERRED",
@@ -9070,6 +9239,12 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/budget_policy.py:anchor_pool",
       "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:effective_policy"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/budget_policy.py:anchor_pool",
+      "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:pacing_forecast"
     },
     {
       "confidence": "INFERRED",
@@ -9128,6 +9303,12 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/budget_policy.py:pacing_forecast",
+      "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:forecast_days"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/budget_policy.py:pool_budget",
       "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:active_grants"
     },
@@ -9160,6 +9341,12 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/budget_policy.py:pool_budget",
       "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:forecast_days"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/budget_policy.py:pool_budget",
+      "target": "pyfunc:skills/session-harness/scripts/budget_policy.py:pacing_forecast"
     },
     {
       "confidence": "INFERRED",
@@ -10656,6 +10843,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "label": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/test_claude_models.py",
       "label": "skills/session-harness/scripts/test_claude_models.py",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
@@ -11042,6 +11236,14 @@
       "label": "BudgetTests",
       "source_file": "skills/session-harness/scripts/test_budget_policy.py",
       "source_location": "L27",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests",
+      "label": "UnknownResetTests",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L17",
       "type": "class"
     },
     {
@@ -11793,7 +11995,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_cli.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/budget_cli.py",
-      "source_location": "L86",
+      "source_location": "L89",
       "type": "function"
     },
     {
@@ -11801,7 +12003,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_cli.py:parser_for",
       "label": "parser_for",
       "source_file": "skills/session-harness/scripts/budget_cli.py",
-      "source_location": "L57",
+      "source_location": "L60",
       "type": "function"
     },
     {
@@ -11809,7 +12011,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:active_grants",
       "label": "active_grants",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L184",
+      "source_location": "L201",
       "type": "function"
     },
     {
@@ -11817,7 +12019,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:allocation",
       "label": "allocation",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L201",
+      "source_location": "L218",
       "type": "function"
     },
     {
@@ -11825,7 +12027,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:anchor_pool",
       "label": "anchor_pool",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L215",
+      "source_location": "L232",
       "type": "function"
     },
     {
@@ -11833,7 +12035,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:audit_deadline",
       "label": "audit_deadline",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L244",
+      "source_location": "L268",
       "type": "function"
     },
     {
@@ -11849,7 +12051,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:deadline_release",
       "label": "deadline_release",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L93",
+      "source_location": "L105",
       "type": "function"
     },
     {
@@ -11857,7 +12059,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:effective_policy",
       "label": "effective_policy",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L103",
+      "source_location": "L115",
       "type": "function"
     },
     {
@@ -11865,7 +12067,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:empty_state",
       "label": "empty_state",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L115",
+      "source_location": "L127",
       "type": "function"
     },
     {
@@ -11910,6 +12112,14 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:pacing_forecast",
+      "label": "pacing_forecast",
+      "source_file": "skills/session-harness/scripts/budget_policy.py",
+      "source_location": "L93",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:parse_workdays",
       "label": "parse_workdays",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
@@ -11921,7 +12131,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:pool_budget",
       "label": "pool_budget",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L254",
+      "source_location": "L278",
       "type": "function"
     },
     {
@@ -11953,7 +12163,7 @@
       "id": "pyfunc:skills/session-harness/scripts/budget_policy.py:validate_state",
       "label": "validate_state",
       "source_file": "skills/session-harness/scripts/budget_policy.py",
-      "source_location": "L119",
+      "source_location": "L131",
       "type": "function"
     },
     {
@@ -15194,6 +15404,126 @@
       "label": "BudgetTests.test_use_rest_pins_ceiling_at_recovery_and_does_not_inherit_new_pool",
       "source_file": "skills/session-harness/scripts/test_budget_policy.py",
       "source_location": "L188",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.record",
+      "label": "UnknownResetTests.record",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L27",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.setUp",
+      "label": "UnknownResetTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L18",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_actual_reset_appearance_preserves_today_cap",
+      "label": "UnknownResetTests.test_actual_reset_appearance_preserves_today_cap",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L64",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_budget_display_distinguishes_pacing_from_a_reported_reset",
+      "label": "UnknownResetTests.test_budget_display_distinguishes_pacing_from_a_reported_reset",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L153",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_deadline_withdrawal_tightens_full_balance_to_weekly_pacing",
+      "label": "UnknownResetTests.test_deadline_withdrawal_tightens_full_balance_to_weekly_pacing",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L96",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_disappearing_reset_or_changed_duration_cannot_recredit_an_anchor",
+      "label": "UnknownResetTests.test_disappearing_reset_or_changed_duration_cannot_recredit_an_anchor",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L88",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_dst_uses_full_duration_and_never_the_reset_cutoff",
+      "label": "UnknownResetTests.test_dst_uses_full_duration_and_never_the_reset_cutoff",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L136",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_hook_allows_paced_work_and_stops_at_its_cap",
+      "label": "UnknownResetTests.test_hook_allows_paced_work_and_stops_at_its_cap",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L144",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_next_day_redistributes_without_a_fake_recovery",
+      "label": "UnknownResetTests.test_next_day_redistributes_without_a_fake_recovery",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L119",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_reads_restarts_repeated_refreshes_cannot_grow_the_daily_allowance",
+      "label": "UnknownResetTests.test_reads_restarts_repeated_refreshes_cannot_grow_the_daily_allowance",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L49",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_real_recovery_to_null_preserves_consumption_and_spent_grants",
+      "label": "UnknownResetTests.test_real_recovery_to_null_preserves_consumption_and_spent_grants",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L74",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_stale_or_incomplete_transition_cannot_use_old_large_anchor",
+      "label": "UnknownResetTests.test_stale_or_incomplete_transition_cannot_use_old_large_anchor",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L112",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_unknown_reset_uses_full_window_without_predicting_refill",
+      "label": "UnknownResetTests.test_unknown_reset_uses_full_window_without_predicting_refill",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L37",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_unknown_untrusted_and_expired_metadata_still_block",
+      "label": "UnknownResetTests.test_unknown_untrusted_and_expired_metadata_still_block",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L102",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_budget_unknown_reset.py:UnknownResetTests.test_work_calendar_reserve_and_cutoff_are_respected",
+      "label": "UnknownResetTests.test_work_calendar_reserve_and_cutoff_are_respected",
+      "source_file": "skills/session-harness/scripts/test_budget_unknown_reset.py",
+      "source_location": "L126",
       "type": "method"
     },
     {

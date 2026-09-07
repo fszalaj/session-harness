@@ -65,8 +65,10 @@ eligible working days. On a working day, a reset at or before tomorrow's cutoff
 releases the full current native balance subject to the selected reserve and fresh,
 complete evidence. Days off have no automatic allowance; explicit grants can add it.
 Show `ai-session budget`, `ai-session budget add SERVICE 5` and
-`ai-session budget use-rest SERVICE`. Unknown reset schedules need an explicit
-policy, not an invented renewal date. Calendar rules and grants cannot create
+`ai-session budget use-rest SERVICE`. If a reset is absent, a verified native window
+duration permits conservative pacing over its full duration, with no cutoff release.
+Keep the reset unknown. Without either reset or duration evidence, an explicit
+fixed/window policy is required. Calendar rules and grants cannot create
 provider headroom or bypass missing evidence.
 
 Include explicit API support for OpenAI, Anthropic, Gemini, xAI/Grok, DeepSeek,

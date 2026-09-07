@@ -35,6 +35,9 @@ def display(result):
             reset = row.get("resets_at")
             if reset is None:
                 print("    reset unknown")
+                if row.get("strategy") == "adaptive" and row.get("pacing_source") == "native_window_duration":
+                    print(f"    conservative pacing: full native window across {row['pacing_workdays']} workdays "
+                          "(not a reset prediction)")
             else:
                 instant = datetime.fromtimestamp(reset, timezone.utc)
                 print(f"    reset {instant.isoformat()} / {instant.astimezone(zone).isoformat()} "

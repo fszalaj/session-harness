@@ -90,6 +90,18 @@ def scheduled_today(now, timezone, schedule):
     return datetime.fromtimestamp(now, ZoneInfo(timezone)).weekday() in schedule["workdays"]
 
 
+def pacing_forecast(value, now, timezone, schedule):
+    if value["resets_at"] is not None:
+        return "reported_reset", forecast_days(now, value["resets_at"], timezone, schedule)
+    minutes = value.get("window_minutes", 0)
+    if value.get("window_source") in WINDOW_SOURCES and 1440 < minutes <= 527040:
+        # A full-duration horizon is a pacing fallback, never a reset prediction.
+        horizon = now + minutes * 60
+        conservative = {**schedule, "reset_cutoff": "00:00"}
+        return "native_window_duration", forecast_days(now, horizon, timezone, conservative)
+    return "unknown", None
+
+
 def deadline_release(value, now, timezone, schedule):
     reset = value["resets_at"]
     if reset is None or reset <= now or not scheduled_today(now, timezone, schedule):
@@ -145,6 +157,11 @@ def validate_state(state):
                 validate_calendar(anchor["calendar"])
             if type(anchor.get("deadline_origin", False)) is not bool:
                 raise ValueError("invalid anchor deadline origin")
+            if anchor.get("pacing_source", "reported_reset") not in {"reported_reset", "native_window_duration", "unknown"}:
+                raise ValueError("invalid anchor pacing source")
+            if anchor.get("pacing_source") == "native_window_duration":
+                if not 1440 < numeric(anchor.get("pacing_window_minutes"), "pacing window") <= 527040:
+                    raise ValueError("invalid anchor pacing window")
             datetime.fromisoformat(anchor["day"])
             for field in ("consumed", "used", "allocation", "ceiling", "grant_spent", "observed_at"):
                 if numeric(anchor[field], field) < 0:
@@ -199,7 +216,7 @@ def active_grants(config, service, pool, now, day):
 
 
 def allocation(policy, value, now, timezone, schedule):
-    days = forecast_days(now, value["resets_at"], timezone, schedule)
+    _, days = pacing_forecast(value, now, timezone, schedule)
     available = max(0, 100 - value["used_percent"] - policy["reserve"])
     if policy["strategy"] == "fixed":
         return policy["daily_limit"]
@@ -217,14 +234,20 @@ def anchor_pool(config, service, pool, value, entry, base, now, day, *, recovery
     schedule = calendar(config)
     anchors = config["anchors"].setdefault(service, {})
     prior = anchors.get(pool)
+    source, _ = pacing_forecast(value, now, base["timezone"], schedule)
+    fallback_changed = policy["strategy"] == "adaptive" and source == "native_window_duration" and prior and (
+        prior.get("pacing_source") != source or prior.get("pacing_window_minutes") != value["window_minutes"])
     origin = policy["strategy"] == "adaptive" and deadline_release(value, now, base["timezone"], schedule)
     withdrawn = prior and prior.get("deadline_origin", False) and not origin
     if (prior and prior["day"] == day and prior["policy"] == policy and prior.get("calendar") == schedule
-            and not recovery and not force and not withdrawn):
+            and not recovery and not force and not withdrawn and not fallback_changed):
         return
     alloc = allocation(policy, value, now, base["timezone"], schedule)
     if alloc is None:
         return
+    if (fallback_changed and prior["day"] == day and prior["policy"] == policy
+            and prior.get("calendar") == schedule and not recovery and not force):
+        alloc = min(alloc, max(0, prior["ceiling"] - entry["consumed"]))
     adds, _ = active_grants(config, service, pool, now, day)
     spent = 0.0
     if prior and prior["day"] == day:
@@ -236,7 +259,8 @@ def anchor_pool(config, service, pool, value, entry, base, now, day, *, recovery
                     "used": value["used_percent"], "allocation": alloc, "ceiling": ceiling,
                     "grant_spent": spent, "observed_at": value["observed_at"],
                     "lower_bound": bool(entry["history_partial"] or entry["unknown"]), "calendar": schedule,
-                    "deadline_origin": origin}
+                    "deadline_origin": origin, "pacing_source": source,
+                    "pacing_window_minutes": value.get("window_minutes") if source == "native_window_duration" else None}
     config["audit"].append({"action": "anchor", "service": service, "pool": pool, "at": now,
                             "recovery": recovery, "anchor": dict(anchors[pool])})
 
@@ -258,8 +282,11 @@ def pool_budget(config, service, pool, value, entry, base, now, day, fresh=False
     consumed = entry["consumed"]
     remaining = 100 - value["used_percent"]
     adds, rest = active_grants(config, service, pool, now, day)
+    source, days = pacing_forecast(value, now, base["timezone"], schedule)
     anchor = config["anchors"].get(service, {}).get(pool)
     if anchor and (anchor["day"] != day or anchor["policy"] != policy or anchor.get("calendar") != schedule
+                   or strategy == "adaptive" and source == "native_window_duration" and (anchor.get("pacing_source") != source
+                       or anchor.get("pacing_window_minutes") != value["window_minutes"])
                    or anchor.get("deadline_origin", False) and not deadline_release(value, now, base["timezone"], schedule)):
         anchor = None
     reasons = []
@@ -269,9 +296,9 @@ def pool_budget(config, service, pool, value, entry, base, now, day, fresh=False
     base_ceiling = policy["daily_limit"] if strategy == "fixed" else None
     epoch_remaining = native
     if strategy == "adaptive":
-        if value["resets_at"] is None:
+        if source == "unknown":
             reasons.append("unknown_adaptive_reset")
-        elif value["resets_at"] <= now:
+        elif value["resets_at"] is not None and value["resets_at"] <= now:
             reasons.append("reset_needs_fresh_evidence")
         if anchor:
             alloc = anchor["allocation"]
@@ -306,6 +333,7 @@ def pool_budget(config, service, pool, value, entry, base, now, day, fresh=False
             "grant_remaining_percent": grant_remaining, "spendable_percent": spendable,
             "forecast_days": forecast_days(now, value["resets_at"], base["timezone"], schedule),
             "workdays_remaining": forecast_days(now, value["resets_at"], base["timezone"], schedule),
+            "pacing_source": source, "pacing_workdays": days,
             "scheduled_workday": scheduled_today(now, base["timezone"], schedule),
             "deadline_release": release, "calendar": schedule,
             "window_minutes": value.get("window_minutes"), "window_source": value.get("window_source"),

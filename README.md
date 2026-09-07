@@ -17,7 +17,7 @@ API requests and profile installation support Linux, macOS and Windows. Native
 client execution has the narrower capabilities listed below.
 
 ```sh
-git clone --branch v0.1.0 --depth 1 https://github.com/fszalaj/session-harness.git
+git clone --branch v0.1.1 --depth 1 https://github.com/fszalaj/session-harness.git
 cd session-harness
 python3 scripts/test.py
 python3 scripts/install-agent-profile.py --launcher
@@ -53,7 +53,7 @@ ai-session configure --status    # Inspect authorized services without changing 
 ai-session version
 ai-session update --check        # Check the latest published release
 ai-session update                # Show the version and ask before installing
-ai-session update --version 0.1.0 --apply  # Pin or return to an exact release
+ai-session update --version 0.1.1 --apply  # Pin or return to an exact release
 ai-session claude                # Start a protected session after configuration
 ai-session codex
 ```
@@ -155,7 +155,10 @@ instead of duplicating personal settings.
 Adaptive allocation divides each pool's balance over scheduled workdays until its
 actual reset. On a working day, a fresh reset due by tomorrow's local cutoff makes
 all current headroom available, subject to the configured reserve. It never invents
-a refill. Unknown schedules require an explicit policy. Grants expire at local
+a refill. When the reset is absent but the native long-window duration is verified,
+adaptive pacing conservatively divides the balance over a full window. The reset
+stays unknown, and the cutoff cannot release that balance. Without either form of
+evidence, an explicit fixed/window policy is required. Grants expire at local
 midnight; reuse their printed `--id` when retrying. See
 [budget controls and reset sources](skills/session-harness/references/budgets.md).
 

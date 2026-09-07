@@ -9,7 +9,9 @@ snapshots, local paths, review packets and session results in private records.
 Run `python3 scripts/test.py` after source changes. The suite covers quota admission,
 concurrent accounting, reset handling, malformed telemetry, process cleanup, model
 selection, profile installation and license preservation. Budget tests exercise
-calendar boundaries, pacing policies, grants and partial history. Money tests cover
+calendar boundaries, pacing policies, grants, partial history,
+missing resets with verified native durations, frozen allowances across session
+restarts, actual recovery and subsequent reset reporting. Money tests cover
 concurrent reservations, exact decimal rounding, crashes, duplicate IDs, month
 rollover and reconciliation. API fixtures cover eight protocol routes and malformed
 cost/output data. Windows checks exercise jobs, IPC, ACLs and checked-copy installs. Provider fixtures

@@ -58,7 +58,9 @@ A money cap does not automatically authorize native credits.
   reservations, charges and evidence references.
 - Preserve a quota pool even when its backend omits the reset schedule. Store
   `resets_at: null` as unknown, retain percentage/daily accounting and require fresh
-  observations. A later schedule never creates allowance. Observed balance recovery
+  observations. A verified native long-window duration permits conservative full-window
+  pacing without inventing a reset or activating the cutoff release; see [budgets](budgets.md).
+  A later schedule never recredits the daily anchor. Observed balance recovery
   may re-anchor an adaptive allocation; it never refunds daily consumption or replays grants.
 - Initialize a first prospective baseline explicitly. Earlier daily use remains
   marked unknown. Do not erase a ledger or change its timezone to gain allowance.
