@@ -425,6 +425,8 @@ class AntigravitySettingsTests(unittest.TestCase):
         self.path.write_text('file')
         with patch("credits.antigravity_settings_path", return_value=self.path / 'settings.json'):
             self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
+            with patch.object(Path, "lstat", side_effect=FileNotFoundError()):
+                self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
         with patch.object(Path, "lstat", side_effect=PermissionError()):
             self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
 

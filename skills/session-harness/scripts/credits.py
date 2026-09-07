@@ -313,6 +313,14 @@ def antigravity_resources():
         try:
             original = path.lstat()
         except FileNotFoundError:
+            for parent in path.parents:
+                try:
+                    ancestor = parent.stat()
+                except FileNotFoundError:
+                    continue
+                if not stat.S_ISDIR(ancestor.st_mode):
+                    raise ValueError("Settings parent must be a directory")
+                break
             result.update(source=AGY_DEFAULTS_SOURCE, enabled=False, metadata_status="reported",
                           native_controls={"useG1Credits": False})
             return [result]

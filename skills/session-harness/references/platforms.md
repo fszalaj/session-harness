@@ -33,6 +33,11 @@ A generic Windows subprocess test does not establish a native client's quota,
 model or paid-credit controls. All native admission requirements still apply;
 see the README capability table for current availability.
 
+The portable settings reader distinguishes an absent Antigravity settings file
+from an invalid parent path. Windows can report both as `FileNotFoundError`, so
+the reader validates the nearest existing ancestor before using the disabled
+default. A regular file in the parent path or a permission error remains invalid.
+
 CI uses standard GitHub-hosted Linux, macOS and Windows runners. Windows-specific
 checks exercise job descendants, parent death, pipe bounds, argument forwarding,
 copy drift and private state controls. POSIX terminal/socket tests run on their
