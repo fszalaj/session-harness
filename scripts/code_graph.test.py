@@ -60,7 +60,8 @@ class GraphTests(unittest.TestCase):
     def test_line_endings_do_not_cause_platform_drift(self):
         self.snapshot()
         path = self.root / "module.py"
-        path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+        content = path.read_bytes().replace(b"\r\n", b"\n")
+        path.write_bytes(content.replace(b"\n", b"\r\n"))
         graph.load(self.root)
 
     def test_tampered_snapshot_is_rejected(self):

@@ -1,5 +1,5 @@
 {
-  "content_sha256": "d3fec0803ae633f00474ec886d7beaa386d625b883f319d707ad83138437eb98",
+  "content_sha256": "995b3452483f9f6229258513713f38a30154939d1290a469530c776678141ac0",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
@@ -10,7 +10,7 @@
     "schema_version": 1,
     "sources": {
       "scripts/code_graph.py": "fa7c041129167808a7a3cc44fed5534c57ba31da2bf42cddc470f549e3fd58b3",
-      "scripts/code_graph.test.py": "f83234213e8e5dbd6a3d137f5062003e2c078e3e9c967cbb75fecfe9f93965e4",
+      "scripts/code_graph.test.py": "5baef7e0c95ef579828bfbceab61c7b3792c05c160714378bdfe6580ce40d423",
       "scripts/install-agent-profile.py": "f15878d825527095f4647eaecf99728d18fcfd35125a35345db548bed820dfb8",
       "scripts/install-agent-profile.test.py": "41b72933353f12a982878f7ea12a4296cd36aa00f08360e948fe372d1b9d8b0b",
       "scripts/test.py": "541e6a9fce210a5685dfaa47205dbe78a938c53720d8775180c2ea1feaab6429",
@@ -12487,7 +12487,7 @@
       "id": "pymethod:scripts/code_graph.test.py:GraphTests.test_queries_and_ambiguous_module",
       "label": "GraphTests.test_queries_and_ambiguous_module",
       "source_file": "scripts/code_graph.test.py",
-      "source_location": "L84",
+      "source_location": "L85",
       "type": "method"
     },
     {
@@ -12495,7 +12495,7 @@
       "id": "pymethod:scripts/code_graph.test.py:GraphTests.test_real_extractor_repeatability_and_private_exclusion",
       "label": "GraphTests.test_real_extractor_repeatability_and_private_exclusion",
       "source_file": "scripts/code_graph.test.py",
-      "source_location": "L94",
+      "source_location": "L95",
       "type": "method"
     },
     {
@@ -12503,7 +12503,7 @@
       "id": "pymethod:scripts/code_graph.test.py:GraphTests.test_script_directory_imports_reach_real_files",
       "label": "GraphTests.test_script_directory_imports_reach_real_files",
       "source_file": "scripts/code_graph.test.py",
-      "source_location": "L108",
+      "source_location": "L109",
       "type": "method"
     },
     {
@@ -12519,7 +12519,7 @@
       "id": "pymethod:scripts/code_graph.test.py:GraphTests.test_symlink_source_is_rejected",
       "label": "GraphTests.test_symlink_source_is_rejected",
       "source_file": "scripts/code_graph.test.py",
-      "source_location": "L74",
+      "source_location": "L75",
       "type": "method"
     },
     {
@@ -12527,7 +12527,7 @@
       "id": "pymethod:scripts/code_graph.test.py:GraphTests.test_tampered_snapshot_is_rejected",
       "label": "GraphTests.test_tampered_snapshot_is_rejected",
       "source_file": "scripts/code_graph.test.py",
-      "source_location": "L66",
+      "source_location": "L67",
       "type": "method"
     },
     {
