@@ -188,13 +188,13 @@ Keep application rules in the project's `AGENTS.md`. Add a short reference such 
 
 Prefer the installed release for projects that need no harness customization. Run
 `ai-session update --check` to inspect releases and `ai-session update` for a confirmed
-update; see [release management](RELEASES.md). The development build also offers
+update; see [release management](RELEASES.md). Version 0.2.0 also offers
 explicitly enabled [automatic maintenance](AUTO-UPDATE.md): register reviewed local
 overlays, choose `auto-update enable --interval-hours 24`, and verify actual scheduler
 delivery and maintenance-aware authority entry points. Keep it off unless the owner
-chooses it; do not equate this flag with provider billing auto top-up. This feature
-is not included in v0.1.2. A project-owned copy is appropriate when the repository needs reviewed, versioned
-customization. Select one canonical skill directory, link client discovery paths
+chooses it, and preserve existing opt-ins. Do not equate this flag with provider
+billing auto top-up. A project-owned copy is appropriate when the repository needs
+reviewed, versioned customization. Select one canonical skill directory, link client discovery paths
 where supported, and identify its source and update procedure. Do not copy this
 repository's maintenance policy over another project's `AGENTS.md`.
 
@@ -239,8 +239,8 @@ reasons: metadata success is not admission. Missing, stale or incomplete evidenc
 blocks inference; calendar rules and grants cannot create provider headroom. Do
 not run a paid request merely to make onboarding appear complete.
 
-The published v0.1.2 baseline blocks protected Codex execution because its credit
-schema does not establish paid-use disablement. The unreleased repair accepts
+Version 0.1.2 blocked protected Codex execution because its credit
+schema did not establish paid-use disablement. Version 0.2.0 accepts
 owner-bound confirmation of disabled Auto top-up with fresh zero-credit evidence;
 check the selected release before using that route. Antigravity requires verified
 disabled `useG1Credits`, including its documented default for an absent file/key;

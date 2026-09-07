@@ -9,9 +9,9 @@
 - `ai-session update --version VERSION --apply`: explicitly install or roll back to
   that published version. Replace `VERSION` with the chosen numeric version after
   reading its release notes. No moving branch.
-- **Unreleased:** `ai-session auto-update register`, `enable --interval-hours 24`,
+- **Available in v0.2.0:** `ai-session auto-update register`, `enable --interval-hours 24`,
   `status`, `run` and `disable`: explicitly enabled macOS/Linux background updates.
-  This feature is not in published v0.1.2. Registration accepts reviewed local
+  Updates default to off; existing opt-ins are preserved. Registration accepts reviewed local
   skill overlays against a verified published baseline. New releases install only
   while the configured authority has no protected sessions and holds maintenance;
   conflicts defer. Windows and checked-copy installations retain explicit updates.

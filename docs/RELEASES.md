@@ -33,7 +33,8 @@ ai-session update --version VERSION --apply
 ```
 
 The same command selects an older release for rollback. A missing release, download
-failure, invalid archive or checksum mismatch stops before installation. Optional **Unreleased** `auto-update` commands provide an
+failure, invalid archive or checksum mismatch stops before installation. Since
+v0.2.0, optional `auto-update` commands provide an
 explicitly enabled background path; see [automatic maintenance](AUTO-UPDATE.md).
 Updates need HTTPS access to GitHub; public downloads
 need no GitHub token. They make no model calls.

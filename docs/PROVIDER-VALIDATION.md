@@ -52,9 +52,9 @@ of a successful review.
   account matching and existing SSH trust must be verified during private setup.
 - Antigravity review restrictions do not provide full filesystem isolation. A
   visible tool registry does not establish tool use; inspect actual events.
-- Native paid-credit eligibility is a separate gate. Published v0.1.2 blocks the
-  protected Codex route and requires explicit `useG1Credits: false` for Antigravity.
-  **Unreleased:** Codex adds account-bound owner confirmation plus fresh zero-credit
+- Native paid-credit eligibility is a separate gate. Version 0.1.2 blocked the
+  protected Codex route and required explicit `useG1Credits: false` for Antigravity.
+  **Since v0.2.0:** Codex supports account-bound owner confirmation plus fresh zero-credit
   evidence; Antigravity also accepts its documented disabled default when the
   file/key is absent. Enabled, unreadable or malformed controls still block.
   Claude requires explicit disabled controls without unknown purchase eligibility.
@@ -93,6 +93,6 @@ errors must identify concurrency rather than claiming quota exhaustion.
 
 Review protocols default to medium effort and 16 KiB packets. Confirm native effort
 from the actual catalog; fixtures cannot establish the current cheapest tier.
-On published v0.1.2, Antigravity clients that omit a false setting when persisting
-sparse configuration remain blocked. The Unreleased adapter distinguishes a
+On v0.1.2, Antigravity clients that omitted a false setting when persisting
+sparse configuration were blocked. Since v0.2.0, the adapter distinguishes a
 documented absent default from invalid settings; test both provenance and denial.

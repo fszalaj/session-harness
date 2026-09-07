@@ -15,7 +15,8 @@ extracted directory. Resolve the release once; maintained installations never tr
 `main`. To delegate the whole workflow, use the [short onboarding prompt](docs/ONBOARDING-PROMPT.md).
 
 Already installed? Run `ai-session version` and retain that selected release.
-`ai-session update --check` checks availability; an update needs your instruction.
+`ai-session update --check` checks availability; updates need your instruction or
+your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
 See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -65,10 +66,11 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-The published v0.1.2 baseline blocks protected Codex execution because its native
-credit metadata cannot establish paid-use disablement. The unreleased development
-repair adds owner-bound disabled Auto top-up confirmation plus fresh zero-credit
-evidence. Automatic maintenance is also unreleased relative to that baseline.
+Version 0.2.0 adds account-bound owner confirmation of disabled Codex Auto top-up
+plus fresh zero-credit evidence; quota and admission controls still apply. It also
+adds optional automatic stable updates, disabled by default. Existing opt-ins are
+preserved. Version 0.1.2 blocked protected Codex execution because its native
+credit metadata could not establish paid-use disablement.
 Check the [capability guide](docs/PROVIDER-VALIDATION.md) and [release guide](docs/RELEASES.md)
 for your selected version before relying on either feature.
 

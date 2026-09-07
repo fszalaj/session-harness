@@ -1,13 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 - Add account-bound Codex confirmation of disabled automatic credit top-up and
   recognize the documented disabled default in sparse Antigravity credit settings.
   No paid fallback is enabled.
 - Select concrete current Claude catalog models when advertised and verify returned
   review identity; exclude automatic orchestration from manager effort selection.
-
 - Add explicitly enabled automatic immutable stable updates on macOS and Linux,
   with configurable cadence, scheduler status, newer-version comparison and disable.
 - Coordinate idle activation with an account-wide maintenance reservation; retain
@@ -15,7 +14,12 @@
 - Verify local overlays and managed installation paths, preserve private policy
   and accounting, and roll back known profile changes after activation failure.
 - Document optional shared-host activation hooks, scheduler delivery boundaries,
-  release integrity and recovery. Existing installations remain opted out.
+  release integrity and recovery. Automatic updates default to off; existing
+  opt-in settings are preserved, including on prerelease installations that can
+  select the newer stable release after publication.
+- Streamline the README, onboarding prompt and documentation navigation around
+  verified release installation, preserved personal rules and guided configuration.
+- Restart affected clients after installation or update to load the new instructions.
 
 ## 0.1.2
 

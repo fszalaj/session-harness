@@ -1,8 +1,9 @@
 # Automatic release maintenance
 
-**Unreleased - absent from published v0.1.2.** Existing installations retain their
-selected release. This feature requires an explicitly authorized development
-installation and separate owner opt-in; it never follows a development branch.
+**Available in v0.2.0.** Automatic updates default to off and require owner opt-in;
+they never follow a development branch. Existing opt-in settings are preserved,
+including prerelease installations that can select the newer stable release after
+publication, subject to normal cadence and activation checks.
 
 The complete [automatic maintenance reference](../skills/session-harness/references/automatic-maintenance.md)
 ships inside the installed skill, so recovery does not depend on a source checkout.

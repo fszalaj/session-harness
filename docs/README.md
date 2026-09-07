@@ -9,7 +9,7 @@ and only the reference needed for their next action.
 | Give an agent the installation task | [Start prompt](ONBOARDING-PROMPT.md) |
 | Install and reconcile existing instructions | [Onboarding](ONBOARDING.md) |
 | Configure, update or recover an installation | [Releases and updates](RELEASES.md) |
-| Understand optional background updates | [Automatic maintenance - Unreleased](AUTO-UPDATE.md) |
+| Understand optional background updates | [Automatic maintenance](AUTO-UPDATE.md) |
 | Inspect dependencies before contributing | [Code graph](CODE-GRAPH.md) |
 | Validate a provider adapter | [Provider validation](PROVIDER-VALIDATION.md) |
 | Prepare a contribution or sensitive report | [Contributing](../CONTRIBUTING.md), [security](../SECURITY.md) |
@@ -27,7 +27,6 @@ and only the reference needed for their next action.
 | [Platforms](../skills/session-harness/references/platforms.md) | Operating-system support and limitations |
 | [Design sources](../skills/session-harness/references/sources.md) | Rationale and provider contracts |
 
-Published v0.1.2 is the stable baseline for this documentation review. Features
-marked **Unreleased** require a separately selected development runtime and do not
-authorize changing an existing installation. Check the installed version before
-following those instructions.
+This documentation describes v0.2.0. Check `ai-session version` before following
+version-specific instructions. Existing installations retain their selected release
+unless the owner requests an update or has already enabled automatic maintenance.

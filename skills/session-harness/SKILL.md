@@ -15,10 +15,10 @@ and the confirmed `ai-session update`. For exact rollback, use
 published numeric version. Preserve private policy and usage history. Updates never
 follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
-**Unreleased:** `ai-session auto-update` adds an explicit opt-in for automatic stable
+**Available in v0.2.0:** `ai-session auto-update` adds an explicit opt-in for automatic stable
 updates on macOS/Linux. Keep it disabled unless the owner selects it. Respect idle
 maintenance, local overlay conflicts and private accounting; do not steal a lock
-to make an update proceed. This command is not in published v0.1.2.
+to make an update proceed. Preserve existing owner opt-in settings.
 
 ## 0. Check resources before dispatch
 
@@ -37,8 +37,8 @@ Keep the manager's maximum effort for planning and reconciliation. Select the
 highest standalone reasoning level, such as `max`,
 and do not add Codex `ultra` or Claude `ultracode` automatic orchestration as a default.
 This is a control-policy choice, not a claim that identical labels are comparable.
-The automatic selector repairs are Unreleased; check the
-[stable adapter limits](references/clients.md) before relying on them.
+Version 0.2.0 includes automatic selector repairs; check the
+[client adapter limits](references/clients.md) for their scope.
 Delegate execution with explicit current-tier model and medium effort; gathering normally uses low.
 Use a fresh leaf packet (in native spawn APIs, no full-history fork). Include only
 objective, owned files, relevant contracts and acceptance. Target 2-4 KiB input and

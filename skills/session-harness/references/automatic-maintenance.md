@@ -1,16 +1,17 @@
 # Automatic release maintenance
 
-**Unreleased - absent from published v0.1.2.** These commands require an explicitly
-selected development installation; retain the current release unless the owner
-requests that change. Installing the feature leaves automatic updates disabled; ordinary release checks do not
-follow a development branch. Automatic installation selects only numerically newer
+**Available in v0.2.0.** Automatic updates default to off. Existing owner opt-ins
+are preserved, including prerelease installations that can select the newer stable
+release after publication, subject to normal cadence and activation checks.
+Ordinary release checks do not follow a development branch. Automatic installation
+selects only numerically newer
 stable `major.minor.patch` releases from GitHub's immutable release endpoint.
 Drafts, prereleases and malformed tags are rejected. No model call, provider
 upgrade, credit purchase, billing change or quota refresh is involved.
 
 ## Choose and inspect the flag
 
-After explicitly installing this feature with the standard profile installer:
+After installing a release that includes this feature with the standard profile installer:
 
 ```sh
 ai-session auto-update register

@@ -7,7 +7,8 @@ target project if they are not already clear. This prompt delegates the canonica
 ```text
 Onboard session-harness globally and into this project using docs/ONBOARDING.md.
 For an existing installation, inspect ai-session version and retain its selected
-release unless I authorize an update. For a new installation, resolve the latest
+release unless I authorize an update or my existing automatic-update opt-in applies.
+For a new installation, resolve the latest
 published stable release once, verify its matching archive/checksum and keep that
 version throughout. Never install maintained profiles from moving main.
 
@@ -38,7 +39,8 @@ missing capabilities or reviews are not success. Do not restart orchestration fo
 Report version/provenance, preserved rules, changes, tests, actual loading, discovery
 and protected execution separately, plus rollback and unresolved items. Read release
 and recovery guides when updating, rolling back or considering optional maintenance;
-check support in my selected release and enable optional maintenance only if I choose it.
+check support in my selected release. Preserve existing maintenance opt-ins and
+enable optional maintenance only if I choose it.
 Keep account evidence and consumer paths private. After any authorized push, check
 README/docs/skills and consumers against their selected release. Do not change
 repository visibility, publish, or alter authentication as part of onboarding.

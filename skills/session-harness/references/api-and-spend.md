@@ -138,13 +138,12 @@ credits are not merged into subscription percentages.
 
 A money configuration does not make a native paid-credit route safe. Until a
 verified adapter can establish billing eligibility and associate charges with
-requests, paid native execution is unsupported. Published v0.1.2 blocks protected
-Codex execution and requires an explicit disabled Antigravity setting.
+requests, paid native execution is unsupported. Version 0.1.2 blocked protected
+Codex execution and required an explicit disabled Antigravity setting.
 
-**Unreleased:** the Codex confirmation commands and absent-file/key Antigravity
-default handling below are unavailable in v0.1.2. Retain an existing installation
-until an update is explicitly requested; these instructions do not authorize a
-development install.
+The Codex confirmation commands and absent-file/key Antigravity default handling
+below are available in v0.2.0. Retain an existing installation until the owner
+requests an update or an already enabled automatic maintenance policy applies.
 
 Claude can establish subscription-
 only eligibility from explicit disabled controls. Antigravity's documented

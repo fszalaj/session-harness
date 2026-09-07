@@ -35,7 +35,7 @@ A generic Windows subprocess test does not establish a native client's quota,
 model or paid-credit controls. All native admission requirements still apply;
 see [client adapter boundaries](clients.md#explicit-apis-and-platform-boundaries).
 
-**Unreleased (absent from v0.1.2):** the portable settings reader distinguishes an
+**Since v0.2.0:** the portable settings reader distinguishes an
 absent Antigravity settings file
 from an invalid parent path. Windows can report both as `FileNotFoundError`, so
 the reader validates the nearest existing ancestor before using the disabled

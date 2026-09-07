@@ -39,9 +39,9 @@ manager to verify task fit, tools and cost.
 
 Use the exact runtime-selected ID and highest supported standalone reasoning effort
 for the manager. Codex `ultra` combines maximum reasoning with automatic delegation;
-the **Unreleased** selector excludes `ultra`, selects `max` when advertised and owns delegation through its existing
-review, role and budget rules. If `max` is unavailable, select the highest advertised
-standalone level. Published v0.1.2 does not exclude `ultra` automatically; verify
+the v0.2.0 selector excludes `ultra`, selects `max` when advertised and owns
+delegation through its existing review, role and budget rules. If `max` is unavailable, select the highest advertised
+standalone level. Version 0.1.2 did not exclude `ultra` automatically; verify
 its effective selection before launching. The catalog still reports `ultra`; it
 is not a manager policy default.
 See [Codex models](https://learn.chatgpt.com/docs/models). Claude's `max` is a reasoning
@@ -70,13 +70,13 @@ Verify the effective effort instead of assuming a spawn argument won.
 
 ## Claude Code
 
-**Unreleased:** prefer concrete account-selectable model IDs when the initialize
+**Since v0.2.0:** prefer concrete account-selectable model IDs when the initialize
 catalog supplies them. Select the newest numeric generation and advertised effort; do not let an
 unresolved `best` or `sonnet` alias override a visible newer generation. When no
 current cheaper concrete tier is available, use the selected current model at
 medium effort for execution. A concrete review verifies the returned actual model;
 alias-only catalogs remain explicitly unresolved until native session evidence.
-Published v0.1.2 reports unresolved alias suggestions; verify the actual model
+Version 0.1.2 reported unresolved alias suggestions; verify the actual model
 through native session evidence before accepting a manager or reviewer.
 
 Use documented versionless aliases after checking the installed CLI and current
@@ -146,8 +146,8 @@ windows per group and reject HTTP failures or incomplete responses. Close only
 the owned process group after reading.
 
 Admission additionally reads the documented `useG1Credits` setting from the CLI
-settings file. Published v0.1.2 requires explicit `false`; absent values block.
-**Unreleased:** explicit `false` and the documented default for an absent file/key
+settings file. Version 0.1.2 required explicit `false`; absent values blocked.
+**Since v0.2.0:** explicit `false` and the documented default for an absent file/key
 disable paid fallback. The CLI [persists only nondefault settings](https://antigravity.google/docs/cli/settings),
 so it can remove explicit `false` at startup. The harness distinguishes
 `antigravity.cli_defaults` from `antigravity.cli_settings` evidence, rereads the
@@ -208,7 +208,7 @@ These routes use separate credentials and explicit monetary caps. They do not
 consume a native subscription allowance or become an automatic fallback.
 Z.ai catalog discovery and generic model-specific API effort controls are unsupported.
 
-Native quota discovery is separate from paid-credit eligibility. **Unreleased:**
+Native quota discovery is separate from paid-credit eligibility. **Since v0.2.0:**
 Codex supports a private owner confirmation that automatic top-up is disabled for the authenticated
 account, combined with fresh zero-credit evidence and unchanged quota admission.
 Antigravity uses its verified disabled CLI setting/default. Claude requires disabled

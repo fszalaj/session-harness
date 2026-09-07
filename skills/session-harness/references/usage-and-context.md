@@ -37,12 +37,12 @@ The public default stays strict. Configuration changes never erase daily counts.
 For explicit API routes, use [money admission](api-and-spend.md) with a separate
 monthly total cap and per-request liability. Native paid-credit controls must also
 be verified; missing or enabled eligibility blocks protected native inference.
-**Unreleased (absent from v0.1.2):** Codex requires an account-bound owner confirmation
+**Since v0.2.0:** Codex requires an account-bound owner confirmation
 that automatic top-up is disabled,
 plus fresh zero-credit evidence; see [API and spend](api-and-spend.md). Antigravity
 uses its documented local `useG1Credits` control, including the disabled default
 for an absent file/key; unreadable, malformed or enabled settings block.
-Published v0.1.2 instead blocks protected Codex execution and requires an explicit
+Version 0.1.2 instead blocked protected Codex execution and required an explicit
 Antigravity `false` setting. A money cap does not authorize native credits.
 
 ## Observations and daily history
