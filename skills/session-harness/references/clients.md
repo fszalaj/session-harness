@@ -6,12 +6,18 @@ commands inspect metadata only; `review` and `launch --execute` invoke a model.
 For instruction filenames and skill paths, read the [client instruction map](instructions.md).
 Keep Gemini CLI, Antigravity CLI and their IDE interfaces separate.
 
+With the selected skill directory (containing `SKILL.md`) as your working directory:
+
 ```sh
-python3 <skill-dir>/scripts/harness.py discover --session codex
-python3 <skill-dir>/scripts/harness.py launch codex
-python3 <skill-dir>/scripts/harness.py launch claude --execute
-python3 <skill-dir>/scripts/harness.py review claude --timeout 600 < plan-packet.md
+python3 scripts/harness.py discover --session codex
+python3 scripts/harness.py launch codex
+python3 scripts/harness.py launch claude --execute
+python3 scripts/harness.py review claude < /absolute/path/to/plan-packet.md
 ```
+
+Reviews default to 180 seconds. POSIX input redirection is shown; in PowerShell,
+pipe `Get-Content -Raw -Encoding utf8` from the packet file into the review command.
+The execution commands still require setup, fresh admission and review isolation.
 
 Use `--session claude` or `--session antigravity` when that client owns the current
 conversation. Automatic environment/ancestor detection is a fallback. Presence of
@@ -33,9 +39,11 @@ manager to verify task fit, tools and cost.
 
 Use the exact runtime-selected ID and highest supported standalone reasoning effort
 for the manager. Codex `ultra` combines maximum reasoning with automatic delegation;
-the harness selects `max` when advertised and owns delegation through its existing
+the **Unreleased** selector excludes `ultra`, selects `max` when advertised and owns delegation through its existing
 review, role and budget rules. If `max` is unavailable, select the highest advertised
-standalone level. The catalog still reports `ultra`; it is not a manager default.
+standalone level. Published v0.1.2 does not exclude `ultra` automatically; verify
+its effective selection before launching. The catalog still reports `ultra`; it
+is not a manager policy default.
 See [Codex models](https://learn.chatgpt.com/docs/models). Claude's `max` is a reasoning
 level, while `ultracode` is a separate orchestration mode. Effort labels across clients
 do not establish equal cost or quality, and this choice makes no savings guarantee.
@@ -62,12 +70,14 @@ Verify the effective effort instead of assuming a spawn argument won.
 
 ## Claude Code
 
-Prefer concrete account-selectable model IDs when the initialize catalog supplies
-them. Select the newest numeric generation and advertised effort; do not let an
+**Unreleased:** prefer concrete account-selectable model IDs when the initialize
+catalog supplies them. Select the newest numeric generation and advertised effort; do not let an
 unresolved `best` or `sonnet` alias override a visible newer generation. When no
 current cheaper concrete tier is available, use the selected current model at
 medium effort for execution. A concrete review verifies the returned actual model;
 alias-only catalogs remain explicitly unresolved until native session evidence.
+Published v0.1.2 reports unresolved alias suggestions; verify the actual model
+through native session evidence before accepting a manager or reviewer.
 
 Use documented versionless aliases after checking the installed CLI and current
 subscription coverage. `best` chooses the strongest eligible model; the actual
@@ -83,7 +93,7 @@ Persistent `effortLevel` does not accept every CLI effort value. Do not put a ma
 value in an unsupported setting or globally set `CLAUDE_CODE_EFFORT_LEVEL`: that
 environment variable overrides worker effort. `ultracode` is an orchestration mode,
 not an extra leaf reasoning tier. Installed Claude roles use the rolling `sonnet`
-alias at medium effort for the investigator and implementer and inherit the manager
+alias at low effort for the investigator and medium for the implementer and inherit the manager
 model at high effort for the verifier. A per-invocation `model` overrides
 frontmatter and `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` overrides both; reject `sonnet`
 when its resolved generation is superseded and pass the current flagship at medium.
@@ -136,7 +146,8 @@ windows per group and reject HTTP failures or incomplete responses. Close only
 the owned process group after reading.
 
 Admission additionally reads the documented `useG1Credits` setting from the CLI
-settings file. Explicit `false` and the documented default for an absent file/key
+settings file. Published v0.1.2 requires explicit `false`; absent values block.
+**Unreleased:** explicit `false` and the documented default for an absent file/key
 disable paid fallback. The CLI [persists only nondefault settings](https://antigravity.google/docs/cli/settings),
 so it can remove explicit `false` at startup. The harness distinguishes
 `antigravity.cli_defaults` from `antigravity.cli_settings` evidence, rereads the
@@ -145,7 +156,8 @@ It never writes that file or infers account balances from a local setting.
 `metadata_status: reported` means the control was resolved; its source distinguishes
 documented defaults from an explicit file value. An interrupted read denies that
 check and can recover on the next successful refresh. If the CLI reports enabled
-credits, disable `useG1Credits` in its settings before using subscription-only mode.
+credits, subscription-only admission remains blocked until the owner explicitly
+chooses to disable `useG1Credits`; never change the setting to bypass a stop.
 When upgrading the CLI, revalidate its documented default and sparse persistence;
 they are part of this adapter's provider contract.
 
@@ -196,8 +208,8 @@ These routes use separate credentials and explicit monetary caps. They do not
 consume a native subscription allowance or become an automatic fallback.
 Z.ai catalog discovery and generic model-specific API effort controls are unsupported.
 
-Native quota discovery is separate from paid-credit eligibility. Codex supports a
-private owner confirmation that automatic top-up is disabled for the authenticated
+Native quota discovery is separate from paid-credit eligibility. **Unreleased:**
+Codex supports a private owner confirmation that automatic top-up is disabled for the authenticated
 account, combined with fresh zero-credit evidence and unchanged quota admission.
 Antigravity uses its verified disabled CLI setting/default. Claude requires disabled
 paid controls. Enabled native paid credits remain unsupported. See

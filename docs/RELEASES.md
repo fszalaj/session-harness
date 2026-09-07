@@ -13,7 +13,6 @@ ai-session configure --status
 ai-session version
 ai-session update --check
 ai-session update
-ai-session update --version 0.1.2 --apply
 ```
 
 Configuration is guided: Enter keeps current settings and the final prompt confirms
@@ -25,9 +24,16 @@ history is dated in that timezone.
 
 `update` shows the release before asking to install it. In a noninteractive terminal
 it only reports the command to apply. Scripts must name an exact `--version` with
-`--apply`; `--check` never installs. The same command selects an older release for
-rollback. A missing release, download failure, invalid archive or checksum mismatch
-stops before installation. Optional development `auto-update` commands provide an
+`--apply`; `--check` never installs. For an exact install or rollback, replace
+`VERSION` below with the published numeric version you have chosen after reading
+its release notes:
+
+```sh
+ai-session update --version VERSION --apply
+```
+
+The same command selects an older release for rollback. A missing release, download
+failure, invalid archive or checksum mismatch stops before installation. Optional **Unreleased** `auto-update` commands provide an
 explicitly enabled background path; see [automatic maintenance](AUTO-UPDATE.md).
 Updates need HTTPS access to GitHub; public downloads
 need no GitHub token. They make no model calls.
@@ -42,6 +48,7 @@ For an additional attestation check, use
 
 ## Preserve personal policy and project rules
 
+Run the installer examples below from the root of a verified release archive.
 First reconcile existing instructions using [onboarding](ONBOARDING.md). Save unique
 personal rules in a private Markdown file outside the public repository:
 

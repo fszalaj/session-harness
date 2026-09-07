@@ -2,9 +2,11 @@
 
 ## Unreleased
 
-- Carry the existing verified client repairs: account-bound Codex confirmation of
-  disabled automatic credit top-up, sparse disabled Antigravity credit settings,
-  and concrete current Claude catalog selection. No paid fallback is enabled.
+- Add account-bound Codex confirmation of disabled automatic credit top-up and
+  recognize the documented disabled default in sparse Antigravity credit settings.
+  No paid fallback is enabled.
+- Select concrete current Claude catalog models when advertised and verify returned
+  review identity; exclude automatic orchestration from manager effort selection.
 
 - Add explicitly enabled automatic immutable stable updates on macOS and Linux,
   with configurable cadence, scheduler status, newer-version comparison and disable.
@@ -44,5 +46,5 @@
 - Portable profile installation, checked-copy support for Windows, onboarding,
   contributor code graph and deterministic tests without paid inference.
 
-See README capability boundaries before enabling execution. Client instruction
+See [client capability boundaries](skills/session-harness/references/clients.md) before enabling execution. Client instruction
 compatibility alone does not establish a working quota or execution adapter.

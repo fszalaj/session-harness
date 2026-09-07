@@ -10,10 +10,12 @@ provider discovery and isolated reviews. This is a manager/worker workflow with
 independent review, not a replacement for the clients' permission controls.
 
 Installed release maintenance uses `ai-session version`, `ai-session update --check`
-and the confirmed `ai-session update`. An exact `--version X.Y.Z --apply` also supports
-rollback. Preserve private policy and usage history. Updates never follow `main`;
+and the confirmed `ai-session update`. For exact rollback, use
+`ai-session update --version VERSION --apply`, replacing `VERSION` with the chosen
+published numeric version. Preserve private policy and usage history. Updates never
+follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
-Development `ai-session auto-update` adds an explicit opt-in for automatic stable
+**Unreleased:** `ai-session auto-update` adds an explicit opt-in for automatic stable
 updates on macOS/Linux. Keep it disabled unless the owner selects it. Respect idle
 maintenance, local overlay conflicts and private accounting; do not steal a lock
 to make an update proceed. This command is not in published v0.1.2.
@@ -35,6 +37,8 @@ Keep the manager's maximum effort for planning and reconciliation. Select the
 highest standalone reasoning level, such as `max`,
 and do not add Codex `ultra` or Claude `ultracode` automatic orchestration as a default.
 This is a control-policy choice, not a claim that identical labels are comparable.
+The automatic selector repairs are Unreleased; check the
+[stable adapter limits](references/clients.md) before relying on them.
 Delegate execution with explicit current-tier model and medium effort; gathering normally uses low.
 Use a fresh leaf packet (in native spawn APIs, no full-history fork). Include only
 objective, owned files, relevant contracts and acceptance. Target 2-4 KiB input and
@@ -98,8 +102,9 @@ or process work, read [platform support](references/platforms.md).
   report drift. Same-named project/profile entries may coexist in the selector.
 - Read applicable `AGENTS.md` and relevant durable context. Preserve the user's
   objective, existing authorization, dirty changes and release boundaries.
-- Run `python3 <skill-dir>/scripts/harness.py discover --session <client>`.
-  Set `<client>` from the actual session identity: `codex`, `claude`, or
+- With the selected skill directory as the working directory, run
+  `python3 scripts/harness.py discover --session CLIENT`.
+  Replace `CLIENT` with the actual session identity: `codex`, `claude`, or
   `antigravity`. Run `harness.py inventory` for Copilot, Cursor, Gemini CLI, Kimi,
   OpenCode, Aider, Continue and Ollama discovery. Installed clients, advertised
   catalogs, account-selectable models and verified entitlement are different states.
@@ -117,7 +122,7 @@ or process work, read [platform support](references/platforms.md).
   client's catalog. See [client adapters](references/clients.md) for CLI details.
   Never read credentials or transcripts to guess identity or entitlements.
 - The manager/planner uses the strongest available **active-provider** model and
-  its highest advertised reasoning effort. Use a supported model switch or launch
+  its highest advertised standalone reasoning effort. Use a supported model switch or launch
   a fresh manager through `harness.py launch <client> --execute` when necessary.
   A running model cannot promote itself by writing instructions. If switching is
   unavailable, report the mismatch, prepare a handoff, and keep planning explicitly
@@ -152,15 +157,15 @@ provider guidance when capability or successor relationships remain uncertain.
   for an OpenAI manager, Anthropic workers for an Anthropic manager, and Google
   workers for a Google manager. In multi-model clients, select the family explicitly.
   Installed Claude investigator/implementer roles use the rolling `sonnet` alias
-  at medium effort and the verifier inherits the manager model at high effort;
-  pass a per-call model only for a verified better fit. Keep leaf work off the
+  (investigator: low; implementer: medium) and the verifier inherits the manager
+  model at high effort; pass a per-call model only for a verified better fit. Keep leaf work off the
   flagship and off maximum effort unless a concrete failure requires escalation.
   Another provider may implement in an isolated
   worktree when its supported client offers a material benefit.
 
 | Role | Model and effort | Ownership |
 | --- | --- | --- |
-| Manager/planner | Strongest current session model, highest supported effort | Plan, reconciliation, integration, final verification |
+| Manager/planner | Strongest current session model, highest supported standalone effort | Plan, reconciliation, integration, final verification |
 | Two plan reviewers | Current suitable models from two other distinct provider families, medium; high for demonstrated difficult risks | Independent findings on the same plan |
 | Investigator | Current suitable model, low/medium | Bounded evidence gathering, no edits |
 | Implementer | Current suitable model, medium; high for hard changes | One non-overlapping file/task scope |
@@ -233,11 +238,13 @@ independent work is exhausted; this skill does not require routine plan approval
   versus observed models, checks and remaining blockers before compaction/handoff.
 - Before documentation changes, use the project code graph and inspect measured
   blind spots. After each push, verify docs/README/skill against code and synchronize
-  configured local consumers from the published source. Keep consumer paths,
-  private setup details and session evidence out of public commits.
-- Reinstall the shared profile after changing its maintained sources. Profile
-  links target a verified immutable local snapshot, so branch changes cannot break
-  other clients. Compare the runtime path/hash when project and profile skills coexist.
+  configured local consumers against their selected published release. Keep
+  consumer paths, private setup details and session evidence out of public commits.
+- Prepare a profile refresh when maintained sources change; apply it only within
+  the owner-authorized installation or update scope. Existing profiles retain their
+  selected release. Profile links target a verified immutable local snapshot, so
+  branch changes cannot break other clients. Compare the runtime path/hash when
+  project and profile skills coexist.
 - Report delivered behavior and evidence, plus any missing provider or unsupported
   control. Do not label unrun tests, provisional plans or timed-out reviews complete.
 

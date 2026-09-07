@@ -52,11 +52,14 @@ of a successful review.
   account matching and existing SSH trust must be verified during private setup.
 - Antigravity review restrictions do not provide full filesystem isolation. A
   visible tool registry does not establish tool use; inspect actual events.
-- Native paid-credit eligibility is a separate gate. Current Codex schemas cannot
-  establish disabled paid use; its protected native route is blocked. Antigravity
-  requires its documented `useG1Credits` setting explicitly `false` in the CLI
-  settings file; missing, enabled or malformed values block. Claude requires explicit disabled controls without unknown purchase
-  eligibility. A configured money budget does not waive this limitation.
+- Native paid-credit eligibility is a separate gate. Published v0.1.2 blocks the
+  protected Codex route and requires explicit `useG1Credits: false` for Antigravity.
+  **Unreleased:** Codex adds account-bound owner confirmation plus fresh zero-credit
+  evidence; Antigravity also accepts its documented disabled default when the
+  file/key is absent. Enabled, unreadable or malformed controls still block.
+  Claude requires explicit disabled controls without unknown purchase eligibility.
+  A configured money budget does not waive these gates. See the
+  [credit contract](../skills/session-harness/references/api-and-spend.md#native-extra-credits).
 - Explicit API text routes require separate monetary authorization. Deterministic
   fixtures do not establish live access, provider-enforced cost limits or support
   for model-specific effort. Z.ai catalog discovery remains unavailable.
@@ -90,5 +93,6 @@ errors must identify concurrency rather than claiming quota exhaustion.
 
 Review protocols default to medium effort and 16 KiB packets. Confirm native effort
 from the actual catalog; fixtures cannot establish the current cheapest tier.
-Antigravity clients that omit a false setting when persisting sparse configuration
-remain blocked until a supported effective-control observation is available.
+On published v0.1.2, Antigravity clients that omit a false setting when persisting
+sparse configuration remain blocked. The Unreleased adapter distinguishes a
+documented absent default from invalid settings; test both provenance and denial.

@@ -4,7 +4,36 @@ Use the [short onboarding prompt](ONBOARDING-PROMPT.md) to delegate this procedu
 The result should be a working discovery setup, preserved project conventions and
 a clear account of what can actually execute. Installation alone is not acceptance.
 
-## 1. Inspect and choose scope
+## 1. Select and verify the release
+
+For an existing installation, run `ai-session version` and inspect its recorded
+provenance. Keep that selected release unless the owner requests an update;
+`ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
+for an authorized version change. Do not reinstall from an arbitrary checkout.
+
+For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
+once and stay on that release's page. Record the selected tag. Download the named
+`session-harness-VERSION.zip` asset and `SHA256SUMS` from that same release into an
+otherwise empty directory. `VERSION` denotes the version shown on the page, not a
+literal filename. Use these published assets, not GitHub's generic source archives.
+Do not follow `main` or resolve `latest` again midway through installation.
+
+Python 3.11+ and Git are prerequisites. On Windows, substitute `python` for
+`python3`. In the download directory, this portable Python command checks the
+single-archive checksum format produced by `scripts/release.py`:
+
+```sh
+python3 -c "from pathlib import Path; import hashlib; digest, name = Path('SHA256SUMS').read_text().strip().split(); archive = Path(name); actual = hashlib.sha256(archive.read_bytes()).hexdigest(); print(archive.name, actual); raise SystemExit(0 if actual == digest else 'Checksum mismatch - stop')"
+```
+
+Continue only on a successful match. SHA-256 checks download integrity; a checksum
+from the same publisher is not an independent signature. Extract the verified ZIP
+using your archive tool, then open a terminal inside its `session-harness-VERSION`
+root, where `scripts/` and `RELEASE.json` are present. The release metadata records
+the source version and commit; the installer records provenance in its private
+manifest. Keep that record with the selected tag and checksum for verification.
+
+## 2. Inspect and choose scope
 
 Identify the hosting client, harness checkout, target project and dirty files.
 Distinguish application, interface and model provider: Copilot CLI, VS Code Chat
@@ -23,7 +52,7 @@ clients, purchasing subscriptions or changing paid-usage settings. A normal loca
 installation needs filesystem access, not a GitHub PAT or repository-admin scope.
 Cloning a private repository separately requires access to that repository.
 
-## 2. Consolidate instructions and owned skills
+## 3. Consolidate instructions and owned skills
 
 Compare native instruction sources at each scope, including `AGENTS.md`,
 `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, Copilot
@@ -51,7 +80,7 @@ For relevant user/project-owned skills, inspect purpose, trigger precision, actu
 scripts/functions and references. Retain useful unique behavior; remove redundant
 prose, move lengthy procedures to linked references and consolidate duplicate
 skills only when their discovery and functions remain covered. Preserve local
-modifications and a mapping of old entry points. Do not modify vendor-managed
+modifications, installed standalone skills and a mapping of old entry points. Do not modify vendor-managed
 system skills or plugin caches. Avoid a broad rewrite of unrelated skills.
 
 The installer snapshots the generic profile and harness sources. Save unique personal
@@ -61,33 +90,22 @@ updates reuse that registered file automatically. The installer does not semanti
 merge conflicting policies. An existing skill directory at a managed destination
 must be preserved and reconciled before installation.
 
-## 3. Test, preview and install globally
+## 4. Test, preview and install globally
 
-Use a published release tag from [README.md](../README.md), rather than tracking `main`.
-From the selected harness checkout:
+On Windows, first install timezone data from the extracted release root with
+`python -m pip install -r requirements-windows.txt`.
+
+From the verified extracted release root (or the retained source of an existing
+installation):
 
 ```sh
 python3 scripts/test.py
 python3 scripts/install-agent-profile.py --launcher
 python3 scripts/install-agent-profile.py --launcher --apply
-ai-session configure
 ```
 
-`ai-session setup` is the owner's explicit environment authorization. Run it
-interactively with the owner: it selects the native and API services allowed to
-run inference, confirms timezone, working days, reset cutoff, quota mode and session capacity, and
-for API services requires a positive monthly total and money mode. Until it is
-complete, launch, review and API dispatch return `environment_setup_required`.
-Repeating setup, reinstalling or changing budgets keeps accounting history. Do
-not complete it noninteractively on the owner's behalf.
-
-New configurations allow four sessions per service; all share the account budget.
-Existing explicit capacity is retained. Use `ai-session coordination status` to
-inspect actual authority occupancy and `ai-session coordination set --max-sessions 8`
-on that authority to change it. Different accounts have separate authorities; joining
-the same repository does not merge their quotas. See [session coordination](../skills/session-harness/references/coordination.md).
-
-On Windows, use `python`, install `requirements-windows.txt`, and add
+On Windows, use `python`, first run
+`python -m pip install -r requirements-windows.txt`, and add
 `--link-mode copy` to both installer commands when symlinks are unavailable.
 PowerShell 7.3+ supports the installed `.ps1` launcher; Python can invoke
 `ai-session.py` directly. Copy mode checks drift instead of overwriting user edits.
@@ -105,7 +123,60 @@ verified instruction paths explicitly. Add `~/.local/bin` to PATH if needed.
 Restart affected clients to reload instructions. Cursor global User Rules require
 its UI; local installation does not configure remote/cloud workers.
 
-## 4. Integrate the project and knowledge layer
+## 5. Configure with the owner
+
+```sh
+ai-session configure
+ai-session configure --status
+ai-session coordination status
+ai-session budget
+```
+
+`configure` is the interactive alias for `setup`; existing selections are defaults.
+`ai-session setup` is the owner's explicit environment authorization. Run it
+interactively with the owner: it selects the native and API services allowed to
+run inference, confirms timezone, working days, reset cutoff, quota mode and session capacity, and
+for API services requires a positive monthly total and money mode. Until it is
+complete, launch, review and API dispatch return `environment_setup_required`.
+Repeating setup, reinstalling or changing budgets keeps accounting history. Do
+not complete it noninteractively on the owner's behalf.
+
+New configurations allow four sessions per service; all share the account budget.
+Existing explicit capacity is retained. Use `ai-session coordination status` to
+inspect actual authority occupancy and `ai-session coordination set --max-sessions 8`
+on that authority to change it. Different accounts have separate authorities; joining
+the same repository does not merge their quotas. See [session coordination](../skills/session-harness/references/coordination.md).
+
+Ask whether the same account is used on several computers. Choose `local` for one
+machine, or configure one already trusted SSH quota authority with
+`ai-session coordination set --authority user@host`. Set up that authority first
+with the same accounts; verify connectivity privately. Separate installations do
+not coordinate automatically. Cross-machine API dispatch is blocked; paid requests
+run on the monetary authority. Read the [coordination procedure](../skills/session-harness/references/coordination.md)
+before configuring shared use. Direct clients outside its controls remain unprotected.
+
+Offer deterministic Claude hooks where applicable: `ai-session hooks --install`
+previews the settings merge; append `--apply` for the authorized installation.
+Preserve existing hooks/settings and restart Claude. Hooks cover supported events,
+not every client or streaming response. Follow the coordination reference for limits.
+
+Strict mode is the default and denies inference without enforceable bounds.
+Observed mode requires the owner's explicit choice and accepts possible in-flight
+overshoot. Keep existing authentication, mode, strategies, reserves, grants and
+history. Do not use an example budget as authorization to change private policy.
+Review calendar, timezone, cutoff, fallback strategy and service/pool overrides
+using [budget controls](../skills/session-harness/references/budgets.md). An existing
+ledger's timezone must remain consistent with its dated history. No mandatory 10%
+reserve applies. If the owner defers configuration, report
+`environment_setup_required` and complete the remaining read-only verification.
+
+Only if the owner requests paid API use, follow [API and money setup](../skills/session-harness/references/api-and-spend.md)
+for supported services, existing key presence, explicit monthly authorization,
+separate money mode and bounded dispatch. Never reveal keys, buy credits, enable
+automatic reload or infer API entitlement from a subscription. Installation itself
+creates no paid allowance and changes no authentication.
+
+## 6. Integrate the project and knowledge layer
 
 Keep application rules in the project's `AGENTS.md`. Add a short reference such as:
 
@@ -138,16 +209,18 @@ Knowledge-gateway can supply knowledge access and graph queries. Session harness
 supplies workflow, review and usage admission. Neither replaces the other's role,
 and harness installation does not require knowledge-gateway or migrate its data.
 
-## 5. Discover capabilities and establish usage policy
+## 7. Discover capabilities and verify admission
 
 ```sh
-python3 skills/session-harness/scripts/harness.py inventory
-python3 skills/session-harness/scripts/harness.py usage refresh codex --initialize
-python3 skills/session-harness/scripts/harness.py usage status codex
-python3 skills/session-harness/scripts/harness.py usage check codex
+ai-session inventory
+ai-session usage refresh SERVICE
+ai-session usage status SERVICE
+ai-session usage check SERVICE
 ```
 
-Use the relevant supported client in place of `codex`. `usage check` reports
+Replace `SERVICE` with the configured supported service. For first-time prospective
+observation only, explicitly initialize with `ai-session usage refresh SERVICE --initialize`.
+Retain existing observation history. `usage check` reports
 `environment_setup_required` until `ai-session setup` names that service.
 Initialization starts prospective observation; it cannot recover earlier daily usage. Choose the ledger
 timezone and private state path before initialization. A new ledger defaults to UTC;
@@ -160,62 +233,26 @@ Select current account-visible models and supported effort dynamically, verify
 actual session selection, and distinguish provider family from the service owning
 the quota. Do not pin current model IDs or interpret a model list as review access.
 
-Strict mode remains the default and blocks inference without enforceable bounds.
-Observed-threshold mode is an explicit local user choice accepting possible
-in-flight overshoot. Preserve the existing budget strategy, reserves, grants and
-history until the user authorizes a migration. New ledgers default to adaptive allocation and a 0% reserve. There is no mandatory 10% floor.
-For an authorized full-utilization target, configure adaptive budgets with reserve
-0 for the relevant service or pool.
+Follow the selected release's [usage and context procedure](../skills/session-harness/references/usage-and-context.md)
+and [provider validation guide](PROVIDER-VALIDATION.md). Inspect `allowed` and stop
+reasons: metadata success is not admission. Missing, stale or incomplete evidence
+blocks inference; calendar rules and grants cannot create provider headroom. Do
+not run a paid request merely to make onboarding appear complete.
 
-Review these editable preferences during onboarding: working days, ledger timezone,
-reset cutoff, fallback strategy, fixed daily limit, reserve and any service/pool overrides. The calendar defaults
-to all seven days and an inclusive 08:30 cutoff in the ledger timezone. Examples:
+The published v0.1.2 baseline blocks protected Codex execution because its credit
+schema does not establish paid-use disablement. The unreleased repair accepts
+owner-bound confirmation of disabled Auto top-up with fresh zero-credit evidence;
+check the selected release before using that route. Antigravity requires verified
+disabled `useG1Credits`, including its documented default for an absent file/key;
+enabled, malformed or unreadable settings block. The harness never changes billing
+settings. Native extra-credit accounting retains reported units and does not prove
+protected paid execution.
 
-```sh
-ai-session budget calendar --workdays all --reset-cutoff 08:30 --timezone UTC
-ai-session budget defaults --strategy adaptive --reserve 0
-ai-session budget set codex --strategy adaptive --reserve 0
-ai-session budget
-ai-session budget add codex 5
-ai-session budget use-rest codex
-```
-
-Apply the examples only when they match the selected policy; substitute the relevant
-service. `--workdays` accepts `all`, `weekdays` or a comma-separated list such as
-`mon,tue,thu`. The fallback reserve set by `defaults --reserve 0` does not override
-explicit service or pool reserves. Inspect those settings before claiming migration
-is complete.
-
-Adaptive pacing divides the available balance across eligible working days. On a
-working day, a reset at or before tomorrow's cutoff releases the full current native
-balance, subject to the selected reserve and fresh, complete quota evidence. Days
-off have no automatic allowance; explicit `add` or `use-rest` grants can make room
-for authorized work. Neither calendar rules nor grants invent provider headroom,
-waive missing evidence or prove that a reset has occurred.
-
-For an absent reset with a verified native long-window duration, adaptive pacing
-uses a full-duration horizon and keeps the reset unknown. It cannot activate the
-cutoff release. Without either kind of schedule evidence, an explicit fixed/window
-policy is needed; do not delete the pool or grant unlimited work to bypass the block.
-
-Read [budget controls](../skills/session-harness/references/budgets.md) for daily
-additions, actual reset horizons and unknown-window exceptions. Follow the maintained
-[usage policy](../skills/session-harness/references/usage-and-context.md) and CLI
-help for configuration. Metadata success is not admission: inspect `allowed` and
-stop reasons. Do not run a paid inference merely to make onboarding appear complete.
-
-For explicitly authorized paid work, include the eight direct API routes listed in
-[API and money setup](../skills/session-harness/references/api-and-spend.md).
-Discover existing key presence without exposing values, select current models and
-establish a total monthly amount/currency before inference. Show `ai-session spend
-status`, `spend set`, `spend add`, `api models` and bounded `api run`. Money mode is
-separate from subscription mode. Never create a paid allowance merely to finish
-onboarding. Native extra-credit receipt accounting does not establish protected
-native paid execution; retain units and report missing eligibility controls.
-Current Codex readers cannot establish paid-use disablement, so its protected
-native adapter remains blocked despite available quota metadata. Antigravity is
-admitted only when its documented `useG1Credits` CLI setting is explicitly `false`;
-the harness reads that file and never edits it.
+Select the strongest account-available hosting-provider model as manager at its
+highest supported standalone effort. Use bounded fresh-context native workers at
+medium effort, low for gathering. Two distinct other-provider families review the
+same plan independently, normally at medium effort. Reconcile findings and report
+missing reviews accurately. Do not start a new harness cycle for trivial or leaf work.
 
 Keep the same task in the current session through compaction by default. At 60%
 context usage, save a checkpoint; at 75%, reduce new context and use bounded packets;
@@ -224,7 +261,7 @@ are advisory thresholds: Markdown instructions cannot invoke a client's compacti
 control. Start a fresh session for an unrelated task, a required model change or
 failed context recovery, carrying the necessary handoff when work continues.
 
-## 6. Verify and hand off
+## 8. Verify and hand off
 
 Rerun the installer preview and confirm expected paths are unchanged. Resolve
 instruction/skill links and verify the loaded runtime path/hash after restart.
@@ -252,18 +289,3 @@ When vendoring the harness, copy its root `LICENSE` and `NOTICE` into the
 vendored skill directory. The installer includes both files with the shared
 profile and installed skill. Preserve these Apache 2.0 licensing files in
 maintained source copies.
-
-## Session efficiency and shared usage
-
-Ask whether the same subscriptions are used on several computers. Configure one
-trusted SSH quota authority through `ai-session setup --authority user@host`, or
-choose `local` for one machine. Never infer successful cross-machine enforcement
-from two installed copies. Verify connectivity and the same account setup privately.
-Offer the deterministic Claude hooks with `ai-session hooks --install`, then apply
-the reviewed merge when authorized. Keep all hostnames, account evidence and quota
-state out of public files. Direct clients without these controls are unprotected.
-
-Resolve a current economical tier for execution at medium effort and low for simple
-investigation. Plan with the strongest manager; do not duplicate its entire context
-or maximum effort into workers. Keep review packets short and ordinary reviews at
-medium. Check actual selected models and efforts in private session metadata.

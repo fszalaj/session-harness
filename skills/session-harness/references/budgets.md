@@ -1,7 +1,8 @@
 # Adaptive budgets and daily grants
 
 Use these commands from the installed `ai-session` launcher. Without installation,
-replace `ai-session` with `python3 <skill-dir>/scripts/harness.py`. They inspect or
+use `python3 scripts/harness.py` with the selected skill directory (containing
+`SKILL.md`) as your working directory. They inspect or
 change private local policy without sending a model prompt or altering provider billing.
 
 ```sh

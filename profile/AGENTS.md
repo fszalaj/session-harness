@@ -54,7 +54,7 @@ claim maximum-model execution if the client could not select it.
 
 Complete `ai-session setup` with the owner before inference; it names the native
 and API services allowed to run, and an agent never finishes it with `--yes`.
-Before inference, complete `ai-session setup`. For multiple computers, configure one
+For multiple computers, configure one
 trusted SSH authority with `ai-session coordination set --authority user@host`;
 independent local ledgers do not share a daily budget. Claude's optional command hooks
 stop supported prompt/tool events without another model call. Default account

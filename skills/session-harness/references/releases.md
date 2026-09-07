@@ -6,9 +6,10 @@
 - `ai-session version`: inspect the running installed version and runtime path.
 - `ai-session update --check`: compare against the latest immutable stable release.
 - `ai-session update`: show the selected release and ask before installation.
-- `ai-session update --version X.Y.Z --apply`: explicitly install or roll back to
-  that published version. No moving branch.
-- Development `ai-session auto-update register`, `enable --interval-hours 24`,
+- `ai-session update --version VERSION --apply`: explicitly install or roll back to
+  that published version. Replace `VERSION` with the chosen numeric version after
+  reading its release notes. No moving branch.
+- **Unreleased:** `ai-session auto-update register`, `enable --interval-hours 24`,
   `status`, `run` and `disable`: explicitly enabled macOS/Linux background updates.
   This feature is not in published v0.1.2. Registration accepts reviewed local
   skill overlays against a verified published baseline. New releases install only
@@ -42,7 +43,7 @@ attention. Inspect processes and managed backups, restore or complete only profi
 changes, then explicitly release the stopped maintenance owner with `coordination
 maintenance-release --owner TOKEN --confirm-stopped`. `auto-update recover
 --confirm-stopped` clears the empty local update lock only after maintenance is
-absent. Never restore accounting. The source archive's `docs/AUTO-UPDATE.md` gives
+absent. Never restore accounting. The [automatic maintenance reference](automatic-maintenance.md) gives
 the full scheduler, shared activation hook and crash-recovery contract.
 
 The full release and bootstrap guide ships in `docs/RELEASES.md` in the source

@@ -4,6 +4,8 @@ Core Python accounting, explicit API routes and profile installation target
 Linux, macOS and Windows with Python 3.11+. Windows also needs `tzdata` because
 its system does not provide the IANA database consumed by `zoneinfo`.
 
+From the root of a verified release archive:
+
 ```powershell
 python -m pip install -r requirements-windows.txt
 python scripts/test.py
@@ -31,9 +33,10 @@ selectors. Private state checks reject reparse paths and apply a user-specific A
 Native Windows Antigravity quota ownership/terminal protocols are unsupported.
 A generic Windows subprocess test does not establish a native client's quota,
 model or paid-credit controls. All native admission requirements still apply;
-see the README capability table for current availability.
+see [client adapter boundaries](clients.md#explicit-apis-and-platform-boundaries).
 
-The portable settings reader distinguishes an absent Antigravity settings file
+**Unreleased (absent from v0.1.2):** the portable settings reader distinguishes an
+absent Antigravity settings file
 from an invalid parent path. Windows can report both as `FileNotFoundError`, so
 the reader validates the nearest existing ancestor before using the disabled
 default. A regular file in the parent path or a permission error remains invalid.

@@ -1,137 +1,45 @@
 # Copy-paste onboarding prompt
 
-Use this prompt with a coding assistant that can inspect your local files. Name the
-harness checkout and target project when they are not already clear.
+Use with an assistant that can inspect local files. Identify the harness source and
+target project if they are not already clear. This prompt delegates the canonical
+[onboarding workflow](ONBOARDING.md); its conditional references preserve detail.
 
 ```text
-Onboard the latest published stable session-harness release globally and into this project.
-Use a fixed release tag, never a moving main branch for a maintained installation. Read its README and
-docs/ONBOARDING.md and skills/session-harness/references/instructions.md. Identify
-the hosting client and installed clients I use: Codex, Claude Code, Gemini CLI,
-Antigravity, GitHub Copilot (CLI, IDE or GitHub) and Cursor (local or cloud), plus
-Kimi CLI, OpenCode, Aider, Continue, Ollama and any others discovered. Distinguish
-Grok/xAI, DeepSeek, Kimi/Moonshot and GLM/Z.ai model families from their hosting
-client and billing service. Check current official rules for the actual client/version;
-do not infer support from the model provider. Inspect instructions, skills and dirty
-state, then carry out reversible changes and verification within this request.
+Onboard session-harness globally and into this project using docs/ONBOARDING.md.
+For an existing installation, inspect ai-session version and retain its selected
+release unless I authorize an update. For a new installation, resolve the latest
+published stable release once, verify its matching archive/checksum and keep that
+version throughout. Never install maintained profiles from moving main.
 
-Audit AGENTS.md, CLAUDE.md, GEMINI.md, Copilot instructions and scoped rules, Cursor
-rules/User Rules, and other detected clients' native entry points at personal and
-project scope. Preserve unique rules, scope, activation settings and user edits.
-Use one canonical personal AGENTS.md and one canonical AGENTS.md per project,
-with one shared skills root at each scope. Consolidate compatible rules and create
-relative symlinks from supported native instruction/skill paths to those targets.
-Verify actual client loading; where symlinks do not load, use a supported import
-or checked generated view. Preserve scoped rules and avoid duplicate context.
-Gemini CLI defaults to GEMINI.md; keep its compatibility link unless AGENTS.md
-discovery is explicitly configured and verified. Do not conflate Gemini CLI with
-Antigravity CLI or IDE. Copilot support varies by feature; do not assume AGENTS.md
-covers every IDE or GitHub surface. Cursor reads project AGENTS.md, but global
-User Rules require its supported UI. A local skill does not configure cloud workers.
-For another AI client, verify its documented entry points before adding integration.
+Read the workflow and client instruction reference before changing files. Inspect
+hosting/installed clients, dirty state, personal/project rules and relevant owned
+skills. Preserve unique rules, scoped activation, user edits and standalone skills;
+do not edit vendor-managed skills. Use a private registered personal-policy addendum.
+Resolve conflicts from my current instructions or ask only when a decision is needed.
+Use the existing project knowledge and code graph before structural/documentation work.
 
-Audit relevant user/project-owned skills for necessity,
-length, triggers and actual functions; consolidate duplication without losing
-behavior. Do not edit vendor-managed skills or silently discard conflicts.
+Carry out authorized reversible installation and project integration: test, preview,
+apply, restart or report restart needs, then verify real client loading and idempotence.
+Follow the Windows section when applicable. Keep one canonical policy/skills root per
+scope, supported discovery aliases and project-owned customizations. Read the linked
+instruction/platform guides for each detected client; local files do not configure cloud workers.
 
-Preserve backups before changes. Keep unique personal policy in a private Markdown
-addendum outside the public checkout and register it with --personal-policy during
-installation; updates must retain it. Backups alone do not keep rules active. Use the existing code graph before code, README or documentation changes,
-checking measured blind spots in source. Prefer existing project
-knowledge and graph tools, including knowledge-gateway if available, without
-adding a mandatory backend. Document the reading order and durable handoff path.
-Discover installed clients, current selectable models and supported effort without
-version pins or assumptions based on a subscription name. Separate advertised
-catalogs, account-selectable options and verified execution; retain unknowns.
-Preserve persisted quota strategies, reserves, grants, mode and history until I
-authorize migration. New ledgers use adaptive allocation and reserve 0;
-there is no mandatory 10% floor. For a full-utilization target I select, configure
-adaptive per-pool budgets with reserve 0 from actual reset metadata. Otherwise
-retain the existing policy or new-ledger defaults.
+Walk me through ai-session configure interactively; never authorize services with
+--yes on my behalf. Preserve settings, authentication, budgets, grants, history and
+quota mode. Read the coordination and budget references for shared accounts and
+policy choices; read API/money guidance only if paid use is requested. Do not enable
+billing, top-up or paid fallback. Strict remains the default unless I choose observed mode.
 
-Ask about simultaneous sessions in the configuration wizard. New configurations
-allow four per service; preserve existing choices unless I request a change.
-Show `ai-session coordination status` and `ai-session coordination set --max-sessions 8`.
-Change capacity on the account authority without changing the shared quota allowance.
-Different accounts require separate authorities; a common repository does not make
-its contributors share one account. Do not delete live owners to bypass contention.
+Resolve models dynamically: strongest hosting-provider manager at highest standalone
+effort, bounded native workers normally medium (low for gathering), two independent
+other-provider plan reviews. Follow the selected skill's admission/context procedure;
+missing capabilities or reviews are not success. Do not restart orchestration for leaf tasks.
 
-On Windows, install the timezone dependency and use explicit --link-mode copy
-when symlinks are unavailable. Preserve checked-copy drift and backups; use
-PowerShell 7.3+ or the Python launcher, not a cmd.exe interpolation wrapper.
-
-Review editable calendar preferences with me: working days (all seven by default),
-IANA timezone (UTC for a new ledger), inclusive reset cutoff (08:30 by default),
-fallback strategy, fixed daily limit, reserve and service/pool overrides. Show `ai-session budget calendar
---workdays all --reset-cutoff 08:30 --timezone UTC`; working days also accept
-`weekdays` or a list such as `mon,tue,thu`. Timezone can initialize a new ledger but
-must match an existing ledger to preserve dated history. `ai-session budget defaults
---reserve 0` changes only the fallback; explicit service/pool reserves take precedence.
-Apply changes only within my chosen policy. Adaptive pacing divides the balance over
-eligible working days. On a working day, a reset at or before tomorrow's cutoff
-releases the full current native balance subject to the selected reserve and fresh,
-complete evidence. Days off have no automatic allowance; explicit grants can add it.
-Show `ai-session budget`, `ai-session budget add SERVICE 5` and
-`ai-session budget use-rest SERVICE`. If a reset is absent, a verified native window
-duration permits conservative pacing over its full duration, with no cutoff release.
-Keep the reset unknown. Without either reset or duration evidence, an explicit
-fixed/window policy is required. Calendar rules and grants cannot create
-provider headroom or bypass missing evidence.
-
-Include explicit API support for OpenAI, Anthropic, Gemini, xAI/Grok, DeepSeek,
-Moonshot/Kimi, Z.ai/GLM and OpenRouter. Read references/api-and-spend.md within the
-skill. Inventory existing key presence without exposing values. Do not assume a
-subscription supplies an API key or that catalog order ranks model strength.
-If I authorize paid use, establish my total monthly amount/currency and optional
-service caps with `ai-session spend`; preserve separate monetary and subscription
-modes. Show `spend status`, `spend add`, `api models` and bounded `api run`.
-Missing monetary authorization leaves paid execution disabled. Native extra credits
-retain their units; record verified monetary receipts under extra:SERVICE when
-applicable. Never buy credits, enable automatic reload or invent dollar conversion.
-Report missing paid-eligibility controls honestly, including native Codex and
-Antigravity limitations. Keep account evidence and personal setup out of public files.
-
-Continue the same task through compaction by default: checkpoint at 60% context,
-reduce new context at 75%, use native compaction at 85% when available, then resume.
-These thresholds are advisory; Markdown cannot invoke the client's native compact
-control. Use a fresh session for an unrelated task, a required model change or failed
-context recovery, with a handoff when continuing work.
-
-Run deterministic tests and an install preview, install globally, integrate the
-project, restart or report the required restart, and verify actual discovery and
-idempotence. Then walk me through `ai-session configure` interactively so I authorize
-which native and API services may run inference; never complete it with --yes on
-my behalf, and report `environment_setup_required` as the next step if I defer it. Report instruction loading, skill discovery, model access and protected
-execution separately. Copilot/Cursor instruction compatibility does not establish
-working review, quota or manager adapters; Gemini CLI is not an Antigravity adapter.
-Show ai-session version, update --check, interactive update and an exact-version
-rollback. When the installed version supports auto-update, explain its default-off
-flag, registration, enable/status/disable commands and idle maintenance behavior.
-Enable only if I choose it; verify actual scheduler delivery, noninteractive SSH
-and shared authority compatibility. Preserve local overlays and document conflict
-and crash recovery. The development feature is not included in v0.1.2.
-Prefer a shared installed release plus a short project AGENTS.md reference;
-keep explicitly vendored customizations on their own reviewed version. After every
-push, check README/docs/skills and configured consumers against their selected release.
-Do not silently move maintained profiles to development main. Store consumer paths
-and setup privately; do not publish consumer repositories without authorization.
-Keep the existing explicit quota-mode choice; otherwise use strict mode unless I
-opt into observed-threshold stopping with possible in-flight overshoot. Do not change billing, authentication,
-repository visibility or publish anything. Report changes, checks, rollback paths
-and any remaining decisions or unavailable capabilities.
+Report version/provenance, preserved rules, changes, tests, actual loading, discovery
+and protected execution separately, plus rollback and unresolved items. Read release
+and recovery guides when updating, rolling back or considering optional maintenance;
+check support in my selected release and enable optional maintenance only if I choose it.
+Keep account evidence and consumer paths private. After any authorized push, check
+README/docs/skills and consumers against their selected release. Do not change
+repository visibility, publish, or alter authentication as part of onboarding.
 ```
-
-## Session efficiency and shared usage
-
-Ask whether the same subscriptions are used on several computers. Configure one
-trusted SSH quota authority through `ai-session setup --authority user@host`, or
-choose `local` for one machine. Never infer successful cross-machine enforcement
-from two installed copies. Verify connectivity and the same account setup privately.
-Offer the deterministic Claude hooks with `ai-session hooks --install`, then apply
-the reviewed merge when authorized. Keep all hostnames, account evidence and quota
-state out of public files. Direct clients without these controls are unprotected.
-
-Resolve a current economical tier for execution at medium effort and low for simple
-investigation. Plan with the strongest manager; do not duplicate its entire context
-or maximum effort into workers. Keep review packets short and ordinary reviews at
-medium. Check actual selected models and efforts in private session metadata.
