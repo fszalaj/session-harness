@@ -241,3 +241,6 @@ existing hooks and records a private backup. Denial emits `continue: false`; it 
 not return a Stop-hook block that asks the model to continue. Restart the client.
 These controls reduce races and detect aggregate use; observed mode still cannot
 promise an exact charge boundary for provider streaming or unprotected clients.
+
+Model-specific Claude stops and exact-session recovery are described in
+[model allowances](model-allowances.md). Common budget stops still require restored admission.

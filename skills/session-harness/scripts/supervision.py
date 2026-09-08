@@ -21,7 +21,9 @@ if os.name == "posix":
 class Stop(RuntimeError):
     """A quota stop containing reason codes only, never adapter payloads."""
 
-    def __init__(self, service, reasons):
+    def __init__(self, service, reasons, *, receipt=None):
+        import model_scope
+        self.model_scope_stop = model_scope.scope_only_denial(receipt)
         self.service = service
         known = {"missing_snapshot", "stale_or_future_snapshot", "incomplete_pools",
                  "new_day_needs_observation", "unknown_daily_consumption", "daily_limit",
@@ -51,7 +53,8 @@ class Stop(RuntimeError):
 
 
 class Watch:
-    def __init__(self, service, check=None, interval=15, clock=time.monotonic):
+    def __init__(self, service, check=None, interval=15, clock=time.monotonic, models=None):
+        self.models = models
         if not math.isfinite(interval) or interval <= 0:
             raise ValueError("Polling interval must be positive and finite")
         self.service, self.check = service, check
@@ -63,14 +66,15 @@ class Watch:
         try:
             if self.check is None:
                 from coordination import dispatch
-                result = dispatch('admit', self.service, self.owner)
+                models = self.models() if callable(self.models) else self.models
+                result = dispatch('admit', self.service, self.owner, **({'models': models} if models is not None else {}))
             else:
                 result = self.check(self.service)
         except Exception:
             raise Stop(self.service, ["quota_refresh_failed"]) from None
         if not isinstance(result, dict) or result.get("allowed") is not True:
             reasons = result.get("reasons", []) if isinstance(result, dict) else []
-            raise Stop(self.service, reasons if isinstance(reasons, (list, tuple)) else [])
+            raise Stop(self.service, reasons if isinstance(reasons, (list, tuple)) else [], receipt=result)
         self.next_check = self.clock() + self.interval
         return result
 
@@ -201,14 +205,16 @@ def _cleanup(pid, grace, observer=None):
             observer.close()
 
 
-def run_terminal(argv, env, service, *, check=None, interval=15, grace=1.0):
+def run_terminal(argv, env, service, *, check=None, interval=15, grace=1.0, models=None, on_stop=None, input_ready=None):
     """Relay a PTY and stop its entire owned group when observation denies work."""
     if not math.isfinite(grace) or grace < 0:
         raise ValueError("Cleanup grace must be nonnegative and finite")
     if os.name == 'nt':
+        if models is not None:
+            raise ValueError('Model-scoped interactive supervision requires POSIX')
         from platform_runtime import terminal
         return terminal(argv, env, service, check=check, interval=interval, grace=grace)
-    watch = Watch(service, check=check, interval=interval)
+    watch = Watch(service, check=check, interval=interval, models=models)
     watch.start()
     env = dict(env, SESSION_HARNESS_OWNER=watch.owner)
     stdin, stdout = sys.stdin.fileno(), sys.stdout.fileno()
@@ -257,9 +263,10 @@ def run_terminal(argv, env, service, *, check=None, interval=15, grace=1.0):
         input_open, master_open = True, True
         exit_deadline = None
         while True:
-            watch.tick()
+            if exit_deadline is None and not exit_observer.ready():
+                watch.tick()
             readers = ([master] if master_open and len(to_stdout) < capacity else [])
-            if input_open and len(to_child) < capacity and exit_deadline is None:
+            if input_open and len(to_child) < capacity and exit_deadline is None and (input_ready is None or input_ready()):
                 readers.append(stdin)
             writers = ([stdout] if to_stdout else [])
             if master_open and to_child and exit_deadline is None:
@@ -315,6 +322,13 @@ def run_terminal(argv, env, service, *, check=None, interval=15, grace=1.0):
         status = 130
     except BaseException as exc:
         primary_error = exc
+        if isinstance(exc, Stop):
+            exc.inference_interrupted = pid is not None and not exit_observer.ready()
+            if on_stop is not None:
+                try:
+                    on_stop(exc)
+                except Exception:
+                    exc.inference_interrupted = False
         raise
     finally:
         tearing_down = True
@@ -356,6 +370,9 @@ def run_terminal(argv, env, service, *, check=None, interval=15, grace=1.0):
             restore("signal_handler", signal.signal, signum, handler)
         if deferred_signals:
             errors.extend(("teardown_signal", _SignalStop(signum)) for signum in deferred_signals)
+        if isinstance(primary_error, Stop):
+            primary_error.session_cleanup = {"state": "stopped" if stopped else "unknown",
+                                             "owner_retained": not stopped, "errors": []}
         if errors:
             error = primary_error if primary_error is not None else errors[0][1]
             if primary_error is None and not isinstance(error, (Stop, OSError)):

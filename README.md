@@ -107,9 +107,10 @@ reason and report uncertain process termination separately. See
 
 Claude alias resolution also uses fresh native `resolvedModel` metadata, allowing
 current Sonnet workers alongside a newer minor revision of the planning tier.
-Fable's model allowance and the overall subscription allowance are distinct, but
-protected admission currently requires all reported pools. Automatic continuation
-on Opus after a Fable-only stop is not implemented. See [Claude limits](skills/session-harness/references/clients.md#claude-code).
+Development builds keep model-specific and common Claude allowances separate. A
+Fable-only stop can select current Opus and resume the exact protected conversation
+after confirmed cleanup. Common quota and configured role restrictions still apply.
+See [model allowances and recovery](skills/session-harness/references/model-allowances.md).
 
 ## Find the relevant guide
 

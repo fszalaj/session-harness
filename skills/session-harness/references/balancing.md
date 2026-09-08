@@ -38,7 +38,9 @@ mean equal tokens, dollars, requests or useful output. No work is invented to bu
 quota. Comparisons are approximate and expose partial history and reset timestamps.
 
 For each service, divide observed cumulative daily consumption by the current daily
-ceiling for each non-session pacing pool, and use the highest ratio. Overlapping
+ceiling for each common non-session pacing pool, and use the highest ratio.
+Verified model-specific pools constrain model selection instead of ranking an entire
+subscription; see [model allowances](model-allowances.md). Overlapping
 pools are never added together. Short renewable windows still constrain admission
 but do not rank providers against weekly budgets. Missing or invalid pacing evidence
 blocks enablement and work. Status shows binding pools, drift and unresolved jobs.
@@ -106,8 +108,9 @@ An absent setting means no restrictions, including in legacy or reset state. Thi
 configuration for trusted controllers, not a security boundary against the ledger
 owner. The remote protocol cannot edit it, and text workers have no tools. Direct
 IDE calls and API routes without protected role adapters remain outside this control.
-Interactive launches check the selected model at startup; later native model changes
-are not observed by the role guard.
+Interactive launches check the selected model at startup. Supported protected Claude
+sessions also check model changes through native hooks; other client adapters retain
+their documented startup-only role boundary.
 
 ## Other AI clients and billing routes
 
@@ -180,7 +183,7 @@ proof of an API invoice.
 
 Missing evidence, unsupported controls or a participant's quota denial pauses the
 coordinated batch. Status distinguishes evidence failures from quota denials. There
-is no silent participant removal, provider/model retry, API fallback, quota grant or
+is no silent participant removal, billing-service retry, API fallback, quota grant or
 credit purchase. A Mac client being offline does not stop a reachable authority;
 that Mac cannot reserve locally while disconnected. Older authorities that do not
 understand the balance protocol fail closed and need a reviewed update.

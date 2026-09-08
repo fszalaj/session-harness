@@ -222,12 +222,15 @@ def _evaluate(ledger, config=None, override=False, refresh=True):
     summaries, captured, reasons = {}, {}, []
     for service in config['services']:
         check = usage.require_admission(service, ledger=ledger) if refresh else ledger.check(service)
+        if service == 'claude' and not check.get('allowed'):
+            import claude_admission
+            check = claude_admission.worker_check(ledger, check)
         with ledger._connect() as db:
             captured['service:' + service] = _snapshot(db).get('service:' + service)
         pools = check.get('pools', [])
         progress = []
         for pool in pools:
-            if pool.get('strategy') == 'window':
+            if pool.get('strategy') == 'window' or pool.get('model_scope') is not None:
                 continue
             try:
                 ceiling = budget_policy.numeric(pool.get('daily_ceiling'), 'daily ceiling')

@@ -107,9 +107,9 @@ quota. After its model allowance runs out, other Claude models can remain availa
 within the overall allowance. Pro and standard Team require paid credits for Fable;
 catalog visibility does not authorize those credits. Verify the account and current
 [Claude plan documentation](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan).
-The harness currently gates every reported pool, including scoped pools. It does not
-yet implement model-scoped admission or automatic Opus continuation after a Fable-only
-stop. Omitting that pool before verified model enforcement would weaken admission.
+Development builds preserve proven model scopes and support current Opus selection
+after a Fable-only stop, with supervised exact-session resume on supported clients.
+Common limits and unknown scopes remain required; see [model allowances](model-allowances.md).
 
 The manager launcher uses the highest reasoning effort supported by the CLI/model.
 Persistent `effortLevel` does not accept every CLI effort value. Do not put a max

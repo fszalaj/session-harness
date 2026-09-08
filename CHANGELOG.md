@@ -10,8 +10,11 @@
 - Keep redirected output free of diagnostic terminal escapes and preserve machine
   JSON failures. Refuse to confirm cleanup when the owned child cannot be reaped.
 - Read native Claude alias resolutions and use verified current Sonnet workers
-  without changing the manager tier. Keep all quota pools required and report that
-  model-scoped admission is unsupported.
+  without changing the manager tier. Preserve native model-pool scope and common
+  accounting; admit current alternatives after a model-specific stop.
+- Track protected Claude model changes and resume an exact conversation once after
+  a verified scoped stop and successful cleanup. Preserve common limits, role
+  restrictions, legacy all-pool behavior and separate billing authorization.
 - Re-evaluate a concurrent newer quota observation once without refreshing or
   writing accounting again. Preserve policy, completeness and final reservation guards.
 

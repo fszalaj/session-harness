@@ -219,10 +219,10 @@ def terminal(argv, env, service, check=None, interval=15, grace=1):
     return code
 
 
-def run(argv, *, stdin=b'', timeout=15, cwd=None, env=None, on_stdout_line=None, quota_service=None):
+def run(argv, *, stdin=b'', timeout=15, cwd=None, env=None, on_stdout_line=None, quota_service=None, quota_models=None):
     import harness
     from supervision import Watch
-    watch = Watch(quota_service) if quota_service else None
+    watch = Watch(quota_service, models=quota_models) if quota_service else None
     if watch: watch.start()
     if watch: env = dict(os.environ if env is None else env, SESSION_HARNESS_OWNER=watch.owner)
     proc = spawn(argv, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,

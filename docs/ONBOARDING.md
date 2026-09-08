@@ -192,9 +192,10 @@ See [stop recovery](../skills/session-harness/references/usage-and-context.md#wh
 
 Inspect the requested and actual worker model in each receipt. Development Claude
 selection resolves current aliases and prefers a current Sonnet for bounded work.
-Fable and overall weekly limits are separate; the harness still requires every
-reported pool and cannot automatically continue on Opus after a Fable-only stop.
-See [Claude model and plan limits](../skills/session-harness/references/clients.md#claude-code).
+Fable and overall weekly limits are separate. Development builds check the actual
+model and can resume on current Opus after a verified Fable-only stop.
+See [model allowances and recovery](../skills/session-harness/references/model-allowances.md)
+for the shared-authority check command and supported interactive launch controls.
 
 ## 6. Integrate the project and knowledge layer
 

@@ -82,7 +82,9 @@ configuration after an explicit owner choice. Honor an existing choice without
 asking again. It uses observed daily lower bounds where earlier history is partial.
 Never silently substitute modes. A stop saves a checkpoint and does not switch
 billing services, start replacement workers or consume reset credits to bypass it.
-The launcher and external review runner poll while their owned processes run;
+A verified model-specific stop may select an admitted model within the same
+subscription; see [model allowances](references/model-allowances.md). Common stops
+never permit that transition. The launcher and external review runner poll while their owned processes run;
 direct native sessions remain outside that process boundary.
 
 Development launchers explain quota stops after terminal restoration. Preserve the
@@ -174,7 +176,8 @@ provider guidance when capability or successor relationships remain uncertain.
   Verify an actual work receipt; an enabled profile does not move manager tokens.
   Claude's native alias resolution can establish current Sonnet workers. Check
   [client limits](references/clients.md#claude-code): scoped Fable allowance is not
-  total subscription allowance, but model-scoped admission remains unsupported.
+  total subscription allowance. Use [model-aware admission](references/model-allowances.md)
+  for current alternatives and supervised exact-session recovery.
   Installed Claude investigator/implementer roles use the rolling `sonnet` alias
   (investigator: low; implementer: medium) and the verifier inherits the manager
   model at high effort; pass a per-call model only for a verified better fit. Keep leaf work off the

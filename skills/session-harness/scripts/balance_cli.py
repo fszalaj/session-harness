@@ -65,14 +65,19 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None):
             'verdict': 'worker output requires manager inspection; not an independent plan review'}
 
 
-def run_interactive(provider, response, environment, *, ledger=None):
+def run_interactive(provider, response, environment, *, ledger=None, capability=None):
     import supervision
     ledger = ledger or Ledger()
+    def execute():
+        if provider == 'claude' and capability:
+            import claude_session
+            return claude_session.run(capability, response, environment)
+        return supervision.run_terminal(response['argv'], environment, provider)
     state = coordination.balance_dispatch('status', {}, ledger)
     if not state.get('enabled'):
         if state.get('reasons'):
             raise ValueError('balance status unavailable')
-        return supervision.run_terminal(response['argv'], environment, provider)
+        return execute()
     task_id = 'interactive-' + uuid.uuid4().hex
     artifact = json.dumps(response['argv']).encode()
     reserved = coordination.balance_dispatch('reserve', {
@@ -82,7 +87,7 @@ def run_interactive(provider, response, environment, *, ledger=None):
     started = coordination.balance_dispatch('start', {'id': task_id}, ledger)
     if not started.get('allowed'):
         raise ValueError('worker balance start denied')
-    code = supervision.run_terminal(response['argv'], environment, provider)
+    code = execute()
     receipt = coordination.balance_dispatch('finish', {'id': task_id,
         'status': 'completed' if code == 0 else 'failed',
         'metadata': {'requested_model': response['selection']['model'],

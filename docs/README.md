@@ -32,3 +32,5 @@ version-specific instructions. Existing installations retain their selected rele
 unless the owner requests an update or has already enabled automatic maintenance.
 
 - [Subscription balancing (development)](../skills/session-harness/references/balancing.md): shared routing, billing attribution, local usage audit and recovery.
+
+- [Claude model allowances](../skills/session-harness/references/model-allowances.md): common quotas, model selection and exact-session recovery.
