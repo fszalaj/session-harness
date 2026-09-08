@@ -12,6 +12,8 @@ The manager remains the strongest supported model of the hosting provider. With
 balancing enabled, it delegates bounded work across configured native subscriptions.
 Choose tasks before reaching a quota stop. Keep manager work to planning, decisions,
 integration and verification; provider reviews remain separate independent judgments.
+Enabling the profile alone does not move the interactive manager's work or tokens.
+Submit the bounded task through `work` and verify its receipt before claiming delegation.
 
 ```sh
 ai-session balance status
@@ -40,6 +42,14 @@ ceiling for each non-session pacing pool, and use the highest ratio. Overlapping
 pools are never added together. Short renewable windows still constrain admission
 but do not rank providers against weekly budgets. Missing or invalid pacing evidence
 blocks enablement and work. Status shows binding pools, drift and unresolved jobs.
+
+Concurrent protected sessions can record a newer observation during evaluation.
+If settings are unchanged and only observation identity changed, the router performs
+one read-only re-evaluation against current ledger evidence. This makes no model or
+backend call and records no timestamp. A second race, stale/incomplete data, failed
+refresh, quota denial or policy change still stops dispatch. The final snapshot
+comparison remains mandatory; this mitigates the sequential-refresh race rather
+than promising an atomic multi-provider backend snapshot.
 
 The next useful chunk comes from services within the configured lead of the least
 consumed fraction. Within that band, choose the fewest recorded dispatches today,

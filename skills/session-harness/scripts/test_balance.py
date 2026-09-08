@@ -101,6 +101,78 @@ class BalanceTests(unittest.TestCase):
             result = balance.reserve(self.ledger, self.request())
         self.assertIn('state_changed', result['reasons'])
 
+    def test_concurrent_refresh_reevaluates_new_consumption_without_network_retry(self):
+        calls = []
+        def admission(service, ledger):
+            calls.append(service)
+            result = ledger.check(service)
+            if service == 'codex':
+                self.seed('claude', 8)
+            return result
+        with patch.object(balance.usage, 'require_admission', side_effect=admission):
+            result = balance.reserve(self.ledger, self.request())
+        self.assertTrue(result['allowed'], result)
+        self.assertEqual(result['service'], 'codex')
+        self.assertEqual(calls, ['claude', 'codex'])
+        self.assertEqual(result['job']['before']['claude']['pools'][0]['daily_consumed'], 8)
+
+    def test_concurrent_refresh_cannot_hide_exhaustion(self):
+        def admission(service, ledger):
+            result = ledger.check(service)
+            if service == 'codex':
+                self.seed('claude', 100)
+            return result
+        with patch.object(balance.usage, 'require_admission', side_effect=admission):
+            result, _ = balance._evaluate(self.ledger)
+        self.assertFalse(result['allowed'])
+        self.assertTrue(any('daily_limit' in reason for reason in result['reasons']), result)
+
+    def test_concurrent_refresh_cannot_hide_missing_scoped_pool(self):
+        self.seed('claude', 0, [dict(pool='scoped', used_percent=0, resets_at=time.time()+604800)])
+        def admission(service, ledger):
+            result = ledger.check(service)
+            if service == 'codex':
+                self.seed('claude', 0)
+            return result
+        with patch.object(balance.usage, 'require_admission', side_effect=admission):
+            result, _ = balance._evaluate(self.ledger)
+        self.assertFalse(result['allowed'])
+        self.assertTrue(any('incomplete_pools' in reason for reason in result['reasons']), result)
+
+    def test_repeated_race_stops_after_one_read_only_reevaluation(self):
+        original = self.ledger.check
+        def inconsistent(service):
+            result = original(service)
+            if service == 'claude':
+                result['observed_at'] -= 1
+            return result
+        with self.ledger._connect() as db:
+            before = balance._snapshot(db)
+        with patch.object(self.ledger, 'check', side_effect=inconsistent) as check, \
+                patch.object(balance, '_evaluate', wraps=balance._evaluate) as evaluate, \
+                patch.object(balance.usage, 'require_admission', side_effect=lambda service, ledger: ledger.check(service)) as refresh:
+            result, _ = balance._evaluate(self.ledger)
+        self.assertFalse(result['allowed'])
+        self.assertEqual(evaluate.call_count, 2)
+        self.assertEqual(refresh.call_count, 2)
+        self.assertEqual(check.call_count, 4)
+        with self.ledger._connect() as db:
+            self.assertEqual(before, balance._snapshot(db))
+
+    def test_mixed_refresh_failure_and_race_never_retries(self):
+        def admission(service, ledger):
+            result = ledger.check(service)
+            if service == 'claude':
+                result.update(allowed=False, reasons=['quota_refresh_failed'])
+            else:
+                self.seed('claude', 1)
+            return result
+        with patch.object(balance.usage, 'require_admission', side_effect=admission), \
+                patch.object(balance, '_evaluate', wraps=balance._evaluate) as evaluate:
+            result, _ = balance._evaluate(self.ledger)
+        self.assertFalse(result['allowed'])
+        self.assertEqual(evaluate.call_count, 1)
+
     def test_invalid_requests_metadata_and_no_key(self):
         for edit in ({'provider': 'openai-api'}, {'id': 'unsafe id'}, {'fingerprint': 'abc'}, {'prompt': 'private'}):
             with self.assertRaises(ValueError):

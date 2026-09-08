@@ -31,6 +31,29 @@ class ClaudeModelsTests(unittest.TestCase):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 claude_models.parse_initialize(text, 'match')
 
+    def test_current_alias_resolution_is_allowlisted_without_entitlement_claim(self):
+        row = {'value': 'sonnet', 'resolvedModel': 'claude-sonnet-99-2', 'description': 'private'}
+        model = claude_models.parse_initialize(json.dumps(event([row])), 'match')[0]
+        self.assertEqual(model['resolved_model'], 'claude-sonnet-99-2')
+        self.assertEqual(model['alias_resolution'], 'client_initialize')
+        self.assertFalse(model['entitlement_verified'])
+        self.assertNotIn('private', json.dumps(model))
+
+    def test_resolution_rejects_malformed_cross_tier_and_concrete_drift(self):
+        for alias, resolved in [('opus', 5), ('opus', '../private'), ('opus', 'sonnet'),
+                                ('opus', 'claude-sonnet-99'),
+                                ('claude-fable-99-1[1m]', 'claude-fable-99-2'),
+                                ('opus', 'claude-opus-20260908'),
+                                ('haiku', 'claude-haiku-99-20261301')]:
+            with self.subTest(alias=alias, resolved=resolved), self.assertRaises(ValueError):
+                claude_models.resolved_model(alias, resolved)
+        self.assertEqual(claude_models.resolved_model('haiku', 'claude-haiku-99-20260908'),
+                         'claude-haiku-99-20260908')
+        self.assertIsNone(claude_models.resolved_model('future', 'claude-unknown-99'))
+        self.assertEqual(claude_models.resolved_model('claude-opus', 'claude-opus-99'), 'claude-opus-99')
+        self.assertEqual(claude_models.resolved_model('claude-sonnet-99', 'claude-sonnet-99-20260908'),
+                         'claude-sonnet-99-20260908')
+
     def test_narrow_identifier_and_capabilities(self):
         for row in [{'value': 'opus[2m]'}, {'value': 'opus[1m]evil'}, {'value': '../bad value'},
                     {'value': 'sonnet', 'supportsEffort': 'true'},

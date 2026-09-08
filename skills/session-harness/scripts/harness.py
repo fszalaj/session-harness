@@ -271,7 +271,16 @@ def generation(model_id, family):
              if family == "claude" else re.match(r"^" + re.escape(family) + r"-(\d+(?:\.\d+)*)(?:-|$)", model_id))
     if not match:
         return None
-    parts = tuple(int(part) for part in re.split(r"[-.]", match.group(1)))
+    tokens = re.split(r"[-.]", match.group(1))
+    if family == 'claude' and len(tokens) > 1 and len(tokens[-1]) == 8:
+        try:
+            dt.datetime.strptime(tokens[-1], '%Y%m%d')
+        except ValueError:
+            return None
+        tokens.pop()
+    if family == 'claude' and any(len(token) > 4 for token in tokens):
+        return None
+    parts = tuple(int(part) for part in tokens)
     return parts + (0,) * max(0, 4 - len(parts))
 
 
@@ -562,17 +571,42 @@ def discover_claude(executable, offline=False):
                "basis": "Unresolved provider alias; verify the actual session model."}
     worker = {"model": worker_alias, "effort": select_effort(supported, "worker"),
               "basis": "Unresolved worker alias; verify the actual session model."}
-    concrete = [{"id": model["id"], "rank": rank,
+    concrete = [{"id": model.get("resolved_model", model["id"]), "rank": rank,
                  "description": model.get("description", ""),
                  "efforts": model["native_controls"]["reasoning_efforts"]}
                 for rank, model in enumerate(metadata["models"])
-                if model.get("account_selectable") is True and generation(model["id"], "claude") is not None]
+                if model.get("account_selectable") is True and generation(model.get("resolved_model", model["id"]), "claude") is not None]
+    unique = {}
+    for model in concrete:
+        if model['id'] in unique:
+            prior = unique[model['id']]
+            prior['efforts'] = [effort for effort in prior['efforts'] if effort in model['efforts']]
+        else:
+            unique[model['id']] = model
+    concrete = list(unique.values())
     if concrete:
         planner, worker = select_models(concrete, "claude")
+        current_major = generation(planner['model'], 'claude')[0]
+        sonnets = [model for model in concrete if re.fullmatch(r'claude-sonnet-\d+(?:[-.]\d+)*(?:\[1m\])?', model['id'])
+                  and generation(model['id'], 'claude')[0] == current_major]
+        if sonnets:
+            candidate = max(sonnets, key=lambda model: (generation(model['id'], 'claude'),
+                            not bool(re.search(r'-\d{8}(?:\[1m\])?$', model['id'])), model['id']))
+            try:
+                effort = select_effort(candidate['efforts'], 'worker')
+            except HarnessError:
+                pass
+            else:
+                worker = dict(worker, model=candidate['id'], effort=effort,
+                              basis='Current Sonnet for bounded work; same major generation, minor revisions compared within its tier.',
+                              generation_policy='Newest Sonnet revision in the manager current major generation.',
+                              generation='.'.join(str(n) for n in generation(candidate['id'], 'claude')[:2]))
     return {"status": "available" if concrete else "alias_resolution_required", "source": "official dynamic aliases and installed CLI help",
             "models": [dict(model, efforts=model["native_controls"]["reasoning_efforts"])
                        for model in metadata["models"]], "model_metadata_status": metadata["status"],
             "entitlement_verified": False, "resolved_model": None,
+            "model_scoped_admission_supported": False,
+            "quota_scope_policy": "All reported pools remain required; a Fable-only stop cannot yet select another pool.",
             "supported_efforts": supported, "planner": planner, "worker": worker,
             "auth": auth,
             "review": {"status": "available" if isolation else "unsupported_capability",
@@ -877,7 +911,32 @@ def require_quota(provider):
     import coordination
     result = coordination.dispatch('check', provider, 'preflight')
     if not result.get("allowed"):
-        raise HarnessError("quota_blocked", "Inference blocked: " + ", ".join(result.get("reasons", ["unknown_quota"])))
+        stop = supervision.Stop(provider, result.get("reasons", []))
+        error = HarnessError("quota_blocked", str(stop))
+        error.quota_stop = stop
+        raise error
+
+
+def explain_terminal_stop(error, cleanup=None):
+    """Write the reason after terminal restoration, without starting another request."""
+    service = error.service if error.service in PROVIDERS else "service"
+    print(f"\nSession stopped ({service}): {error.explanation()}", file=sys.stderr)
+    print("Reason: " + ", ".join(error.reasons), file=sys.stderr)
+    print("Inspect shared session state: ai-session coordination status", file=sys.stderr)
+    print(f"Inspect the budget on your account authority: ai-session budget {service}", file=sys.stderr)
+    if service == 'claude':
+        print('Claude admission requires all reported pools; a model-only stop does not prove the overall subscription is exhausted.', file=sys.stderr)
+    cleanup = getattr(error, "session_cleanup", {}) if cleanup is None else cleanup
+    if cleanup.get("state") == "unknown":
+        print("Process cleanup is unconfirmed; the protected owner was retained. "
+              "Inspect its processes before recovery or restart.", file=sys.stderr)
+    else:
+        print(f"When admission is restored, reopen ai-session {service} and use the client's resume option.",
+              file=sys.stderr)
+    if cleanup.get("errors"):
+        print("Cleanup diagnostics: " + ", ".join(
+            row["stage"] + (f" (errno {row['errno']})" if row["errno"] is not None else "")
+            for row in cleanup["errors"]), file=sys.stderr)
 
 
 def require_role(provider, model, role, *, supervised=False):
@@ -1104,11 +1163,37 @@ def main(argv=None):
     except (HarnessError, supervision.Stop, BrokenPipeError, OSError) as exc:
         status = exc.status if isinstance(exc, HarnessError) else (
             "quota_blocked" if isinstance(exc, supervision.Stop) else "provider_error")
-        failure = {"schema_version": 1, "status": status, "error": str(exc),
+        message = ("Operating-system operation failed" + (f" (errno {exc.errno})" if exc.errno is not None else "")
+                   if isinstance(exc, OSError) else str(exc))
+        failure = {"schema_version": 1, "status": status, "error": message,
                    "runtime": {"path": RUNTIME_PATH, "sha256": RUNTIME_SHA256}}
+        stop = exc if isinstance(exc, supervision.Stop) else getattr(exc, "quota_stop", None)
+        cleanup = getattr(exc, "session_cleanup", None) or getattr(stop, "session_cleanup", None)
+        if isinstance(stop, supervision.Stop):
+            failure.update(service=stop.service, reasons=list(stop.reasons), message=stop.explanation())
+            if stop.service == 'claude':
+                failure.update(model_scoped_admission_supported=False, quota_scope_policy='all_reported_pools')
+            if args.command == "launch" and args.execute:
+                try:
+                    explain_terminal_stop(stop, cleanup)
+                except OSError:
+                    pass
+        if cleanup:
+            failure["cleanup"] = cleanup
         if artifact is not None:
             failure["artifact_sha256"] = hashlib.sha256(artifact).hexdigest()
-        print(json.dumps(failure))
+        try:
+            print(json.dumps(failure), flush=True)
+        except OSError:
+            try:
+                print(json.dumps(failure), file=sys.stderr, flush=True)
+            except OSError:
+                pass
+            try:
+                with open(os.devnull, 'w') as sink:
+                    os.dup2(sink.fileno(), sys.stdout.fileno())
+            except (OSError, ValueError, AttributeError):
+                pass
         return 2
     except (TypeError, ValueError, KeyError, AttributeError):
         print(json.dumps({"schema_version": 1, "status": "schema_error",

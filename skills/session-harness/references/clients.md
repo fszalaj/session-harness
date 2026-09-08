@@ -79,14 +79,37 @@ alias-only catalogs remain explicitly unresolved until native session evidence.
 Version 0.1.2 reported unresolved alias suggestions; verify the actual model
 through native session evidence before accepting a manager or reviewer.
 
+**Development source:** the same fresh initialize request can supply `resolvedModel`
+for an alias. Validate a concrete identifier, matching tier and any dated suffix;
+retain unresolved status when resolution is missing or the tier is unknown. Duplicate
+aliases share the intersection of their advertised efforts. Resolution is read again
+at discovery, not cached or copied between accounts. Current Sonnet workers may share
+the planning model's major generation while having a different minor revision. Compare
+minor revisions within Sonnet; an older major still falls back to the current planning
+model at medium. The existing manager-selection policy remains unchanged. A returned
+model mismatch rejects the result without an automatic inference retry.
+Malformed resolution metadata rejects the catalog. Equivalent dated and undated
+Sonnet revisions prefer the undated ID deterministically, matching the runtime
+identity guard. That guard ignores the context suffix; it does not verify context size.
+
 Use documented versionless aliases after checking the installed CLI and current
 subscription coverage. `best` chooses the strongest eligible model; the actual
 model must be recorded from runtime metadata. An initialize-only native control
 request lists the current client's selectable options and supported effort, including
-context suffixes. These are not proven account entitlements, and aliases remain
-unresolved. Never build a model list from a subscription name. A smaller alias such as `sonnet` is
+context suffixes. These are not proven account entitlements. Aliases without native
+resolution remain unresolved. Never build a model list from a subscription name. A smaller alias such as `sonnet` is
 only a candidate: reject it if its resolved generation has been superseded under
 the current policy, and use the current manager model at lower effort instead.
+
+Fable on Max, premium Team and seat-based Enterprise can use up to 50% of the regular
+weekly allowance. It also consumes the shared overall limit; this is not additional
+quota. After its model allowance runs out, other Claude models can remain available
+within the overall allowance. Pro and standard Team require paid credits for Fable;
+catalog visibility does not authorize those credits. Verify the account and current
+[Claude plan documentation](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan).
+The harness currently gates every reported pool, including scoped pools. It does not
+yet implement model-scoped admission or automatic Opus continuation after a Fable-only
+stop. Omitting that pool before verified model enforcement would weaken admission.
 
 The manager launcher uses the highest reasoning effort supported by the CLI/model.
 Persistent `effortLevel` does not accept every CLI effort value. Do not put a max

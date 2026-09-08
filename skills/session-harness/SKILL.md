@@ -85,6 +85,11 @@ billing services, start replacement workers or consume reset credits to bypass i
 The launcher and external review runner poll while their owned processes run;
 direct native sessions remain outside that process boundary.
 
+Development launchers explain quota stops after terminal restoration. Preserve the
+reported reason even if cleanup also fails. An unconfirmed process cleanup retains
+its owner for inspection; follow [stop recovery](references/usage-and-context.md#when-a-protected-session-stops)
+before restarting work. Never treat a cleanup error as a quota grant.
+
 For an explicitly authorized API route or money/credit configuration, read
 [API and spend](references/api-and-spend.md). API budget and admission mode are
 separate from subscription percentages. A paid route requires a configured total
@@ -166,6 +171,10 @@ provider guidance when capability or successor relationships remain uncertain.
   relative budget use, not the manager family. Explicit worker launches obey the same
   lead check. With balancing disabled, native same-family workers remain the default.
   In multi-model clients, verify billing service and model family separately.
+  Verify an actual work receipt; an enabled profile does not move manager tokens.
+  Claude's native alias resolution can establish current Sonnet workers. Check
+  [client limits](references/clients.md#claude-code): scoped Fable allowance is not
+  total subscription allowance, but model-scoped admission remains unsupported.
   Installed Claude investigator/implementer roles use the rolling `sonnet` alias
   (investigator: low; implementer: medium) and the verifier inherits the manager
   model at high effort; pass a per-call model only for a verified better fit. Keep leaf work off the

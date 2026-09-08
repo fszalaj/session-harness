@@ -92,10 +92,24 @@ Enable on the account authority after the owner requests balancing. Selection ta
 equal fractions of daily allowances, using atomic task reservations and fresh native
 observations. It does not promise equal token totals or dollar costs. APIs remain
 separately authorized; inventory-only clients are reported as unsupported for routing.
+The manager must submit useful tasks to `work`; enabling a profile does not transfer
+its interactive conversation to another model. A newer concurrent quota observation
+gets one read-only re-evaluation; failed refreshes and quota denials still stop work.
 See [balancing, supported clients and recovery](skills/session-harness/references/balancing.md).
 Owners can also [configure model supervision](skills/session-harness/references/balancing.md#configure-which-models-need-supervision)
 by model pattern and role. These settings can allow implementation while preventing
 the same model from acting as an independent reviewer; no vendor ranking is built in.
+
+Development installations also explain protected session stops in the terminal,
+including the reason and recovery commands. Cleanup errors retain the original quota
+reason and report uncertain process termination separately. See
+[session stop recovery](skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
+
+Claude alias resolution also uses fresh native `resolvedModel` metadata, allowing
+current Sonnet workers alongside a newer minor revision of the planning tier.
+Fable's model allowance and the overall subscription allowance are distinct, but
+protected admission currently requires all reported pools. Automatic continuation
+on Opus after a Fable-only stop is not implemented. See [Claude limits](skills/session-harness/references/clients.md#claude-code).
 
 ## Find the relevant guide
 

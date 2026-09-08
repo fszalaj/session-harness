@@ -253,7 +253,8 @@ def _evaluate(ledger, config=None, override=False, refresh=True):
     with ledger._connect() as db:
         db.execute('BEGIN DEFERRED')
         snapshot = _snapshot(db)
-        if before != _snapshot(db, settings=True) or any(snapshot.get(k) != v for k, v in captured.items()):
+        settings_changed = before != _snapshot(db, settings=True)
+        if settings_changed or any(snapshot.get(k) != v for k, v in captured.items()):
             reasons.append('state_changed')
         now = time.time()
         for service, summary in summaries.items():
@@ -261,6 +262,10 @@ def _evaluate(ledger, config=None, override=False, refresh=True):
             if (not ledger._fresh(state, now) or summary['day'] != ledger._day(now)
                     or not state or summary['observed_at'] != state['observed_at']):
                 reasons.append(f'{service}:evidence_unavailable:stale_or_changed_snapshot')
+    changed_only = {'state_changed', *(f'{service}:evidence_unavailable:stale_or_changed_snapshot'
+                                       for service in config['services'])}
+    if refresh and reasons and not settings_changed and set(reasons).issubset(changed_only):
+        return _evaluate(ledger, config, override=override, refresh=False)
     result = _reply(services=summaries, max_lead=config['max_lead'])
     progress_values = [v['progress'] for v in summaries.values() if v['progress'] is not None]
     result['drift'] = (max(progress_values) - min(progress_values)) if len(progress_values) == len(summaries) else None

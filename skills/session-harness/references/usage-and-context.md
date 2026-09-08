@@ -160,6 +160,33 @@ it or run inference to obtain the first quota report. Enabled extra-usage credit
 pools require complete supported telemetry; the adapter may block those accounts
 without changing their settings.
 
+## When a protected session stops
+
+**Development behavior, beyond published v0.2.0:** an interactive launch prints the
+reason and recovery steps after restoring its output terminal, including leaving a
+child's alternate screen. Machine-readable failure JSON remains on stdout;
+redirected streams receive no diagnostic terminal escape sequences.
+
+`daily_limit` means today's configured harness allowance was reached. It does not
+establish that the provider subscription is exhausted. Capacity, maintenance,
+reserve and unavailable quota evidence have separate explanations. Inspect
+`ai-session coordination status`; inspect or change budgets on the account authority
+using `ai-session budget SERVICE`. A new grant requires the owner's instruction.
+After admission is restored, reopen `ai-session SERVICE` and use the client's native
+resume option. Transcript persistence depends on that client. No automatic restart,
+provider switch, grant or paid fallback occurs.
+
+The harness stops its owned client process group when work is denied. It restores
+terminal attributes, descriptor flags and signal handlers independently, so failure
+of one restoration does not skip the others. A cleanup failure keeps the original
+quota reason and adds only fixed stage names and numeric errno metadata. When process
+termination is unconfirmed, the protected owner is retained and reported for inspection;
+do not blindly release it or start replacement work. Terminal restoration errors after
+confirmed process termination are reported separately and do not imply a live process.
+Deliberately detached descendants outside the owned process group remain outside this
+boundary. Operating-system permission failures are not treated as permission to ignore
+live processes; see Apple's [process-group signal contract](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/killpg.2.html).
+
 ## Context
 
 Read actual context-window size/percentage from native session metadata. At 60%,

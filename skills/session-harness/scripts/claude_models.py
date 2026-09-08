@@ -1,10 +1,34 @@
 """Allowlisted Claude initialize metadata; no user message or inference probe."""
 import json
+import re
 import tempfile
 import uuid
 
 import harness
 from inventory import EFFORTS, SAFE_ID, normalize_models
+
+
+def resolved_model(alias, value):
+    if value is None:
+        return None
+    if not isinstance(value, str) or not SAFE_ID.fullmatch(value):
+        raise ValueError('Invalid resolved model identifier')
+    match = re.fullmatch(r'claude-([a-z]+)-(\d+(?:[-.]\d+)*)(?:\[1m\])?', value)
+    if not match:
+        raise ValueError('Resolved model must be concrete')
+    if harness.generation(value, 'claude') is None:
+        raise ValueError('Invalid resolved model generation')
+    tier = match[1]
+    if tier not in {'fable', 'opus', 'sonnet', 'haiku'}:
+        return None
+    alias_tier = re.fullmatch(r'(?:claude-)?(fable|opus|sonnet|haiku)(?:-\d+(?:[-.]\d+)*)?(?:\[1m\])?', alias)
+    if alias_tier and alias_tier[1] != tier:
+        raise ValueError('Resolved model tier differs from alias')
+    if harness.generation(alias, 'claude') is not None:
+        expected, actual = alias.removesuffix('[1m]'), value.removesuffix('[1m]')
+        if actual != expected and not re.fullmatch(re.escape(expected) + r'-\d{8}', actual):
+            raise ValueError('Concrete model resolution changed')
+    return value
 
 
 def unique_fields(pairs):
@@ -44,6 +68,10 @@ def parse_initialize(stdout, request_id):
                                   source='initialize.response.models')
         model = models[0]
         model['alias_resolution'] = 'unresolved'
+        resolved = resolved_model(ident, row.get('resolvedModel'))
+        if resolved:
+            model.update(resolved_model=resolved, alias_resolution='client_initialize',
+                         resolution_source='initialize.response.models.resolvedModel')
         for key in ('supportsEffort', 'supportsAdaptiveThinking', 'supportsFastMode', 'supportsAutoMode'):
             if key in row:
                 if type(row[key]) is not bool:

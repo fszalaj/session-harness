@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 import signal
 import subprocess
@@ -48,6 +49,11 @@ class WatchTests(unittest.TestCase):
         with self.assertRaisesRegex(Stop, "quota_refresh_failed"):
             Watch("codex", broken).start()
 
+    def test_explanations_distinguish_capacity_maintenance_and_missing_evidence(self):
+        for reason, phrase in [('account_session_busy', 'slots'), ('account_maintenance', 'maintenance'),
+                               ('quota_refresh_failed', 'could not authorize'), ('reserve_floor', 'reserve')]:
+            self.assertIn(phrase, Stop('codex', [reason]).explanation())
+
 
 @unittest.skipUnless(os.name == "posix", "POSIX terminal/kernel contract; Windows has native job tests")
 class DarwinSignalTests(unittest.TestCase):
@@ -86,8 +92,23 @@ class DarwinSignalTests(unittest.TestCase):
             self.assertEqual(0, supervision._cleanup(123, 1, observer))
         self.assertEqual([signal.SIGTERM, 0, signal.SIGKILL], [c.args[1] for c in send.call_args_list])
         self.assertTrue(all(c.args[2] is observer for c in send.call_args_list))
-        reap.assert_called_once_with(123, 0)
+        reap.assert_called_once_with(123, os.WNOHANG)
         observer.close.assert_not_called()
+
+    def test_reaped_leader_is_not_reported_as_confirmed_cleanup(self):
+        with patch.object(supervision, 'signal_group', return_value=False), \
+                patch.object(supervision.os, 'waitpid', side_effect=ChildProcessError):
+            with self.assertRaises(OSError) as caught:
+                supervision._cleanup(123, 0, Mock())
+        self.assertEqual(caught.exception.errno, supervision.errno.ECHILD)
+
+    def test_unreaped_child_has_bounded_cleanup_and_no_false_confirmation(self):
+        with patch.object(supervision, 'signal_group', return_value=False), \
+                patch.object(supervision.os, 'waitpid', return_value=(0, 0)), \
+                patch.object(supervision.time, 'monotonic', side_effect=[0, 1, 2, 10]):
+            with self.assertRaises(OSError) as caught:
+                supervision._cleanup(123, 0, Mock())
+        self.assertEqual(caught.exception.errno, supervision.errno.ETIMEDOUT)
 
     def test_group_snapshot_rejects_live_missing_and_invalid_evidence(self):
         for rows, expected in ((b"123 Z\n123 Z+\n456 R\n", True),
@@ -102,6 +123,174 @@ class DarwinSignalTests(unittest.TestCase):
 
 @unittest.skipUnless(os.name == "posix", "POSIX terminal/kernel contract; Windows has native job tests")
 class TerminalTests(unittest.TestCase):
+    def test_cleanup_error_preserves_quota_reason_and_retains_owner(self):
+        script = '''import json,supervision
+from unittest.mock import patch
+original=supervision._cleanup
+def failing(*args):
+ original(*args)
+ raise PermissionError(1,'private diagnostic','/private/credential')
+closed=[]
+patch.object(supervision,'_cleanup',failing).start()
+patch.object(supervision.Watch,'close',lambda self: closed.append(True)).start()
+'''
+        check = "calls=0\ndef check(_):\n global calls\n calls+=1\n return {'allowed':calls<3,'reasons':['daily_limit']}"
+        body = self.wrapper("import time; time.sleep(30)", check).replace(
+            "except Stop:\n code=77", "except Stop as exc:\n code=77\n print(json.dumps(exc.session_cleanup))\n assert not closed")
+        result = self.run_wrapper(script + body, stdin=subprocess.DEVNULL, capture_output=True)
+        self.assertEqual(result.returncode, 77, result.stderr)
+        data = json.loads(result.stdout)
+        self.assertEqual(data['state'], 'unknown')
+        self.assertTrue(data['owner_retained'])
+        self.assertEqual(data['errors'], [{'stage': 'process_group', 'errno': 1}])
+        self.assertNotIn(b'private', result.stdout + result.stderr)
+
+    def test_nonquota_primary_survives_cleanup_error(self):
+        script = '''import os,sys,supervision
+from unittest.mock import patch
+original=supervision._cleanup
+def cleanup(*args):
+ original(*args)
+ raise PermissionError(1,'cleanup')
+try:
+ with patch.object(supervision,'_cleanup',cleanup), patch.object(supervision.select,'select',side_effect=ValueError('primary')):
+  supervision.run_terminal([sys.executable,'-c','import time;time.sleep(30)'],dict(os.environ),'codex',check=lambda _: {'allowed':True},grace=.01)
+except ValueError as exc:
+ assert str(exc)=='primary'
+ assert exc.session_cleanup['state']=='unknown'
+else: raise AssertionError('Primary error lost')
+'''
+        result = self.run_wrapper(script, stdin=subprocess.DEVNULL, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_cleanup_only_non_os_errors_are_normalized_without_private_text(self):
+        for error in ('RuntimeError', 'KeyboardInterrupt'):
+            with self.subTest(error=error):
+                script = """import os,sys,supervision
+from unittest.mock import patch
+try:
+ with patch.object(supervision.Watch,'close',side_effect=ERROR('private diagnostic')):
+  supervision.run_terminal([sys.executable,'-c','pass'],dict(os.environ),'codex',check=lambda _: {'allowed':True},grace=.01)
+except OSError as exc:
+ assert exc.errno==supervision.errno.EIO
+ assert 'private' not in str(exc)
+ assert exc.session_cleanup['state']=='stopped'
+ assert exc.session_cleanup['errors']==[{'stage':'owner_release','errno':None}]
+else: raise AssertionError('Missing cleanup error')
+""".replace('ERROR', error)
+                result = self.run_wrapper(script, stdin=subprocess.DEVNULL, capture_output=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_short_screen_reset_is_diagnosed_without_masking_stop(self):
+        script = """import supervision
+from unittest.mock import patch
+original_write=supervision.os.write
+def short_reset(fd,data):
+ if data.startswith(b'\\x1b[?1049l'): return len(data)-1
+ return original_write(fd,data)
+patch.object(supervision.os,'write',short_reset).start()
+"""
+        check = "calls=0\ndef check(_):\n global calls\n calls+=1\n return {'allowed':calls<3,'reasons':['daily_limit']}"
+        body = self.wrapper("import time;time.sleep(30)", check).replace(
+            'except Stop:\n code=77', "except Stop as exc:\n code=77\n assert exc.session_cleanup['errors']==[{'stage':'terminal_screen','errno':supervision.errno.EIO}]")
+        master, slave = pty.openpty()
+        try:
+            result = self.run_wrapper(script + body, stdin=slave, stdout=slave, stderr=subprocess.PIPE)
+            self.assertEqual(result.returncode, 77, result.stderr)
+        finally:
+            os.close(master)
+            os.close(slave)
+
+    def test_restoration_failures_do_not_skip_other_steps_or_mask_stop(self):
+        for target in ('ignore_signal', 'descriptor_flags', 'terminal_attributes', 'interrupt'):
+            with self.subTest(target=target):
+                script = '''import json,supervision
+from unittest.mock import patch
+target=TARGET
+events=[]
+fired=False
+original_signal=supervision.signal.signal
+original_fcntl=supervision.fcntl.fcntl
+original_tty=supervision.termios.tcsetattr
+def on_signal(number,handler):
+ global fired
+ if handler==supervision.signal.SIG_IGN and not fired and target in ('ignore_signal','interrupt'):
+  fired=True
+  if target=='interrupt': os.kill(os.getpid(),supervision.signal.SIGINT)
+  else: raise PermissionError(1,'private')
+ events.append('signal')
+ return original_signal(number,handler)
+def on_flags(fd,command,*args):
+ global fired
+ if command==supervision.fcntl.F_SETFL and args and not args[0]&os.O_NONBLOCK:
+  events.append('flags')
+  if target=='descriptor_flags' and not fired:
+   fired=True
+   raise PermissionError(1,'private')
+ return original_fcntl(fd,command,*args)
+def on_tty(fd,when,attrs):
+ global fired
+ if when==supervision.termios.TCSANOW:
+  events.append('tty')
+  if target=='terminal_attributes' and not fired:
+   fired=True
+   raise PermissionError(1,'private')
+ return original_tty(fd,when,attrs)
+patch.object(supervision.signal,'signal',on_signal).start()
+patch.object(supervision.fcntl,'fcntl',on_flags).start()
+patch.object(supervision.termios,'tcsetattr',on_tty).start()
+'''.replace('TARGET', repr(target))
+                check = "calls=0\ndef check(_):\n global calls\n calls+=1\n return {'allowed':calls<3,'reasons':['daily_limit']}"
+                body = self.wrapper("import time;time.sleep(30)", check).replace(
+                    'except Stop:\n code=77', "except Stop as exc:\n code=77\n assert exc.reasons==('daily_limit',)\n assert exc.session_cleanup['state']=='stopped'\n assert not exc.session_cleanup['owner_retained']\n assert 'flags' in events and 'tty' in events and events[-1]=='signal'")
+                master, slave = pty.openpty()
+                before = termios.tcgetattr(slave)
+                try:
+                    result = self.run_wrapper(script + body, stdin=slave, capture_output=True)
+                    self.assertEqual(result.returncode, 77, result.stderr)
+                finally:
+                    termios.tcsetattr(slave, termios.TCSANOW, before)
+                    os.close(master)
+                    os.close(slave)
+
+    def test_alternate_screen_is_restored_on_output_terminal_before_stop_notice(self):
+        check = "calls=0\ndef check(_):\n global calls\n calls+=1\n return {'allowed':calls<5,'reasons':['daily_limit']}"
+        child = "import sys,time;sys.stdout.write('\\x1b[?1049h');sys.stdout.flush();time.sleep(30)"
+        script = self.wrapper(child, check).replace('except Stop:\n code=77',
+            'except Stop as exc:\n code=77\n import harness\n harness.explain_terminal_stop(exc)')
+        master, slave = pty.openpty()
+        before = termios.tcgetattr(slave)
+        try:
+            result = self.run_wrapper(script, stdin=slave, stdout=slave, stderr=slave)
+            self.assertEqual(result.returncode, 77)
+            self.assert_terminal_restored(slave, before)
+            data = os.read(master, 8192)
+            self.assertLess(data.index(b'\x1b[?1049h'), data.index(b'\x1b[?1049l'))
+            self.assertLess(data.index(b'\x1b[?1049l'), data.index(b"Today's harness allowance"))
+            self.assertIn(b'\r\n', data)
+        finally:
+            os.close(master)
+            os.close(slave)
+
+    def test_screen_reset_follows_stdout_and_never_escapes_into_redirected_streams(self):
+        check = "calls=0\ndef check(_):\n global calls\n calls+=1\n return {'allowed':calls<3,'reasons':['daily_limit']}"
+        script = self.wrapper("import time;time.sleep(30)", check)
+        for output_terminal in (True, False):
+            with self.subTest(output_terminal=output_terminal):
+                master, slave = pty.openpty()
+                try:
+                    result = self.run_wrapper(script, stdin=slave,
+                        stdout=slave if output_terminal else subprocess.PIPE,
+                        stderr=subprocess.PIPE if output_terminal else slave)
+                    self.assertEqual(result.returncode, 77)
+                    redirected = result.stderr if output_terminal else result.stdout
+                    self.assertNotIn(b'\x1b', redirected)
+                    if output_terminal:
+                        self.assertIn(b'\x1b[?1049l', os.read(master, 8192))
+                finally:
+                    os.close(master)
+                    os.close(slave)
+
     def assert_descriptor_flags_restored(self, fd, before):
         after = fcntl.fcntl(fd, fcntl.F_GETFL)
         self.assertEqual(after & os.O_NONBLOCK, before & os.O_NONBLOCK)

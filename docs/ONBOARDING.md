@@ -183,6 +183,19 @@ and inventory-only clients remain separate; installation does not opt anyone in.
 The same guide explains optional model/role supervision settings controlled by the
 owner. They apply through the common authority and survive disabling balancing.
 
+Development installations print a readable explanation when a protected session
+stops. A daily allowance stop ends the owned client process; reopen the client and
+use its resume option after admission is restored. Inspect `ai-session coordination
+status` and run `ai-session budget SERVICE` on the account authority. If cleanup is
+reported as unconfirmed, inspect the retained owner's processes before recovery.
+See [stop recovery](../skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
+
+Inspect the requested and actual worker model in each receipt. Development Claude
+selection resolves current aliases and prefers a current Sonnet for bounded work.
+Fable and overall weekly limits are separate; the harness still requires every
+reported pool and cannot automatically continue on Opus after a Fable-only stop.
+See [Claude model and plan limits](../skills/session-harness/references/clients.md#claude-code).
+
 ## 6. Integrate the project and knowledge layer
 
 Keep application rules in the project's `AGENTS.md`. Add a short reference such as:

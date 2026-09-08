@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- Add opt-in native subscription balancing and editable model/role supervision,
+  with shared accounting and separate API monetary authorization.
+- Explain interactive quota stops after restoring the terminal display. Preserve
+  the original stop reason when process or terminal cleanup fails; report sanitized
+  cleanup stages and retain the protected owner when process termination is unknown.
+- Keep redirected output free of diagnostic terminal escapes and preserve machine
+  JSON failures. Refuse to confirm cleanup when the owned child cannot be reaped.
+- Read native Claude alias resolutions and use verified current Sonnet workers
+  without changing the manager tier. Keep all quota pools required and report that
+  model-scoped admission is unsupported.
+- Re-evaluate a concurrent newer quota observation once without refreshing or
+  writing accounting again. Preserve policy, completeness and final reservation guards.
+
 ## 0.2.0
 
 - Add account-bound Codex confirmation of disabled automatic credit top-up and
