@@ -419,7 +419,8 @@ class ReviewTests(unittest.TestCase):
         capability = {"review": {"status": "available"}, "auth": {"status": "subscription"},
                       "planner": {"model": "best", "effort": "high"}, "supported_efforts": ["low", "medium", "high"], "executable": "mock-claude"}
         artifact = "Review this plan with UTF-8: zażółć.".encode()
-        with patch.object(harness, "checked", return_value=self.stream()) as checked, patch.object(harness, "require_quota"):
+        with patch.object(harness, "checked", return_value=self.stream()) as checked, \
+                patch.object(harness, "require_quota"), patch.object(harness, 'require_role', return_value={}):
             result = harness.review("claude", artifact, 1, capability)
         transmitted = checked.call_args.kwargs["stdin"]
         self.assertEqual(transmitted, b"<review-artifact>\n" + artifact + b"\n</review-artifact>")

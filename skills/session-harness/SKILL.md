@@ -93,6 +93,13 @@ Native paid-credit execution remains unsupported, and missing eligibility contro
 can block a subscription adapter even when quota remains. On Windows installation
 or process work, read [platform support](references/platforms.md).
 
+Subscription balancing is an explicit opt-in development feature. It uses fresh
+native quotas and shared reservations; APIs and unsupported execution adapters
+remain separate. Consult [balancing](references/balancing.md) when the owner requests
+even usage. Do not infer equal spending from equal task counts or dollar estimates.
+Honor the owner's configured model/role supervision settings. Supervised output is
+not independent review approval; report any review gap caused by those settings.
+
 ## 1. Establish the manager
 
 - If assigned a leaf task, or `SESSION_HARNESS_LEAF=1`, perform only that task.
@@ -153,9 +160,12 @@ provider guidance when capability or successor relationships remain uncertain.
   plan decisions. Do not force global max effort onto workers through environment.
 - No fixed provider-to-specialty stereotype. Choose from demonstrated capability,
   task risk, required tools, context size, latency and remaining subscription quota.
-  Use native workers from the manager's model family by default: OpenAI workers
-  for an OpenAI manager, Anthropic workers for an Anthropic manager, and Google
-  workers for a Google manager. In multi-model clients, select the family explicitly.
+  When the owner enables subscription balancing, read [balancing](references/balancing.md)
+  and select bounded work through `ai-session work` before every dispatch. Keep the
+  manager focused on planning and integration; the billing service comes from fresh
+  relative budget use, not the manager family. Explicit worker launches obey the same
+  lead check. With balancing disabled, native same-family workers remain the default.
+  In multi-model clients, verify billing service and model family separately.
   Installed Claude investigator/implementer roles use the rolling `sonnet` alias
   (investigator: low; implementer: medium) and the verifier inherits the manager
   model at high effort; pass a per-call model only for a verified better fit. Keep leaf work off the

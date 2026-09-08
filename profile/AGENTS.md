@@ -35,13 +35,16 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
   because it appeared in a previous conversation or on another subscription.
 - Two other distinct provider families independently review the same plan before
   implementation. They have equal standing; reconcile every material finding.
+  Honor configured model supervision limits and report unavailable independent reviews.
 - Choose execution roles, models and effort for the task. Use current generations,
   normally medium effort, low for simple gathering and high for difficult work.
   Leaf roles default to the cheaper current model (Claude: `sonnet`); the flagship
   and maximum effort are reserved for the manager and the final verifier.
   If a current cheaper model is unavailable, use the current flagship at lower
   effort rather than an older generation. Keep the manager at its planning tier.
-- Prefer native workers from the manager's model family. Give workers bounded context and non-overlapping
+- When subscription balancing is enabled, route bounded work through its shared
+  authority using fresh quota fractions, independently of the manager family. Otherwise
+  prefer native same-family workers. Give workers bounded context and non-overlapping
   ownership. Only the manager starts reviews or additional workers; leaf agents
   never recursively invoke the harness.
 - Verify the integrated result independently and record actual models, reviews,

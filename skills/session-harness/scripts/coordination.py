@@ -200,6 +200,56 @@ def dispatch(action, service, owner, ledger=None):
     return response
 
 
+def balance_local(operation, payload, ledger):
+    import balance
+    if settings(ledger)['authority'] != 'local':
+        raise ValueError('balance authority must terminate locally')
+    fields = {'status': set(), 'role_admission': {'service', 'model', 'role', 'supervised'},
+              'reserve': {'request', 'client_services'}, 'start': {'id'},
+              'finish': {'id', 'status', 'metadata'},
+              'reconcile': {'id', 'confirm_stopped'}}
+    if operation not in fields or not isinstance(payload, dict) or set(payload) != fields[operation]:
+        raise ValueError('invalid balance operation or fields')
+    return {'protocol_version': 1, **getattr(balance, operation)(ledger, **payload)}
+
+
+def balance_dispatch(operation, payload, ledger=None):
+    ledger = ledger or Ledger()
+    if operation == 'reserve':
+        payload = {**payload, 'client_services': ledger.setup_status()['services']}
+    authority = settings(ledger)['authority']
+    if authority == 'local':
+        return balance_local(operation, payload, ledger)
+    setup = ledger.setup_status()
+    if not setup.get('complete'):
+        raise ValueError('environment_setup_required')
+    packet = {'action': 'balance', 'version': 1, 'operation': operation, 'payload': payload}
+    raw = json.dumps(packet).encode()
+    if len(raw) > 4096:
+        raise ValueError('balance request too large')
+    from platform_runtime import which
+    executable = which('ssh')
+    if not executable:
+        raise ValueError('SSH authority transport unavailable')
+    command = 'python3 "$HOME/.agents/skills/session-harness/scripts/coordination.py" serve'
+    try:
+        result = subprocess.run([executable, '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=yes',
+                                 '-o', 'ConnectTimeout=5', authority, command], input=raw,
+                                capture_output=True, timeout=90)
+    except subprocess.TimeoutExpired as exc:
+        raise ValueError('balance authority timed out; keep unresolved task, no local fallback') from exc
+    if result.returncode or len(result.stdout) > 256 * 1024:
+        raise ValueError('balance authority unavailable; no local fallback')
+    response = json.loads(result.stdout)
+    if (not isinstance(response, dict) or type(response.get('allowed')) is not bool
+            or type(response.get('protocol_version')) is not int or response['protocol_version'] != 1):
+        raise ValueError('authority must support balance protocol version 1')
+    service = response.get('service')
+    if service is not None and service not in setup['services']:
+        raise ValueError('service_not_configured on this client')
+    return response
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='action', required=True)
@@ -223,9 +273,15 @@ def main(argv=None):
             if len(raw) > 4096:
                 raise ValueError('coordination request too large')
             packet = json.loads(raw)
-            if not isinstance(packet, dict) or set(packet) != {'action', 'service', 'owner'}:
+            if isinstance(packet, dict) and packet.get('action') == 'balance':
+                if (set(packet) != {'action', 'version', 'operation', 'payload'}
+                        or type(packet['version']) is not int or packet['version'] != 1):
+                    raise ValueError('invalid balance protocol')
+                result = balance_local(packet['operation'], packet['payload'], ledger)
+            elif not isinstance(packet, dict) or set(packet) != {'action', 'service', 'owner'}:
                 raise ValueError('invalid coordination request')
-            result = local(**packet, ledger=ledger)
+            else:
+                result = local(**packet, ledger=ledger)
         elif args.action == 'set':
             if args.authority is None and args.max_sessions is None:
                 raise ValueError('set requires --authority or --max-sessions')

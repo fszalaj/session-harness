@@ -74,6 +74,29 @@ credit metadata could not establish paid-use disablement.
 Check the [capability guide](docs/PROVIDER-VALIDATION.md) and [release guide](docs/RELEASES.md)
 for your selected version before relying on either feature.
 
+## Balance subscriptions (development)
+
+The development source adds opt-in routing across configured native subscriptions.
+A short manager session can distribute bounded text work independently of its model
+family while respecting every provider's daily quota and paid-use guards. These
+commands are not included in the published v0.2.0 release:
+
+```sh
+ai-session balance enable
+ai-session balance status
+ai-session work --id unique-task-id < task.txt
+ai-session audit --since 2026-01-01
+```
+
+Enable on the account authority after the owner requests balancing. Selection targets
+equal fractions of daily allowances, using atomic task reservations and fresh native
+observations. It does not promise equal token totals or dollar costs. APIs remain
+separately authorized; inventory-only clients are reported as unsupported for routing.
+See [balancing, supported clients and recovery](skills/session-harness/references/balancing.md).
+Owners can also [configure model supervision](skills/session-harness/references/balancing.md#configure-which-models-need-supervision)
+by model pattern and role. These settings can allow implementation while preventing
+the same model from acting as an independent reviewer; no vendor ranking is built in.
+
 ## Find the relevant guide
 
 Browse the [documentation index](docs/README.md) or choose a task below.

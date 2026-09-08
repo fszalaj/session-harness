@@ -12,7 +12,8 @@ coding-client and explicit API harness; do not add application-specific policies
   account quota pool and model provider. Never infer quota from token counts or models.
 - Honor the daily quota budget and remaining reserve for managers, workers and reviews.
   Missing/stale/incomplete evidence is not zero usage or approval to dispatch.
-- Native same-provider workers are normal. Cross-provider review remains independent.
+- Follow enabled subscription balancing for bounded work; otherwise native same-provider
+  workers are normal. Cross-provider review remains independent.
 - Test limits, concurrency, reset handling, malformed telemetry, installation and real
   capability boundaries. Simulated tests are not evidence of provider guarantees.
 - Existing application instructions outrank generic defaults. Keep updates explicit,

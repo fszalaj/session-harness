@@ -176,13 +176,20 @@ separate money mode and bounded dispatch. Never reveal keys, buy credits, enable
 automatic reload or infer API entitlement from a subscription. Installation itself
 creates no paid allowance and changes no authentication.
 
+For development installations supporting `balance`, an owner requesting even native
+subscription use can enable [shared fractional pacing](../skills/session-harness/references/balancing.md).
+Use only configured services with protected execution adapters. API money budgets
+and inventory-only clients remain separate; installation does not opt anyone in.
+The same guide explains optional model/role supervision settings controlled by the
+owner. They apply through the common authority and survive disabling balancing.
+
 ## 6. Integrate the project and knowledge layer
 
 Keep application rules in the project's `AGENTS.md`. Add a short reference such as:
 
 > For substantive work, use `~/.agents/skills/session-harness/SKILL.md`, unless this
 > repository explicitly selects a maintained project copy. Honor shared usage and
-> context safeguards. Use native same-family workers and independent reviews from
+> context safeguards. Use enabled subscription balancing for bounded workers (otherwise native same-family workers) and independent reviews from
 > the other two provider families when supported. Leaf assignments and trivial
 > tasks do not restart orchestration. Preserve this project's rules.
 

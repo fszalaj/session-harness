@@ -30,3 +30,5 @@ and only the reference needed for their next action.
 This documentation describes v0.2.0. Check `ai-session version` before following
 version-specific instructions. Existing installations retain their selected release
 unless the owner requests an update or has already enabled automatic maintenance.
+
+- [Subscription balancing (development)](../skills/session-harness/references/balancing.md): shared routing, billing attribution, local usage audit and recovery.
