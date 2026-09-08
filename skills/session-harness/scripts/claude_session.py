@@ -119,6 +119,10 @@ def recovery_arguments(argv):
     return None
 
 
+def hook_command():
+    return shlex.join([sys.executable, str(Path(__file__).with_name('claude_gate.py'))])
+
+
 def run(capability, response, environment):
     import claude_admission
     import harness
@@ -138,7 +142,7 @@ def run(capability, response, environment):
             db.execute('CREATE TABLE state(value TEXT NOT NULL)')
             db.execute('INSERT INTO state VALUES (?)', (json.dumps(dict(session=initial_id,
                 model=choice['model'], role=response['role'], children=[], ended=False, started=False)),))
-        command = shlex.join([sys.executable, str(Path(__file__).with_name('claude_gate.py'))])
+        command = hook_command()
         import claude_gate
         settings = {'hooks': {e: [{'hooks': [{'type': 'command', 'command': command, 'timeout': 45}]}]
                              for e in claude_gate.EVENTS}}

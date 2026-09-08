@@ -1,11 +1,11 @@
 {
-  "content_sha256": "0d95c22e18edf6600b0e7da7b8663e6ffb1bed3dd1f205f4f442f4d7c75092e8",
+  "content_sha256": "a345851ea182975055d25d78dd415e653662bd14cc1d22454ac44423b85b304e",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 2461,
+    "edge_count": 2463,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1327,
+    "node_count": 1328,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -30,7 +30,7 @@
       "skills/session-harness/scripts/claude_admission.py": "9959e40a09b5b8d8a9253260a78314cb670a09d284e5060fdf6b187f18ef5897",
       "skills/session-harness/scripts/claude_gate.py": "25c9a193f40bab156d5b69a77b5eba9075f820ccf930ce7bba466e809fabc61f",
       "skills/session-harness/scripts/claude_models.py": "4f3978013faea78ec36b4bd769fbd0589d57dc5a4e3ae21a2fe5fd1b35756098",
-      "skills/session-harness/scripts/claude_session.py": "876ac4e750de91b90f1e7fa10624525c13f966c8f23b3a2264a78382e0cd9c70",
+      "skills/session-harness/scripts/claude_session.py": "d43e869e5c90e50d828e2014c94490590791f48e3041d48b3c794ecb93a52963",
       "skills/session-harness/scripts/coordination.py": "53436f5baed7cb50064eb97db4379167ce2f184b653c40d569fbc27c6b858d82",
       "skills/session-harness/scripts/credits.py": "9a57841b5faa96898b0e2cfae69ea5d836f0d03b7e0f130df474cce0cb2075d4",
       "skills/session-harness/scripts/harness.py": "51bac28a36c84cbc2214daaa5026518b3d5a722ddbd8cdac3a503019f36379fd",
@@ -2526,6 +2526,12 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/claude_session.py",
       "target": "pyfunc:skills/session-harness/scripts/claude_session.py:hook"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/claude_session.py",
+      "target": "pyfunc:skills/session-harness/scripts/claude_session.py:hook_command"
     },
     {
       "confidence": "EXTRACTED",
@@ -13535,6 +13541,12 @@
       "confidence": "INFERRED",
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/claude_session.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/claude_session.py:hook_command"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/claude_session.py:run",
       "target": "pyfunc:skills/session-harness/scripts/claude_session.py:models"
     },
     {
@@ -17501,6 +17513,14 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/claude_session.py:hook_command",
+      "label": "hook_command",
+      "source_file": "skills/session-harness/scripts/claude_session.py",
+      "source_location": "L122",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/claude_session.py:models",
       "label": "models",
       "source_file": "skills/session-harness/scripts/claude_session.py",
@@ -17528,7 +17548,7 @@
       "id": "pyfunc:skills/session-harness/scripts/claude_session.py:run",
       "label": "run",
       "source_file": "skills/session-harness/scripts/claude_session.py",
-      "source_location": "L122",
+      "source_location": "L126",
       "type": "function"
     },
     {
