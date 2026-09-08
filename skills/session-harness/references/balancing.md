@@ -3,6 +3,11 @@
 Development feature, not part of the published v0.2.0 release. Check the installed
 CLI before using these commands. Installation does not enable balancing or billing.
 
+The updated runtime also accepts these commands through the older published
+launcher. A maintainer can retain the published profile and installer while
+registering reviewed skill-only overlays; preserve private addenda and verify the
+resulting registration. This compatibility does not activate an installed profile.
+
 The manager remains the strongest supported model of the hosting provider. With
 balancing enabled, it delegates bounded work across configured native subscriptions.
 Choose tasks before reaching a quota stop. Keep manager work to planning, decisions,

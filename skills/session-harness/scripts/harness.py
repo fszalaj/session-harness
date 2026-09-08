@@ -992,6 +992,9 @@ def main(argv=None):
     if os.environ.get(LEAF_MARKER):
         print(json.dumps({"status": "recursion_blocked"}))
         return 2
+    if (len(arguments) >= 3 and arguments[0] == "launch"
+            and arguments[1] in {"balance", "work", "audit"} and arguments[2] == "--execute"):
+        arguments = [arguments[1], *arguments[3:]]
     if arguments and arguments[0] in {"setup", "configure"}:
         import setup_environment
         return setup_environment.main(arguments[1:])

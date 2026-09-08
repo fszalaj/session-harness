@@ -1,11 +1,11 @@
 {
-  "content_sha256": "12f330b45cba8e8bb06ab02c8622b085977abaa6442dd9570be4e6560d44e083",
+  "content_sha256": "0511a85137a2b48844eb85386b7a94ef7ac3364091fa1d9ae1d58405c8ae6f83",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 2305,
+    "edge_count": 2310,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1244,
+    "node_count": 1249,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -31,7 +31,7 @@
       "skills/session-harness/scripts/claude_models.py": "a0184dfb93b40b53305cf8acec153de72cfc297d0c6554fcbb33716fcb9c7a2b",
       "skills/session-harness/scripts/coordination.py": "a002ff1924eac1f496b1eb748782c543681dbb2313f87b754cbf308f7c76dbe8",
       "skills/session-harness/scripts/credits.py": "9a57841b5faa96898b0e2cfae69ea5d836f0d03b7e0f130df474cce0cb2075d4",
-      "skills/session-harness/scripts/harness.py": "bcc219d8540205e6c5d32fd7237d35820c5c780da6deec12f76b5eb175a698db",
+      "skills/session-harness/scripts/harness.py": "0fe0018695d8614ea7625e140a6d6d075e9064e3524867c740dc63d369f62414",
       "skills/session-harness/scripts/inventory.py": "a25b6663c9b00b95202ade571daf574b5264bd69292d00fb84402aecdd9640a3",
       "skills/session-harness/scripts/native_quota.py": "ecda56527babe591c8f21e83ab6891bebd9ad070be10e3de16b7ccc859035dca",
       "skills/session-harness/scripts/optional_clients.py": "6a8192702eb2f0a7b9722a5352e6dcbcd628456ed3bbf2f75cc1217ed36e496c",
@@ -57,7 +57,7 @@
       "skills/session-harness/scripts/test_claude_models.py": "22d0c1d7ebb3dc409b6eb5c07f4ed4d3beff36def13e18568b375defda8b237e",
       "skills/session-harness/scripts/test_coordination.py": "3d3b58600b8aa3d75733061410c748b6131b2fd986287f6b7d9dbc4c297acd7b",
       "skills/session-harness/scripts/test_credits.py": "84c4d7f9d135f3bed9ca0a19065657ab9e8e7bf34cf98965395ee66c911568ef",
-      "skills/session-harness/scripts/test_harness.py": "1034b2feb8869cc31f37bed900bb980695908a33e09a3bdd9433a3322768183b",
+      "skills/session-harness/scripts/test_harness.py": "d266c4fd04f9d71fc1fbb6ebe66f0c81c331697792816a124a32df2439c5165b",
       "skills/session-harness/scripts/test_inventory.py": "3d460c6cfe3c679e600ee4be1fc9b2980f906551a259e3b6ce70d89979c6957c",
       "skills/session-harness/scripts/test_maintenance.py": "25b1b96761f7e4d614af5cceb4eb79c54b51c729d43173b1de2d29ba88a8ca76",
       "skills/session-harness/scripts/test_model_constraints.py": "adb9d866adf67814e85500173721687b703cdabecc8d9766ed5445a25229b8af",
@@ -5430,6 +5430,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/test_harness.py",
+      "target": "pyclass:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_harness.py",
       "target": "pyclass:skills/session-harness/scripts/test_harness.py:ModelTests"
     },
     {
@@ -9535,6 +9541,30 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_harness.py:ExecutionTests",
       "target": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_vertex_adc_overrides_removed_without_redirecting_audited_profiles"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests",
+      "target": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_direct_command_stays_unchanged"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests",
+      "target": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_leaf_cannot_use_legacy_dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests",
+      "target": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_legacy_commands_preserve_arguments"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests",
+      "target": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_only_exact_legacy_prefix_is_recognized"
     },
     {
       "confidence": "EXTRACTED",
@@ -14928,7 +14958,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:DiscoveryTests",
       "label": "DiscoveryTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L121",
+      "source_location": "L150",
       "type": "class"
     },
     {
@@ -14936,7 +14966,15 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:ExecutionTests",
       "label": "ExecutionTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L213",
+      "source_location": "L242",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests",
+      "label": "LegacyLauncherTests",
+      "source_file": "skills/session-harness/scripts/test_harness.py",
+      "source_location": "L26",
       "type": "class"
     },
     {
@@ -14944,7 +14982,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:ModelTests",
       "label": "ModelTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L52",
+      "source_location": "L81",
       "type": "class"
     },
     {
@@ -14952,7 +14990,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests",
       "label": "QuotaProcessIntegrationTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L530",
+      "source_location": "L559",
       "type": "class"
     },
     {
@@ -14960,7 +14998,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:ReviewTests",
       "label": "ReviewTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L406",
+      "source_location": "L435",
       "type": "class"
     },
     {
@@ -14968,7 +15006,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_harness.py:SessionTests",
       "label": "SessionTests",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L26",
+      "source_location": "L55",
       "type": "class"
     },
     {
@@ -21224,7 +21262,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.cache",
       "label": "DiscoveryTests.cache",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L122",
+      "source_location": "L151",
       "type": "method"
     },
     {
@@ -21232,7 +21270,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_claude_auth_output_excludes_personal_account_fields",
       "label": "DiscoveryTests.test_claude_auth_output_excludes_personal_account_fields",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L176",
+      "source_location": "L205",
       "type": "method"
     },
     {
@@ -21240,7 +21278,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_claude_concrete_catalog_supersedes_unresolved_aliases",
       "label": "DiscoveryTests.test_claude_concrete_catalog_supersedes_unresolved_aliases",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L197",
+      "source_location": "L226",
       "type": "method"
     },
     {
@@ -21248,7 +21286,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_claude_truthy_auth_does_not_probe_models",
       "label": "DiscoveryTests.test_claude_truthy_auth_does_not_probe_models",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L187",
+      "source_location": "L216",
       "type": "method"
     },
     {
@@ -21256,7 +21294,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_fresh_cache_accepts_nanosecond_timestamp",
       "label": "DiscoveryTests.test_fresh_cache_accepts_nanosecond_timestamp",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L140",
+      "source_location": "L169",
       "type": "method"
     },
     {
@@ -21264,7 +21302,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_future_cache_rejected",
       "label": "DiscoveryTests.test_future_cache_rejected",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L136",
+      "source_location": "L165",
       "type": "method"
     },
     {
@@ -21272,7 +21310,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_live_codex_catalog_pagination",
       "label": "DiscoveryTests.test_live_codex_catalog_pagination",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L151",
+      "source_location": "L180",
       "type": "method"
     },
     {
@@ -21280,7 +21318,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_missing_cli_has_no_models_or_successful_review",
       "label": "DiscoveryTests.test_missing_cli_has_no_models_or_successful_review",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L144",
+      "source_location": "L173",
       "type": "method"
     },
     {
@@ -21288,7 +21326,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:DiscoveryTests.test_stale_cache_rejected_even_when_file_mtime_is_current",
       "label": "DiscoveryTests.test_stale_cache_rejected_even_when_file_mtime_is_current",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L129",
+      "source_location": "L158",
       "type": "method"
     },
     {
@@ -21296,7 +21334,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_bounded_slow_quota_poll_resumes_pipe_drain",
       "label": "ExecutionTests.test_bounded_slow_quota_poll_resumes_pipe_drain",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L214",
+      "source_location": "L243",
       "type": "method"
     },
     {
@@ -21304,7 +21342,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_catalog_access_is_not_subscription_proof_for_codex_or_claude",
       "label": "ExecutionTests.test_catalog_access_is_not_subscription_proof_for_codex_or_claude",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L386",
+      "source_location": "L415",
       "type": "method"
     },
     {
@@ -21312,7 +21350,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_env_preserves_auth_paths_and_removes_api_overrides",
       "label": "ExecutionTests.test_env_preserves_auth_paths_and_removes_api_overrides",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L277",
+      "source_location": "L306",
       "type": "method"
     },
     {
@@ -21320,7 +21358,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_failure_classification_never_becomes_review_approval",
       "label": "ExecutionTests.test_failure_classification_never_becomes_review_approval",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L364",
+      "source_location": "L393",
       "type": "method"
     },
     {
@@ -21328,7 +21366,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_final_quota_check_runs_after_cleanup_and_unregister",
       "label": "ExecutionTests.test_final_quota_check_runs_after_cleanup_and_unregister",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L235",
+      "source_location": "L264",
       "type": "method"
     },
     {
@@ -21336,7 +21374,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_group_signals_precede_reaping",
       "label": "ExecutionTests.test_group_signals_precede_reaping",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L253",
+      "source_location": "L282",
       "type": "method"
     },
     {
@@ -21344,7 +21382,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_input_size_is_bounded",
       "label": "ExecutionTests.test_input_size_is_bounded",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L374",
+      "source_location": "L403",
       "type": "method"
     },
     {
@@ -21352,7 +21390,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_invalid_utf8_is_rejected_before_provider_dispatch",
       "label": "ExecutionTests.test_invalid_utf8_is_rejected_before_provider_dispatch",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L379",
+      "source_location": "L408",
       "type": "method"
     },
     {
@@ -21360,7 +21398,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_launch_forwards_resume_arguments_as_argv",
       "label": "ExecutionTests.test_launch_forwards_resume_arguments_as_argv",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L393",
+      "source_location": "L422",
       "type": "method"
     },
     {
@@ -21368,7 +21406,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_launch_rejects_forwarded_selection_overrides",
       "label": "ExecutionTests.test_launch_rejects_forwarded_selection_overrides",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L398",
+      "source_location": "L427",
       "type": "method"
     },
     {
@@ -21376,7 +21414,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_literal_stdin_is_not_shell_code",
       "label": "ExecutionTests.test_literal_stdin_is_not_shell_code",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L327",
+      "source_location": "L356",
       "type": "method"
     },
     {
@@ -21384,7 +21422,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_real_subprocess_timeout_reaps_process",
       "label": "ExecutionTests.test_real_subprocess_timeout_reaps_process",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L301",
+      "source_location": "L330",
       "type": "method"
     },
     {
@@ -21392,7 +21430,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_recursion_guard_precedes_discovery",
       "label": "ExecutionTests.test_recursion_guard_precedes_discovery",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L295",
+      "source_location": "L324",
       "type": "method"
     },
     {
@@ -21400,7 +21438,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_sigterm_and_sighup_cleanup_detached_children",
       "label": "ExecutionTests.test_sigterm_and_sighup_cleanup_detached_children",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L339",
+      "source_location": "L368",
       "type": "method"
     },
     {
@@ -21408,7 +21446,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_stdout_callback_receives_final_line_without_newline",
       "label": "ExecutionTests.test_stdout_callback_receives_final_line_without_newline",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L332",
+      "source_location": "L361",
       "type": "method"
     },
     {
@@ -21416,7 +21454,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_timeout_terminates_descendants_in_exact_process_group",
       "label": "ExecutionTests.test_timeout_terminates_descendants_in_exact_process_group",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L309",
+      "source_location": "L338",
       "type": "method"
     },
     {
@@ -21424,7 +21462,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_unsupported_provider_cannot_launch_leaf",
       "label": "ExecutionTests.test_unsupported_provider_cannot_launch_leaf",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L369",
+      "source_location": "L398",
       "type": "method"
     },
     {
@@ -21432,7 +21470,39 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ExecutionTests.test_vertex_adc_overrides_removed_without_redirecting_audited_profiles",
       "label": "ExecutionTests.test_vertex_adc_overrides_removed_without_redirecting_audited_profiles",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L288",
+      "source_location": "L317",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_direct_command_stays_unchanged",
+      "label": "LegacyLauncherTests.test_direct_command_stays_unchanged",
+      "source_file": "skills/session-harness/scripts/test_harness.py",
+      "source_location": "L34",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_leaf_cannot_use_legacy_dispatch",
+      "label": "LegacyLauncherTests.test_leaf_cannot_use_legacy_dispatch",
+      "source_file": "skills/session-harness/scripts/test_harness.py",
+      "source_location": "L48",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_legacy_commands_preserve_arguments",
+      "label": "LegacyLauncherTests.test_legacy_commands_preserve_arguments",
+      "source_file": "skills/session-harness/scripts/test_harness.py",
+      "source_location": "L27",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_harness.py:LegacyLauncherTests.test_only_exact_legacy_prefix_is_recognized",
+      "label": "LegacyLauncherTests.test_only_exact_legacy_prefix_is_recognized",
+      "source_file": "skills/session-harness/scripts/test_harness.py",
+      "source_location": "L40",
       "type": "method"
     },
     {
@@ -21440,7 +21510,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_catalog_order_does_not_establish_planner_capability",
       "label": "ModelTests.test_catalog_order_does_not_establish_planner_capability",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L68",
+      "source_location": "L97",
       "type": "method"
     },
     {
@@ -21448,7 +21518,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_codex_launch_keeps_delegation_with_harness_manager",
       "label": "ModelTests.test_codex_launch_keeps_delegation_with_harness_manager",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L84",
+      "source_location": "L113",
       "type": "method"
     },
     {
@@ -21456,7 +21526,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_current_generation_affordable_variant",
       "label": "ModelTests.test_current_generation_affordable_variant",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L60",
+      "source_location": "L89",
       "type": "method"
     },
     {
@@ -21464,7 +21534,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_hidden_cache_models_excluded",
       "label": "ModelTests.test_hidden_cache_models_excluded",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L115",
+      "source_location": "L144",
       "type": "method"
     },
     {
@@ -21472,7 +21542,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_infeasible_budget_variant_uses_current_flagship_worker",
       "label": "ModelTests.test_infeasible_budget_variant_uses_current_flagship_worker",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L64",
+      "source_location": "L93",
       "type": "method"
     },
     {
@@ -21480,7 +21550,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_maximum_advertised_effort",
       "label": "ModelTests.test_maximum_advertised_effort",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L81",
+      "source_location": "L110",
       "type": "method"
     },
     {
@@ -21488,7 +21558,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_newer_flash_precedes_older_pro_and_other_vendors",
       "label": "ModelTests.test_newer_flash_precedes_older_pro_and_other_vendors",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L109",
+      "source_location": "L138",
       "type": "method"
     },
     {
@@ -21496,7 +21566,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_numeric_generation_beats_lexical_order_and_cheap_old_models",
       "label": "ModelTests.test_numeric_generation_beats_lexical_order_and_cheap_old_models",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L53",
+      "source_location": "L82",
       "type": "method"
     },
     {
@@ -21504,7 +21574,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_orchestration_mode_alone_cannot_establish_reasoning_effort",
       "label": "ModelTests.test_orchestration_mode_alone_cannot_establish_reasoning_effort",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L91",
+      "source_location": "L120",
       "type": "method"
     },
     {
@@ -21512,7 +21582,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_single_effort_does_not_claim_nonmax_worker",
       "label": "ModelTests.test_single_effort_does_not_claim_nonmax_worker",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L101",
+      "source_location": "L130",
       "type": "method"
     },
     {
@@ -21520,7 +21590,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_undocumented_generation_does_not_get_invented",
       "label": "ModelTests.test_undocumented_generation_does_not_get_invented",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L105",
+      "source_location": "L134",
       "type": "method"
     },
     {
@@ -21528,7 +21598,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_unique_current_candidate_does_not_claim_superiority_over_older_tier",
       "label": "ModelTests.test_unique_current_candidate_does_not_claim_superiority_over_older_tier",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L75",
+      "source_location": "L104",
       "type": "method"
     },
     {
@@ -21536,7 +21606,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ModelTests.test_unknown_effort_does_not_silently_downgrade",
       "label": "ModelTests.test_unknown_effort_does_not_silently_downgrade",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L96",
+      "source_location": "L125",
       "type": "method"
     },
     {
@@ -21544,7 +21614,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.setUp",
       "label": "QuotaProcessIntegrationTests.setUp",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L531",
+      "source_location": "L560",
       "type": "method"
     },
     {
@@ -21552,7 +21622,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_closed_output_does_not_disable_running_quota_checks",
       "label": "QuotaProcessIntegrationTests.test_closed_output_does_not_disable_running_quota_checks",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L555",
+      "source_location": "L584",
       "type": "method"
     },
     {
@@ -21560,7 +21630,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_denial_never_starts_review_process",
       "label": "QuotaProcessIntegrationTests.test_denial_never_starts_review_process",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L548",
+      "source_location": "L577",
       "type": "method"
     },
     {
@@ -21568,7 +21638,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_review_process_checks_quota_before_and_after_execution",
       "label": "QuotaProcessIntegrationTests.test_review_process_checks_quota_before_and_after_execution",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L540",
+      "source_location": "L569",
       "type": "method"
     },
     {
@@ -21576,7 +21646,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:QuotaProcessIntegrationTests.test_terminal_launch_uses_supervisor",
       "label": "QuotaProcessIntegrationTests.test_terminal_launch_uses_supervisor",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L597",
+      "source_location": "L626",
       "type": "method"
     },
     {
@@ -21584,7 +21654,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.stream",
       "label": "ReviewTests.stream",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L407",
+      "source_location": "L436",
       "type": "method"
     },
     {
@@ -21592,7 +21662,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_accepts_only_substantive_isolated_result",
       "label": "ReviewTests.test_accepts_only_substantive_isolated_result",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L413",
+      "source_location": "L442",
       "type": "method"
     },
     {
@@ -21600,7 +21670,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_agy_cwd_accepts_same_directory_through_symlink",
       "label": "ReviewTests.test_agy_cwd_accepts_same_directory_through_symlink",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L519",
+      "source_location": "L548",
       "type": "method"
     },
     {
@@ -21608,7 +21678,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_agy_restricted_review_requires_exact_model_leaf_and_response",
       "label": "ReviewTests.test_agy_restricted_review_requires_exact_model_leaf_and_response",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L499",
+      "source_location": "L528",
       "type": "method"
     },
     {
@@ -21616,7 +21686,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_agy_tool_step_aborts_before_final_response",
       "label": "ReviewTests.test_agy_tool_step_aborts_before_final_response",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L513",
+      "source_location": "L542",
       "type": "method"
     },
     {
@@ -21624,7 +21694,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_claude_artifact_boundary_and_transmitted_prompt_hashes",
       "label": "ReviewTests.test_claude_artifact_boundary_and_transmitted_prompt_hashes",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L418",
+      "source_location": "L447",
       "type": "method"
     },
     {
@@ -21632,7 +21702,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_error_diagnostic_redacts_credentials",
       "label": "ReviewTests.test_codex_error_diagnostic_redacts_credentials",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L487",
+      "source_location": "L516",
       "type": "method"
     },
     {
@@ -21640,7 +21710,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_error_item_is_diagnostic_not_tool_use",
       "label": "ReviewTests.test_codex_error_item_is_diagnostic_not_tool_use",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L480",
+      "source_location": "L509",
       "type": "method"
     },
     {
@@ -21648,7 +21718,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_restricted_arguments_preserve_sandbox_and_disable_integrations",
       "label": "ReviewTests.test_codex_restricted_arguments_preserve_sandbox_and_disable_integrations",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L455",
+      "source_location": "L484",
       "type": "method"
     },
     {
@@ -21656,7 +21726,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_review_distinguishes_requested_and_observed_model",
       "label": "ReviewTests.test_codex_review_distinguishes_requested_and_observed_model",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L465",
+      "source_location": "L494",
       "type": "method"
     },
     {
@@ -21664,7 +21734,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_codex_tool_events_and_unknown_events_fail_closed",
       "label": "ReviewTests.test_codex_tool_events_and_unknown_events_fail_closed",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L475",
+      "source_location": "L504",
       "type": "method"
     },
     {
@@ -21672,7 +21742,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_expected_codex_restriction_notice_is_not_review_success",
       "label": "ReviewTests.test_expected_codex_restriction_notice_is_not_review_success",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L493",
+      "source_location": "L522",
       "type": "method"
     },
     {
@@ -21680,7 +21750,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_final_error_is_not_success",
       "label": "ReviewTests.test_final_error_is_not_success",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L448",
+      "source_location": "L477",
       "type": "method"
     },
     {
@@ -21688,7 +21758,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_tool_event_rejects_even_with_empty_init",
       "label": "ReviewTests.test_tool_event_rejects_even_with_empty_init",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L437",
+      "source_location": "L466",
       "type": "method"
     },
     {
@@ -21696,7 +21766,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_tools_or_mcp_reject_review",
       "label": "ReviewTests.test_tools_or_mcp_reject_review",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L431",
+      "source_location": "L460",
       "type": "method"
     },
     {
@@ -21704,7 +21774,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:ReviewTests.test_truncated_stream_is_schema_error",
       "label": "ReviewTests.test_truncated_stream_is_schema_error",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L443",
+      "source_location": "L472",
       "type": "method"
     },
     {
@@ -21712,7 +21782,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:SessionTests.test_ambiguous_environment_is_not_guessed",
       "label": "SessionTests.test_ambiguous_environment_is_not_guessed",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L31",
+      "source_location": "L60",
       "type": "method"
     },
     {
@@ -21720,7 +21790,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:SessionTests.test_explicit_session_overrides_inherited_markers",
       "label": "SessionTests.test_explicit_session_overrides_inherited_markers",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L27",
+      "source_location": "L56",
       "type": "method"
     },
     {
@@ -21728,7 +21798,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:SessionTests.test_launcher_identity_survives_cross_provider_ancestry",
       "label": "SessionTests.test_launcher_identity_survives_cross_provider_ancestry",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L36",
+      "source_location": "L65",
       "type": "method"
     },
     {
@@ -21736,7 +21806,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:SessionTests.test_nearest_known_ancestor",
       "label": "SessionTests.test_nearest_known_ancestor",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L44",
+      "source_location": "L73",
       "type": "method"
     },
     {
@@ -21744,7 +21814,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:SessionTests.test_no_identity_from_installed_clis_or_generic_node",
       "label": "SessionTests.test_no_identity_from_installed_clis_or_generic_node",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L41",
+      "source_location": "L70",
       "type": "method"
     },
     {
@@ -21752,7 +21822,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_harness.py:SessionTests.test_values_are_never_in_identity_evidence",
       "label": "SessionTests.test_values_are_never_in_identity_evidence",
       "source_file": "skills/session-harness/scripts/test_harness.py",
-      "source_location": "L47",
+      "source_location": "L76",
       "type": "method"
     },
     {

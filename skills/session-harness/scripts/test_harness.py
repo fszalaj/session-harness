@@ -23,6 +23,35 @@ def model(ident, rank=0, description="", efforts=None):
             "efforts": efforts or ["low", "medium", "high", "max"]}
 
 
+class LegacyLauncherTests(unittest.TestCase):
+    def test_legacy_commands_preserve_arguments(self):
+        for command in ('balance', 'work', 'audit'):
+            with self.subTest(command=command), patch('balance_cli.main', return_value=7) as handler:
+                args = [command, '--id', 'literal value', '--', '--execute']
+                self.assertEqual(harness.main(['launch', command, '--execute', *args[1:]]), 7)
+                handler.assert_called_once_with(args)
+
+    def test_direct_command_stays_unchanged(self):
+        with patch('balance_cli.main', return_value=0) as handler:
+            args = ['work', 'launch', '--execute']
+            self.assertEqual(harness.main(args), 0)
+            handler.assert_called_once_with(args)
+
+    def test_only_exact_legacy_prefix_is_recognized(self):
+        for args in (['launch', 'work'], ['launch', 'work', '--help'],
+                     ['launch', 'Work', '--execute'], ['launch', 'work', '--execute=true']):
+            with self.subTest(args=args), patch('balance_cli.main') as handler, \
+                    patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
+                harness.main(args)
+            handler.assert_not_called()
+
+    def test_leaf_cannot_use_legacy_dispatch(self):
+        with patch.dict(os.environ, {harness.LEAF_MARKER: '1'}), \
+                patch('balance_cli.main') as handler, patch('sys.stdout', new_callable=io.StringIO):
+            self.assertEqual(harness.main(['launch', 'balance', '--execute', 'status']), 2)
+            handler.assert_not_called()
+
+
 class SessionTests(unittest.TestCase):
     def test_explicit_session_overrides_inherited_markers(self):
         result = harness.detect_session("claude", {"CODEX_THREAD_ID": "redacted"})
