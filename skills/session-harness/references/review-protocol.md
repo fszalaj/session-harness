@@ -73,3 +73,49 @@ Use `harness.py api run SERVICE` only with explicit monetary authorization and
 not native quota polling or subprocess review sessions. Never automatically retry
 a paid POST. A timeout retains liability; repeating its ID returns accounting only.
 Check the actual returned review and provider family before accepting a verdict.
+
+## Avoid unnecessary review work
+
+Use the code graph and targeted source inspection to include the contracts that
+can change the verdict: callers, validators, state writers and platform branches.
+A shorter packet that omits a relevant contract can cost another full review.
+If the complete scope does not fit, narrow the artifact explicitly; never truncate
+code silently or present an omitted implementation as verified.
+
+Classify findings before deciding what to repeat:
+
+- Confirmed defect: reproduce or inspect it, fix it and verify the affected behavior.
+- Missing evidence: provide the relevant contract; extra effort cannot recover
+  information that the reviewer never received.
+- Authentication, quota, timeout or unsupported control: repair the stated cause
+  and preserve its original accounting/outcome; do not blindly retry or raise effort.
+- Optional improvement: record the decision; it does not automatically block delivery.
+
+Keep a compact private checkpoint index of phase, artifact digest, upstream family,
+requested/observed model and effort, receipt path, verdict and finding disposition.
+A changed implementation is not the same artifact as its plan. Reuse unchanged
+accepted evidence only within its original scope and validity; re-review material
+changes or unresolved material findings. Never replace a required second provider
+or treat an unparsed, conditional or missing verdict as approval.
+
+Successful native review receipts include local `duration_seconds`,
+`artifact_bytes`, `result_bytes` and `effort_source` (`explicit`, `default` or
+`client_managed`). `requested_effort` is the client setting; `actual_effort: null`
+with `effort_verification: not_reported` means the provider did not independently
+confirm it. Wall time covers `review()`, including admission and execution; CLI
+discovery before that call is excluded. It is not pure model latency.
+Byte counts are not tokens, quota or money. Failure
+receipts and external native workers may lack these fields; keep them unknown.
+`explicit` means a non-null argument supplied to `review()`, including an automatic
+worker dispatch. It does not mean a human overrode the default policy.
+Copilot can accept an effort advertised by its selected model; otherwise it uses
+client-managed effort. Cursor exposes no effort override.
+
+Evaluate effort changes on matched tasks with fixed acceptance criteria and the
+same model/packet. Compare defects found, unsupported findings, completion, latency
+and reported usage. Separate task counts from model-request counts, reasoning
+output from visible output, and cached from uncached input. Do not infer an invoice
+or subscription percentage from token totals. A small probe is a diagnostic,
+not evidence to lower every role's effort. Prefer the cheaper current-generation
+tier only where task quality remains acceptable. Keep the manager default and
+explicit maximum-effort exception intact.

@@ -93,3 +93,5 @@ outside the manager's family. Preserve every budget and role restriction; superv
 output is not an independent verdict. Carry authorized work through verification and
 report actual models, supported capabilities, tests and precise remaining gaps.
 ```
+
+For each native leaf, pass the selected current model and its supported effort explicitly; record requested versus observed settings. Use the [review protocol](review-protocol.md#avoid-unnecessary-review-work) to preserve verdicts and finding dispositions across compaction.

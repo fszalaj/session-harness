@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1
+
+- Select review effort from the chosen model's advertised levels; reject ambiguous
+  model matches, missing variants and unsupported overrides before execution.
+- Report review duration, packet/output bytes, effort source and explicitly unknown
+  actual effort without adding unverified usage or monetary claims.
+- Require explicit native worker controls and preserve phase/artifact review evidence.
+  Load conditional procedures from existing references to reduce startup context.
+- Preserve Extra High managers, medium ordinary work/reviews and explicit max escalation.
+
 ## 0.4.0
 
 - Add interactive per-provider onboarding with provider-first and command-first forms.

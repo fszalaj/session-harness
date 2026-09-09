@@ -9,126 +9,52 @@ Use the active client's native agent controls, with the local CLI helper for
 provider discovery and isolated reviews. This is a manager/worker workflow with
 independent review, not a replacement for the clients' permission controls.
 
-Installed release maintenance uses `ai-session version`, `ai-session update --check`
-and the confirmed `ai-session update`. For exact rollback, use
-`ai-session update --version VERSION --apply`, replacing `VERSION` with the chosen
-published numeric version. For this release, run
-`ai-session update --version 0.4.0 --apply`, then restart affected clients.
-Preserve private policy and usage history. Updates never follow `main`;
-project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
-**Available in v0.2.0:** `ai-session auto-update` adds an explicit opt-in for automatic stable
-updates on macOS/Linux. Keep it disabled unless the owner selects it. Respect idle
-maintenance, local overlay conflicts and private accounting; do not steal a lock
-to make an update proceed. Preserve existing owner opt-in settings.
+Use the selected [session startup procedure](references/session-start.md) once per
+substantive task. It resolves current capabilities without loading every provider
+procedure. Trivial questions, edits and assigned leaf tasks do not start a new cycle.
 
 ## 0. Check resources before dispatch
 
-To add one provider, use the [interactive onboarding wizard](references/provider-onboarding.md):
-`ai-session onboard PROVIDER` or `ai-session PROVIDER onboard`. It uses installed
-adapter registries and preserves existing account policy. The user completes its
-real authorization prompts; agents do not submit answers on the user's behalf.
+Before any inference, including native workers, reviewers and retries, inspect the
+existing setup, shared authority and fresh per-pool admission. Use `ai-session usage
+check SERVICE` through that authority; cached local status is diagnostic. Preserve
+its budget strategy, reserve, calendar, dated grants, capacity and daily history.
+A reset timestamp alone does not grant quota. Missing or stale evidence blocks.
+Do not bypass a stop by switching accounts/services, enabling paid fallback or
+restoring an old ledger. A model-specific stop permits only a verified current
+alternative within the same subscription when all common limits still pass.
 
-Run `ai-session configure` (alias: `setup`) before inference. For multiple computers, select one trusted
-SSH quota authority on every participating client; local ledgers are not a shared
-account lock. Use `ai-session coordination status`. New configurations allow four
-sessions per service; preserve existing explicit capacity. All owners and their
-native workers share one budget. `account_session_busy` is a capacity stop, not
-quota exhaustion. Read [session coordination](references/coordination.md) for teams,
-capacity changes and recovery. Never clone a ledger or delete a live owner to bypass a stop.
-Claude command hooks (`ai-session hooks --install --apply`) enforce supported prompt
-and tool boundaries without model calls. Missing authority connectivity blocks.
-Direct unhooked sessions and streaming text remain outside exact enforcement.
+Existing authorization persists. If setup is absent, the user completes
+`ai-session configure` or [provider onboarding](references/provider-onboarding.md)
+interactively; never supply real authorization answers on their behalf. Adding a
+key or detecting an installed client does not authorize inference. For accounts
+shared across computers, keep one verified SSH authority and existing settings.
+Independent local ledgers do not coordinate budgets or concurrent sessions.
 
-Default the manager to Extra High (`xhigh`). If unavailable, select the highest
-advertised reasoning level below `max`, normally `high`. Use `max` only by explicit
-task-level selection for an extremely difficult task, then return to the default.
-Do not enable Codex `ultra` or Claude `ultracode` automatic orchestration by default.
-Effort labels are not comparable across providers. Since v0.2.1, the launcher
-applies this default and excludes `max` and `ultra` from default selection.
-Use native controls for an explicit exception; there is no generic launcher
-`--effort` flag. Check the [client adapter limits](references/clients.md).
-Delegate execution with explicit current-tier model and medium effort; gathering normally uses low.
-Use a fresh leaf packet (in native spawn APIs, no full-history fork). Include only
-objective, owned files, relevant contracts and acceptance. Target 2-4 KiB input and
-300 words back. Reuse a worker only for its bounded correction, not serial whole-repo
-investigations. Prefer one executor at a time by default. Do not launch multiple
-maximum-effort sessions for tests, docs, polling, or routine implementation.
-Ordinary provider reviews use medium effort, at most 16 KiB input and a three-minute
-default deadline. Escalate once for a specific unresolved defect; do not repeatedly
-review unchanged plans or forward every transcript. Preserve checks after compaction.
+Respect the persisted strict or observed mode. Strict requires enforceable bounds;
+observed mode permits possible in-flight overshoot and must have been explicitly
+selected. Do not substitute modes or invent a mandatory reserve. Read current
+policy again before reporting a stop; instructions are not live quota evidence.
 
+Load only the procedure needed for the selected operation:
 
-Read [usage and context](references/usage-and-context.md) before any model call,
-including manager continuation, native workers, external review and retries. The
-same account budgets apply across projects. Read the persisted budget strategy and
-reserve for every pool. New ledgers default to adaptive allocation and 0% reserve,
-UTC, all seven workdays and an 08:30 reset cutoff. Preserve existing configuration.
-Adaptive policy distributes the balance across scheduled workdays
-until the actual reset; a fresh reset due by tomorrow's local cutoff releases
-current headroom on a scheduled workday without predicting a refill. When the reset
-is absent, a verified native long-window duration allows conservative full-window
-pacing; keep the reset unknown and do not apply the cutoff release. Honor existing
-settings and dated grants. See [budget controls](references/budgets.md)
-for daily additions and use-rest. Record fresh observations; unknown usage is not
-zero and a reset forecast alone never creates headroom.
-
-Admission also requires the owner's private environment setup. `ai-session setup`
-(or `harness.py setup`) records which native and API services may run inference;
-absent, corrupt or unselected setup denies launch, review and API dispatch with
-`environment_setup_required` or `service_not_configured`, while status, inventory,
-discovery, refresh and accounting stay available. Never complete setup on the
-owner's behalf; report it as the next step.
-
-Use `harness.py usage refresh <service>` and `harness.py usage check <service>`.
-Version 0.3.0 native `check` refreshes the configured authority with or without a model;
-`status` reads local evidence and `refresh` updates only the local ledger. Diagnose
-shared admission with `check`, since remote checks leave local cached status unchanged.
-Refresh persisted policy before a stop and report its actual reserve; loaded
-instructions may describe stale settings. There is no mandatory 10% floor.
-Global reserve defaults do not replace existing service/pool overrides.
-A strict cap requires a provable execution boundary and request-cost bound. If the
-client cannot supply these, strict mode refuses inference. Observed-threshold
-monitoring is a separately named weaker mode, enabled through private persisted
-configuration after an explicit owner choice. Honor an existing choice without
-asking again. It uses observed daily lower bounds where earlier history is partial.
-Never silently substitute modes. A stop saves a checkpoint and does not switch
-billing services, start replacement workers or consume reset credits to bypass it.
-A verified model-specific stop may select an admitted model within the same
-subscription; see [model allowances](references/model-allowances.md). Common stops
-never permit that transition. The launcher and external review runner poll while their owned processes run;
-direct native sessions remain outside that process boundary.
-
-Version 0.3.0 launchers explain quota stops after terminal restoration. Preserve the
-reported reason even if cleanup also fails. An unconfirmed process cleanup retains
-its owner for inspection; follow [stop recovery](references/usage-and-context.md#when-a-protected-session-stops)
-before restarting work. Never treat a cleanup error as a quota grant.
-
-For an explicitly authorized API route or money/credit configuration, read
-[API and spend](references/api-and-spend.md). API budget and admission mode are
-separate from subscription percentages. A paid route requires a configured total
-monthly cap and per-request reservation; no automatic paid fallback is allowed.
-Native paid-credit execution remains unsupported, and missing eligibility controls
-can block a subscription adapter even when quota remains. On Windows installation
-or process work, read [platform support](references/platforms.md).
-
-When asked to add strong coding models from multi-provider catalogs, read
-[reviewed coding models](references/coding-models.md). `api coding-models`
-filters a reviewed allowlist against fresh public metadata; `api coding-run` adds
-supervised text work behind existing explicit API money admission. It does not
-install a gateway, authorize billing or count as independent review.
-
-Subscription balancing is an explicit opt-in feature in version 0.3.0. It uses fresh
-native quotas and shared reservations; APIs and unsupported execution adapters
-remain separate. Consult [balancing](references/balancing.md) when the owner requests
-even usage. Do not infer equal spending from equal task counts or dollar estimates.
-Honor the owner's configured model/role supervision settings. Supervised output is
-not independent review approval; report any review gap caused by those settings.
-
-For explicitly requested recurring free API access, read [free account pools](references/free-access.md).
-Use one execution host, verified no-paid-overage account evidence and the separate
-free ledger. Never equate free credits with zero token prices, infer a monthly
-refill, or create a paid money budget for this route. Expired evidence and unknown
-dispatch outcomes stop the configured free group until inspected.
+- [Usage and context](references/usage-and-context.md): mandatory admission,
+  observations, accounting, bounded process supervision, recovery and compaction.
+- [Budget controls](references/budgets.md) and [coordination](references/coordination.md):
+  policy changes, shared authority, capacity and exact-owner maintenance/recovery.
+- [API and spend](references/api-and-spend.md): explicit API money authorization,
+  cost reservations and native paid-credit eligibility. No automatic paid fallback.
+- [Balancing](references/balancing.md): when enabled, route bounded work through
+  `ai-session work` using fresh account evidence. When disabled, use native
+  same-family workers. Preserve model-role restrictions in either case.
+- [Free accounts](references/free-access.md), [coding models](references/coding-models.md)
+  or [model allowances](references/model-allowances.md): only for those routes.
+- [Client controls](references/clients.md) and [platform support](references/platforms.md):
+  supported model/effort, isolation, authentication and operating-system limits.
+- [Release maintenance](references/releases.md): inspect with `ai-session version`,
+  update from an explicitly selected published release and preserve registered
+  private policy, accounting and existing automatic-update opt-in. Never silently
+  replace maintained profiles with development main or steal an update lock.
 
 ## 1. Establish the manager
 
@@ -194,6 +120,11 @@ provider guidance when capability or successor relationships remain uncertain.
   `work` uses Codex, Claude or Antigravity; Copilot/Cursor requires an explicit provider.
 - Prefer a cheaper **current-generation** model for bounded work. If none exists,
   use the current flagship at medium effort instead of an older cheap model.
+- At each native leaf dispatch, pass both the current catalog-selected model and
+  supported effort explicitly. Read the returned effective configuration when exposed.
+  A role's name, an omitted parameter or a rolling alias alone does not prove those
+  settings. If a role fixes effort, choose a compatible role; Markdown cannot override
+  native controls. Record requested settings separately from verified observations.
 - Only use effort levels advertised by that model/client. Normal workers use
   medium; simple evidence collection may use low; complex implementation and
   final review use high. Reserve `max` for explicit task-level escalation on
@@ -232,6 +163,14 @@ findings using evidence; majority voting does not erase a concrete defect.
 
 ## 3. Plan and cross-check
 
+Before another review, consult the private checkpoint's phase/artifact/family index.
+Reuse a completed verdict only for the same scope and evidence; preserve missing,
+blocked and supervised results as such. Classify each finding as a confirmed defect,
+missing context, control/transport failure or optional improvement. Supply missing
+contracts before increasing effort; raise it only for an unresolved reasoning problem.
+Do not repeat full reviews merely to obtain an `approve` word. A material change or
+unresolved material finding still requires the appropriate independent review.
+
 1. Save a concise plan: outcome, constraints, evidence, proposed changes, task
    dependencies/file ownership, acceptance checks and rollback where relevant.
    Record model/provider/effort selections with reasons. Keep it in the client's
@@ -269,6 +208,12 @@ independent work is exhausted; this skill does not require routine plan approval
   keep one slot for the manager. Each worker gets a leaf marker, task/plan version,
   owned files/worktree, relevant rules, selected model/effort, acceptance criteria
   and a concise return format: changes, checks, residual risks, paths/commit.
+  Aim for a 2-4 KiB task packet and a 300-word return; include additional code
+  when it is needed to verify a contract instead of silently truncating it.
+- Keep verbose catalogs, test logs and document JSON in private files. Return a
+  compact summary and relevant excerpts; read more when evidence requires it.
+  Poll an existing process only for changed state. Reuse unchanged catalog evidence
+  while fresh; refresh on expiry, a changed account or a model/control failure.
 - Check context capacity before dispatch. At 60% prepare a checkpoint; at 75%
   reduce irrelevant context and avoid large new tasks; at 85% prefer native
   compaction for the same task. These thresholds are advisory context safeguards.
