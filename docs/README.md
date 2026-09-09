@@ -27,6 +27,6 @@ and only the reference needed for their next action.
 | [Platforms](../skills/session-harness/references/platforms.md) | Operating-system support and limitations |
 | [Design sources](../skills/session-harness/references/sources.md) | Rationale and provider contracts |
 
-This documentation describes v0.2.0. Check `ai-session version` before following
+This documentation describes v0.2.1. Check `ai-session version` before following
 version-specific instructions. Existing installations retain their selected release
 unless the owner requests an update or has already enabled automatic maintenance.
