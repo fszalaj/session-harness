@@ -4,9 +4,9 @@ Shared instructions, current-model discovery, independent plan review and usage
 accounting for coding assistants. The strongest available model of the hosting
 provider manages substantive work; bounded workers normally use medium effort.
 Manager policy defaults to Extra High (`xhigh`), or the highest advertised level
-below `max` if unavailable. Reserve `max` for explicitly selected, extremely
-difficult tasks. The development launcher applies this default; published v0.2.0
-requires checking and adjusting the native effort control before work.
+below `max` if unavailable. Since v0.2.1, the launcher excludes `max` and `ultra`
+from default manager selection. Reserve `max` for explicitly selected, extremely
+difficult tasks through native controls.
 Two other provider families review the same plan independently. Models are resolved
 at runtime rather than pinned in policy.
 
@@ -24,7 +24,8 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-See [updates and rollback](docs/RELEASES.md).
+To select this release, run `ai-session update --version 0.2.1 --apply`, then
+restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
 release directory, the essential installation commands are:
@@ -72,6 +73,16 @@ unprotected. See [coordination](skills/session-harness/references/coordination.m
 Explicit observed mode accepts delayed counters and possible in-flight overshoot.
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
+
+| Client or route | Harness support in v0.2.1 |
+| --- | --- |
+| Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
+| Copilot CLI | Model inventory and quota metadata only; no harness launch/review adapter |
+| Cursor CLI | Advertised model inventory only; no verified personal quota or harness launch/review adapter |
+| Explicit APIs | Direct text requests with separate credentials and monetary authorization; no native client or automatic fallback |
+
+See [client adapter boundaries](skills/session-harness/references/clients.md).
+Recurring free API pools and mixed native/free routing are not included in v0.2.1.
 
 Version 0.2.0 adds account-bound owner confirmation of disabled Codex Auto top-up
 plus fresh zero-credit evidence; quota and admission controls still apply. It also

@@ -32,6 +32,11 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
+For v0.2.1, use `ai-session update --version 0.2.1 --apply`, then restart affected
+clients. The manager defaults to advertised `xhigh`, otherwise the highest
+supported level below `max`; `max` and `ultra` are excluded from default selection.
+Existing conversations keep their selected model and runtime until restarted.
+
 The same command selects an older release for rollback. A missing release, download
 failure, invalid archive or checksum mismatch stops before installation. Since
 v0.2.0, optional `auto-update` commands provide an

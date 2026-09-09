@@ -12,8 +12,9 @@ independent review, not a replacement for the clients' permission controls.
 Installed release maintenance uses `ai-session version`, `ai-session update --check`
 and the confirmed `ai-session update`. For exact rollback, use
 `ai-session update --version VERSION --apply`, replacing `VERSION` with the chosen
-published numeric version. Preserve private policy and usage history. Updates never
-follow `main`;
+published numeric version. For this release, run
+`ai-session update --version 0.2.1 --apply`, then restart affected clients.
+Preserve private policy and usage history. Updates never follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
 **Available in v0.2.0:** `ai-session auto-update` adds an explicit opt-in for automatic stable
 updates on macOS/Linux. Keep it disabled unless the owner selects it. Respect idle
@@ -37,9 +38,10 @@ Default the manager to Extra High (`xhigh`). If unavailable, select the highest
 advertised reasoning level below `max`, normally `high`. Use `max` only by explicit
 task-level selection for an extremely difficult task, then return to the default.
 Do not enable Codex `ultra` or Claude `ultracode` automatic orchestration by default.
-Effort labels are not comparable across providers. This default is a development
-change; published v0.2.0 still selects the highest standalone level. Check the
-[client adapter limits](references/clients.md) before launching an older release.
+Effort labels are not comparable across providers. Since v0.2.1, the launcher
+applies this default and excludes `max` and `ultra` from default selection.
+Use native controls for an explicit exception; there is no generic launcher
+`--effort` flag. Check the [client adapter limits](references/clients.md).
 Delegate execution with explicit current-tier model and medium effort; gathering normally uses low.
 Use a fresh leaf packet (in native spawn APIs, no full-history fork). Include only
 objective, owned files, relevant contracts and acceptance. Target 2-4 KiB input and

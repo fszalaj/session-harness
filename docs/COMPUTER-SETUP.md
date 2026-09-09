@@ -56,6 +56,9 @@ Use PowerShell 7.3+ or the Python launcher. See the
 [platform limits](../skills/session-harness/references/platforms.md), including
 unsupported native Windows Antigravity quota/terminal supervision.
 
+For an existing installation, select this release with
+`ai-session update --version 0.2.1 --apply`, then restart affected clients.
+
 ## Share one account across computers
 
 Set up one already trusted authority with the same authorized provider accounts.
@@ -115,16 +118,10 @@ Use `max` only for an extremely difficult task, selected explicitly in the nativ
 model/effort control, and return to the default afterwards. Worker effort remains
 medium, or low for gathering. Do not set a global worker effort override.
 
-The development launcher implements this manager default. Published v0.2.0 still
-selects the highest standalone level, so inspect and adjust its native effort
-control before work. Editing Markdown or a configuration file does not switch an
-already-running conversation. There is no new launcher `--effort` flag.
+Since v0.2.1, the launcher implements this manager default and excludes `max` and
+`ultra` from default selection. Editing Markdown or a configuration file does not
+switch an already-running conversation. There is no generic launcher `--effort` flag.
 
-Recurring free API pools and mixed native/free routing are separate development
-features, not included in published v0.2.0. A saved key or subscription does not
-enable them. A reviewed build needs explicit account evidence, no-paid-overage
-verification and one physical executor with a local ledger. Other computers may
-use its verified SSH interface; they do not receive the keys or clone accounting.
-Do not copy another user's free-account balances, evidence or configuration.
+Recurring free API pools and mixed native/free routing are not included in v0.2.1.
 Paid API use separately requires explicit monetary authorization. No setup path
 enables billing, automatic top-up or paid fallback.

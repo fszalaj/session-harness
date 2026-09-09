@@ -1,10 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.2.1
 
 - Default managers to advertised Extra High (`xhigh`), otherwise the highest
-  supported level below `max`. Reserve explicit `max` for extremely difficult
-  tasks. Document personal-computer setup and shared-account boundaries.
+  supported level below `max`. Exclude `max` and `ultra` from default selection;
+  reserve explicit `max` for extremely difficult tasks through native controls.
+- Document personal-computer setup, shared-account boundaries and the supported
+  native, inventory-only and explicit API routes. Recurring free API pools and
+  mixed native/free routing are not included in this release.
+- Update with `ai-session update --version 0.2.1 --apply`, then restart affected
+  clients. Existing sessions retain their selected model and runtime.
 
 ## 0.2.0
 

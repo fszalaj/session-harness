@@ -6,6 +6,13 @@ commands inspect metadata only; `review` and `launch --execute` invoke a model.
 For instruction filenames and skill paths, read the [client instruction map](instructions.md).
 Keep Gemini CLI, Antigravity CLI and their IDE interfaces separate.
 
+| Client or route | Harness support in v0.2.1 |
+| --- | --- |
+| Codex, Claude Code, Antigravity CLI | Native discovery, quota and launch/review adapters; execution requires admission and the isolation/platform controls below |
+| Copilot CLI | Authenticated model inventory and quota metadata only; no harness launch/review adapter |
+| Cursor CLI | Advertised model inventory only; personal quota and harness launch/review are unsupported |
+| Explicit APIs | Direct text requests with separate credentials and money admission; no native client execution or automatic fallback |
+
 With the selected skill directory (containing `SKILL.md`) as your working directory:
 
 ```sh
@@ -37,14 +44,12 @@ ranking; multiple candidates require explicit provider capability evidence. The
 helper refuses ambiguous manager ranking. Worker suggestions still require the
 manager to verify task fit, tools and cost.
 
-Use the exact runtime-selected ID with Extra High (`xhigh`) for the manager. The
-development selector chooses the highest advertised reasoning level below `max`
+Use the exact runtime-selected ID with Extra High (`xhigh`) for the manager. Since
+v0.2.1, the selector chooses the highest advertised reasoning level below `max`
 when `xhigh` is unavailable. Use `max` only for an extremely difficult task,
 selected explicitly through the client's supported model/effort control; return
-to the default afterwards. This does not add a launcher `--effort` option.
-Published v0.2.0 still selects `max` when advertised and excludes `ultra`; v0.1.2
-did not exclude `ultra`. Verify older releases' effective selection and change it
-with supported native controls before work. Codex `ultra` combines maximum
+to the default afterwards. There is no generic launcher `--effort` option.
+Default selection excludes both `max` and `ultra`. Codex `ultra` combines maximum
 reasoning with automatic delegation and remains outside the default policy.
 See [Codex models](https://learn.chatgpt.com/docs/models). Claude's `max` is a reasoning
 level, while `ultracode` is a separate orchestration mode. Effort labels across clients
@@ -90,7 +95,7 @@ unresolved. Never build a model list from a subscription name. A smaller alias s
 only a candidate: reject it if its resolved generation has been superseded under
 the current policy, and use the current manager model at lower effort instead.
 
-The development manager launcher defaults to advertised `xhigh`, otherwise the
+Since v0.2.1, the manager launcher defaults to advertised `xhigh`, otherwise the
 highest advertised reasoning level below `max`. Explicit `max` is reserved for
 extremely difficult tasks.
 Persistent `effortLevel` does not accept every CLI effort value. Do not put a max
@@ -211,6 +216,7 @@ OpenRouter direct text requests, follow [API and money setup](api-and-spend.md).
 These routes use separate credentials and explicit monetary caps. They do not
 consume a native subscription allowance or become an automatic fallback.
 Z.ai catalog discovery and generic model-specific API effort controls are unsupported.
+Recurring free API pools and mixed native/free routing are not included in v0.2.1.
 
 Native quota discovery is separate from paid-credit eligibility. **Since v0.2.0:**
 Codex supports a private owner confirmation that automatic top-up is disabled for the authenticated

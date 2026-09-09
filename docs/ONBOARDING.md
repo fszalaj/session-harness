@@ -9,7 +9,9 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. Do not reinstall from an arbitrary checkout.
+for an authorized version change. To select v0.2.1, run
+`ai-session update --version 0.2.1 --apply`, then restart affected clients.
+Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
 once and stay on that release's page. Record the selected tag. Download the named
@@ -251,8 +253,9 @@ protected paid execution.
 Select the strongest account-available hosting-provider model as manager at Extra
 High (`xhigh`), falling back to the highest advertised level below `max` if needed.
 Use `max` only by explicit task-level selection for an extremely difficult task.
-The development launcher applies this default; published v0.2.0 still selects the
-highest standalone level, so verify and adjust its native effort control before work. Use bounded fresh-context native workers at
+Since v0.2.1, the launcher applies this default and excludes `max` and `ultra` from
+default selection. Use native model/effort controls for an explicit exception;
+the launcher has no generic `--effort` flag. Use bounded fresh-context native workers at
 medium effort, low for gathering. Two distinct other-provider families review the
 same plan independently, normally at medium effort. Reconcile findings and report
 missing reviews accurately. Do not start a new harness cycle for trivial or leaf work.
