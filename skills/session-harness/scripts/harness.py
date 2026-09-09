@@ -1103,6 +1103,12 @@ def main(argv=None):
     if os.environ.get(LEAF_MARKER):
         print(json.dumps({"status": "recursion_blocked"}))
         return 2
+    if arguments and arguments[0] == 'onboard':
+        import onboard
+        return onboard.main(arguments[1:])
+    if len(arguments) >= 2 and arguments[1] == 'onboard':
+        import onboard
+        return onboard.main([arguments[0], *arguments[2:]])
     if arguments and arguments[0] == 'ollama':
         import local_ollama
         return local_ollama.main(arguments[1:])
@@ -1154,7 +1160,7 @@ def main(argv=None):
                           "api_services": api,
                           "runtime": {"path": RUNTIME_PATH, "sha256": RUNTIME_SHA256}}, indent=2))
         return 0
-    parser = argparse.ArgumentParser(description=__doc__, epilog="Management: configure, version, update, budget, usage, coordination, hooks, inventory, api, spend. Use COMMAND --help for options.")
+    parser = argparse.ArgumentParser(description=__doc__, epilog="Management: onboard [PROVIDER] (or PROVIDER onboard), configure, version, update, budget, usage, coordination, hooks, inventory, api, spend. Use COMMAND --help for options.")
     sub = parser.add_subparsers(dest="command", required=True)
     discover_parser = sub.add_parser("discover", help="Read CLI catalogs without model inference")
     discover_parser.add_argument("--session", choices=("auto", *PROVIDERS), default="auto")

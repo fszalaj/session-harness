@@ -13,7 +13,7 @@ Installed release maintenance uses `ai-session version`, `ai-session update --ch
 and the confirmed `ai-session update`. For exact rollback, use
 `ai-session update --version VERSION --apply`, replacing `VERSION` with the chosen
 published numeric version. For this release, run
-`ai-session update --version 0.3.2 --apply`, then restart affected clients.
+`ai-session update --version 0.4.0 --apply`, then restart affected clients.
 Preserve private policy and usage history. Updates never follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
 **Available in v0.2.0:** `ai-session auto-update` adds an explicit opt-in for automatic stable
@@ -22,6 +22,11 @@ maintenance, local overlay conflicts and private accounting; do not steal a lock
 to make an update proceed. Preserve existing owner opt-in settings.
 
 ## 0. Check resources before dispatch
+
+To add one provider, use the [interactive onboarding wizard](references/provider-onboarding.md):
+`ai-session onboard PROVIDER` or `ai-session PROVIDER onboard`. It uses installed
+adapter registries and preserves existing account policy. The user completes its
+real authorization prompts; agents do not submit answers on the user's behalf.
 
 Run `ai-session configure` (alias: `setup`) before inference. For multiple computers, select one trusted
 SSH quota authority on every participating client; local ledgers are not a shared

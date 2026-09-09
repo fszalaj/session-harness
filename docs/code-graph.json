@@ -1,18 +1,18 @@
 {
-  "content_sha256": "0a2845c436c787e26ba9f81316ca210c44f647042f019e0f1f2aa4cfa42bd231",
+  "content_sha256": "d6c47fe01cd3e4d9edcaf0704a41da0045f0b27a8efc4e3b357c5c90ff7e3f9c",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 2855,
+    "edge_count": 2933,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1514,
+    "node_count": 1549,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
       "scripts/code_graph.py": "fa7c041129167808a7a3cc44fed5534c57ba31da2bf42cddc470f549e3fd58b3",
       "scripts/code_graph.test.py": "5baef7e0c95ef579828bfbceab61c7b3792c05c160714378bdfe6580ce40d423",
-      "scripts/install-agent-profile.py": "339f668244336f3eacbd84eb29e81a686bcb7e6ef6249f154e90259e8d5c89c5",
-      "scripts/install-agent-profile.test.py": "95a892a7e2cd4fd4762dea0abe95922b806b529fe236b45ead4c0c7149b8fcc5",
+      "scripts/install-agent-profile.py": "023ef5a194418eccdf6528bbae28765d0d3b5b2ed56f5c895bb7dbf8321b832e",
+      "scripts/install-agent-profile.test.py": "2b18560be5d51e1f9dbb88eadb57b51d8f55767cbd4530546da5fc70da7fae3e",
       "scripts/release.py": "711b3c849d21285dd7932338e1ed145e9e5a1566dfc7c6d7e3f0876f424c53db",
       "scripts/release.test.py": "c0cabc31299955487c013852d4d1956b4c05c785ac7dd78927a360960027dcaa",
       "scripts/test.py": "ea279177805e95a35922f421f8e167cadf0d275cbcb851535aa9a4e8550fe38a",
@@ -40,11 +40,12 @@
       "skills/session-harness/scripts/free_access.py": "2369641cad5089366ba901b7694d72941c3bc8564b1e2cad64a22d1acd7856ab",
       "skills/session-harness/scripts/free_access_cli.py": "96bfaa0becc7cd0d377548d15565ff2082a3961ed69e5c660869a71dd6db1ee8",
       "skills/session-harness/scripts/free_accounts.py": "74742308c585d19ca3b697140a42be076f897970aaf285cdbc41c9a0ee8db14c",
-      "skills/session-harness/scripts/harness.py": "7935f95d17a92d13c339722679d48755472931e19237e5b62b8e4c3fe5ab8b7d",
+      "skills/session-harness/scripts/harness.py": "c25b8db73e746f32ee665fd29ddf5087300856d776270be6296a8942058a8193",
       "skills/session-harness/scripts/inventory.py": "5fec32fbb6b1f974f2c031d64baa53e8bb35ed6c98e54620cf95156c4e281e41",
       "skills/session-harness/scripts/local_ollama.py": "688a50049dac1a44f9d6876bd1fc466a24f274180a148402c2be3ef63796fb59",
       "skills/session-harness/scripts/model_scope.py": "028bbeaeaf3a16b8be86e8a03a0e0d0c6f10fc4932c0b45ab58bdd7649837d7b",
       "skills/session-harness/scripts/native_quota.py": "013a8450940d8c6f9871e1423e82667b760279978badedc948b9531ce5d03cad",
+      "skills/session-harness/scripts/onboard.py": "dec95abb87a5e220fa37a5d715392593c1b586727e997fa3018a2118a7994dad",
       "skills/session-harness/scripts/optional_clients.py": "6a8192702eb2f0a7b9722a5352e6dcbcd628456ed3bbf2f75cc1217ed36e496c",
       "skills/session-harness/scripts/platform_runtime.py": "874a3adcf735cd2620ea3df2ad2eaef3c88c764acb58294e1adcff0361c3cbec",
       "skills/session-harness/scripts/quota.py": "bb30e9b2ac066dc2aa5540740a22359c681f85ef144fe153a2d9444a1b60f05a",
@@ -82,6 +83,7 @@
       "skills/session-harness/scripts/test_model_constraints.py": "adb9d866adf67814e85500173721687b703cdabecc8d9766ed5445a25229b8af",
       "skills/session-harness/scripts/test_model_scope.py": "1028f122ad201846f3c451ca1de17e6f41626b8e18ee726e7c4f90e0b731cb17",
       "skills/session-harness/scripts/test_native_quota.py": "88dbbdec4498d9437b5b8e30891984362aec08cd377065fb7a6244f50ba359a7",
+      "skills/session-harness/scripts/test_onboard.py": "1a76ef5324e79e86fa36919a23fc6366185f45a58f0f22919ba1e5172592596b",
       "skills/session-harness/scripts/test_optional_clients.py": "39bc13b222daf9636301b2df66f648d1c860dad0218ca553bfb9051b0d938766",
       "skills/session-harness/scripts/test_platform_runtime.py": "361f83baa81bce13abe74186090be8ae90bcf49d519a24f68b233842a9204df5",
       "skills/session-harness/scripts/test_quota.py": "03a3a79e920b81e41f306568c630558b43a51346d33a3cb5528fb9477a044ebd",
@@ -3746,6 +3748,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/harness.py",
+      "target": "module:skills/session-harness/scripts/onboard.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/harness.py",
       "target": "module:skills/session-harness/scripts/platform_runtime.py"
     },
     {
@@ -4521,6 +4529,162 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/native_quota.py",
       "target": "pyfunc:skills/session-harness/scripts/native_quota.py:validate_native_limit"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:argparse"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:copy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:sqlite3"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:sys"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "extmodule:time"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/api_providers.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/coordination.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/free_accounts.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/harness.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/local_ollama.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/quota.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "module:skills/session-harness/scripts/setup_environment.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyclass:skills/session-harness/scripts/onboard.py:Input"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:account_summary"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:accounts"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:authorize"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:choose"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:free"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:local"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:main"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:registry"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/onboard.py",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:yes"
     },
     {
       "confidence": "EXTRACTED",
@@ -7597,6 +7761,126 @@
     {
       "confidence": "EXTRACTED",
       "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:contextlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:io"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:sqlite3"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:time"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/coordination.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/harness.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/local_ollama.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/onboard.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/quota.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/spend.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "module:skills/session-harness/scripts/test_free_accounts.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_onboard.py",
+      "target": "pyclass:skills/session-harness/scripts/test_onboard.py:Terminal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_optional_clients.py",
       "target": "extmodule:json"
     },
@@ -9225,6 +9509,24 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/inventory.py:MetadataRPC",
       "target": "pymethod:skills/session-harness/scripts/inventory.py:MetadataRPC.request"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/onboard.py:Input",
+      "target": "pymethod:skills/session-harness/scripts/onboard.py:Input.__init__"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/onboard.py:Input",
+      "target": "pymethod:skills/session-harness/scripts/onboard.py:Input.isatty"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/onboard.py:Input",
+      "target": "pymethod:skills/session-harness/scripts/onboard.py:Input.readline"
     },
     {
       "confidence": "EXTRACTED",
@@ -12861,6 +13163,114 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_native_quota.py:NativeTests",
       "target": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_windows_antigravity_rejects_before_discovery_or_spawn"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.existing"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.run_onboard"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.snapshot"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_api_preserves_existing_caps_and_auth_and_redacts_key"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_cancel_and_eof_leave_existing_bytes_and_new_home_unchanged"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_core_both_spellings_dispatch_to_one_wizard"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_disabled_fresh_free_import_skips_enable_prompt_and_redacts_shape_errors"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_free_import_preserves_other_rows_and_cancel"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_free_stale_import_remote_executor_and_malformed_data_do_not_write"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_local_catalog_is_bounded_without_setup_or_fallback"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_missing_key_and_remote_api_preserve_state"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_native_addition_preserves_all_other_state"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_native_auth_failure_and_exception_are_sanitized_before_writes"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_native_remote_authority_stays_shared"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_new_api_requires_explicit_positive_cap_and_money_mode"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_non_tty_unknown_and_leaf_fail_without_storage_access"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_onboard.py:Terminal",
+      "target": "pymethod:skills/session-harness/scripts/test_onboard.py:Terminal.isatty"
     },
     {
       "confidence": "EXTRACTED",
@@ -16921,6 +17331,66 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:authorize",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:yes"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:free",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:account_summary"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:free",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:accounts"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:free",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:yes"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:local",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:yes"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:authorize"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:choose"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:free"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:local"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/onboard.py:main",
+      "target": "pyfunc:skills/session-harness/scripts/onboard.py:registry"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/optional_clients.py:discover",
       "target": "pyfunc:skills/session-harness/scripts/optional_clients.py:parse_ollama"
     },
@@ -17667,6 +18137,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/onboard.py",
+      "label": "skills/session-harness/scripts/onboard.py",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/optional_clients.py",
       "label": "skills/session-harness/scripts/optional_clients.py",
       "source_file": "skills/session-harness/scripts/optional_clients.py",
@@ -17926,6 +18403,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_onboard.py",
+      "label": "skills/session-harness/scripts/test_onboard.py",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/test_optional_clients.py",
       "label": "skills/session-harness/scripts/test_optional_clients.py",
       "source_file": "skills/session-harness/scripts/test_optional_clients.py",
@@ -18050,7 +18534,7 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:CheckedCopyTests",
       "label": "CheckedCopyTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L390",
+      "source_location": "L394",
       "type": "class"
     },
     {
@@ -18066,7 +18550,7 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:RepositoryProfileContractTests",
       "label": "RepositoryProfileContractTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L335",
+      "source_location": "L339",
       "type": "class"
     },
     {
@@ -18187,6 +18671,14 @@
       "label": "NativeQuotaError",
       "source_file": "skills/session-harness/scripts/native_quota.py",
       "source_location": "L18",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/onboard.py:Input",
+      "label": "Input",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L35",
       "type": "class"
     },
     {
@@ -18607,6 +19099,22 @@
     },
     {
       "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_onboard.py:OnboardTests",
+      "label": "OnboardTests",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L25",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_onboard.py:Terminal",
+      "label": "Terminal",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L20",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
       "id": "pyclass:skills/session-harness/scripts/test_optional_clients.py:OptionalClientsTests",
       "label": "OptionalClientsTests",
       "source_file": "skills/session-harness/scripts/test_optional_clients.py",
@@ -18810,7 +19318,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:_apply_copy_locked",
       "label": "_apply_copy_locked",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L207",
+      "source_location": "L209",
       "type": "function"
     },
     {
@@ -18818,7 +19326,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:apply_copy",
       "label": "apply_copy",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L182",
+      "source_location": "L184",
       "type": "function"
     },
     {
@@ -18826,7 +19334,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:apply_install",
       "label": "apply_install",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L480",
+      "source_location": "L482",
       "type": "function"
     },
     {
@@ -18834,7 +19342,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:copy_state_path",
       "label": "copy_state_path",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L111",
+      "source_location": "L113",
       "type": "function"
     },
     {
@@ -18842,7 +19350,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:file_digest",
       "label": "file_digest",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L115",
+      "source_location": "L117",
       "type": "function"
     },
     {
@@ -18858,7 +19366,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:install_release",
       "label": "install_release",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L345",
+      "source_location": "L347",
       "type": "function"
     },
     {
@@ -18866,7 +19374,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:installation_state_path",
       "label": "installation_state_path",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L545",
+      "source_location": "L547",
       "type": "function"
     },
     {
@@ -18890,7 +19398,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:launcher_files",
       "label": "launcher_files",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L97",
+      "source_location": "L99",
       "type": "function"
     },
     {
@@ -18906,7 +19414,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:main",
       "label": "main",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L585",
+      "source_location": "L587",
       "type": "function"
     },
     {
@@ -18914,7 +19422,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:plan_copy",
       "label": "plan_copy",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L119",
+      "source_location": "L121",
       "type": "function"
     },
     {
@@ -18922,7 +19430,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:plan_install",
       "label": "plan_install",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L382",
+      "source_location": "L384",
       "type": "function"
     },
     {
@@ -18930,7 +19438,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:private_backup_run",
       "label": "private_backup_run",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L459",
+      "source_location": "L461",
       "type": "function"
     },
     {
@@ -18938,7 +19446,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:read_installation_state",
       "label": "read_installation_state",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L549",
+      "source_location": "L551",
       "type": "function"
     },
     {
@@ -18946,7 +19454,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:release_hash",
       "label": "release_hash",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L312",
+      "source_location": "L314",
       "type": "function"
     },
     {
@@ -18954,7 +19462,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:release_sources",
       "label": "release_sources",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L257",
+      "source_location": "L259",
       "type": "function"
     },
     {
@@ -18962,7 +19470,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:save_installation_state",
       "label": "save_installation_state",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L563",
+      "source_location": "L565",
       "type": "function"
     },
     {
@@ -18970,7 +19478,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:set_permissions",
       "label": "set_permissions",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L90",
+      "source_location": "L92",
       "type": "function"
     },
     {
@@ -18978,7 +19486,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:verify_release",
       "label": "verify_release",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L320",
+      "source_location": "L322",
       "type": "function"
     },
     {
@@ -18986,7 +19494,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:windows_security",
       "label": "windows_security",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L78",
+      "source_location": "L80",
       "type": "function"
     },
     {
@@ -18994,7 +19502,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:write_manifest",
       "label": "write_manifest",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L472",
+      "source_location": "L474",
       "type": "function"
     },
     {
@@ -21287,6 +21795,78 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:account_summary",
+      "label": "account_summary",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L143",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:accounts",
+      "label": "accounts",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L135",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:authorize",
+      "label": "authorize",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L70",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:choose",
+      "label": "choose",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L49",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:free",
+      "label": "free",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L154",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:local",
+      "label": "local",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L191",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:main",
+      "label": "main",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L201",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:registry",
+      "label": "registry",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L23",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/onboard.py:yes",
+      "label": "yes",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L62",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/optional_clients.py:discover",
       "label": "discover",
       "source_file": "skills/session-harness/scripts/optional_clients.py",
@@ -22082,7 +22662,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.install",
       "label": "CheckedCopyTests.install",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L406",
+      "source_location": "L410",
       "type": "method"
     },
     {
@@ -22090,7 +22670,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.setUp",
       "label": "CheckedCopyTests.setUp",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L391",
+      "source_location": "L395",
       "type": "method"
     },
     {
@@ -22098,7 +22678,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
       "label": "CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L411",
+      "source_location": "L415",
       "type": "method"
     },
     {
@@ -22106,7 +22686,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "label": "CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L441",
+      "source_location": "L445",
       "type": "method"
     },
     {
@@ -22114,7 +22694,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_modified_copy_is_preserved",
       "label": "CheckedCopyTests.test_modified_copy_is_preserved",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L452",
+      "source_location": "L456",
       "type": "method"
     },
     {
@@ -22122,7 +22702,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "label": "CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L473",
+      "source_location": "L477",
       "type": "method"
     },
     {
@@ -22130,7 +22710,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "label": "CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L466",
+      "source_location": "L470",
       "type": "method"
     },
     {
@@ -22138,7 +22718,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "label": "CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L423",
+      "source_location": "L427",
       "type": "method"
     },
     {
@@ -22146,7 +22726,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "label": "CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L459",
+      "source_location": "L463",
       "type": "method"
     },
     {
@@ -22186,7 +22766,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_concurrent_managed_change_is_preserved",
       "label": "ProfileInstallationTests.test_concurrent_managed_change_is_preserved",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L215",
+      "source_location": "L219",
       "type": "method"
     },
     {
@@ -22194,7 +22774,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_corrupted_existing_release_is_not_overwritten_or_relinked",
       "label": "ProfileInstallationTests.test_corrupted_existing_release_is_not_overwritten_or_relinked",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L322",
+      "source_location": "L326",
       "type": "method"
     },
     {
@@ -22250,7 +22830,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_private_policy_survives_upgrades_and_missing_policy_blocks",
       "label": "ProfileInstallationTests.test_private_policy_survives_upgrades_and_missing_policy_blocks",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L282",
+      "source_location": "L286",
       "type": "method"
     },
     {
@@ -22266,7 +22846,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_reinstall_preserves_environment_setup_and_ledger_bytes",
       "label": "ProfileInstallationTests.test_reinstall_preserves_environment_setup_and_ledger_bytes",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L193",
+      "source_location": "L197",
       "type": "method"
     },
     {
@@ -22274,7 +22854,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_survives_source_removal_and_excludes_unrelated_files",
       "label": "ProfileInstallationTests.test_release_survives_source_removal_and_excludes_unrelated_files",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L227",
+      "source_location": "L231",
       "type": "method"
     },
     {
@@ -22282,7 +22862,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_update_and_rollback_keep_private_policy_and_accounting",
       "label": "ProfileInstallationTests.test_release_update_and_rollback_keep_private_policy_and_accounting",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L296",
+      "source_location": "L300",
       "type": "method"
     },
     {
@@ -22290,7 +22870,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_source_change_creates_a_new_release_and_preserves_the_old_release",
       "label": "ProfileInstallationTests.test_source_change_creates_a_new_release_and_preserves_the_old_release",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L272",
+      "source_location": "L276",
       "type": "method"
     },
     {
@@ -22298,7 +22878,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_standalone_legal_artifacts_and_incomplete_source_protection",
       "label": "ProfileInstallationTests.test_standalone_legal_artifacts_and_incomplete_source_protection",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L257",
+      "source_location": "L261",
       "type": "method"
     },
     {
@@ -22314,7 +22894,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:RepositoryProfileContractTests.test_shared_entrypoints_and_native_roles_keep_the_profile_contract",
       "label": "RepositoryProfileContractTests.test_shared_entrypoints_and_native_roles_keep_the_profile_contract",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L336",
+      "source_location": "L340",
       "type": "method"
     },
     {
@@ -22611,6 +23191,30 @@
       "label": "MetadataRPC.request",
       "source_file": "skills/session-harness/scripts/inventory.py",
       "source_location": "L167",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/onboard.py:Input.__init__",
+      "label": "Input.__init__",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L36",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/onboard.py:Input.isatty",
+      "label": "Input.isatty",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L39",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/onboard.py:Input.readline",
+      "label": "Input.readline",
+      "source_file": "skills/session-harness/scripts/onboard.py",
+      "source_location": "L42",
       "type": "method"
     },
     {
@@ -27459,6 +28063,150 @@
       "label": "NativeTests.test_windows_antigravity_rejects_before_discovery_or_spawn",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
       "source_location": "L238",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.existing",
+      "label": "OnboardTests.existing",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L45",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.run_onboard",
+      "label": "OnboardTests.run_onboard",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L36",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.setUp",
+      "label": "OnboardTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L26",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.snapshot",
+      "label": "OnboardTests.snapshot",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L58",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_api_preserves_existing_caps_and_auth_and_redacts_key",
+      "label": "OnboardTests.test_api_preserves_existing_caps_and_auth_and_redacts_key",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L111",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_cancel_and_eof_leave_existing_bytes_and_new_home_unchanged",
+      "label": "OnboardTests.test_cancel_and_eof_leave_existing_bytes_and_new_home_unchanged",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L75",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_core_both_spellings_dispatch_to_one_wizard",
+      "label": "OnboardTests.test_core_both_spellings_dispatch_to_one_wizard",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L235",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_disabled_fresh_free_import_skips_enable_prompt_and_redacts_shape_errors",
+      "label": "OnboardTests.test_disabled_fresh_free_import_skips_enable_prompt_and_redacts_shape_errors",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L220",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_free_import_preserves_other_rows_and_cancel",
+      "label": "OnboardTests.test_free_import_preserves_other_rows_and_cancel",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L171",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_free_stale_import_remote_executor_and_malformed_data_do_not_write",
+      "label": "OnboardTests.test_free_stale_import_remote_executor_and_malformed_data_do_not_write",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L193",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_local_catalog_is_bounded_without_setup_or_fallback",
+      "label": "OnboardTests.test_local_catalog_is_bounded_without_setup_or_fallback",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L158",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_missing_key_and_remote_api_preserve_state",
+      "label": "OnboardTests.test_missing_key_and_remote_api_preserve_state",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L97",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_native_addition_preserves_all_other_state",
+      "label": "OnboardTests.test_native_addition_preserves_all_other_state",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L63",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_native_auth_failure_and_exception_are_sanitized_before_writes",
+      "label": "OnboardTests.test_native_auth_failure_and_exception_are_sanitized_before_writes",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L138",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_native_remote_authority_stays_shared",
+      "label": "OnboardTests.test_native_remote_authority_stays_shared",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L151",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_new_api_requires_explicit_positive_cap_and_money_mode",
+      "label": "OnboardTests.test_new_api_requires_explicit_positive_cap_and_money_mode",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L124",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:OnboardTests.test_non_tty_unknown_and_leaf_fail_without_storage_access",
+      "label": "OnboardTests.test_non_tty_unknown_and_leaf_fail_without_storage_access",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L89",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_onboard.py:Terminal.isatty",
+      "label": "Terminal.isatty",
+      "source_file": "skills/session-harness/scripts/test_onboard.py",
+      "source_location": "L21",
       "type": "method"
     },
     {

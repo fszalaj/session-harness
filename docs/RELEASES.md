@@ -5,6 +5,16 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.4.0
+
+Add one provider through `ai-session onboard PROVIDER` or `ai-session PROVIDER onboard`.
+The interactive wizard discovers installed route types, reuses existing setup and
+preserves other services and account policy. It supports native/API authorization,
+selected-provider imports of verified free configurations and local Ollama checks.
+See [provider onboarding](../skills/session-harness/references/provider-onboarding.md)
+for authentication, incomplete results and shared-authority boundaries. No inference,
+secret store, model download or provider billing change is added.
+
 ## 0.3.2
 
 The installed skill and personal profile now use one [dynamic session-start procedure](../skills/session-harness/references/session-start.md).
@@ -58,7 +68,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.3.2, use `ai-session update --version 0.3.2 --apply`, then restart affected
+For v0.4.0, use `ai-session update --version 0.4.0 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.
