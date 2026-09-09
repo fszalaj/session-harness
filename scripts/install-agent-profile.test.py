@@ -185,10 +185,14 @@ class ProfileInstallationTests(unittest.TestCase):
         self.assertEqual(json.loads(completed.stdout), ["launch", "codex", "--execute", "--", "resume", "--last"])
         for arguments in (["inventory"], ["free", "status"], ["budget", "add", "codex", "5", "--id", payload],
                           ["usage", "status", "claude"], ["setup", "--status"], ["setup"],
-                          ["configure", "--status"], ["version"], ["update", "--check"],
+                          ["configure", "--status"], ["onboard", "--list"], ["onboard", "claude"], ["version"], ["update", "--check"],
                           ["discover", "--session", "claude"], ["review", "codex"], ["--help"], ["-h"]):
             completed = subprocess.run([str(launcher), *arguments], capture_output=True, text=True, check=True)
             self.assertEqual(json.loads(completed.stdout), arguments)
+        for provider in ('claude', 'gemini', 'ollama', 'groq'):
+            completed = subprocess.run([str(launcher), provider, 'onboard', '--list'],
+                                       capture_output=True, text=True, check=True)
+            self.assertEqual(json.loads(completed.stdout), ['onboard', provider, '--list'])
 
     def test_reinstall_preserves_environment_setup_and_ledger_bytes(self):
         root = INSTALLER.parents[1]

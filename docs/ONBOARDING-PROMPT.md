@@ -25,7 +25,8 @@ Follow the Windows section when applicable. Keep one canonical policy/skills roo
 scope, supported discovery aliases and project-owned customizations. Read the linked
 instruction/platform guides for each detected client; local files do not configure cloud workers.
 
-Walk me through ai-session configure interactively; never authorize services with
+Walk me through ai-session onboard PROVIDER for one provider, or ai-session configure
+for full account settings, interactively; never authorize services with
 --yes on my behalf. Preserve settings, authentication, budgets, grants, history and
 quota mode. Read the coordination and budget references for shared accounts and
 policy choices; read API/money guidance only if paid use is requested. Do not enable

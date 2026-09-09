@@ -9,8 +9,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.3.2, run
-`ai-session update --version 0.3.2 --apply`, then restart affected clients.
+for an authorized version change. To select v0.4.0, run
+`ai-session update --version 0.4.0 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -126,7 +126,15 @@ Restart affected clients to reload instructions. The installer also adds a globa
 rule in `~/.cursor/rules/session-harness.mdc`. Local installation does not configure
 remote/cloud workers or editor inline completions.
 
-## 5. Configure with the owner
+## 5. Configure interactively
+
+For one provider, run `ai-session onboard PROVIDER` (or `ai-session PROVIDER onboard`).
+Omit the name to choose from supported adapters. Follow the
+[provider wizard](../skills/session-harness/references/provider-onboarding.md) for native,
+API, recurring free and local routes. It adds the selected service while retaining
+existing settings; missing sign-in or API key stops before a new authorization is saved.
+The user answers the final confirmation. Use the full configurator below for
+intentional changes to account-wide settings.
 
 ```sh
 ai-session configure

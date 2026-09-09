@@ -25,6 +25,7 @@ this procedure adds no inference, background polling or new account authorizatio
    configured API, use `ai-session api models SERVICE` and `ai-session spend status`
    on its authority; for a configured free route, use `ai-session free status` and
    its catalog command from `ai-session free --help`. Use the current route reference.
+   Use the [provider wizard](provider-onboarding.md) when the user wants to add a route.
    A public catalog or saved key is not authorization. Do not dump credentials,
    enable billing, or discover unrelated accounts. Local models have their own
    explicit catalog and residency checks (`ai-session ollama models`).

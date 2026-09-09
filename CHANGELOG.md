@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+- Add interactive per-provider onboarding with provider-first and command-first forms.
+- Discover access routes from installed registries; preserve existing service selections and account policy.
+- Reuse native sign-in, API environment keys, verified free-account imports and local Ollama metadata.
+- Keep cancellation, missing authentication and noninteractive calls from creating authorization.
+
 ## 0.3.2
 
 - Add one canonical dynamic session-start procedure and reusable task prompt to the
