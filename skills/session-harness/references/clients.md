@@ -227,6 +227,9 @@ to a task; do not load an unrelated plugin's skill merely because it is installe
 
 For OpenAI, Anthropic, Gemini, xAI/Grok, DeepSeek, Kimi/Moonshot, Z.ai/GLM and
 OpenRouter direct text requests, follow [API and money setup](api-and-spend.md).
+Development builds also offer a [reviewed coding profile](coding-models.md) through
+OpenRouter for Kimi, GLM, DeepSeek, MiniMax and Qwen. Its live catalog filter and
+supervised text execution do not add a native client adapter or independent review.
 These routes use separate credentials and explicit monetary caps. They do not
 consume a native subscription allowance or become an automatic fallback.
 Z.ai catalog discovery and generic model-specific API effort controls are unsupported.

@@ -176,6 +176,12 @@ separate money mode and bounded dispatch. Never reveal keys, buy credits, enable
 automatic reload or infer API entitlement from a subscription. Installation itself
 creates no paid allowance and changes no authentication.
 
+Development builds offer a [reviewed coding profile](../skills/session-harness/references/coding-models.md)
+for five additional model families through one OpenRouter account. Inspect it with
+`ai-session api coding-models` before choosing an exact ID. Follow the guide to add
+private key delivery and explicit API money authorization; public catalog access
+does not establish account entitlement. Keep account records out of project docs.
+
 For development installations supporting `balance`, an owner requesting even native
 subscription use can enable [shared fractional pacing](../skills/session-harness/references/balancing.md).
 Use only configured services with protected execution adapters. API money budgets

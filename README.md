@@ -3,8 +3,8 @@
 Shared instructions, current-model discovery, independent plan review and usage
 accounting for coding assistants. The strongest available model of the hosting
 provider manages substantive work; bounded workers normally use medium effort.
-Two other provider families review the same plan independently. Models are resolved
-at runtime rather than pinned in policy.
+Two other provider families review the same plan independently. Native role models
+are resolved at runtime from current client capabilities.
 
 ## Start here
 
@@ -111,6 +111,19 @@ Development builds keep model-specific and common Claude allowances separate. A
 Fable-only stop can select current Opus and resume the exact protected conversation
 after confirmed cleanup. Common quota and configured role restrictions still apply.
 See [model allowances and recovery](skills/session-harness/references/model-allowances.md).
+
+## Add reviewed coding models (development)
+
+The optional [coding profile](skills/session-harness/references/coding-models.md)
+adds Kimi, GLM, DeepSeek, MiniMax and Qwen candidates through OpenRouter. Run
+`ai-session api coding-models` to intersect the reviewed allowlist with fresh public
+metadata. Review expiry, missing capabilities and unapproved variants block selection.
+
+Execution with `ai-session api coding-run` requires an OpenRouter key, explicit API
+setup and a monthly money budget. It returns supervised text work for manager
+inspection. API billing stays separate from native subscription balancing, and
+installation does not enable paid inference. The guide explains what to configure;
+keep passwords, keys and deployment records private.
 
 ## Find the relevant guide
 

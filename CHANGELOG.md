@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a reviewed coding profile for Kimi, GLM, DeepSeek, MiniMax and Qwen through
+  OpenRouter. Intersect expiring evidence with fresh catalog capabilities and prices;
+  reject unreviewed variants and returned-model mismatches. Keep supervised text
+  execution behind existing API setup and monetary admission, separate from native
+  subscription balancing. Account setup and secret delivery remain private.
+
 - Add opt-in native subscription balancing and editable model/role supervision,
   with shared accounting and separate API monetary authorization.
 - Explain interactive quota stops after restoring the terminal display. Preserve

@@ -130,6 +130,10 @@ third-party catalog access alone does not add a balancing execution route. Local
 Ollama models are not a subscription budget. Unsupported configured services and
 excluded API services appear explicitly in balance status.
 
+The development [reviewed coding profile](coding-models.md) adds explicit OpenRouter
+text work across five model families. It remains in the separate API money ledger;
+`api coding-run` does not consume or balance native subscription allowances.
+
 For a multi-model platform, distinguish the billing service, its account pool, the
 requested and observed model IDs, and the model's vendor. Claude through Copilot
 draws on Copilot resources, not the direct Claude subscription. Two Claude models

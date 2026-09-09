@@ -23,6 +23,7 @@ and only the reference needed for their next action.
 | [Budgets](../skills/session-harness/references/budgets.md) | Calendars, daily allocation, reserves and grants |
 | [Coordination](../skills/session-harness/references/coordination.md) | Shared authorities, capacity and stopped-owner recovery |
 | [API and spend](../skills/session-harness/references/api-and-spend.md) | Paid-route authorization, pricing and liability |
+| [Coding models (development)](../skills/session-harness/references/coding-models.md) | Reviewed candidates, live eligibility and supervised OpenRouter work |
 | [Reviews](../skills/session-harness/references/review-protocol.md) | Independent verdicts, packets and deadlines |
 | [Platforms](../skills/session-harness/references/platforms.md) | Operating-system support and limitations |
 | [Design sources](../skills/session-harness/references/sources.md) | Rationale and provider contracts |

@@ -1,11 +1,11 @@
 {
-  "content_sha256": "a345851ea182975055d25d78dd415e653662bd14cc1d22454ac44423b85b304e",
+  "content_sha256": "b776d5112f158b5e9246d1bd9089916e3099bac34936c3f1b5d9e9f4476743a2",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 2463,
+    "edge_count": 2526,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1328,
+    "node_count": 1364,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -17,7 +17,7 @@
       "scripts/release.test.py": "c0cabc31299955487c013852d4d1956b4c05c785ac7dd78927a360960027dcaa",
       "scripts/test.py": "ea279177805e95a35922f421f8e167cadf0d275cbcb851535aa9a4e8550fe38a",
       "skills/session-harness/scripts/agy_quota.py": "21e1f1d597b6e76acdcfa36c22437e9689a5b115ea83538508966a217e25829e",
-      "skills/session-harness/scripts/api_execution.py": "e8baf738b118fec39a04a3d1798acd5b4964c4bf22ab11dc5d8e33154b1f6b65",
+      "skills/session-harness/scripts/api_execution.py": "d32ac415aea843ed15fb2826f2a0293a1d595831b774e9fc2bde1053ed06a34d",
       "skills/session-harness/scripts/api_providers.py": "274cea4c40c494a18895ba346af9c7ec16ff8f191486157a04df4692302cb687",
       "skills/session-harness/scripts/api_transport.py": "3e06e183260978018619b8b2fe4d4dfa3d0a0961273e360cfb687789f884546c",
       "skills/session-harness/scripts/auto_install.py": "d706fea12603b9e9d0179ad93a9ba1c352948d7c3940df8316c0a6741f4e713c",
@@ -31,6 +31,7 @@
       "skills/session-harness/scripts/claude_gate.py": "25c9a193f40bab156d5b69a77b5eba9075f820ccf930ce7bba466e809fabc61f",
       "skills/session-harness/scripts/claude_models.py": "4f3978013faea78ec36b4bd769fbd0589d57dc5a4e3ae21a2fe5fd1b35756098",
       "skills/session-harness/scripts/claude_session.py": "d43e869e5c90e50d828e2014c94490590791f48e3041d48b3c794ecb93a52963",
+      "skills/session-harness/scripts/coding_models.py": "76f740e86f58142111fb576f64c2d217c8ad6efb396c5d43b1b8501845d1db56",
       "skills/session-harness/scripts/coordination.py": "53436f5baed7cb50064eb97db4379167ce2f184b653c40d569fbc27c6b858d82",
       "skills/session-harness/scripts/credits.py": "9a57841b5faa96898b0e2cfae69ea5d836f0d03b7e0f130df474cce0cb2075d4",
       "skills/session-harness/scripts/harness.py": "51bac28a36c84cbc2214daaa5026518b3d5a722ddbd8cdac3a503019f36379fd",
@@ -59,6 +60,7 @@
       "skills/session-harness/scripts/test_budget_unknown_reset.py": "5120bb55cba23b45ec3f5d6f37d9559aed33027c5798d3b333c51b789de94643",
       "skills/session-harness/scripts/test_claude_admission.py": "1385d13d78c9095989359fd57b9f414fdc3241841aec370e2a212ab2d8fbe1fe",
       "skills/session-harness/scripts/test_claude_models.py": "297e16906baf5323fe13e03e8ccb2c69fe5e20f53edc362399ff4732eb97ba60",
+      "skills/session-harness/scripts/test_coding_models.py": "4fca5d2cff8c375e808f1720be5465c400c662296efa8116090bdf00510867fe",
       "skills/session-harness/scripts/test_coordination.py": "d90066dc72b2519703e5c3ac8559fb9bfec5396c921800ffc5bf5690ff209217",
       "skills/session-harness/scripts/test_credits.py": "84c4d7f9d135f3bed9ca0a19065657ab9e8e7bf34cf98965395ee66c911568ef",
       "skills/session-harness/scripts/test_harness.py": "036183c5b63a90da92c586f03604a37850c19c2da583050818a877f56467993b",
@@ -76,7 +78,7 @@
       "skills/session-harness/scripts/test_setup_environment.py": "f2b25a674f45c725f5c097139742b3c94ab8afd10d3fe12a2c7a2b1527ec3266",
       "skills/session-harness/scripts/test_spend.py": "89219080c1b1561e61c74d4a9f1d98fa2237f849e11ceede30c20cb050747d52",
       "skills/session-harness/scripts/test_spend_pacing.py": "a9fd80c394f38a3a4337fd1e79c5d4eb8f916a549ea3234825eed5e95db34012",
-      "skills/session-harness/scripts/test_supervision.py": "0e3f801cc51ae68e4e47f4a6b67c3f683704ea5e774de20e93158f7f645cfd56",
+      "skills/session-harness/scripts/test_supervision.py": "da773ca23beadf3363da6bd9a9f4759d83109e4ffbda373548ae1f76eea34074",
       "skills/session-harness/scripts/test_usage.py": "1090af40fd6c8ce108de3598b3cdf8008f1b0ec0c71d0c79ee6bb01ca407840a",
       "skills/session-harness/scripts/test_usage_audit.py": "dd66cf13d7dda1a6249b7cc6c66a4fad8ebcb9766b9fb6c6b9fe34b53849b86b",
       "skills/session-harness/scripts/usage.py": "e96f9468adbc858b53f7f945aa63bde356610ef66630db6880107969a9db8fd9",
@@ -936,6 +938,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/api_execution.py",
       "target": "module:skills/session-harness/scripts/api_providers.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/api_execution.py",
+      "target": "module:skills/session-harness/scripts/coding_models.py"
     },
     {
       "confidence": "EXTRACTED",
@@ -2562,6 +2570,96 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/claude_session.py",
       "target": "pyfunc:skills/session-harness/scripts/claude_session.py:state"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "extmodule:datetime"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "extmodule:decimal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "extmodule:re"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "extmodule:time"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "extmodule:urllib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "module:skills/session-harness/scripts/api_providers.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:_day"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:_positive_int"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:_price"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:catalog"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:load_policy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:require_model"
     },
     {
       "confidence": "EXTRACTED",
@@ -5568,6 +5666,114 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/test_claude_models.py",
       "target": "pyfunc:skills/session-harness/scripts/test_claude_models.py:event"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:copy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:datetime"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:decimal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "module:skills/session-harness/scripts/api_execution.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "module:skills/session-harness/scripts/api_providers.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "module:skills/session-harness/scripts/coding_models.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "module:skills/session-harness/scripts/spend.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "pyclass:skills/session-harness/scripts/test_coding_models.py:PolicyFixture"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/test_coding_models.py:model"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_coding_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/test_coding_models.py:policy"
     },
     {
       "confidence": "EXTRACTED",
@@ -9622,6 +9828,144 @@
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.response"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.run_request"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_duplicate_request_never_repeats_paid_dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_mismatch_with_unknown_cost_retains_reservation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_model_or_variant_mismatch_hides_output_but_settles_spend"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_network_error_stops_before_reservation_and_post"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_ordinary_api_run_does_not_depend_on_coding_catalog"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_output_limit_loss_blocks_before_dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_success_retains_worker_and_actual_billing_identity"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_valid_key_without_setup_or_money_cannot_dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.catalog"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_current_bundled_policy_has_five_reviewed_families"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_duplicate_keys_and_oversized_policy_fail"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_expired_and_future_evidence_are_excluded_at_boundaries"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_invalid_policy_never_fetches"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_live_metadata_is_public_and_uses_effective_provider_limits"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_missing_tools_context_output_or_negative_price_excludes_model"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_partial_or_malformed_catalog_never_qualifies"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_unreviewed_variants_and_new_generations_never_qualify"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_zero_price_is_metadata_not_entitlement"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:PolicyFixture",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:PolicyFixture.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_coding_models.py:PolicyFixture",
+      "target": "pymethod:skills/session-harness/scripts/test_coding_models.py:PolicyFixture.write"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_coordination.py:CoordinationTests",
       "target": "pymethod:skills/session-harness/scripts/test_coordination.py:CoordinationTests.admit"
     },
@@ -13570,6 +13914,42 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coding_models.py:catalog",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:_day"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coding_models.py:catalog",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:_positive_int"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coding_models.py:catalog",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:_price"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coding_models.py:catalog",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:load_policy"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coding_models.py:load_policy",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:_day"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/coding_models.py:require_model",
+      "target": "pyfunc:skills/session-harness/scripts/coding_models.py:catalog"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/coordination.py:_maintenance",
       "target": "pyfunc:skills/session-harness/scripts/coordination.py:_validate_maintenance"
     },
@@ -15196,6 +15576,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/coding_models.py",
+      "label": "skills/session-harness/scripts/coding_models.py",
+      "source_file": "skills/session-harness/scripts/coding_models.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/coordination.py",
       "label": "skills/session-harness/scripts/coordination.py",
       "source_file": "skills/session-harness/scripts/coordination.py",
@@ -15388,6 +15775,13 @@
       "id": "module:skills/session-harness/scripts/test_claude_models.py",
       "label": "skills/session-harness/scripts/test_claude_models.py",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_coding_models.py",
+      "label": "skills/session-harness/scripts/test_coding_models.py",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
       "type": "module"
     },
     {
@@ -15620,7 +16014,7 @@
       "id": "pyclass:skills/session-harness/scripts/api_execution.py:_Admission",
       "label": "_Admission",
       "source_file": "skills/session-harness/scripts/api_execution.py",
-      "source_location": "L54",
+      "source_location": "L60",
       "type": "class"
     },
     {
@@ -15885,6 +16279,30 @@
       "label": "ClaudeModelsTests",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
       "source_location": "L16",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests",
+      "label": "CodingExecutionTests",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L130",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_coding_models.py:CodingModelTests",
+      "label": "CodingModelTests",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L49",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_coding_models.py:PolicyFixture",
+      "label": "PolicyFixture",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L38",
       "type": "class"
     },
     {
@@ -16516,7 +16934,7 @@
       "id": "pyfunc:skills/session-harness/scripts/api_execution.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/api_execution.py",
-      "source_location": "L77",
+      "source_location": "L83",
       "type": "function"
     },
     {
@@ -17557,6 +17975,54 @@
       "label": "state",
       "source_file": "skills/session-harness/scripts/claude_session.py",
       "source_location": "L19",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coding_models.py:_day",
+      "label": "_day",
+      "source_file": "skills/session-harness/scripts/coding_models.py",
+      "source_location": "L18",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coding_models.py:_positive_int",
+      "label": "_positive_int",
+      "source_file": "skills/session-harness/scripts/coding_models.py",
+      "source_location": "L70",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coding_models.py:_price",
+      "label": "_price",
+      "source_file": "skills/session-harness/scripts/coding_models.py",
+      "source_location": "L76",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coding_models.py:catalog",
+      "label": "catalog",
+      "source_file": "skills/session-harness/scripts/coding_models.py",
+      "source_location": "L88",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coding_models.py:load_policy",
+      "label": "load_policy",
+      "source_file": "skills/session-harness/scripts/coding_models.py",
+      "source_location": "L27",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/coding_models.py:require_model",
+      "label": "require_model",
+      "source_file": "skills/session-harness/scripts/coding_models.py",
+      "source_location": "L153",
       "type": "function"
     },
     {
@@ -18745,6 +19211,22 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/test_coding_models.py:model",
+      "label": "model",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L31",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/test_coding_models.py:policy",
+      "label": "policy",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L23",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/test_credits.py:money",
       "label": "money",
       "source_file": "skills/session-harness/scripts/test_credits.py",
@@ -19372,7 +19854,7 @@
       "id": "pymethod:skills/session-harness/scripts/api_execution.py:_Admission.__init__",
       "label": "_Admission.__init__",
       "source_file": "skills/session-harness/scripts/api_execution.py",
-      "source_location": "L55",
+      "source_location": "L61",
       "type": "method"
     },
     {
@@ -19380,7 +19862,7 @@
       "id": "pymethod:skills/session-harness/scripts/api_execution.py:_Admission.claim",
       "label": "_Admission.claim",
       "source_file": "skills/session-harness/scripts/api_execution.py",
-      "source_location": "L59",
+      "source_location": "L65",
       "type": "method"
     },
     {
@@ -22037,6 +22519,190 @@
       "label": "ClaudeModelsTests.test_safe_models_unresolved_and_private_fields_removed",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
       "source_location": "L17",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.response",
+      "label": "CodingExecutionTests.response",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L149",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.run_request",
+      "label": "CodingExecutionTests.run_request",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L145",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.setUp",
+      "label": "CodingExecutionTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L131",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_duplicate_request_never_repeats_paid_dispatch",
+      "label": "CodingExecutionTests.test_duplicate_request_never_repeats_paid_dispatch",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L212",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_mismatch_with_unknown_cost_retains_reservation",
+      "label": "CodingExecutionTests.test_mismatch_with_unknown_cost_retains_reservation",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L162",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_model_or_variant_mismatch_hides_output_but_settles_spend",
+      "label": "CodingExecutionTests.test_model_or_variant_mismatch_hides_output_but_settles_spend",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L153",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_network_error_stops_before_reservation_and_post",
+      "label": "CodingExecutionTests.test_network_error_stops_before_reservation_and_post",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L179",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_ordinary_api_run_does_not_depend_on_coding_catalog",
+      "label": "CodingExecutionTests.test_ordinary_api_run_does_not_depend_on_coding_catalog",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L205",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_output_limit_loss_blocks_before_dispatch",
+      "label": "CodingExecutionTests.test_output_limit_loss_blocks_before_dispatch",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L198",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_success_retains_worker_and_actual_billing_identity",
+      "label": "CodingExecutionTests.test_success_retains_worker_and_actual_billing_identity",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L169",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingExecutionTests.test_valid_key_without_setup_or_money_cannot_dispatch",
+      "label": "CodingExecutionTests.test_valid_key_without_setup_or_money_cannot_dispatch",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L186",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.catalog",
+      "label": "CodingModelTests.catalog",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L50",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_current_bundled_policy_has_five_reviewed_families",
+      "label": "CodingModelTests.test_current_bundled_policy_has_five_reviewed_families",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L124",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_duplicate_keys_and_oversized_policy_fail",
+      "label": "CodingModelTests.test_duplicate_keys_and_oversized_policy_fail",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L92",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_expired_and_future_evidence_are_excluded_at_boundaries",
+      "label": "CodingModelTests.test_expired_and_future_evidence_are_excluded_at_boundaries",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L72",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_invalid_policy_never_fetches",
+      "label": "CodingModelTests.test_invalid_policy_never_fetches",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L78",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_live_metadata_is_public_and_uses_effective_provider_limits",
+      "label": "CodingModelTests.test_live_metadata_is_public_and_uses_effective_provider_limits",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L57",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_missing_tools_context_output_or_negative_price_excludes_model",
+      "label": "CodingModelTests.test_missing_tools_context_output_or_negative_price_excludes_model",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L104",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_partial_or_malformed_catalog_never_qualifies",
+      "label": "CodingModelTests.test_partial_or_malformed_catalog_never_qualifies",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L98",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_unreviewed_variants_and_new_generations_never_qualify",
+      "label": "CodingModelTests.test_unreviewed_variants_and_new_generations_never_qualify",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L65",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:CodingModelTests.test_zero_price_is_metadata_not_entitlement",
+      "label": "CodingModelTests.test_zero_price_is_metadata_not_entitlement",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L118",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:PolicyFixture.setUp",
+      "label": "PolicyFixture.setUp",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L39",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_coding_models.py:PolicyFixture.write",
+      "label": "PolicyFixture.write",
+      "source_file": "skills/session-harness/scripts/test_coding_models.py",
+      "source_location": "L45",
       "type": "method"
     },
     {

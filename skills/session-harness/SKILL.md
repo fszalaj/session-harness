@@ -100,6 +100,12 @@ Native paid-credit execution remains unsupported, and missing eligibility contro
 can block a subscription adapter even when quota remains. On Windows installation
 or process work, read [platform support](references/platforms.md).
 
+When asked to add strong coding models from multi-provider catalogs, read
+[reviewed coding models](references/coding-models.md). Development `api coding-models`
+filters a reviewed allowlist against fresh public metadata; `api coding-run` adds
+supervised text work behind existing explicit API money admission. It does not
+install a gateway, authorize billing or count as independent review.
+
 Subscription balancing is an explicit opt-in development feature. It uses fresh
 native quotas and shared reservations; APIs and unsupported execution adapters
 remain separate. Consult [balancing](references/balancing.md) when the owner requests

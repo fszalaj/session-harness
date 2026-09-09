@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "service": "openrouter",
+  "min_context_tokens": 65536,
+  "models": [
+    {
+      "id": "moonshotai/kimi-k3",
+      "family": "moonshot",
+      "publisher": "moonshotai",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [{
+        "kind": "vendor_report",
+        "url": "https://github.com/MoonshotAI/Kimi-K3",
+        "note": "Vendor-reported Terminal-Bench 2.1 88.3 and DeepSWE 67.5 using Kimi Code at max effort. Evaluation conditions differ from other reports."
+      }]
+    },
+    {
+      "id": "z-ai/glm-5.3-flash",
+      "family": "zai",
+      "publisher": "z-ai",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [{
+        "kind": "vendor_report",
+        "url": "https://autoclaw.z.ai/blog/model/glm-5.3-flash/",
+        "note": "Vendor-reported Terminal Bench 2.1 84.3 and DeepSWE v1.1 63.4 support coding eligibility; the Flash name and price are not quality evidence."
+      }]
+    },
+    {
+      "id": "deepseek/deepseek-v4-pro-0813",
+      "family": "deepseek",
+      "publisher": "deepseek",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [{
+        "kind": "vendor_report",
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813",
+        "note": "Vendor-reported Terminal Bench 2.1 87.9 and DeepSWE 62.7. Public code-agent tasks used DeepSeek Harness minimal mode with max reasoning effort."
+      }]
+    },
+    {
+      "id": "minimax/minimax-m3",
+      "family": "minimax",
+      "publisher": "minimax",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [{
+        "kind": "vendor_report",
+        "url": "https://www.minimax.io/blog/minimax-m3",
+        "note": "Vendor-reported SWE-Bench Pro 59.0 and Terminal-Bench 2.1 66.0 support supervised coding work. The reported harnesses and evaluation conditions are not a common ranking."
+      }]
+    },
+    {
+      "id": "qwen/qwen3.8-max-0902",
+      "family": "qwen",
+      "publisher": "qwen",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [
+        {
+          "kind": "vendor_report",
+          "url": "https://www.qwencloud.com/models/qwen3.8-max-0902",
+          "note": "The official September 2 snapshot specifically improves engineering-scale coding and tool orchestration, retaining 1M context and function calling."
+        },
+        {
+          "kind": "benchmark_author",
+          "url": "https://arena.ai/company/leaderboard-changelog",
+          "note": "Arena independently lists this exact snapshot in its Code Arena leaderboard. This source confirms evaluated identity, not a claimed cross-benchmark rank."
+        }
+      ]
+    }
+  ]
+}

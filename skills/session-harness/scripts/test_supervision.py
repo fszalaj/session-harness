@@ -418,7 +418,9 @@ patch.object(supervision.termios,'tcsetattr',on_tty).start()
     def test_parent_sigterm_cleans_child(self):
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "pid"
-            child = f"import os,time; open({str(marker)!r},'w').write(str(os.getpid())); time.sleep(30)"
+            child = (f"import os,time; from pathlib import Path; marker=Path({str(marker)!r}); "
+                     "temporary=marker.with_suffix('.tmp'); temporary.write_text(str(os.getpid())); "
+                     "temporary.replace(marker); time.sleep(30)")
             script = self.wrapper(child, "def check(_): return {'allowed': True}")
             proc = subprocess.Popen([sys.executable, "-c", script], cwd=Path(__file__).parent,
                                     stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
