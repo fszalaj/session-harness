@@ -25,7 +25,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.4.0 --apply`, then
+To select this release, run `ai-session update --version 0.4.1 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -53,6 +53,11 @@ directory to PATH. See [platform support](skills/session-harness/references/plat
 For each new substantive task, use the [dynamic session startup procedure and prompt](skills/session-harness/references/session-start.md).
 It discovers configured capabilities and selects reviewers by upstream family and
 permitted role instead of a fixed provider pair.
+Select an explicit current model and effort for each native worker and verify the
+effective controls; omitted settings can inherit the manager's effort. Review
+defaults use the selected model's advertised levels. See [review evidence and
+efficiency](skills/session-harness/references/review-protocol.md#avoid-unnecessary-review-work)
+for receipt fields, checkpoint reuse and matched-task comparisons.
 
 ## Configure and run
 
@@ -92,7 +97,7 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.4.0 |
+| Client or route | Harness support in v0.4.1 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
 | Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |

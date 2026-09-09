@@ -5,6 +5,22 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.4.1
+
+Native reviews choose and validate effort against the same selected model. An
+unsupported explicit effort, ambiguous catalog match or missing model variant fails
+before execution. Copilot accepts efforts advertised for its selected model;
+Cursor keeps client-managed effort and rejects overrides.
+Successful review receipts add duration and byte counts, plus effort provenance.
+Actual provider effort remains unknown when it is not reported. These fields do
+not change accounting or establish a token price or subscription percentage.
+
+The skill now routes conditional procedures to existing references and requires
+explicit model/effort selection for native workers. Use its private checkpoint to
+distinguish defects, incomplete evidence and control failures before another review.
+Manager defaults, authorization, quotas and mandatory independent reviews remain.
+See [review protocol](../skills/session-harness/references/review-protocol.md#avoid-unnecessary-review-work).
+
 ## 0.4.0
 
 Add one provider through `ai-session onboard PROVIDER` or `ai-session PROVIDER onboard`.

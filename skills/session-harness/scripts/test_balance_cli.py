@@ -51,11 +51,14 @@ class WorkTests(unittest.TestCase):
     def test_real_adapter_entry_uses_current_worker_and_native_service(self):
         replies = [{'allowed': True, 'status': 'reserved', 'service': 'claude'},
                    {'allowed': True, 'status': 'running'}, {'allowed': True, 'status': 'completed'}]
+        telemetry = {'duration_seconds': 1.5, 'effort_source': 'explicit',
+                     'actual_effort': None, 'effort_verification': 'not_reported',
+                     'artifact_bytes': 12, 'result_bytes': 14}
         with patch.object(coordination, 'balance_dispatch', side_effect=replies) as dispatch, \
              patch.object(harness, 'discover_provider', return_value=self.capability) as discover, \
              patch.object(harness, 'review', return_value={'result': 'proposed patch',
                  'actual_model': 'example-current', 'requested_model': 'example-current',
-                 'requested_effort': 'medium'}) as execute:
+                 'requested_effort': 'medium', **telemetry}) as execute:
             result = balance_cli.run_work(b'Bounded task', task_id='one', ledger=self.ledger)
         self.assertEqual(result['billing_route'], 'native_subscription')
         self.assertEqual(result['billing_service'], 'claude')
@@ -63,6 +66,31 @@ class WorkTests(unittest.TestCase):
         self.assertTrue(execute.call_args.kwargs['task'])
         self.assertEqual(execute.call_args.args[3]['planner']['effort'], 'medium')
         self.assertNotIn('Bounded task', json.dumps(dispatch.call_args_list[0].args[1]))
+        for key, value in telemetry.items():
+            self.assertEqual(result[key], value)
+            self.assertNotIn(key, dispatch.call_args.args[1]['metadata'])
+
+    def test_copilot_work_preserves_advertised_effort_through_real_review(self):
+        capability = {**self.capability, 'auth': {'status': 'subscription'},
+                      'review': {'status': 'supervised_only'},
+                      'models': [{'id': 'example-current',
+                                  'native_controls': {'reasoning_efforts': ['medium', 'high']}}]}
+        replies = [{'allowed': True, 'status': 'reserved', 'service': 'copilot'},
+                   {'allowed': True, 'status': 'running'}, {'allowed': True, 'status': 'completed'}]
+        with patch.object(coordination, 'balance_dispatch', side_effect=replies) as dispatch, \
+             patch.object(harness, 'discover_provider', return_value=capability), \
+             patch.object(harness, 'require_quota'), patch.object(harness, 'require_role', return_value={}), \
+             patch('copilot_client.execute', return_value={'result': 'patch',
+                 'actual_model': 'example-current', 'requested_effort': 'medium'}) as execute:
+            result = balance_cli.run_work(b'Bounded task', task_id='copilot-effort',
+                                          provider='copilot', ledger=self.ledger)
+        self.assertEqual(result['status'], 'completed')
+        self.assertEqual(result['effort_source'], 'explicit')
+        self.assertFalse(result['independent_judgment'])
+        execute.assert_called_once()
+        self.assertTrue(execute.call_args.kwargs['task'])
+        self.assertEqual(execute.call_args.args[2]['planner']['effort'], 'medium')
+        self.assertEqual(dispatch.call_args.args[1]['metadata']['requested_effort'], 'medium')
 
     def test_denial_and_duplicate_never_execute_or_switch(self):
         for reply in [{'allowed': False, 'status': 'max_lead_exceeded'},

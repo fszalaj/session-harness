@@ -671,6 +671,143 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(result["stdin_sha256"], hashlib.sha256(transmitted).hexdigest())
         self.assertEqual(result["prompt_sha256"], result["stdin_sha256"])
 
+    def test_review_uses_selected_model_efforts_and_exact_id_precedence(self):
+        capability = {"review": {"status": "available"}, "auth": {"status": "subscription"},
+                      "planner": {"model": "best", "effort": "high"}, "executable": "mock-claude",
+                      "supported_efforts": ["low", "medium", "high"],
+                      "models": [{"id": "alias", "resolved_model": "best", "efforts": ["medium", "high"]},
+                                 {"id": "best", "efforts": ["low", "high"]}]}
+        with patch.object(harness, "checked", return_value=self.stream()) as checked, \
+                patch.object(harness, "require_quota"), patch.object(harness, 'require_role', return_value={}):
+            result = harness.review("claude", b"plan", 1, capability)
+        self.assertEqual(result['requested_effort'], 'low')
+        self.assertEqual(checked.call_args.args[0][checked.call_args.args[0].index('--effort') + 1], 'low')
+        self.assertEqual(capability['planner']['effort'], 'high')
+
+    def test_review_rejects_invalid_efforts_and_model_variants_before_execution(self):
+        model = {"id": "best", "efforts": ["low", "medium", "high"]}
+        cases = [('', [model]), ('unknown', [model]), ('ultra', [model]),
+                 (None, [dict(model, efforts=[])]),
+                 (None, [dict(model, variants={'high': 'best-high'})]),
+                 (None, [dict(model, variants={})]),
+                 (None, [dict(model, id='a', resolved_model='best'),
+                         dict(model, id='b', variants={'medium': 'best'})])]
+        for effort, models in cases:
+            with self.subTest(effort=effort, models=models):
+                capability = {"review": {"status": "available"}, "auth": {"status": "subscription"},
+                              "planner": {"model": "best", "effort": "high"}, "models": models,
+                              "supported_efforts": ["low", "medium", "high"], "executable": "mock-claude"}
+                with patch.object(harness, 'require_quota'), patch.object(harness, 'checked') as checked, \
+                        self.assertRaises(harness.HarnessError) as raised:
+                    harness.review('claude', b'plan', 1, capability, effort)
+                self.assertEqual(raised.exception.status, 'unsupported_capability')
+                checked.assert_not_called()
+
+    def test_review_resolves_unique_variant_and_explicit_effort(self):
+        capability = {"review": {"status": "available"}, "auth": {"status": "catalog_access"},
+                      "planner": {"model": "fixture-high", "effort": "high"},
+                      "models": [{"id": "fixture", "efforts": ["low", "medium", "high"],
+                                  "variants": {"medium": "fixture-medium", "high": "fixture-high"}}]}
+        with patch.object(harness, 'require_quota'), patch.object(harness, 'require_role', return_value={}), \
+                patch.object(harness, 'review_agy', return_value={'result': 'done', 'actual_model': 'fixture-medium'}):
+            result = harness.review('antigravity', b'plan', 1, capability, 'medium')
+        self.assertEqual(result['requested_model'], 'fixture-medium')
+        self.assertEqual(result['effort_source'], 'explicit')
+
+    def test_all_review_paths_report_elapsed_bytes_and_unknown_actual_effort(self):
+        for provider in ('claude', 'codex', 'antigravity', 'copilot', 'cursor'):
+            with self.subTest(provider=provider):
+                capability = {"review": {"status": "available"}, "auth": {"status": "subscription"},
+                              "planner": {"model": "best", "effort": "high"},
+                              "supported_efforts": ["low", "medium", "high"], "executable": "mock"}
+                if provider in {'copilot', 'cursor'}:
+                    capability['planner']['effort'] = None
+                response = {'result': 'Zażółć', 'actual_model': 'best'}
+                clock = [10.0]
+                def admission(*args, **kwargs):
+                    clock[0] += 3
+                with patch.object(harness.time, 'monotonic', side_effect=lambda: clock[0]), \
+                        patch.object(harness, 'require_quota', side_effect=admission), \
+                        patch.object(harness, 'require_role', return_value={}), \
+                        patch.object(harness, 'checked', return_value=self.stream()), \
+                        patch.object(harness, 'verify_codex_sandbox'), patch.object(harness, 'codex_review_argv', return_value=[]), \
+                        patch.object(harness, 'validate_codex_review', return_value=dict(response)), \
+                        patch.object(harness, 'validate_claude_review', return_value=dict(response)), \
+                        patch.object(harness, 'review_agy', return_value=dict(response)), \
+                        patch('copilot_client.execute', return_value=dict(response)), \
+                        patch('cursor_client.execute', return_value=dict(response)):
+                    result = harness.review(provider, 'ż'.encode(), 1, capability)
+                self.assertEqual(result['duration_seconds'], 3.0)
+                self.assertEqual(result['artifact_bytes'], 2)
+                self.assertEqual(result['result_bytes'], len('Zażółć'.encode()))
+                self.assertIsNone(result['actual_effort'])
+                self.assertEqual(result['effort_verification'], 'not_reported')
+                self.assertEqual(result['effort_source'], 'client_managed' if provider in {'copilot', 'cursor'} else 'default')
+                self.assertEqual(result['role'], 'reviewer')
+                self.assertTrue(result['independent_judgment'])
+                self.assertNotIn('cost', result)
+
+    def test_receipt_helper_preserves_legacy_calls_and_role_denial(self):
+        with patch.object(harness, 'require_role', return_value={'requires_supervision': True}) as admission:
+            result = harness.checked_role_response('claude', {'result': 'patch', 'actual_model': 'best'}, b'plan', True)
+        admission.assert_called_once_with('claude', 'best', 'worker', supervised=True)
+        self.assertTrue(result['requires_manager_inspection'])
+        self.assertFalse(result['independent_judgment'])
+        self.assertNotIn('duration_seconds', result)
+        with patch.object(harness, 'require_role', side_effect=harness.HarnessError('role_denied', 'denied')), \
+                self.assertRaises(harness.HarnessError) as raised:
+            harness.checked_role_response('claude', {'result': 'patch'}, b'plan', False,
+                                          started=0, effort_source='default')
+        self.assertEqual(raised.exception.status, 'role_denied')
+
+    def test_client_managed_review_rejects_explicit_effort(self):
+        capability = {'review': {'status': 'available'}, 'auth': {'status': 'subscription'},
+                      'planner': {'model': 'best', 'effort': None}}
+        for provider in ('copilot', 'cursor'):
+            for effort in ('', 'unknown', 'medium'):
+                with self.subTest(provider=provider, effort=effort), patch.object(harness, 'require_quota'), \
+                        self.assertRaises(harness.HarnessError) as raised:
+                    harness.review(provider, b'plan', 1, capability, effort)
+                self.assertEqual(raised.exception.status, 'unsupported_capability')
+
+    def test_cursor_rejects_non_none_planner_effort(self):
+        capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
+                      'planner': {'model': 'auto', 'effort': 'medium'}}
+        with patch.object(harness, 'require_quota'), self.assertRaises(harness.HarnessError) as raised:
+            harness.review('cursor', b'plan', 1, capability, task=True)
+        self.assertEqual(raised.exception.status, 'unsupported_capability')
+
+    def test_copilot_task_preserves_supported_default_and_explicit_effort(self):
+        model = {'id': 'auto', 'native_controls': {'reasoning_efforts': ['low', 'medium', 'high']}}
+        for override, expected, source in ((None, 'high', 'default'), ('medium', 'medium', 'explicit')):
+            with self.subTest(override=override):
+                capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
+                              'planner': {'model': 'auto', 'effort': 'high'}, 'models': [model]}
+                with patch.object(harness, 'require_quota'), patch.object(harness, 'require_role', return_value={}), \
+                        patch('copilot_client.execute', return_value={'result': 'patch', 'actual_model': 'observed'}) as execute:
+                    result = harness.review('copilot', b'plan', 1, capability, override, task=True)
+                self.assertEqual(execute.call_args.args[2]['planner']['effort'], expected)
+                self.assertTrue(execute.call_args.kwargs['task'])
+                self.assertEqual(result['effort_source'], source)
+                self.assertEqual(result['role'], 'worker')
+                self.assertTrue(result['requires_manager_inspection'])
+                self.assertFalse(result['independent_judgment'])
+                self.assertEqual(capability['planner']['effort'], 'high')
+
+    def test_copilot_task_rejects_unsupported_or_ambiguous_native_effort(self):
+        model = {'id': 'auto', 'native_controls': {'reasoning_efforts': ['low', 'medium', 'high']}}
+        for override, models in (('ultra', [model]), ('', [model]), ('unknown', [model]),
+                                 ('medium', [model, model]), ('medium', []),
+                                 (None, [dict(model, native_controls={'reasoning_efforts': ['low', 'medium']})])):
+            with self.subTest(override=override, models=models):
+                capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
+                              'planner': {'model': 'auto', 'effort': 'high'}, 'models': models}
+                with patch.object(harness, 'require_quota'), patch('copilot_client.execute') as execute, \
+                        self.assertRaises(harness.HarnessError) as raised:
+                    harness.review('copilot', b'plan', 1, capability, override, task=True)
+                self.assertEqual(raised.exception.status, 'unsupported_capability')
+                execute.assert_not_called()
+
     def test_tools_or_mcp_reject_review(self):
         for change in ({"tools": ["Bash"]}, {"mcp_servers": [{"name": "external"}]}, {"tools": None}):
             with self.subTest(change=change), self.assertRaises(harness.HarnessError) as raised:
