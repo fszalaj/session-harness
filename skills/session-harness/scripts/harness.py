@@ -294,10 +294,21 @@ def select_effort(supported, role):
         if not reasoning:
             raise HarnessError("unsupported_capability", "No advertised default reasoning effort below max; refresh capability policy.")
         return reasoning[-1]
-    choices = ordered[:-1]
+    choices = [effort for effort in ordered if EFFORTS.index(effort) <= EFFORTS.index("medium")]
     if not choices:
-        raise HarnessError("unsupported_capability", "No advertised non-maximum worker effort.")
-    return "medium" if "medium" in choices else choices[-1]
+        raise HarnessError("unsupported_capability", "No advertised routine effort at or below medium.")
+    return choices[-1]
+
+
+def resolve_variant(model, effort, selected):
+    if "variants" not in model:
+        return selected
+    import inventory
+    variants = model["variants"]
+    variant = variants.get(effort) if isinstance(variants, dict) else None
+    if not isinstance(variant, str) or not inventory.SAFE_ID.fullmatch(variant):
+        raise HarnessError("unsupported_capability", "Selected effort has no valid advertised model variant.")
+    return variant
 
 
 def select_models(models, family):
@@ -317,26 +328,28 @@ def select_models(models, family):
         ranking_basis = "Unique explicit provider capability claim among current-generation candidates."
     else:
         raise HarnessError("capability_unverified", "Multiple current-generation candidates lack a unique provider capability claim; the manager must verify current provider guidance before dispatch.")
-    feasible = []
-    for candidate in current:
-        try:
-            select_effort(candidate["efforts"], "worker")
-            feasible.append(candidate)
-        except HarnessError:
-            continue
-    if not feasible:
-        raise HarnessError("unsupported_capability", "Current generation has no verified nonmax worker effort.")
-    worker = next((model for model in feasible if re.search(
-        r"affordable|everyday|cost.efficient|lightweight", model.get("description", ""), re.I)),
-                  strongest if strongest in feasible else feasible[0])
     def selection(model, role):
         effort = select_effort(model["efforts"], role)
-        return {"model": model.get("variants", {}).get(effort, model["id"]), "effort": effort,
+        return {"model": resolve_variant(model, effort, model["id"]), "effort": effort,
                 "basis": ranking_basis if role == "planner" else "Current-generation worker candidate; manager must verify task fit and cost suitability.",
                 "generation_policy": "Newest numeric generation by owner preference; not a cross-tier capability ranking.",
                 "selection_status": "policy_selected" if role == "planner" else "task_fit_verification_required",
                 "generation": ".".join(str(part) for part in newest[:2])}
-    return selection(strongest, "planner"), selection(worker, "worker")
+    planner = selection(strongest, "planner")
+    feasible = []
+    for candidate in current:
+        try:
+            effort = select_effort(candidate["efforts"], "worker")
+            resolve_variant(candidate, effort, candidate["id"])
+            feasible.append(candidate)
+        except HarnessError:
+            continue
+    if not feasible:
+        raise HarnessError("unsupported_capability", "Current generation has no verified routine worker effort and variant.")
+    worker = next((model for model in feasible if re.search(
+        r"affordable|everyday|cost.efficient|lightweight", model.get("description", ""), re.I)),
+                  strongest if strongest in feasible else feasible[0])
+    return planner, selection(worker, "worker")
 
 
 class CodexRPC:
@@ -1029,17 +1042,21 @@ def review(provider, artifact, timeout, capability, effort=None, *, task=False):
     else:
         require_quota(provider)
     if provider in {'copilot', 'cursor'}:
-        if effort is None:
-            effort = capability['planner'].get('effort')
-        if effort is None:
-            effort_source = 'client_managed'
-        else:
+        if provider == 'copilot':
             entries = [entry for entry in capability.get('models', [])
                        if entry['id'] == capability['planner']['model']]
-            supported = entries[0].get('native_controls', {}).get('reasoning_efforts', []) if len(entries) == 1 else []
-            if provider != 'copilot' or effort not in EFFORTS or effort not in supported:
+            if len(entries) != 1:
+                raise HarnessError('unsupported_capability', 'Selected client model lacks unique catalog evidence.')
+            supported = entries[0].get('native_controls', {}).get('reasoning_efforts', [])
+            if effort is None:
+                effort = select_effort(supported, 'reviewer') if supported else None
+            elif effort not in EFFORTS or effort not in supported:
                 raise HarnessError('unsupported_capability', 'Requested effort is not advertised for the selected client model.')
             capability = dict(capability, planner=dict(capability['planner'], effort=effort))
+        elif effort is not None or capability['planner'].get('effort') is not None:
+            raise HarnessError('unsupported_capability', 'This client does not support a review effort override.')
+        if effort is None:
+            effort_source = 'client_managed'
         import copilot_client
         import cursor_client
         choice = capability['planner']
@@ -1053,7 +1070,7 @@ def review(provider, artifact, timeout, capability, effort=None, *, task=False):
     entries = [entry for entry in models if entry["id"] == selected]
     if not entries:
         entries = [entry for entry in models if entry.get("resolved_model") == selected
-                   or selected in entry.get("variants", {}).values()]
+                   or (isinstance(entry.get("variants"), dict) and selected in entry["variants"].values())]
     if len(entries) > 1:
         raise HarnessError("unsupported_capability", "Selected review model matches multiple catalog entries.")
     supported = entries[0].get("efforts", []) if entries else capability.get("supported_efforts", [])
@@ -1062,11 +1079,8 @@ def review(provider, artifact, timeout, capability, effort=None, *, task=False):
     if effort not in EFFORTS or effort not in supported:
         raise HarnessError("unsupported_capability", "Requested review effort is not advertised for the selected model.")
     capability = dict(capability, planner=dict(capability["planner"], effort=effort))
-    if entries and "variants" in entries[0]:
-        variant = entries[0]["variants"].get(effort)
-        if not variant:
-            raise HarnessError("unsupported_capability", "Selected review effort has no advertised model variant.")
-        capability["planner"]["model"] = variant
+    if entries:
+        capability["planner"]["model"] = resolve_variant(entries[0], effort, selected)
     choice = capability["planner"]
     require_role(provider, choice['model'], 'worker' if task else 'reviewer', supervised=task)
     instruction = ("You are a bounded text worker. Complete only the manager's supplied task. "

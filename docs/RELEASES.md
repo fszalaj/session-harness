@@ -5,6 +5,28 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.4.2
+
+Automatic worker and review effort selection uses advertised `medium`, otherwise
+the highest advertised level below it. A model exposing only `low` or `medium`
+is usable. Models advertising only higher levels are ineligible for automatic
+work; some catalogs that previously selected high, xhigh or max now stop with
+`unsupported_capability`. Select a compatible current model. Explicit supported
+high reviews and native high verification remain available on compatible routes.
+Manager defaults and quota, role and authorization checks are unchanged.
+
+Copilot's no-override task path now derives effort from its selected catalog row.
+It replaces inherited manager effort, using client-managed `None` when the model
+advertises no effort control. An explicit supported override remains explicit.
+Cursor's existing client-managed behavior is unchanged.
+
+Discovery, worker qualification and review share strict effort-variant resolution.
+An absent variant map preserves the selected base or resolved model. An explicit
+map must contain a valid selected-effort variant; empty, malformed or incomplete
+maps fail before launch. A missing strongest-manager variant stops discovery.
+An invalid worker candidate may yield to a usable candidate in the same current
+generation. No guessed base-model fallback is used for an explicit variant map.
+
 ## 0.4.1
 
 Native reviews choose and validate effort against the same selected model. An
@@ -84,7 +106,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.4.0, use `ai-session update --version 0.4.0 --apply`, then restart affected
+For v0.4.2, use `ai-session update --version 0.4.2 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.

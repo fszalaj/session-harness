@@ -203,6 +203,39 @@ class ModelTests(unittest.TestCase):
         self.assertIn("no superiority", planner["basis"])
         self.assertEqual(worker["selection_status"], "task_fit_verification_required")
 
+    def test_routine_effort_ceiling_and_advertised_floor(self):
+        for role in ('worker', 'reviewer'):
+            for options, expected in ((['low'], 'low'), (['medium'], 'medium'),
+                                      (['none'], 'none'), (['none', 'minimal'], 'minimal'),
+                                      (['high', 'low'], 'low'), (['high', 'medium', 'low'], 'medium')):
+                with self.subTest(role=role, options=options):
+                    self.assertEqual(harness.select_effort(options, role), expected)
+            for options in ([], ['high'], ['xhigh', 'max'], ['max', 'ultra'], ['medium', 'unknown']):
+                with self.subTest(role=role, options=options), self.assertRaises(harness.HarnessError) as raised:
+                    harness.select_effort(options, role)
+                self.assertEqual(raised.exception.status, 'unsupported_capability')
+
+    def test_variant_selection_requires_valid_manager_then_usable_current_worker(self):
+        leader = model('gpt-99.10-leader', 0, 'Most capable', ['medium', 'high'])
+        cheap = model('gpt-99.10-cheap', 1, 'Affordable', ['medium', 'high'])
+        for variants in (None, {}, [], {'high': ''}, {'high': 42}, {'high': 'unsafe id'}):
+            with self.subTest(variants=variants), self.assertRaises(harness.HarnessError) as raised:
+                harness.select_models([dict(leader, variants=variants), cheap], 'gpt')
+            self.assertEqual(raised.exception.status, 'unsupported_capability')
+        for variants in (None, {}, [], {'high': 'gpt-99.10-cheap-high'}, {'medium': 'unsafe id'}):
+            with self.subTest(worker_variants=variants):
+                planner, worker = harness.select_models([leader, dict(cheap, variants=variants)], 'gpt')
+                self.assertEqual(worker['model'], leader['id'])
+        mapped = dict(leader, variants={'medium': 'gpt-99.10-medium', 'high': 'gpt-99.10-high'})
+        planner, worker = harness.select_models([mapped], 'gpt')
+        self.assertEqual(planner['model'], 'gpt-99.10-high')
+        self.assertEqual(worker['model'], 'gpt-99.10-medium')
+        self.assertIn('gpt-99.10-medium', harness.launch_plan('codex', 'worker',
+                      {'executable': 'codex', 'worker': worker})['argv'])
+        with self.assertRaises(harness.HarnessError):
+            harness.select_models([dict(leader, variants={'high': 'gpt-99.10-high'}),
+                                   model('gpt-99.9-old', 2, 'Affordable')], 'gpt')
+
     def test_manager_defaults_below_maximum_effort(self):
         self.assertEqual(harness.select_effort(["low", "high", "max", "ultra"], "planner"), "high")
         self.assertEqual(harness.select_effort(["high", "xhigh", "max", "ultra"], "planner"), "xhigh")
@@ -722,6 +755,8 @@ class ReviewTests(unittest.TestCase):
                               "supported_efforts": ["low", "medium", "high"], "executable": "mock"}
                 if provider in {'copilot', 'cursor'}:
                     capability['planner']['effort'] = None
+                if provider == 'copilot':
+                    capability['models'] = [{'id': 'best', 'native_controls': {'reasoning_efforts': []}}]
                 response = {'result': 'Zażółć', 'actual_model': 'best'}
                 clock = [10.0]
                 def admission(*args, **kwargs):
@@ -779,10 +814,10 @@ class ReviewTests(unittest.TestCase):
 
     def test_copilot_task_preserves_supported_default_and_explicit_effort(self):
         model = {'id': 'auto', 'native_controls': {'reasoning_efforts': ['low', 'medium', 'high']}}
-        for override, expected, source in ((None, 'high', 'default'), ('medium', 'medium', 'explicit')):
+        for override, expected, source in ((None, 'medium', 'default'), ('high', 'high', 'explicit')):
             with self.subTest(override=override):
                 capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
-                              'planner': {'model': 'auto', 'effort': 'high'}, 'models': [model]}
+                              'planner': {'model': 'auto', 'effort': 'xhigh'}, 'models': [model]}
                 with patch.object(harness, 'require_quota'), patch.object(harness, 'require_role', return_value={}), \
                         patch('copilot_client.execute', return_value={'result': 'patch', 'actual_model': 'observed'}) as execute:
                     result = harness.review('copilot', b'plan', 1, capability, override, task=True)
@@ -792,13 +827,43 @@ class ReviewTests(unittest.TestCase):
                 self.assertEqual(result['role'], 'worker')
                 self.assertTrue(result['requires_manager_inspection'])
                 self.assertFalse(result['independent_judgment'])
-                self.assertEqual(capability['planner']['effort'], 'high')
+                self.assertEqual(capability['planner']['effort'], 'xhigh')
+
+    def test_copilot_no_control_clears_inherited_effort(self):
+        capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
+                      'planner': {'model': 'auto', 'effort': 'xhigh'},
+                      'models': [{'id': 'auto', 'native_controls': {'reasoning_efforts': []}}]}
+        with patch.object(harness, 'require_quota'), patch.object(harness, 'require_role', return_value={}), \
+                patch('copilot_client.execute', return_value={'result': 'patch'}) as execute:
+            result = harness.review('copilot', b'plan', 1, capability, task=True)
+        self.assertIsNone(execute.call_args.args[2]['planner']['effort'])
+        self.assertEqual(result['effort_source'], 'client_managed')
+        self.assertEqual(capability['planner']['effort'], 'xhigh')
+
+    def test_review_variant_validation_and_alias_preservation(self):
+        base = {'review': {'status': 'available'}, 'auth': {'status': 'catalog_access'},
+                'planner': {'model': 'resolved', 'effort': 'high'}}
+        entry = {'id': 'base', 'resolved_model': 'resolved', 'efforts': ['medium', 'high']}
+        for variants in (None, {}, [], {'medium': None}, {'medium': 42}, {'medium': 'unsafe id'}):
+            with self.subTest(variants=variants), patch.object(harness, 'require_quota'), \
+                    self.assertRaises(harness.HarnessError) as raised:
+                harness.review('antigravity', b'plan', 1, dict(base, models=[dict(entry, variants=variants)]))
+            self.assertEqual(raised.exception.status, 'unsupported_capability')
+        for selected_entry, override, expected in ((entry, None, 'resolved'),
+                (dict(entry, variants={'medium': 'base-medium', 'high': 'base-high'}), None, 'base-medium'),
+                (dict(entry, variants={'medium': 'base-medium', 'high': 'base-high'}), 'high', 'base-high')):
+            with self.subTest(expected=expected), patch.object(harness, 'require_quota'), \
+                    patch.object(harness, 'require_role', return_value={}), \
+                    patch.object(harness, 'review_agy', return_value={'result': 'done'}):
+                result = harness.review('antigravity', b'plan', 1, dict(base, models=[selected_entry]), override)
+            self.assertEqual(result['requested_model'], expected)
+            self.assertEqual(result['effort_source'], 'default' if override is None else 'explicit')
 
     def test_copilot_task_rejects_unsupported_or_ambiguous_native_effort(self):
         model = {'id': 'auto', 'native_controls': {'reasoning_efforts': ['low', 'medium', 'high']}}
         for override, models in (('ultra', [model]), ('', [model]), ('unknown', [model]),
                                  ('medium', [model, model]), ('medium', []),
-                                 (None, [dict(model, native_controls={'reasoning_efforts': ['low', 'medium']})])):
+                                 (None, [dict(model, native_controls={'reasoning_efforts': ['high']})])):
             with self.subTest(override=override, models=models):
                 capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
                               'planner': {'model': 'auto', 'effort': 'high'}, 'models': models}

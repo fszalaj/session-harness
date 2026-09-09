@@ -9,8 +9,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.4.0, run
-`ai-session update --version 0.4.0 --apply`, then restart affected clients.
+for an authorized version change. To select v0.4.2, run
+`ai-session update --version 0.4.2 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)

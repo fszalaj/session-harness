@@ -49,6 +49,9 @@ Use the strongest current hosting-provider model for the manager at advertised
 explicitly selected, extremely difficult task. Verify the running model; Markdown
 cannot switch it. Normal bounded workers and ordinary reviews use supported medium
 effort, gathering low and difficult verification high.
+Automatic helper defaults select advertised medium or the highest supported level
+below it. If no routine level or required model variant exists, inspect the catalog
+and select a compatible current model. Do not infer a working base-model fallback.
 
 Select two reviewer-capable routes with different **upstream model families**, both
 different from the manager. Do not prescribe a fixed pair of brands. Resolve model
