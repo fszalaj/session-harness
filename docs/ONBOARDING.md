@@ -9,8 +9,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.4.2, run
-`ai-session update --version 0.4.2 --apply`, then restart affected clients.
+for an authorized version change. To select v0.4.3, run
+`ai-session update --version 0.4.3 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -144,6 +144,26 @@ ai-session budget
 ```
 
 `configure` is the interactive alias for `setup`; existing selections are defaults.
+Press Enter to retain the displayed value. These are the defaults for a new setup;
+they do not replace an existing installation's choices:
+
+| Setting | New setup default |
+| --- | --- |
+| Authorized services | None until you select and confirm them |
+| Quota authority | Local; choose one trusted SSH authority for a shared account |
+| Native quota mode | Strict; observed requires an explicit choice |
+| Concurrent sessions | Four per service, sharing its account budget |
+| Timezone and calendar | UTC, all seven days, reset cutoff 08:30 |
+| Budget allocation and reserve | Adaptive allocation, reserve 0% |
+| Paid API allowance | None; API use needs an explicit positive money budget |
+| Manager | Strongest current hosting-provider model, xhigh when advertised |
+| Routine workers/reviews | Advertised medium or the highest supported level below it |
+
+The manager falls back to the highest advertised level below max. Select supported
+high explicitly for difficult work; max is an explicit extremely-difficult-task
+exception. Review the displayed choices and the final confirmation. Discovery does
+not select services on your behalf. See [budget controls](../skills/session-harness/references/budgets.md)
+for allocation overrides and [effort limits](../skills/session-harness/references/review-protocol.md) for release details.
 `ai-session setup` is the owner's explicit environment authorization. Run it
 interactively with the owner: it selects the native and API services allowed to
 run inference, confirms timezone, working days, reset cutoff, quota mode and session capacity, and

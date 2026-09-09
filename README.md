@@ -27,7 +27,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.4.2 --apply`, then
+To select this release, run `ai-session update --version 0.4.3 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -37,8 +37,12 @@ release directory, the essential installation commands are:
 python3 scripts/test.py
 python3 scripts/install-agent-profile.py --launcher
 python3 scripts/install-agent-profile.py --launcher --apply
-ai-session configure
 ```
+
+Open a new terminal and run `ai-session --help`. If the command is unavailable,
+add the launcher directory reported by the installer to PATH (`~/.local/bin` on
+macOS/Linux), or invoke the reported launcher by its full path. Then run
+`ai-session configure` interactively.
 
 The first installer command previews changes. Preserve unique personal rules in a
 private Markdown addendum and pass the same `--personal-policy /absolute/path/to/personal.md`
@@ -85,10 +89,36 @@ inference returns `environment_setup_required`; inspection remains available.
 ai-session version
 ai-session configure --status
 ai-session inventory
+ai-session discover --session auto
 ai-session budget
 ai-session coordination status
 ai-session claude
 ```
+
+For a new setup, defaults are local authority, strict quota mode, four sessions
+per service, UTC, all seven days, an 08:30 reset cutoff, adaptive allocation and
+0% reserve. No service or paid API allowance is authorized automatically. Existing
+settings stay selected. See the [configuration defaults](docs/ONBOARDING.md#5-configure-interactively).
+
+`inventory` detects known clients on the current host and reports their adapter and
+account status. `discover --session auto` also identifies the active assistant when
+its launcher/session markers or parent process are available. A plain SSH shell may
+correctly report `unknown`; conflicting markers report `ambiguous`. If needed,
+confirm the actual client and pass `--session codex`, `claude` or another supported
+identity. That explicit value is your declaration, not automatic detection.
+
+For a first task, open your project in a terminal and start an authorized client
+with `ai-session codex` or `ai-session claude`, then paste:
+
+```text
+Read this project's instructions and explain how to run its tests. Follow the
+installed session-harness startup procedure and report the detected client,
+selected model/effort, project skills and available knowledge tools. Do not change files.
+```
+
+Use the [reusable task prompt](skills/session-harness/references/session-start.md#reusable-task-prompt)
+for implementation. Missing login, catalog, quota or adapter evidence must be
+resolved before execution; detecting an installed client does not prove it can run.
 
 Use one trusted quota authority when sharing an account across computers. Native
 sessions and workers share its budget. Direct clients outside these controls remain
@@ -99,7 +129,7 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.4.2 |
+| Client or route | Harness support in v0.4.3 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
 | Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |

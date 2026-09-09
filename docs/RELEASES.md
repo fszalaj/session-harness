@@ -5,6 +5,19 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.4.3
+
+The onboarding prompt includes its official source and archive bootstrap. README
+provides launcher PATH recovery, configuration defaults and a first task. Startup
+instructions distinguish detected clients, active session identity and explicit
+operator declarations. A plain SSH session can correctly have an unknown active
+assistant. The computer guide no longer directs upgrades to an older fixed release.
+
+This documentation release changes no inference adapters, model/effort selection,
+authorization, quota or billing behavior. Existing settings remain selected. Use
+the [interactive setup defaults](ONBOARDING.md#5-configure-interactively) and
+[onboarding prompt](ONBOARDING-PROMPT.md) with the selected release.
+
 ## 0.4.2
 
 Automatic worker and review effort selection uses advertised `medium`, otherwise
@@ -106,7 +119,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.4.2, use `ai-session update --version 0.4.2 --apply`, then restart affected
+For v0.4.3, use `ai-session update --version 0.4.3 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.

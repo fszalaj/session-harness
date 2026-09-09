@@ -27,8 +27,11 @@ installation does not turn a laptop client into a proxy for that service.
    python3 scripts/test.py
    python3 scripts/install-agent-profile.py --launcher
    python3 scripts/install-agent-profile.py --launcher --apply
-   ai-session configure
    ```
+
+   Open a new terminal and run `ai-session --help`. If unavailable, add the
+   installer-reported launcher directory to PATH or use its full path. Then run
+   `ai-session configure` interactively.
 
    Preserve unique instructions with the same optional
    `--personal-policy /absolute/path/to/personal.md` in both installer commands.
@@ -56,8 +59,9 @@ Use PowerShell 7.3+ or the Python launcher. See the
 [platform limits](../skills/session-harness/references/platforms.md), including
 unsupported native Windows Antigravity quota/terminal supervision.
 
-For an existing installation, select this release with
-`ai-session update --version 0.3.0 --apply`, then restart affected clients.
+For an existing installation, inspect `ai-session version` and retain that release
+unless you choose an update. To update, select a published version using the
+[release procedure](RELEASES.md#everyday-use), then restart affected clients.
 
 ## Share one account across computers
 
