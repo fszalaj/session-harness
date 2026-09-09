@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Default managers to advertised Extra High (`xhigh`), otherwise the highest
+  supported level below `max`. Reserve explicit `max` for extremely difficult
+  tasks. Document personal-computer setup and shared-account boundaries.
+
 - Add explicitly configured recurring free account pools, shared request identities,
   conservative token/credit reservations, manual reconciliation and fixed-provider
   HTTPS dispatch. Preserve legacy OpenRouter exact-zero guards, native budgets and

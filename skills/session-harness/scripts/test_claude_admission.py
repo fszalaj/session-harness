@@ -44,7 +44,7 @@ class SelectionTests(unittest.TestCase):
         choice, _ = admission.choose(capability(), 'planner', check=check)
         self.assertEqual(checks, [FABLE, OPUS])
         self.assertEqual(choice['model'], OPUS)
-        self.assertEqual(choice['effort'], 'max')
+        self.assertEqual(choice['effort'], 'high')
 
     def test_common_or_legacy_denial_does_not_try_another_model(self):
         for value in (receipt(FABLE, False, True), {'allowed': True}):

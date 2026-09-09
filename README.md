@@ -3,10 +3,17 @@
 Shared instructions, current-model discovery, independent plan review and usage
 accounting for coding assistants. The strongest available model of the hosting
 provider manages substantive work; bounded workers normally use medium effort.
+Manager policy defaults to Extra High (`xhigh`), or the highest advertised level
+below `max` if unavailable. Reserve `max` for explicitly selected, extremely
+difficult tasks. The development launcher applies this default; published v0.2.0
+requires checking and adjusting the native effort control before work.
 Two other provider families review the same plan independently. Native role models
 are resolved at runtime from current client capabilities.
 
 ## Start here
+
+For a laptop or desktop, start with [use your own computer](docs/COMPUTER-SETUP.md).
+It distinguishes personal accounts, shared account coordination and remote execution.
 
 New installation: open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
 and follow the [installation workflow](docs/ONBOARDING.md#1-select-and-verify-the-release).

@@ -203,14 +203,17 @@ class ModelTests(unittest.TestCase):
         self.assertIn("no superiority", planner["basis"])
         self.assertEqual(worker["selection_status"], "task_fit_verification_required")
 
-    def test_maximum_advertised_effort(self):
-        self.assertEqual(harness.select_effort(["low", "high", "ultra"], "planner"), "high")
+    def test_manager_defaults_below_maximum_effort(self):
+        self.assertEqual(harness.select_effort(["low", "high", "max", "ultra"], "planner"), "high")
+        self.assertEqual(harness.select_effort(["high", "xhigh", "max", "ultra"], "planner"), "xhigh")
+        with self.assertRaises(harness.HarnessError):
+            harness.select_effort(["max", "ultra"], "planner")
 
     def test_codex_launch_keeps_delegation_with_harness_manager(self):
-        planner, worker = harness.select_models([model("gpt-99.10-test", efforts=["low", "medium", "high", "max", "ultra"])], "gpt")
+        planner, worker = harness.select_models([model("gpt-99.10-test", efforts=["low", "medium", "high", "xhigh", "max", "ultra"])], "gpt")
         result = harness.launch_plan("codex", "planner", {"executable": "codex", "planner": planner})
-        self.assertIn('model_reasoning_effort="max"', result["argv"])
-        self.assertIn('plan_mode_reasoning_effort="max"', result["argv"])
+        self.assertIn('model_reasoning_effort="xhigh"', result["argv"])
+        self.assertIn('plan_mode_reasoning_effort="xhigh"', result["argv"])
         self.assertEqual(worker["effort"], "medium")
 
     def test_orchestration_mode_alone_cannot_establish_reasoning_effort(self):
@@ -360,7 +363,7 @@ class DiscoveryTests(unittest.TestCase):
                 patch("claude_models.discover", return_value={"models": models, "status": "client_selectable_metadata"}):
             result = harness.discover_claude("mock-claude")
         self.assertEqual("claude-fable-99-10[1m]", result["planner"]["model"])
-        self.assertEqual("max", result["planner"]["effort"])
+        self.assertEqual("high", result["planner"]["effort"])
         self.assertEqual("claude-fable-99-10[1m]", result["worker"]["model"])
         self.assertEqual("medium", result["worker"]["effort"])
         self.assertFalse(result["entitlement_verified"])
@@ -444,7 +447,7 @@ class DiscoveryTests(unittest.TestCase):
                      patch('claude_models.discover', return_value={'models': catalog, 'status': 'client_selectable_metadata'}):
                     res = harness.discover_claude('mock-claude')
                     self.assertEqual(res['planner']['model'], 'claude-fable-99-1')
-                    self.assertEqual(res['planner']['effort'], 'max')
+                    self.assertEqual(res['planner']['effort'], 'high')
                     self.assertEqual(res['worker']['model'], 'claude-sonnet-99')
                     self.assertEqual(res['worker']['effort'], 'low')
                 self.assertEqual(mock_checked.call_count, 2)
