@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.3
+
+- Make the onboarding prompt usable without an existing checkout by naming the
+  official release source and reading instructions from the verified archive.
+- Document new-setup defaults, launcher PATH recovery and a first-task example.
+- Clarify installed-client discovery versus active-session detection and explicit
+  client declarations; remove the outdated computer-guide update target.
+- Runtime selection, authorization, quota and billing behavior are unchanged.
+
 ## 0.4.2
 
 - Keep automatic worker/review effort at advertised medium or below. Accept low

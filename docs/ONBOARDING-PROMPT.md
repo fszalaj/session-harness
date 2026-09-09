@@ -5,12 +5,18 @@ target project if they are not already clear. This prompt delegates the canonica
 [onboarding workflow](ONBOARDING.md); its conditional references preserve detail.
 
 ```text
-Onboard session-harness globally and into this project using docs/ONBOARDING.md.
+Onboard session-harness globally and into the current project. If no project is
+open, ask me which directory to use. The official release source is
+https://github.com/fszalaj/session-harness/releases/latest.
 For an existing installation, inspect ai-session version and retain its selected
 release unless I authorize an update or my existing automatic-update opt-in applies.
+Read its onboarding workflow from the retained source, or retrieve that same
+verified release archive if the source is absent.
 For a new installation, resolve the latest
-published stable release once, verify its matching archive/checksum and keep that
-version throughout. Never install maintained profiles from moving main.
+published stable release once. Download session-harness-VERSION.zip and SHA256SUMS
+from that same release, verify the archive, and extract it. VERSION is the selected
+release number. Read docs/ONBOARDING.md inside that verified extracted release and
+follow it throughout. Never install maintained profiles from moving main.
 
 Read the workflow and client instruction reference before changing files. Inspect
 hosting/installed clients, dirty state, personal/project rules and relevant owned

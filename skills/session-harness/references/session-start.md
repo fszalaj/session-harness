@@ -17,6 +17,11 @@ this procedure adds no inference, background polling or new account authorizatio
    `ai-session inventory`. Inspect each configured candidate through its implemented
    adapter. Distinguish detected software, public catalog, account-selectable model,
    supported execution, supported roles and current admission. None implies the next.
+   If the hosting client is unknown, run `ai-session discover --session auto` first.
+   It checks launcher/session markers and supported parent-process evidence. Plain
+   SSH can correctly return unknown; conflicting markers return ambiguous. Confirm
+   the real client before passing an explicit `--session CLIENT`; that value is an
+   operator declaration, not an independent detection result.
 4. Read `ai-session balance status` for configured participants, model-role
    restrictions and automatic selection eligibility. Its native quota refreshes can
    update observations and native authentication caches; they do not submit prompts
