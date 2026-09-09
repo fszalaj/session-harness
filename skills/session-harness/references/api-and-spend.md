@@ -83,6 +83,13 @@ text-only, one candidate, non-streaming, with no tools. Unsupported model-specif
 effort options fail before dispatch. Z.ai Coding Plan routing is a different
 service contract and is not substituted for the general API.
 
+Development builds add `api coding-models` and `api coding-run` for a reviewed
+OpenRouter coding allowlist. Read [coding setup and eligibility](coding-models.md)
+before use. Catalog inspection is anonymous; coding execution uses the same money
+authorization and unresolved-liability rules as `api run`. It additionally requires
+fresh reviewed capabilities and the exact requested model in the response. Catalog
+prices are metadata, not a maximum charge or authorization to spend.
+
 ## Explicit pricing for estimated routes
 
 Import a private JSON rate record with `ai-session spend rates SERVICE MODEL

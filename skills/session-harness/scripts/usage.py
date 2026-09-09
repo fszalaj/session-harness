@@ -111,6 +111,8 @@ def client_snapshot(service, payload, now=None):
 def copilot_snapshot(rows, now=None, complete=False):
     pools, complete = [], complete and bool(rows)
     for row in rows:
+        if row.get('hasQuota') is False:
+            continue
         if row.get("entitlementRequests") == -1 or row.get("isUnlimitedEntitlement") is True:
             continue
         if "remainingPercentage" not in row or "resetDate" not in row:
@@ -119,8 +121,11 @@ def copilot_snapshot(rows, now=None, complete=False):
         remaining = row["remainingPercentage"]
         if isinstance(remaining, bool) or not isinstance(remaining, (int, float)) or not math.isfinite(remaining) or not 0 <= remaining <= 100:
             raise ValueError("Invalid remaining percentage")
-        pools.append(dict(pool=row["pool"], used_percent=100 - remaining,
-                          resets_at=epoch(row["resetDate"])))
+        reset = epoch(row['resetDate'])
+        observed = time.time() if now is None else now
+        pools.append(dict(pool=row['pool'] + (':token_billing' if row.get('tokenBasedBilling') is True else ':requests'),
+                          used_percent=100 - remaining, resets_at=reset if reset > observed + 60 else None,
+                          window_minutes=44640, window_source='copilot.documented_monthly_maximum'))
     result = snapshot("copilot", pools, "copilot.account.getQuota", complete, now)
     result["credit_resources"] = credits.copilot_resources(rows)
     return result
@@ -183,7 +188,7 @@ def context_status(payload):
     return {"status": "observed", "used_percent": value, "action": action, "advisory": True}
 
 
-def require_admission(service, *, ledger=None):
+def require_admission(service, *, ledger=None, models=None):
     """Refresh metadata and check persisted policy for admission or runtime polling."""
     try:
         active_ledger = ledger or Ledger()
@@ -192,7 +197,20 @@ def require_admission(service, *, ledger=None):
         except ValueError as exc:
             return dict(allowed=False, exact_cap_supported=False,
                         reasons=[str(exc).split(";", 1)[0]], next_step="ai-session setup")
+        if service == 'copilot':
+            with active_ledger._connect() as db:
+                if db.execute("SELECT 1 FROM sqlite_master WHERE name='balance_jobs'").fetchone():
+                    rows = db.execute("SELECT value FROM balance_jobs WHERE service='copilot' AND status='running'").fetchall()
+                    if any(json.loads(row[0]).get('metadata', {}).get('reason_code') == 'copilot_execution_unverified' for row in rows):
+                        return dict(allowed=False, reasons=['copilot_execution_unverified'],
+                                    next_step='Inspect the retained job, then use ai-session balance reconcile ID --confirm-stopped')
         result = refresh(service, ledger=active_ledger)
+        if models is not None:
+            scoped = active_ledger.check(service, models=models)
+            if ("observed_at" not in result or result.get("observed_at") != scoped.get("observed_at")
+                    or result.get("refresh_status") == "unsupported"):
+                return dict(allowed=False, reasons=["quota_refresh_failed"])
+            result = scoped
         # Recheck policy here even when an adapter supplies an inconsistent result.
         if active_ledger.mode() == "strict":
             result["allowed"] = False
@@ -208,6 +226,7 @@ def main(argv=None):
     parser.add_argument("action", choices=("refresh", "status", "check", "capture", "context", "hook", "credit-policy"))
     parser.add_argument("service", nargs="?", choices=("codex", "claude", "antigravity", "copilot", "cursor"))
     parser.add_argument("--initialize", action="store_true", help="Explicit prospective first baseline; prior daily use stays unknown")
+    parser.add_argument("--model", help="Concrete Claude model for a scoped check or status")
     parser.add_argument("--db")
     parser.add_argument("--timezone", default=None)
     parser.add_argument("--renderer", help="Existing trusted statusline command; forward its original input/output")
@@ -217,6 +236,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     raw = None
     try:
+        if args.model and (args.service != "claude" or args.action not in {"check", "status"}):
+            parser.error("--model requires Claude check or status")
         if args.action == "credit-policy":
             if args.service != "codex" or args.db:
                 parser.error("credit-policy supports the current Codex account only")
@@ -244,7 +265,15 @@ def main(argv=None):
                 result = ledger.record(client_snapshot(args.service, payload), initialize=args.initialize)
                 result["context"] = context_status(payload)
             else:
-                result = ledger.check(args.service)
+                if args.action == "check":
+                    import coordination
+                    if args.service not in coordination.SERVICES:
+                        result = dict(allowed=False, reasons=["unsupported_protected_coordination"])
+                    else:
+                        result = coordination.dispatch("check", args.service, "usage-preflight", ledger,
+                                                       **({"models": [args.model]} if args.model else {}))
+                else:
+                    result = ledger.check(args.service, **({"models": [args.model]} if args.model else {}))
             credits.gate(result, args.service)
         if args.action == "hook":
             if not result.get("allowed"):

@@ -102,6 +102,19 @@ command>'` forwards its original input/output after allowlisted recording. Do no
 commit or retain the raw native payload. Installation does not replace statuslines
 or hooks automatically; prepare a reversible merge for the actual client config.
 
+**Version 0.3.0 behavior:** `usage check` for Codex, Claude, Antigravity and Copilot performs a
+fresh check through the configured quota authority, including without `--model`.
+Missing transport or invalid authority evidence denies with exit 2; local cached
+approval is never substituted. `usage status` remains a local diagnostic and can
+stay stale after a successful remote check. `usage refresh` updates that local
+ledger only; initialize shared accounting on its authority. Cursor retains its
+diagnostic reader and returns `unsupported_protected_coordination` for protected
+checks. Copilot admission also stops after an unresolved worker execution; inspect
+and reconcile that job before continuing. A quota read failure does not establish
+subscription exhaustion.
+Claude native sign-in and shared quota admission are separate checks; discovery
+reports a verified signed-out response as `auth_required` in the calling context.
+
 Claude's `usage.py hook claude` follows persisted admission, emitting a synchronous
 UserPromptSubmit block when denied. Native
 hook timeout can fail open and the hook does not gate all autonomous inference.
@@ -160,6 +173,41 @@ it or run inference to obtain the first quota report. Enabled extra-usage credit
 pools require complete supported telemetry; the adapter may block those accounts
 without changing their settings.
 
+## When a protected session stops
+
+**Version 0.3.0 behavior, beyond published v0.2.0:** an interactive launch prints the
+reason and recovery steps after restoring its output terminal, including leaving a
+child's alternate screen. Machine-readable failure JSON remains on stdout;
+redirected streams receive no diagnostic terminal escape sequences.
+
+Interactive worker routing has separate `balance_blocked` diagnostics. A
+`max_lead_exceeded` reason means that service has used a greater fraction of its
+daily allowance than the configured lead permits; quota admission can still have
+headroom. Inspect `ai-session balance status`. An unconfirmed completion receipt
+returns `balance_receipt_unavailable` and exit 2, with the task ID for inspection.
+Do not repeat possibly completed work or reconcile its journal before checking its
+result and process state. See [pacing recovery](balancing.md#stops-and-recovery).
+
+`daily_limit` means today's configured harness allowance was reached. It does not
+establish that the provider subscription is exhausted. Capacity, maintenance,
+reserve and unavailable quota evidence have separate explanations. Inspect
+`ai-session coordination status`; inspect or change budgets on the account authority
+using `ai-session budget SERVICE`. A new grant requires the owner's instruction.
+After admission is restored, reopen `ai-session SERVICE` and use the client's native
+resume option. Transcript persistence depends on that client. No automatic restart,
+provider switch, grant or paid fallback occurs.
+
+The harness stops its owned client process group when work is denied. It restores
+terminal attributes, descriptor flags and signal handlers independently, so failure
+of one restoration does not skip the others. A cleanup failure keeps the original
+quota reason and adds only fixed stage names and numeric errno metadata. When process
+termination is unconfirmed, the protected owner is retained and reported for inspection;
+do not blindly release it or start replacement work. Terminal restoration errors after
+confirmed process termination are reported separately and do not imply a live process.
+Deliberately detached descendants outside the owned process group remain outside this
+boundary. Operating-system permission failures are not treated as permission to ignore
+live processes; see Apple's [process-group signal contract](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/killpg.2.html).
+
 ## Context
 
 Read actual context-window size/percentage from native session metadata. At 60%,
@@ -214,3 +262,6 @@ existing hooks and records a private backup. Denial emits `continue: false`; it 
 not return a Stop-hook block that asks the model to continue. Restart the client.
 These controls reduce races and detect aggregate use; observed mode still cannot
 promise an exact charge boundary for provider streaming or unprotected clients.
+
+Model-specific Claude stops and exact-session recovery are described in
+[model allowances](model-allowances.md). Common budget stops still require restored admission.

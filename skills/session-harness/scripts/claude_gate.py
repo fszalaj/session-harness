@@ -10,7 +10,8 @@ import time
 
 import coordination
 
-EVENTS = ('UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Stop', 'SessionEnd')
+EVENTS = ('SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Stop', 'SessionEnd',
+          'PreModelSwitch', 'PostModelSwitch', 'SubagentStart', 'SubagentStop')
 
 
 def evaluate(payload):
@@ -20,6 +21,11 @@ def evaluate(payload):
         raise ValueError('unknown hook event or session')
     supervised = os.environ.get('SESSION_HARNESS_OWNER')
     owner = supervised or ('claude:' + session)
+    import claude_session
+    if os.environ.get(claude_session.ENV):
+        return claude_session.hook(payload, os.environ[claude_session.ENV], owner)
+    if event in ('SessionStart', 'PostModelSwitch', 'SubagentStart', 'SubagentStop'):
+        return {}
     if event in ('Stop', 'SessionEnd'):
         finished = event == 'SessionEnd' or payload.get('background_tasks') == []
         if not supervised and finished:
@@ -27,6 +33,9 @@ def evaluate(payload):
         return {}
     result = coordination.dispatch('admit', 'claude', owner)
     if result.get('allowed') is not True:
+        if event == 'PreModelSwitch':
+            return {'hookSpecificOutput': {'hookEventName': event, 'permissionDecision': 'deny',
+                    'permissionDecisionReason': 'Session harness: shared quota admission denied.'}}
         if 'account_session_busy' in result.get('reasons', []):
             return {'continue': False, 'stopReason':
                     f"Session harness: Claude session capacity reached ({result.get('active_sessions', '?')}/"
@@ -97,6 +106,14 @@ def main(argv=None):
         print(json.dumps(result))
         return 0
     except Exception:
+        if not args.install and isinstance(locals().get('raw'), bytes):
+            try:
+                if json.loads(raw).get('hook_event_name') == 'PreModelSwitch':
+                    print(json.dumps({'hookSpecificOutput': {'hookEventName': 'PreModelSwitch',
+                        'permissionDecision': 'deny', 'permissionDecisionReason': 'Session harness unavailable.'}}))
+                    return 0
+            except (ValueError, AttributeError):
+                pass
         print(json.dumps({'continue': False, 'stopReason': 'Session harness unavailable; inference remains blocked.'}))
         return 0 if not args.install else 2
 

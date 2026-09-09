@@ -24,7 +24,8 @@ QUOTA_FLAGS = ('isUnlimitedEntitlement', 'hasQuota', 'tokenBasedBilling',
 def child_env(env=None):
     """Keep native auth paths while removing model, API and routing overrides."""
     clean = harness.child_env(env)
-    blocked = ('COPILOT_PROVIDER_', 'COPILOT_MODEL', 'CURSOR_API_KEY', 'CURSOR_MODEL', 'CURSOR_BASE_URL')
+    blocked = ('COPILOT_PROVIDER_', 'COPILOT_MODEL', 'COPILOT_API_URL', 'GITHUB_COPILOT_API_TOKEN',
+               'CURSOR_API_', 'CURSOR_MODEL', 'CURSOR_BASE_URL')
     return {key: value for key, value in clean.items()
             if not any(key.startswith(prefix) for prefix in blocked)}
 
@@ -153,6 +154,7 @@ class MetadataRPC:
     """Bounded JSON-RPC metadata transport for Copilot CLI."""
     def __init__(self, executable, timeout=15):
         self.timeout, self.buffer, self.serial = timeout, b'', 0
+        self.on_message, self.tick = None, None
         self.process = platform_runtime.spawn([executable, '--headless', '--stdio', '--no-auto-update',
                                          '--log-level', 'none'], stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=0,
@@ -165,13 +167,18 @@ class MetadataRPC:
     def request(self, method):
         if method not in METHODS:
             raise ValueError('Only inventory metadata methods are allowed')
+        return self._request(method, {})
+
+    def _request(self, method, params):
         self.serial += 1
-        data = json.dumps({'jsonrpc': '2.0', 'id': self.serial, 'method': method, 'params': {}}).encode()
+        data = json.dumps({'jsonrpc': '2.0', 'id': self.serial, 'method': method, 'params': params}).encode()
         frame = b'Content-Length: ' + str(len(data)).encode() + b'\r\n\r\n' + data
         if self.reader: platform_runtime.write(self.process.stdin, frame, self.timeout)
         else: self.process.stdin.write(frame)
         deadline = time.monotonic() + self.timeout
         while time.monotonic() < deadline:
+            if self.tick:
+                self.tick()
             if b'\r\n\r\n' in self.buffer:
                 header, body = self.buffer.split(b'\r\n\r\n', 1)
                 match = re.search(rb'(?im)^Content-Length:\s*(\d+)\s*$', header)
@@ -185,13 +192,15 @@ class MetadataRPC:
                     self.buffer = body[length:]
                     if not isinstance(message, dict):
                         raise ValueError('Malformed metadata response')
-                    if message.get('id') == self.serial:
+                    if message.get('id') == self.serial and 'method' not in message:
                         if 'error' in message:
                             raise ValueError('Metadata method unavailable')
                         return message.get('result', {})
+                    if self.on_message:
+                        self.on_message(message)
                     continue
             chunk = self.reader.read(min(.1, max(0, deadline - time.monotonic()))) if self.reader else None
-            if chunk is not None or (self.selector and self.selector.select(max(0, deadline - time.monotonic()))):
+            if chunk is not None or (self.selector and self.selector.select(min(.5, max(0, deadline - time.monotonic())))):
                 if self.selector: chunk = os.read(self.process.stdout.fileno(), 65536)
                 if not chunk:
                     raise ValueError('Metadata process exited')

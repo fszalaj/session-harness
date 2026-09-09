@@ -1,5 +1,56 @@
 # Changelog
 
+## Unreleased - 0.3.0
+
+- Add Copilot native launch and supervised text execution with finite chat-pool
+  checks, actual model/usage receipts and retained unresolved jobs. Auto routing
+  is not an independent provider-family review.
+- Add bounded local Ollama execution with loopback-only transport, residency
+  checks, task deduplication and explicit recovery. Add explicit Meta and Ollama
+  Cloud API transports behind existing monetary admission.
+- Install a global Cursor rule pointing to shared instructions. Preserve the
+  Extra High manager default introduced in 0.2.1. Cursor execution remains pending
+  a verified account quota and execution adapter.
+
+- Add explicitly configured recurring free account pools, shared request identities,
+  conservative token/credit reservations, manual reconciliation and fixed-provider
+  HTTPS dispatch. Preserve legacy OpenRouter exact-zero guards, native budgets and
+  monetary accounting. Free-account evidence expires and never invents a refill.
+
+- Report interactive worker pacing denials with their own status and bounded reason
+  codes instead of a CLI schema error. Identify uncertain receipts without retrying
+  work or releasing its journal; preserve quota supervision and cleanup failures.
+- Clarify coding-model access choices across native subscriptions, direct APIs and
+  gateways, including account setup and the evidence needed before claiming deployment.
+
+- Route native `usage check` through the configured authority even without a model
+  argument. Keep local status/refresh diagnostic, deny unsupported protected clients
+  explicitly, and preserve quotas and paid-credit guards on every admitted response.
+- Recognize Claude's signed-out auth-status exit as `auth_required` without exposing
+  native account output or confusing sign-in with quota exhaustion.
+
+- Add a reviewed coding profile for Kimi, GLM, DeepSeek, MiniMax and Qwen through
+  OpenRouter. Intersect expiring evidence with fresh catalog capabilities and prices;
+  reject unreviewed variants and returned-model mismatches. Keep supervised text
+  execution behind existing API setup and monetary admission, separate from native
+  subscription balancing. Account setup and secret delivery remain private.
+
+- Add opt-in native subscription balancing and editable model/role supervision,
+  with shared accounting and separate API monetary authorization.
+- Explain interactive quota stops after restoring the terminal display. Preserve
+  the original stop reason when process or terminal cleanup fails; report sanitized
+  cleanup stages and retain the protected owner when process termination is unknown.
+- Keep redirected output free of diagnostic terminal escapes and preserve machine
+  JSON failures. Refuse to confirm cleanup when the owned child cannot be reaped.
+- Read native Claude alias resolutions and use verified current Sonnet workers
+  without changing the manager tier. Preserve native model-pool scope and common
+  accounting; admit current alternatives after a model-specific stop.
+- Track protected Claude model changes and resume an exact conversation once after
+  a verified scoped stop and successful cleanup. Preserve common limits, role
+  restrictions, legacy all-pool behavior and separate billing authorization.
+- Re-evaluate a concurrent newer quota observation once without refreshing or
+  writing accounting again. Preserve policy, completeness and final reservation guards.
+
 ## 0.2.1
 
 - Default managers to advertised Extra High (`xhigh`), otherwise the highest

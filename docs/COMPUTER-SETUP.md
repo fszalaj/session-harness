@@ -57,7 +57,7 @@ Use PowerShell 7.3+ or the Python launcher. See the
 unsupported native Windows Antigravity quota/terminal supervision.
 
 For an existing installation, select this release with
-`ai-session update --version 0.2.1 --apply`, then restart affected clients.
+`ai-session update --version 0.3.0 --apply`, then restart affected clients.
 
 ## Share one account across computers
 
@@ -122,6 +122,6 @@ Since v0.2.1, the launcher implements this manager default and excludes `max` an
 `ultra` from default selection. Editing Markdown or a configuration file does not
 switch an already-running conversation. There is no generic launcher `--effort` flag.
 
-Recurring free API pools and mixed native/free routing are not included in v0.2.1.
+Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).
 Paid API use separately requires explicit monetary authorization. No setup path
 enables billing, automatic top-up or paid fallback.

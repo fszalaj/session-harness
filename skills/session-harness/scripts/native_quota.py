@@ -12,6 +12,7 @@ import uuid
 
 import harness
 import credits
+import model_scope
 
 
 class NativeQuotaError(ValueError):
@@ -126,6 +127,7 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
     pools, globals_seen, projections = [], set(), []
     for row in limits:
         kind = row["kind"]
+        scope_metadata = None
         if not isinstance(row.get("is_active"), bool):
             invalid()
         if kind in ("session", "weekly_all"):
@@ -148,9 +150,12 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
                 invalid()
             identity = kind + ":" + hashlib.sha256(json.dumps(scope, sort_keys=True).encode()).hexdigest()
             projections.append((model["display_name"], row["percent"], row["resets_at"]))
+            scope_metadata = model_scope.native_scope(model)
         else:
             invalid()
         add_pool(pools, identity, row["percent"], row["resets_at"], observed_at)
+        if scope_metadata is not None:
+            pools[-1]["model_scope"] = scope_metadata
         pools[-1].update(window_minutes=300 if kind == "session" else 10080,
                          window_source="claude.native_limit_kind")
     expected = []
@@ -171,7 +176,8 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
         matches = [entry for entry in expected if family in re.findall(r"[a-z]+", entry[0].lower())]
         if len(matches) != 1 or matches[0][1:] != (row["utilization"], row["resets_at"]):
             add_pool(pools, "native:" + key, row["utilization"], row["resets_at"], observed_at)
-            pools[-1].update(window_minutes=10080, window_source="claude.native_limit_kind")
+            pools[-1].update(window_minutes=10080, window_source="claude.native_limit_kind",
+                             model_scope=model_scope.native_scope({"id": None, "display_name": family.title()}))
     for key in sorted(set(rates) - allowed):
         row = rates[key]
         if row is None:

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "service": "openrouter",
+  "min_context_tokens": 65536,
+  "models": [
+    {
+      "id": "nex-agi/nex-n2.5-pro:free",
+      "family": "nex",
+      "publisher": "nex-agi",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [{"kind": "vendor_report", "url": "https://github.com/nex-agi/Nex-N2.5", "note": "The publisher reports repository, terminal and multimodal coding evaluations for the Pro model. Free route availability is verified separately at dispatch."}]
+    },
+    {
+      "id": "poolside/laguna-s-2.1:free",
+      "family": "poolside",
+      "publisher": "poolside",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [{"kind": "vendor_report", "url": "https://huggingface.co/poolside/Laguna-S-2.1", "note": "The publisher reports Terminal-Bench, SWE-Bench Pro and multilingual repository coding results, with evaluation trajectories. These are not a common ranking across vendors."}]
+    },
+    {
+      "id": "cohere/north-mini-code:free",
+      "family": "cohere",
+      "publisher": "cohere",
+      "reviewed_at": "2026-09-09",
+      "expires_at": "2026-10-09",
+      "evidence": [{"kind": "vendor_report", "url": "https://huggingface.co/CohereLabs/North-Mini-Code-1.0", "note": "The coding-specific model card reports SWE-Bench Verified, SWE-Bench Pro and Terminal-Bench with the evaluation harness described. Account access remains a separate check."}]
+    }
+  ]
+}

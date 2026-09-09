@@ -13,7 +13,7 @@ Installed release maintenance uses `ai-session version`, `ai-session update --ch
 and the confirmed `ai-session update`. For exact rollback, use
 `ai-session update --version VERSION --apply`, replacing `VERSION` with the chosen
 published numeric version. For this release, run
-`ai-session update --version 0.2.1 --apply`, then restart affected clients.
+`ai-session update --version 0.3.0 --apply`, then restart affected clients.
 Preserve private policy and usage history. Updates never follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
 **Available in v0.2.0:** `ai-session auto-update` adds an explicit opt-in for automatic stable
@@ -75,6 +75,9 @@ discovery, refresh and accounting stay available. Never complete setup on the
 owner's behalf; report it as the next step.
 
 Use `harness.py usage refresh <service>` and `harness.py usage check <service>`.
+Version 0.3.0 native `check` refreshes the configured authority with or without a model;
+`status` reads local evidence and `refresh` updates only the local ledger. Diagnose
+shared admission with `check`, since remote checks leave local cached status unchanged.
 Refresh persisted policy before a stop and report its actual reserve; loaded
 instructions may describe stale settings. There is no mandatory 10% floor.
 Global reserve defaults do not replace existing service/pool overrides.
@@ -85,8 +88,15 @@ configuration after an explicit owner choice. Honor an existing choice without
 asking again. It uses observed daily lower bounds where earlier history is partial.
 Never silently substitute modes. A stop saves a checkpoint and does not switch
 billing services, start replacement workers or consume reset credits to bypass it.
-The launcher and external review runner poll while their owned processes run;
+A verified model-specific stop may select an admitted model within the same
+subscription; see [model allowances](references/model-allowances.md). Common stops
+never permit that transition. The launcher and external review runner poll while their owned processes run;
 direct native sessions remain outside that process boundary.
+
+Version 0.3.0 launchers explain quota stops after terminal restoration. Preserve the
+reported reason even if cleanup also fails. An unconfirmed process cleanup retains
+its owner for inspection; follow [stop recovery](references/usage-and-context.md#when-a-protected-session-stops)
+before restarting work. Never treat a cleanup error as a quota grant.
 
 For an explicitly authorized API route or money/credit configuration, read
 [API and spend](references/api-and-spend.md). API budget and admission mode are
@@ -95,6 +105,25 @@ monthly cap and per-request reservation; no automatic paid fallback is allowed.
 Native paid-credit execution remains unsupported, and missing eligibility controls
 can block a subscription adapter even when quota remains. On Windows installation
 or process work, read [platform support](references/platforms.md).
+
+When asked to add strong coding models from multi-provider catalogs, read
+[reviewed coding models](references/coding-models.md). `api coding-models`
+filters a reviewed allowlist against fresh public metadata; `api coding-run` adds
+supervised text work behind existing explicit API money admission. It does not
+install a gateway, authorize billing or count as independent review.
+
+Subscription balancing is an explicit opt-in feature in version 0.3.0. It uses fresh
+native quotas and shared reservations; APIs and unsupported execution adapters
+remain separate. Consult [balancing](references/balancing.md) when the owner requests
+even usage. Do not infer equal spending from equal task counts or dollar estimates.
+Honor the owner's configured model/role supervision settings. Supervised output is
+not independent review approval; report any review gap caused by those settings.
+
+For explicitly requested recurring free API access, read [free account pools](references/free-access.md).
+Use one execution host, verified no-paid-overage account evidence and the separate
+free ledger. Never equate free credits with zero token prices, infer a monthly
+refill, or create a paid money budget for this route. Expired evidence and unknown
+dispatch outcomes stop the configured free group until inspected.
 
 ## 1. Establish the manager
 
@@ -108,7 +137,9 @@ or process work, read [platform support](references/platforms.md).
 - With the selected skill directory as the working directory, run
   `python3 scripts/harness.py discover --session CLIENT`.
   Replace `CLIENT` with the actual session identity: `codex`, `claude`, or
-  `antigravity`. Run `harness.py inventory` for Copilot, Cursor, Gemini CLI, Kimi,
+  `antigravity` or `copilot`. Copilot auto cannot establish a strongest manager or
+  independent provider family; use it for admitted supervised text work.
+  Run `harness.py inventory` for Cursor, Gemini CLI, Kimi,
   OpenCode, Aider, Continue and Ollama discovery. Installed clients, advertised
   catalogs, account-selectable models and verified entitlement are different states.
   Grok/xAI, DeepSeek, Kimi/Moonshot and GLM/Z.ai can appear through multi-model
@@ -117,7 +148,7 @@ or process work, read [platform support](references/platforms.md).
   Direct API text routes cover OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi,
   Z.ai and OpenRouter; Z.ai catalog discovery remains unsupported. Additional
   native clients require verified quota, selection and execution adapters.
-  For Copilot, Cursor or another host, establish session identity from its native
+  For Cursor or another unsupported host, establish session identity from its native
   controls rather than supplying an unsupported `discover --session` value.
   Use auto-detection only when identity is unknown; installed
   binaries do not identify the current session. Conflicting evidence stays unknown.
@@ -156,9 +187,17 @@ provider guidance when capability or successor relationships remain uncertain.
   extremely difficult tasks. Do not force global max effort onto workers through environment.
 - No fixed provider-to-specialty stereotype. Choose from demonstrated capability,
   task risk, required tools, context size, latency and remaining subscription quota.
-  Use native workers from the manager's model family by default: OpenAI workers
-  for an OpenAI manager, Anthropic workers for an Anthropic manager, and Google
-  workers for a Google manager. In multi-model clients, select the family explicitly.
+  When the owner enables subscription balancing, read [balancing](references/balancing.md)
+  and select bounded work through `ai-session work` before every dispatch. Keep the
+  manager focused on planning and integration; the billing service comes from fresh
+  relative budget use, not the manager family. Explicit worker launches obey the same
+  lead check. With balancing disabled, native same-family workers remain the default.
+  In multi-model clients, verify billing service and model family separately.
+  Verify an actual work receipt; an enabled profile does not move manager tokens.
+  Claude's native alias resolution can establish current Sonnet workers. Check
+  [client limits](references/clients.md#claude-code): scoped Fable allowance is not
+  total subscription allowance. Use [model-aware admission](references/model-allowances.md)
+  for current alternatives and supervised exact-session recovery.
   Installed Claude investigator/implementer roles use the rolling `sonnet` alias
   (investigator: low; implementer: medium) and the verifier inherits the manager
   model at high effort; pass a per-call model only for a verified better fit. Keep leaf work off the

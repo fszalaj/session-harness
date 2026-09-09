@@ -23,6 +23,131 @@ def model(ident, rank=0, description="", efforts=None):
             "efforts": efforts or ["low", "medium", "high", "max"]}
 
 
+class LegacyLauncherTests(unittest.TestCase):
+    def test_legacy_commands_preserve_arguments(self):
+        for command in ('balance', 'work', 'audit'):
+            with self.subTest(command=command), patch('balance_cli.main', return_value=7) as handler:
+                args = [command, '--id', 'literal value', '--', '--execute']
+                self.assertEqual(harness.main(['launch', command, '--execute', *args[1:]]), 7)
+                handler.assert_called_once_with(args)
+
+    def test_direct_command_stays_unchanged(self):
+        with patch('balance_cli.main', return_value=0) as handler:
+            args = ['work', 'launch', '--execute']
+            self.assertEqual(harness.main(args), 0)
+            handler.assert_called_once_with(args)
+
+    def test_only_exact_legacy_prefix_is_recognized(self):
+        for args in (['launch', 'work'], ['launch', 'work', '--help'],
+                     ['launch', 'Work', '--execute'], ['launch', 'work', '--execute=true']):
+            with self.subTest(args=args), patch('balance_cli.main') as handler, \
+                    patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
+                harness.main(args)
+            handler.assert_not_called()
+
+    def test_leaf_cannot_use_legacy_dispatch(self):
+        with patch.dict(os.environ, {harness.LEAF_MARKER: '1'}), \
+                patch('balance_cli.main') as handler, patch('sys.stdout', new_callable=io.StringIO):
+            self.assertEqual(harness.main(['launch', 'balance', '--execute', 'status']), 2)
+            handler.assert_not_called()
+
+
+class TerminalFailureTests(unittest.TestCase):
+    def failure(self, error):
+        with patch.dict(os.environ, {}, clear=True), \
+                patch('quota.Ledger'), \
+                patch.object(harness, 'discover_provider', return_value={'auth': {'status': 'subscription'}}), \
+                patch.object(harness, 'launch_plan', return_value={'selection': {'model': 'fixture'}, 'argv': ['fixture']}), \
+                patch.object(harness, 'require_role', return_value={}), \
+                patch.object(harness, 'require_quota'), \
+                patch.object(harness.sys.stdin, 'isatty', return_value=True), \
+                patch.object(harness.supervision, 'run_terminal', side_effect=error), \
+                patch('sys.stdout', new_callable=io.StringIO) as output, \
+                patch('sys.stderr', new_callable=io.StringIO) as diagnostic:
+            code = harness.main(['launch', 'codex', '--execute'])
+        self.assertEqual(code, 2)
+        self.assertNotIn('\x1b', output.getvalue() + diagnostic.getvalue())
+        return json.loads(output.getvalue()), diagnostic.getvalue()
+
+    def test_quota_stop_explains_reason_and_recovery_without_changing_json_stream(self):
+        error = harness.supervision.Stop('codex', ['private-pool:daily_limit'])
+        result, message = self.failure(error)
+        self.assertEqual(result['status'], 'quota_blocked')
+        self.assertEqual(result['reasons'], ['daily_limit'])
+        self.assertIn("Today's harness allowance", message)
+        self.assertIn('ai-session budget codex', message)
+        self.assertIn('resume option', message)
+        self.assertNotIn('private-pool', message + json.dumps(result))
+
+    def test_unconfirmed_cleanup_keeps_primary_stop_and_avoids_resume_advice(self):
+        error = harness.supervision.Stop('codex', ['daily_limit'])
+        error.session_cleanup = {'state': 'unknown', 'owner_retained': True,
+                                 'errors': [{'stage': 'process_group', 'errno': 1}]}
+        result, message = self.failure(error)
+        self.assertEqual(result['status'], 'quota_blocked')
+        self.assertEqual(result['cleanup'], error.session_cleanup)
+        self.assertIn('owner was retained', message)
+        self.assertIn('errno 1', message)
+        self.assertNotIn('resume option', message)
+
+    def test_claude_stop_reports_conservative_pool_scope_in_both_streams(self):
+        result, message = self.failure(harness.supervision.Stop('claude', ['daily_limit']))
+        self.assertTrue(result['model_scoped_admission_supported'])
+        self.assertFalse(result['model_specific_stop'])
+        self.assertIn('common limits apply to every model', message)
+
+    def test_primary_os_error_does_not_expose_path_or_error_text(self):
+        result, message = self.failure(PermissionError(1, 'private diagnostic', '/private/credential'))
+        self.assertEqual(result['status'], 'provider_error')
+        self.assertIn('errno 1', result['error'])
+        self.assertNotIn('private', result['error'] + message)
+
+    def test_wrapped_stop_uses_one_cleanup_record_for_json_and_stderr(self):
+        for attached_to_wrapper in (False, True):
+            with self.subTest(attached_to_wrapper=attached_to_wrapper):
+                error = harness.HarnessError('quota_blocked', 'Quota stopped')
+                error.quota_stop = harness.supervision.Stop('codex', ['daily_limit'])
+                cleanup = {'state': 'unknown', 'owner_retained': True,
+                           'errors': [{'stage': 'process_group', 'errno': 1}]}
+                target = error if attached_to_wrapper else error.quota_stop
+                target.session_cleanup = cleanup
+                result, message = self.failure(error)
+                self.assertEqual(result['cleanup'], cleanup)
+                self.assertIn('owner was retained', message)
+                self.assertNotIn('resume option', message)
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX pipe descriptor contract')
+    def test_closed_output_pipe_uses_stderr_without_losing_exit_status(self):
+        script = """import os,sys,harness,json
+from unittest.mock import patch
+read_fd,write_fd=os.pipe()
+os.close(read_fd)
+os.dup2(write_fd,1)
+os.close(write_fd)
+with patch.object(harness,'discover_provider',side_effect=BrokenPipeError(32,'private')):
+ sys.exit(harness.main(['discover','--session','codex']))
+"""
+        env = dict(os.environ)
+        env.pop(harness.LEAF_MARKER, None)
+        result = subprocess.run([sys.executable, '-c', script], cwd=Path(__file__).parent,
+                                capture_output=True, timeout=5, env=env)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        data = json.loads(result.stderr)
+        self.assertEqual(data['status'], 'provider_error')
+        self.assertNotIn(b'private', result.stderr)
+
+    def test_preflight_denial_uses_sanitized_structured_stop(self):
+        with patch('coordination.dispatch', return_value={'allowed': False, 'reasons': ['private-pool:daily_limit']}):
+            with self.assertRaises(harness.HarnessError) as caught:
+                harness.require_quota('codex')
+        self.assertEqual(caught.exception.status, 'quota_blocked')
+        self.assertEqual(caught.exception.quota_stop.reasons, ('daily_limit',))
+        self.assertNotIn('private-pool', str(caught.exception))
+        result, message = self.failure(caught.exception)
+        self.assertEqual(result['reasons'], ['daily_limit'])
+        self.assertIn("Today's harness allowance", message)
+
+
 class SessionTests(unittest.TestCase):
     def test_explicit_session_overrides_inherited_markers(self):
         result = harness.detect_session("claude", {"CODEX_THREAD_ID": "redacted"})
@@ -176,10 +301,39 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(result["planner"]["model"], "gpt-99.10-leader")
         self.assertIn(("model/list", {"includeHidden": False, "limit": 100, "cursor": "page-two"}), RPC.calls)
 
+    def test_claude_signed_out_exit_is_auth_required_without_private_output(self):
+        data = {"loggedIn": False, "authMethod": "none", "apiProvider": "firstParty", "email": "private-account"}
+        with patch("platform_runtime.which", return_value="mock-claude"), \
+                patch.object(harness, "checked", return_value="--effort <level> Effort (low, medium, high)"), \
+                patch.object(harness, "run", return_value=(1, json.dumps(data), "private-stderr")) as probe, \
+                patch("claude_models.discover", side_effect=AssertionError("No catalog without auth")):
+            result = harness.discover_provider("claude")
+        self.assertEqual(result["status"], "auth_required")
+        self.assertNotIn("private", json.dumps(result))
+        self.assertIn("execution context", result["reason"])
+        probe.assert_called_once_with(["mock-claude", "auth", "status", "--json"], timeout=15)
+
+    def test_claude_auth_rejects_failed_or_malformed_probes(self):
+        signed_out = {"loggedIn": False, "authMethod": "none", "apiProvider": "firstParty"}
+        cases = [(code, json.dumps(data), "provider_error") for code, data in [
+            (2, signed_out), (1, dict(signed_out, loggedIn=0)),
+            (1, dict(signed_out, loggedIn="false")), (1, dict(signed_out, loggedIn=True)),
+            (1, dict(signed_out, authMethod="claude.ai")), (1, dict(signed_out, apiProvider=None))]]
+        cases += [(code, text, "schema_error" if code in (0, 1) else "provider_error")
+                  for code in (0, 1, 2) for text in ("private-not-json", "[]", "null")]
+        for code, stdout, expected in cases:
+            with self.subTest(code=code, stdout=stdout), \
+                    patch.object(harness, "run", return_value=(code, stdout, "private-stderr")):
+                with self.assertRaises(harness.HarnessError) as failure:
+                    harness.claude_auth_status("mock-claude")
+            self.assertEqual(failure.exception.status, expected)
+            self.assertNotIn("private", str(failure.exception))
+
     def test_claude_auth_output_excludes_personal_account_fields(self):
         help_text = "--effort <level> Effort (low, medium, high, max)\n--safe-mode --tools --strict-mcp-config --disable-slash-commands --no-session-persistence --permission-mode --mcp-config"
         auth = {"loggedIn": True, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max", "email": "private@example.test", "orgName": "private"}
-        with patch.object(harness, "checked", side_effect=[help_text, json.dumps(auth)]), \
+        with patch.object(harness, "checked", side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                 patch("claude_models.discover", return_value={"models": [], "status": "client_selectable_metadata"}):
             result = harness.discover_claude("mock-claude")
         self.assertEqual(result["auth"]["status"], "subscription")
@@ -190,7 +344,8 @@ class DiscoveryTests(unittest.TestCase):
     def test_claude_truthy_auth_does_not_probe_models(self):
         auth = {"loggedIn": "true", "authMethod": "private", "apiProvider": "firstParty",
                 "subscriptionType": "private"}
-        with patch.object(harness, "checked", side_effect=["--effort <level> Effort (low, high)", json.dumps(auth)]), \
+        with patch.object(harness, "checked", side_effect=["--effort <level> Effort (low, high)", "2.1.251 (Claude Code)"]), \
+                patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                 patch("claude_models.discover") as probe:
             result = harness.discover_claude("mock-claude")
         self.assertEqual(result["auth"]["status"], "auth_required")
@@ -203,7 +358,8 @@ class DiscoveryTests(unittest.TestCase):
         models = [{"id": name, "account_selectable": True,
                    "native_controls": {"reasoning_efforts": ["low", "medium", "high", "max"]}}
                   for name in ["best", "sonnet", "claude-opus-99-9", "claude-fable-99-10[1m]"]]
-        with patch.object(harness, "checked", side_effect=[help_text, json.dumps(auth)]), \
+        with patch.object(harness, "checked", side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                 patch("claude_models.discover", return_value={"models": models, "status": "client_selectable_metadata"}):
             result = harness.discover_claude("mock-claude")
         self.assertEqual("claude-fable-99-10[1m]", result["planner"]["model"])
@@ -211,6 +367,90 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual("claude-fable-99-10[1m]", result["worker"]["model"])
         self.assertEqual("medium", result["worker"]["effort"])
         self.assertFalse(result["entitlement_verified"])
+
+    def test_resolved_current_sonnet_workers_keep_manager_and_pool_gates(self):
+        import claude_models
+        import test_claude_models
+        help_text = '--effort <level> Effort (low, medium, high, max)\n--safe-mode --tools --strict-mcp-config --disable-slash-commands --no-session-persistence --permission-mode --mcp-config'
+        auth = {'loggedIn': True, 'authMethod': 'claude.ai', 'apiProvider': 'firstParty', 'subscriptionType': 'max'}
+        for sonnet_major in (98, 99):
+            rows = [{'value': alias, 'resolvedModel': resolved, 'supportedEffortLevels': ['low', 'medium', 'high', 'max']}
+                    for alias, resolved in [('default', 'claude-opus-99'), ('opus', 'claude-opus-99'),
+                                           ('claude-fable-99-10', 'claude-fable-99-10'),
+                                           ('sonnet', f'claude-sonnet-{sonnet_major}')]]
+            models = claude_models.parse_initialize(json.dumps(test_claude_models.event(rows)), 'match')
+            for model in models:
+                model['account_selectable'] = True
+            with self.subTest(sonnet_major=sonnet_major), \
+                    patch.object(harness, 'checked', side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                            patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
+                    patch('claude_models.discover', return_value={'models': models, 'status': 'client_selectable_metadata'}):
+                result = harness.discover_claude('mock-claude')
+            self.assertEqual(result['planner']['model'], 'claude-fable-99-10')
+            expected = 'claude-sonnet-99' if sonnet_major == 99 else 'claude-fable-99-10'
+            self.assertEqual(result['worker']['model'], expected)
+            self.assertEqual(result['worker']['effort'], 'medium')
+            self.assertTrue(result['model_scoped_admission_supported'])
+            self.assertIn('unknown scopes remain required', result['quota_scope_policy'])
+        self.assertEqual(harness.generation('claude-opus-99-20260908', 'claude'),
+                         harness.generation('claude-opus-99', 'claude'))
+
+
+    def test_equivalent_sonnet_revisions_prefer_undated_regardless_of_catalog_order(self):
+        help_text = '--effort <level> Effort (low, medium, high, max)\n--safe-mode --tools --strict-mcp-config --disable-slash-commands --no-session-persistence --permission-mode --mcp-config'
+        auth = {'loggedIn': True, 'authMethod': 'claude.ai', 'apiProvider': 'firstParty', 'subscriptionType': 'max'}
+        names = ['claude-sonnet-99', 'claude-sonnet-99-20260908', 'claude-fable-99-1']
+        for order in (names, list(reversed(names))):
+            models = [{'id': name, 'account_selectable': True,
+                       'native_controls': {'reasoning_efforts': ['low', 'medium', 'high', 'max']}}
+                      for name in order]
+            with patch.object(harness, 'checked', side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                    patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
+                    patch('claude_models.discover', return_value={'models': models, 'status': 'client_selectable_metadata'}):
+                result = harness.discover_claude('mock-claude')
+            self.assertEqual(result['worker']['model'], 'claude-sonnet-99')
+
+    def test_duplicate_alias_unequal_efforts_intersection(self):
+        help_text = (
+            '--effort <level> Effort (low, medium, high, max)\n'
+            '--safe-mode --tools --strict-mcp-config --disable-slash-commands '
+            '--no-session-persistence --permission-mode --mcp-config'
+        )
+        auth = {'loggedIn': True, 'authMethod': 'claude.ai', 'apiProvider': 'firstParty', 'subscriptionType': 'max'}
+
+        manager_entry = {
+            'id': 'claude-fable-99-1',
+            'resolved_model': 'claude-fable-99-1',
+            'account_selectable': True,
+            'native_controls': {'reasoning_efforts': ['low', 'medium', 'high', 'max']},
+        }
+        sonnet_alias_1 = {
+            'id': 'sonnet',
+            'resolved_model': 'claude-sonnet-99',
+            'account_selectable': True,
+            'native_controls': {'reasoning_efforts': ['low', 'medium', 'high']},
+        }
+        sonnet_alias_2 = {
+            'id': 'claude-sonnet-99',
+            'resolved_model': 'claude-sonnet-99',
+            'account_selectable': True,
+            'native_controls': {'reasoning_efforts': ['low', 'high']},
+        }
+
+        for catalog in (
+            [manager_entry, sonnet_alias_1, sonnet_alias_2],
+            [manager_entry, sonnet_alias_2, sonnet_alias_1],
+        ):
+            with self.subTest(catalog_order=[m['id'] for m in catalog]):
+                with patch.object(harness, 'checked', side_effect=[help_text, "2.1.251 (Claude Code)"]) as mock_checked, \
+                        patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
+                     patch('claude_models.discover', return_value={'models': catalog, 'status': 'client_selectable_metadata'}):
+                    res = harness.discover_claude('mock-claude')
+                    self.assertEqual(res['planner']['model'], 'claude-fable-99-1')
+                    self.assertEqual(res['planner']['effort'], 'high')
+                    self.assertEqual(res['worker']['model'], 'claude-sonnet-99')
+                    self.assertEqual(res['worker']['effort'], 'low')
+                self.assertEqual(mock_checked.call_count, 2)
 
 
 class ExecutionTests(unittest.TestCase):
@@ -422,7 +662,8 @@ class ReviewTests(unittest.TestCase):
         capability = {"review": {"status": "available"}, "auth": {"status": "subscription"},
                       "planner": {"model": "best", "effort": "high"}, "supported_efforts": ["low", "medium", "high"], "executable": "mock-claude"}
         artifact = "Review this plan with UTF-8: zażółć.".encode()
-        with patch.object(harness, "checked", return_value=self.stream()) as checked, patch.object(harness, "require_quota"):
+        with patch.object(harness, "checked", return_value=self.stream()) as checked, \
+                patch.object(harness, "require_quota"), patch.object(harness, 'require_role', return_value={}):
             result = harness.review("claude", artifact, 1, capability)
         transmitted = checked.call_args.kwargs["stdin"]
         self.assertEqual(transmitted, b"<review-artifact>\n" + artifact + b"\n</review-artifact>")

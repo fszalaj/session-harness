@@ -5,6 +5,15 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## Unreleased
+
+Version 0.3.0 adds opt-in subscription balancing, bounded text work and
+metadata-only usage audits. It preserves independent provider reviews, API money
+admission and installed release selection. See [behavior and capability boundaries](../skills/session-harness/references/balancing.md).
+Optional model/role supervision settings keep quality decisions separate from usage
+balancing; the owner selects restrictions without a hardcoded provider ranking.
+A published v0.2.0 installation does not gain these commands from documentation alone.
+
 ## Everyday use
 
 ```sh
@@ -32,7 +41,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.2.1, use `ai-session update --version 0.2.1 --apply`, then restart affected
+For v0.3.0, use `ai-session update --version 0.3.0 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.

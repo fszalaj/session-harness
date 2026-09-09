@@ -61,7 +61,7 @@ def launcher_content(runtime: Path) -> bytes:
         "args = sys.argv[1:]\n"
         "if not args:\n"
         "    forwarded = ['--help']\n"
-        "elif args[0] in {'setup', 'configure', 'version', 'update', 'auto-update', 'coordination', 'hooks', 'budget', 'inventory', 'usage', 'api', 'spend', 'discover', 'review', '--help', '-h'}:\n"
+        "elif args[0] in {'setup', 'configure', 'version', 'update', 'auto-update', 'coordination', 'hooks', 'budget', 'balance', 'work', 'audit', 'inventory', 'usage', 'api', 'free', 'ollama', 'spend', 'discover', 'review', '--help', '-h'}:\n"
         "    forwarded = args\n"
         "else:\n"
         "    forwarded = ['launch', *args[:1], '--execute', *args[1:]]\n"
@@ -287,6 +287,7 @@ def release_sources(repo: Path, personal_policy: Path | None = None) -> tuple[di
     for provider, directory, pattern, destination in [
         ("codex", "codex-agents", "*.toml", ".codex/agents"),
         ("claude", "claude-agents", "*.md", ".claude/agents"),
+        ("cursor", "cursor-rules", "*.mdc", ".cursor/rules"),
     ]:
         for path in sorted((profile / directory).glob(pattern)):
             relative = (Path("native") / provider / path.name).as_posix()

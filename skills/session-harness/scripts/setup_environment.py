@@ -13,13 +13,13 @@ from budget_policy import WEEKDAYS, parse_workdays, validate_calendar
 from quota import Ledger, default_path
 from spend import SpendLedger, amount, ticks
 
-NATIVE_SERVICES = ("codex", "claude", "antigravity")
+NATIVE_SERVICES = coordination.SERVICES
 
 
 def parser():
     result = argparse.ArgumentParser(description=__doc__)
     result.add_argument("--ledger", "--db", dest="ledger", help="Private shared ledger path")
-    result.add_argument("--services", help="Comma-separated codex,claude,antigravity; empty selects none")
+    result.add_argument("--services", help="Comma-separated " + ','.join(NATIVE_SERVICES) + "; empty selects none")
     result.add_argument("--api-services", help="Comma-separated API services; empty selects none")
     result.add_argument("--timezone", help="IANA timezone; existing ledger timezone must match")
     result.add_argument("--workdays", help="all, weekdays, or comma-separated weekdays")
@@ -112,7 +112,7 @@ def main(argv=None, *, input_stream=None, output_stream=None):
         }
         output.write("Setup authorizes selected routes only; keys and model catalogs do not authorize spending.\n"
                      "Strict native mode requires enforceable bounds. Observed mode permits in-flight overshoot.\n")
-        labels = {"services": "Native services (codex,claude,antigravity; none to clear)",
+        labels = {"services": "Native services (" + ",".join(NATIVE_SERVICES) + "; none to clear)",
                   "api_services": "API services (" + ",".join(SERVICES) + "; none to clear)",
                   "timezone": "Timezone", "workdays": "Workdays", "cutoff": "Reset cutoff",
                   "mode": "Native quota mode (strict/observed)",
