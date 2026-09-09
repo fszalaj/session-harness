@@ -31,8 +31,11 @@ quota mode. Read the coordination and budget references for shared accounts and
 policy choices; read API/money guidance only if paid use is requested. Do not enable
 billing, top-up or paid fallback. Strict remains the default unless I choose observed mode.
 
-Resolve models dynamically: strongest hosting-provider manager at highest standalone
-effort, bounded native workers normally medium (low for gathering), two independent
+Resolve models dynamically: strongest hosting-provider manager at Extra High (xhigh),
+or the highest advertised level below max if unavailable. Use max only by explicit
+task-level selection for an extremely difficult task. Verify older releases' native
+effort control; instructions cannot change a running session. Use bounded native
+workers normally at medium (low for gathering), with two independent
 other-provider plan reviews. Follow the selected skill's admission/context procedure;
 missing capabilities or reviews are not success. Do not restart orchestration for leaf tasks.
 

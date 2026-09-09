@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Default managers to advertised Extra High (`xhigh`), otherwise the highest
+  supported level below `max`. Reserve explicit `max` for extremely difficult
+  tasks. Document personal-computer setup and shared-account boundaries.
+
 ## 0.2.0
 
 - Add account-bound Codex confirmation of disabled automatic credit top-up and
