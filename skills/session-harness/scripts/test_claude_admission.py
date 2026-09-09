@@ -59,7 +59,7 @@ class SelectionTests(unittest.TestCase):
                                  efforts=['low', 'medium']))
         choices = admission.candidates(cap, 'worker')
         self.assertEqual([c['model'] for c in choices], [SONNET, OPUS])
-        self.assertEqual([c['effort'] for c in choices], ['medium', 'low'])
+        self.assertEqual([c['effort'] for c in choices], ['medium', 'medium'])
         self.assertEqual(admission.candidates(cap, 'planner')[-1]['effort'], 'medium')
 
     def test_old_remote_authority_cannot_drop_models(self):

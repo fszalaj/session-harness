@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.2
+
+- Keep automatic worker/review effort at advertised medium or below. Accept low
+  and medium singleton catalogs; stop instead of selecting high, xhigh, max or ultra.
+- Derive Copilot's default task effort from its selected model instead of inheriting
+  manager effort. Preserve advertised explicit overrides and client-managed controls.
+- Validate explicit effort variants consistently during discovery, worker feasibility
+  and review. Missing or malformed variants no longer silently launch a base model.
+- Document the automatic-effort compatibility boundary and explicit native leaf controls.
+
 ## 0.4.1
 
 - Select review effort from the chosen model's advertised levels; reject ambiguous

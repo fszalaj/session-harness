@@ -129,6 +129,9 @@ provider guidance when capability or successor relationships remain uncertain.
   medium; simple evidence collection may use low; complex implementation and
   final review use high. Reserve `max` for explicit task-level escalation on
   extremely difficult tasks. Do not force global max effort onto workers through environment.
+  Automatic helper defaults choose advertised medium or the highest advertised
+  level below it. High and above require explicit task selection; a catalog with
+  no routine level stops automatic work. Do not guess a missing model variant.
 - No fixed provider-to-specialty stereotype. Choose from demonstrated capability,
   task risk, required tools, context size, latency and remaining subscription quota.
   When the owner enables subscription balancing, read [balancing](references/balancing.md)

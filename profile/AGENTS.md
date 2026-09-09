@@ -46,6 +46,9 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
   Honor configured model supervision limits and report unavailable independent reviews.
 - Choose execution roles, models and effort for the task. Use current generations,
   normally medium effort, low for simple gathering and high for difficult work.
+  Pass native leaf model and effort explicitly and verify the effective controls.
+  Automatic helper defaults choose advertised medium or the highest level below it;
+  higher effort requires explicit task selection on a compatible current model.
   Leaf roles default to the cheaper current model (Claude: `sonnet`); the flagship
   is reserved for the manager and the final verifier. Maximum effort is an
   explicit exception for extremely difficult tasks, never a routine role default.
