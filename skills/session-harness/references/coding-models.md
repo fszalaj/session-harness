@@ -21,7 +21,7 @@ That separate route does not require or inherit paid API money authorization.
 | Direct DeepSeek, Moonshot/Kimi, Z.ai | Separate service account/key, direct model ID and current billing rates | General explicit text API; outside the reviewed OpenRouter selector |
 | Direct OpenAI, Anthropic, Gemini, xAI | Separate API credentials and monetary authorization | General explicit text API; outside native subscription balancing |
 | Direct MiniMax, Qwen | A future verified direct adapter as well as service credentials | Direct execution adapter absent; the reviewed gateway route is available |
-| Copilot, Cursor | Existing platform account and, before execution, verified quota/model/role adapters | Inventory only; Copilot additionally reads quota metadata |
+| Copilot, Cursor | Existing platform account and verified no-overage native quotas | Supervised Auto text work; see the additional client runbook for account and model limits |
 
 [Moonshot's API setup](https://platform.kimi.ai/docs/overview),
 [DeepSeek's API setup](https://api-docs.deepseek.com/),

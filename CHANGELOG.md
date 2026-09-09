@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased - 0.3.0
+## 0.3.0
 
 - Add Copilot native launch and supervised text execution with finite chat-pool
   checks, actual model/usage receipts and retained unresolved jobs. Auto routing
@@ -8,9 +8,12 @@
 - Add bounded local Ollama execution with loopback-only transport, residency
   checks, task deduplication and explicit recovery. Add explicit Meta and Ollama
   Cloud API transports behind existing monetary admission.
-- Install a global Cursor rule pointing to shared instructions. Preserve the
-  Extra High manager default introduced in 0.2.1. Cursor execution remains pending
-  a verified account quota and execution adapter.
+- Add Cursor personal Free quota checks, protected Auto launch and supervised text
+  with native token receipts. Auto does not expose its routed model or support
+  independent review. Install a global Cursor rule pointing to shared instructions.
+- Preserve legacy Copilot daily consumption when adopting verified billing-pool
+  identifiers. Rounded account counters remain lower-bound evidence in observed mode.
+- Preserve the Extra High manager default introduced in 0.2.1.
 
 - Add explicitly configured recurring free account pools, shared request identities,
   conservative token/credit reservations, manual reconciliation and fixed-provider

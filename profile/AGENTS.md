@@ -53,11 +53,11 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
 - Verify the integrated result independently and record actual models, reviews,
   tests and missing capabilities. A missing review is not approval.
 
-The optional `ai-session codex` / `ai-session claude` / `ai-session antigravity` / `ai-session copilot`
+The optional `ai-session codex` / `ai-session claude` / `ai-session antigravity` / `ai-session copilot` / `ai-session cursor`
 launcher resolves the manager on each startup. Direct app sessions must verify the
 selected model because Markdown cannot switch an already-running model. Do not
 claim maximum-model execution if the client could not select it.
-Copilot auto does not verify a strongest model before execution; record that
+Copilot and Cursor Auto do not verify a strongest model before execution; record that
 selection limit and use its bounded text worker only as supervised output.
 
 Complete `ai-session setup` with the owner before inference; it names the native

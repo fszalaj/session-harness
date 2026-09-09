@@ -248,6 +248,17 @@ class AutoUpdateTests(unittest.TestCase):
             metadata.assert_not_called()
         self.assertEqual('Owner replacement.\n', target.read_text())
 
+    def test_cursor_rule_drift_is_preserved_and_defers(self):
+        self.enabled()
+        target = self.home / '.cursor/rules/session-harness.mdc'
+        target.unlink()
+        target.write_text('Local rule.\n')
+        with patch('releases.release_metadata') as metadata:
+            result = auto_update.run(self.home, self.ledger)
+            self.assertEqual('deferred_error', result['status'])
+            metadata.assert_not_called()
+        self.assertEqual('Local rule.\n', target.read_text())
+
     def overlay(self):
         local = self.root / 'local'
         shutil.copytree(self.base, local)

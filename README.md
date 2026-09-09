@@ -78,12 +78,12 @@ not prove protected execution or a successful independent review.
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
 | Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |
-| Cursor CLI | Advertised model inventory only; no verified personal quota or harness launch/review adapter |
+| Cursor CLI | Personal Free accounts: native quota, launcher and supervised text via Auto; routed model identity and independent review unavailable |
 | Ollama local | Bounded text from installed local models, explicit task IDs and separate local receipts |
 | Explicit APIs | Direct text requests, including Meta and Ollama Cloud, with separate credentials and monetary authorization; no automatic fallback |
 
 See [client adapter boundaries](skills/session-harness/references/clients.md).
-Follow [additional client execution](docs/CLIENT-EXECUTION.md) for Copilot, local
+Follow [additional client execution](docs/CLIENT-EXECUTION.md) for Copilot, Cursor, local
 Ollama, explicit Meta/Ollama APIs and remaining inventory-only clients.
 Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).
 
@@ -137,7 +137,7 @@ sign-in in that execution context is separate from shared quota admission.
 
 Claude alias resolution also uses fresh native `resolvedModel` metadata, allowing
 current Sonnet workers alongside a newer minor revision of the planning tier.
-Version 0.3.0 keep model-specific and common Claude allowances separate. A
+Version 0.3.0 keeps model-specific and common Claude allowances separate. A
 Fable-only stop can select current Opus and resume the exact protected conversation
 after confirmed cleanup. Common quota and configured role restrictions still apply.
 See [model allowances and recovery](skills/session-harness/references/model-allowances.md).

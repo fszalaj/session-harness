@@ -151,11 +151,19 @@ def _refresh(service, *, ledger, initialize=False):
             observed = codex_snapshot(rpc.request("account/rateLimits/read", {}))
         finally:
             rpc.close()
+    elif service == 'cursor':
+        import cursor_client
+        executable = shutil.which('cursor-agent') or shutil.which('agent')
+        if not executable:
+            raise ValueError('Cursor CLI is not installed')
+        observed = cursor_client.quota_snapshot(cursor_client.metadata(executable))
     elif service == "copilot":
         import inventory
         data = inventory.discover("copilot")
         if data.get("authenticated") is not True:
             raise ValueError("Copilot subscription metadata is unavailable")
+        import copilot_migration
+        copilot_migration.migrate(ledger, data)
         observed = copilot_snapshot(data["quota"], complete=data.get("quota_complete") is True)
     elif service in {"claude", "antigravity"}:
         import native_quota
@@ -197,12 +205,12 @@ def require_admission(service, *, ledger=None, models=None):
         except ValueError as exc:
             return dict(allowed=False, exact_cap_supported=False,
                         reasons=[str(exc).split(";", 1)[0]], next_step="ai-session setup")
-        if service == 'copilot':
+        if service in {'copilot', 'cursor'}:
             with active_ledger._connect() as db:
                 if db.execute("SELECT 1 FROM sqlite_master WHERE name='balance_jobs'").fetchone():
-                    rows = db.execute("SELECT value FROM balance_jobs WHERE service='copilot' AND status='running'").fetchall()
-                    if any(json.loads(row[0]).get('metadata', {}).get('reason_code') == 'copilot_execution_unverified' for row in rows):
-                        return dict(allowed=False, reasons=['copilot_execution_unverified'],
+                    rows = db.execute("SELECT value FROM balance_jobs WHERE service=? AND status='running'", (service,)).fetchall()
+                    if any(json.loads(row[0]).get('metadata', {}).get('reason_code') == service + '_execution_unverified' for row in rows):
+                        return dict(allowed=False, reasons=[service + '_execution_unverified'],
                                     next_step='Inspect the retained job, then use ai-session balance reconcile ID --confirm-stopped')
         result = refresh(service, ledger=active_ledger)
         if models is not None:

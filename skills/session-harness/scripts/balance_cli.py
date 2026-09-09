@@ -116,7 +116,7 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None):
     return {**response, 'status': 'completed' if recorded else 'receipt_unavailable',
             'allowed': recorded, 'billing_service': service,
             'model_family': inventory.model_vendor(response.get('actual_model') or '')
-                if service == 'copilot' else {'codex': 'openai', 'claude': 'anthropic', 'antigravity': 'google'}[service],
+                if service in {'copilot', 'cursor'} else {'codex': 'openai', 'claude': 'anthropic', 'antigravity': 'google'}[service],
             'billing_route': 'native_subscription', 'task_id': task_id, 'balance': receipt,
             'automatic_retry': False,
             'verdict': 'worker output requires manager inspection; not an independent plan review'}

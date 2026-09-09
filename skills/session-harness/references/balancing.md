@@ -90,7 +90,7 @@ public defaults or excluding them from useful supervised work. Save a JSON list:
 Apply it on the account authority with
 `ai-session balance constraints --file model-constraints.json`. `balance status`
 shows the setting to every coordinated client. This example is optional, not a
-built-in provider ranking. Choose `codex`, `claude`, `antigravity` or `copilot`, a model pattern,
+built-in provider ranking. Choose `codex`, `claude`, `antigravity`, `copilot` or `cursor`, a model pattern,
 and any of `manager`, `reviewer`, `verifier`, `worker`, `investigator`. Patterns are
 case-sensitive: only `*` and `?` are wildcards; brackets are literal. Use runtime
 catalog identities rather than assuming an alias's resolved model.
@@ -119,8 +119,9 @@ Match work against verified adapter capabilities:
 | Provider or tool | Execution status | Quota and billing scope |
 | --- | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Protected native execution | Fresh native quota readers; balance fractions of local daily budgets |
-| Copilot, Cursor | Inventory; no protected execution | Copilot also reads quota; catalog presence never grants dispatch |
-| Gemini CLI, Kimi CLI, OpenCode, Aider, Continue, Ollama | Discovery or local inventory | No verified protected execution or native quota adapter |
+| Copilot, Cursor | Native launch and supervised text | Finite Copilot chat pool or personal Cursor Free Auto; fresh no-overage evidence required |
+| Gemini CLI, Kimi CLI, OpenCode, Aider, Continue | Discovery | No protected native execution adapter |
+| Ollama local | Bounded text with local residency checks | Separate local job ledger, outside subscription balancing |
 | Paid OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi, Z.ai, OpenRouter APIs | Explicit text requests | Separate monthly money admission; never subscription fallback |
 
 Resolve the **billing service** independently from the **model family**. For example,
@@ -130,7 +131,7 @@ third-party catalog access alone does not add a balancing execution route. Local
 Ollama models are not a subscription budget. Unsupported configured services and
 excluded API services appear explicitly in balance status.
 
-The development [reviewed coding profile](coding-models.md) adds explicit OpenRouter
+The [reviewed coding profile](coding-models.md) adds explicit OpenRouter
 text work across five model families. It remains in the separate API money ledger;
 `api coding-run` does not consume or balance native subscription allowances.
 The separate [recurring free account pools](free-access.md) can participate in
@@ -145,8 +146,8 @@ constraints and the platform's available allowance answer different questions.
 
 Current selection resolves the supported native worker from the account catalog
 after choosing its billing service by quota fraction. It does not rank every model
-in Copilot or Cursor for implementation/review. Their inventories expose model
-vendor metadata but no protected execution selection. OpenRouter requests require
+in Copilot or Cursor for implementation/review. Their Auto routes produce supervised
+text. Copilot reports the routed model; Cursor currently exposes only Auto. OpenRouter requests require
 an explicit model and monetary admission; they do not participate in native balancing.
 The native model/role configuration above does not claim enforcement in those
 unsupported role adapters. Adding a platform requires verified quota/billing units,

@@ -10,7 +10,7 @@ import time
 
 from quota import Ledger
 
-SERVICES = ('codex', 'claude', 'antigravity', 'copilot')
+SERVICES = ('codex', 'claude', 'antigravity', 'copilot', 'cursor')
 DEFAULT_MAX_SESSIONS = 4
 MAX_SESSIONS = 32
 

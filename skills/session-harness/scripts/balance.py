@@ -11,7 +11,7 @@ import time
 import budget_policy
 import usage
 
-NATIVE = frozenset({'codex', 'claude', 'antigravity', 'copilot'})
+NATIVE = frozenset({'codex', 'claude', 'antigravity', 'copilot', 'cursor'})
 OPEN = {'reserved', 'running'}
 TERMINAL = {'completed', 'failed', 'denied'}
 KEY = 'balance_v1'
@@ -578,12 +578,12 @@ def finish(ledger, id, status, metadata=None):
                            reasons=check.get('reasons', []))
     except Exception:
         pass
-    if job['service'] == 'copilot' and status == 'failed' and job['status'] == 'running':
+    if job['service'] in {'copilot', 'cursor'} and status == 'failed' and job['status'] == 'running':
         with ledger._connect() as db:
             db.execute('BEGIN IMMEDIATE')
             current = json.loads(db.execute('SELECT value FROM balance_jobs WHERE id=?', (id,)).fetchone()[0])
             if current['status'] == 'running':
-                current.update(metadata={'reason_code': 'copilot_execution_unverified'}, after=observation)
+                current.update(metadata={'reason_code': job['service'] + '_execution_unverified'}, after=observation)
                 db.execute('UPDATE balance_jobs SET value=? WHERE id=?', (json.dumps(current), id))
             return _job_reply(current)
     return _transition(ledger, id, status, metadata, observation)

@@ -113,13 +113,14 @@ class UsageTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertFalse(result["allowed"])
 
-    def test_inventory_clients_cannot_claim_protected_admission(self):
-        for service in ("cursor",):
-            with patch("coordination.dispatch", side_effect=AssertionError("No protected adapter")):
+    def test_new_clients_require_authority_admission(self):
+        for service in ("cursor", "copilot"):
+            with patch("coordination.dispatch", return_value={"allowed": False, "reasons": ["quota_refresh_failed"]}) as dispatch:
                 code, result = self.command("check", service)
             self.assertEqual(code, 2)
             self.assertFalse(result["allowed"])
-            self.assertIn("unsupported_protected_coordination", result["reasons"])
+            self.assertIn("quota_refresh_failed", result["reasons"])
+            dispatch.assert_called_once()
 
     def test_codex_keeps_every_window_and_omits_identity_and_reset_credits(self):
         row = {"primary": {"usedPercent": 42, "windowDurationMins": 10080, "resetsAt": 9999},
@@ -133,13 +134,13 @@ class UsageTests(unittest.TestCase):
     def test_unsupported_refresh_cannot_admit_manually_recorded_evidence(self):
         with tempfile.TemporaryDirectory() as directory:
             ledger = Ledger(Path(directory) / "quota.db")
-            ledger.complete_setup(services=["codex", "claude", "antigravity", "copilot", "cursor"], api_services=[], source="test")
+            ledger.complete_setup(services=["codex", "claude", "antigravity", "copilot", "unsupported-client"], api_services=[], source="test")
             ledger.set_mode("observed")
             with patch("quota.time.time", return_value=100):
-                ledger.record(usage.snapshot("cursor", [{"pool": "monthly", "used_percent": 0,
+                ledger.record(usage.snapshot("unsupported-client", [{"pool": "monthly", "used_percent": 0,
                               "resets_at": 9999}], "fixture", now=100), initialize=True)
-                self.assertTrue(ledger.check("cursor")["allowed"])
-                result = usage.require_admission("cursor", ledger=ledger)
+                self.assertTrue(ledger.check("unsupported-client")["allowed"])
+                result = usage.require_admission("unsupported-client", ledger=ledger)
         self.assertFalse(result["allowed"])
         self.assertIn("unsupported_quota_refresh", result["reasons"])
 

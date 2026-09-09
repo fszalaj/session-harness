@@ -61,7 +61,8 @@ class InventoryTests(unittest.TestCase):
             result = inventory.discover_copilot('/mock/copilot')
         self.assertEqual(result['status'], 'account_metadata')
         self.assertEqual(result['quota_status'], 'unavailable')
-        self.assertFalse(result['execution_supported'])
+        self.assertTrue(result['execution_supported'])
+        self.assertEqual(result['execution_admission'], 'not_checked')
         self.assertNotIn('private', json.dumps(result))
 
     def test_rpc_forbids_inference_before_touching_process(self):

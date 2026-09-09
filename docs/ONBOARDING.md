@@ -258,13 +258,13 @@ ai-session usage check SERVICE
 Replace `SERVICE` with the configured supported service. For first-time prospective
 observation only, explicitly initialize with `ai-session usage refresh SERVICE --initialize`.
 Run initialization on the quota authority for a shared account, preserving its history.
-In version 0.3.0, `usage check` for Codex, Claude, Antigravity and Copilot refreshes
+In version 0.3.0, `usage check` for Codex, Claude, Antigravity, Copilot and Cursor refreshes
 that configured authority, including when no model is supplied. `usage status` reads
 the local ledger; a remote check does not refresh this local cache, so it can remain
 stale. `usage refresh` updates only the machine where it runs and is not coordinated
-admission. Cursor retains its diagnostic capabilities; protected `check` returns
-`unsupported_protected_coordination`. Follow the [additional client runbook](CLIENT-EXECUTION.md)
-for Copilot's execution and recovery requirements.
+admission. Cursor requires a verified personal Free account with on-demand usage disabled.
+Follow the [additional client runbook](CLIENT-EXECUTION.md) for Copilot and Cursor
+execution, account limits and recovery.
 Retain existing observation history. `usage check` reports
 `environment_setup_required` until `ai-session setup` names that service.
 Initialization starts prospective observation; it cannot recover earlier daily usage. Choose the ledger

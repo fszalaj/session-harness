@@ -152,7 +152,7 @@ def register(home, source):
     if any(p.resolve() != (root / 'session-harness').resolve() for p in skills):
         raise ValueError('Skill links do not select the installed snapshot')
     paths += skills
-    for provider, directory in [('codex', '.codex/agents'), ('claude', '.claude/agents')]:
+    for provider, directory in [('codex', '.codex/agents'), ('claude', '.claude/agents'), ('cursor', '.cursor/rules')]:
         for p in (root / 'native' / provider).glob('*'):
             target = home / directory / p.name
             if target.resolve() != p.resolve():

@@ -5,14 +5,14 @@ The Python helper uses the standard library. Its `discover` and default `launch`
 commands inspect metadata only; `review` and `launch --execute` invoke a model.
 For instruction filenames and skill paths, read the [client instruction map](instructions.md).
 Keep Gemini CLI, Antigravity CLI and their IDE interfaces separate.
-Use the [additional client runbook](../../../docs/CLIENT-EXECUTION.md) for Copilot
+Use the [additional client runbook](../../../docs/CLIENT-EXECUTION.md) for Copilot, Cursor
 and Ollama commands, requirements, receipts and recovery.
 
 | Client or route | Harness support in v0.3.0 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native discovery, quota and launch/review adapters; execution requires admission and the isolation/platform controls below |
 | Copilot CLI | Native launcher and supervised text worker; requires finite token-billed chat quota and disabled paid overage; no independent auto-model review |
-| Cursor CLI | Advertised model inventory only; personal quota and harness launch/review are unsupported |
+| Cursor CLI | Personal Free account quota and Auto launch/text work; no routed model identity or independent review |
 | Ollama local | Fixed loopback execution, local-model residency checks and a separate job ledger |
 | Explicit APIs | Direct text including Meta and Ollama Cloud; separate credentials and money admission, no automatic fallback |
 

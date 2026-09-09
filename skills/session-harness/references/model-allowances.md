@@ -1,6 +1,6 @@
 # Claude model allowances
 
-Version 0.3.0 admit a concrete Claude model against its common limits and the
+Version 0.3.0 admits a concrete Claude model against its common limits and the
 native pools that apply to that model. A verified Fable-only limit does not block
 Opus or Sonnet. Unknown scope metadata remains required for every model. Existing
 pool identifiers, daily consumption, reset history and grants are preserved.

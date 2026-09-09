@@ -224,7 +224,8 @@ class MetadataRPC:
 def base_record(service, executable):
     return {'service': service, 'installed': executable is not None, 'executable': executable,
             'authenticated': None, 'models': [], 'quota': [], 'quota_complete': False, 'inference_verified': False,
-            'execution_supported': False, 'status': 'metadata_unavailable' if executable else 'not_installed',
+            'execution_supported': service in {'copilot', 'cursor', 'ollama'},
+            'execution_admission': 'not_checked', 'status': 'metadata_unavailable' if executable else 'not_installed',
             'native_controls': {}, 'evidence': {'observed_at': dt.datetime.now(dt.timezone.utc).isoformat(),
                                                'kind': 'metadata_only'}}
 
@@ -296,7 +297,7 @@ def discover_cursor(executable=None, timeout=15):
             return result
         result['models'] = normalize_models(parse_cursor_models(listed[1]), 'cursor')
         result['status'] = 'advertised_catalog' if result['models'] else 'unrecognized_model_output'
-        result['quota_status'] = 'unsupported_personal_cli_metadata'
+        result['quota_status'] = 'not_collected; use usage check cursor for native admission'
         result['native_controls'] = {'model_selection': '--model', 'execution_verification': 'required_before_dispatch'}
     except (OSError, ValueError, subprocess.TimeoutExpired, harness.HarnessError):
         result['error'] = 'metadata_probe_failed'

@@ -1,7 +1,9 @@
 # Run additional clients
 
 Use the commands supplied by your selected release. Inspect the client separately
-from the model provider and the account that pays for execution.
+from the model provider and the account that pays for execution. Inventory
+`execution_supported` identifies an implemented adapter; `execution_admission`
+remains `not_checked` until a protected command verifies the account and quota.
 
 ## Copilot CLI
 
@@ -31,6 +33,13 @@ execution. Inspect `actual_model` and token counts in the completed worker recei
 Copilot auto is not an independent provider-family reviewer. An absent effort
 control is recorded as unavailable; no effort value is invented.
 
+A legacy quota upgrade archives the original service state. Active pool identifiers
+and their daily usage, policies and grants move to verified billing-unit names.
+Native `hasQuota:false` pools leave current admission but retain their historical
+entries and archived observation; they cannot authorize requests. If old and new
+aliases both contain consumption for a day, stop for reconciliation rather than
+counting the same usage twice. Existing newer observations are preserved.
+
 The worker requires a finite token-billed chat pool and checks aggregate account
 consumption before and after execution. These deltas can include other sessions;
 they are not an exclusive per-task bill. Native reset timestamps at or before the
@@ -47,7 +56,8 @@ ai-session usage check copilot
 
 Recovery preserves accounting. Do not automatically replay the task or switch
 services to bypass a stop. Small responses may not move rounded account counters;
-the worker then reports `usage_unaccounted` instead of claiming verified billing.
+the receipt preserves the zero observed delta and reports the per-task charge as
+unknown. Token counts do not establish a quota debit or a monetary charge.
 
 ## Ollama local
 
@@ -89,12 +99,41 @@ than treating the response timestamp as a unique provider receipt. Its
 included free allowance is not automatically converted into a dollar budget.
 Without the configured admission evidence, cloud execution stays blocked.
 
-## Cursor and other inventory clients
+## Cursor CLI
 
-Cursor's global rule and shared skill can load the harness workflow. Inventory
-can inspect the client and advertised models. A verified personal quota/execution
-adapter is still required before the harness can dispatch through Cursor.
-Do not treat sign-in, an installed rule, or an advertised model as live execution.
+1. Install the official Cursor CLI and sign in with `agent login`.
+2. Run `ai-session discover --session cursor`. Use a personal Free account with
+   on-demand usage disabled and no credit grants. Other account configurations stop.
+3. Select `cursor` in `ai-session configure` on the client and account authority.
+4. On a first baseline only, run `ai-session usage refresh cursor --initialize` on
+   the authority. Run `ai-session usage check cursor`.
+5. Start `ai-session cursor`, or enable balancing and submit bounded text:
+
+   ```sh
+   ai-session work --provider cursor --id unique-cursor-task < task.txt
+   ```
+
+The Free CLI requires Auto. Named models shown by `agent models` can still require
+an upgrade; the harness does not upgrade or switch to paid usage. Auto does not
+expose the routed model or reasoning effort. Receipts keep `actual_model` and
+`model_family` unknown and report native token counts. Do not count this route as
+an independent provider-family review or a verified strongest-model manager.
+
+The text worker uses an empty workspace and native configuration, ask mode,
+explicit sandboxing, denied file/shell/web/MCP permissions and blocked web tools.
+It rejects tool events and validates session, response and token metadata. Native
+system instructions and skill metadata may still contribute context. Interactive
+sessions retain normal project tools and existing permissions.
+
+Quota reads use the installed CLI's read-only native account transport. Unknown
+native schemas, plans, grants or paid-usage controls fail closed. The reader does
+not modify the vendor installation. The reader accepts reviewed entry-file hashes
+for CLI 2026.09.08-6caf4ff on Linux x64 and macOS arm64. Other builds fail closed;
+update the adapter when a changed CLI reports unavailable metadata. Quota deltas
+are aggregate lower bounds, not per-task charges. Interrupted or unverified jobs
+require the same inspection and explicit reconciliation as Copilot.
+
+## Other inventory clients
 
 Gemini CLI, Kimi CLI, OpenCode, Aider and Continue retain their separately documented
 inventory boundaries. Antigravity CLI has its own execution adapter and is distinct

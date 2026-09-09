@@ -263,9 +263,9 @@ class BalanceTests(unittest.TestCase):
             self.assertFalse(balance._load(db)['enabled'])
 
     def test_unsupported_default_reported_and_explicit_api_rejected(self):
-        self.ledger.complete_setup(services=['codex', 'claude', 'cursor'], api_services=['openai'], source='test')
+        self.ledger.complete_setup(services=['codex', 'claude', 'unsupported-client'], api_services=['openai'], source='test')
         result = balance.configure(self.ledger, True)
-        self.assertEqual(result['unsupported_services'], ['cursor'])
+        self.assertEqual(result['unsupported_services'], ['unsupported-client'])
         self.assertEqual(result['api_services_excluded'], ['openai'])
         with self.assertRaises(ValueError):
             balance.configure(self.ledger, True, services=['codex', 'openai'])

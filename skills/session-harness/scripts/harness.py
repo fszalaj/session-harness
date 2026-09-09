@@ -22,7 +22,7 @@ import platform_runtime
 import balance_cli
 
 
-PROVIDERS = {"codex": "codex", "claude": "claude", "antigravity": "agy", "copilot": "copilot"}
+PROVIDERS = {"codex": "codex", "claude": "claude", "antigravity": "agy", "copilot": "copilot", "cursor": "cursor-agent"}
 EFFORTS = ("none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra")
 MAX_INPUT = 16 * 1024
 MAX_OUTPUT = 2 * 1024 * 1024
@@ -636,6 +636,9 @@ def discover_provider(provider, offline=False):
     if not executable:
         return {"status": "missing_cli", "reason": "No installed CLI.", "review": {"status": "missing_cli"}}
     try:
+        if provider == 'cursor':
+            import cursor_client
+            return cursor_client.discover(executable, offline)
         if provider == 'copilot':
             import copilot_client
             return {**copilot_client.discover(executable, offline), 'executable': executable}
@@ -660,6 +663,8 @@ def launch_plan(provider, role, capability, client_args=None):
                 "-c", 'forced_login_method="chatgpt"', "-c", 'model_provider="openai"']
     elif provider == "claude":
         argv = [executable, "--model", model, "--effort", effort]
+    elif provider == 'cursor':
+        argv = [executable, '--model', model]
     elif provider == 'copilot':
         argv = [executable, '--model', model, '--no-auto-update']
         if effort is not None:
@@ -669,10 +674,14 @@ def launch_plan(provider, role, capability, client_args=None):
     forwarded = list(client_args or [])
     conflicts = {"--model", "--effort", "-m", "--config", "--settings", "--setting-sources", "-c", "--profile", "-p", "--oss",
                  "--local-provider", "--fallback-model", "--safe-mode", "--bare", "--no-session-persistence", "--print", "--input-format", "--output-format"}
+    if provider == 'cursor':
+        conflicts.update({'--api-key', '--header', '-H', '--endpoint', '-e', '--plugin-dir', '--worker', '--output-format'})
     if provider == 'copilot':
         conflicts.update({'--reasoning-effort', '--config-dir', '--provider', '--api-key',
                           '--base-url', '--headless', '--stdio', '--acp'})
-    if any(arg.split("=", 1)[0] in conflicts or re.match(r"^-[mcp][^-].+", arg) for arg in forwarded):
+    if any(arg.split("=", 1)[0] in conflicts or re.match(r"^-[mcp][^-].+", arg)
+           or (provider == 'cursor' and (re.match(r'^-[eH].+', arg) or arg in {'worker', 'bedrock', 'agent'}))
+           for arg in forwarded):
         raise HarnessError("conflicting_override", "Forwarded model, effort, config or print overrides would bypass harness selection; use the provider CLI directly for these overrides.")
     argv.extend(forwarded)
     return {"status": "ready", "provider": provider, "role": role, "selection": selection,
@@ -998,7 +1007,7 @@ def review(provider, artifact, timeout, capability, effort=None, *, task=False):
     except UnicodeDecodeError as exc:
         raise HarnessError("invalid_encoding", "Review artifact must be valid UTF-8 text.") from exc
     review_status = capability.get("review", {}).get("status")
-    if review_status != "available" and not (task and provider == 'copilot' and review_status == 'supervised_only'):
+    if review_status != "available" and not (task and provider in {'copilot', 'cursor'} and review_status == 'supervised_only'):
         raise HarnessError("unsupported_capability", capability.get("review", {}).get("reason", "No verified review isolation."))
     auth_status = capability.get("auth", {}).get("status")
     if auth_status != "subscription" and not (provider == "antigravity" and auth_status == "catalog_access"):
@@ -1010,11 +1019,13 @@ def review(provider, artifact, timeout, capability, effort=None, *, task=False):
         capability = dict(capability, planner=choice)
     else:
         require_quota(provider)
-    if provider == 'copilot':
+    if provider in {'copilot', 'cursor'}:
         import copilot_client
+        import cursor_client
         choice = capability['planner']
         require_role(provider, choice['model'], 'worker' if task else 'reviewer', supervised=task)
-        response = copilot_client.execute(artifact, timeout, capability, task=task)
+        adapter = copilot_client if provider == 'copilot' else cursor_client
+        response = adapter.execute(artifact, timeout, capability, task=task)
         return checked_role_response(provider, response, artifact, task)
     if effort is None:
         options = capability.get("supported_efforts")
@@ -1198,7 +1209,7 @@ def main(argv=None):
                     require_quota(args.provider, models=[response["selection"]["model"]]
                         if args.provider == "claude" and capability.get("model_switch_hooks_supported") and os.name == "posix" else None)
                     environment = child_env(leaf=args.role == "worker")
-                    if args.provider == 'copilot':
+                    if args.provider in {'copilot', 'cursor'}:
                         import inventory
                         environment = inventory.child_env(environment)
                     environment[SESSION_MARKER] = args.provider

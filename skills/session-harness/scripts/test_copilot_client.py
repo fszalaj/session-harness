@@ -73,10 +73,13 @@ class CopilotTests(unittest.TestCase):
                 client.request.side_effect = rpc
                 capability = {'executable': 'copilot', 'planner': {'model': 'auto', 'effort': None}}
                 with patch.object(inventory, 'MetadataRPC', return_value=client), patch('supervision.Watch'):
-                    if scenario == 'success':
+                    if scenario in {'success', 'unchanged-quota'}:
                         result = copilot.execute(b'task', 30, capability, task=True)
                         self.assertEqual(result['actual_model'], 'gpt-test')
                         self.assertEqual(result['completion_tokens'], 10)
+                        if scenario == 'unchanged-quota':
+                            self.assertEqual(result['quota_evidence']['delta_lower_bound_percent'], 0)
+                            self.assertEqual(result['quota_evidence']['per_task_charge'], 'unknown')
                     else:
                         with self.assertRaises(harness.HarnessError):
                             copilot.execute(b'task', 30, capability, task=True)

@@ -10,11 +10,11 @@ import tempfile
 import time
 
 
-SERVICES = {"claude", "codex", "copilot", "antigravity"}
+SERVICES = {"claude", "codex", "copilot", "antigravity", "cursor"}
 FLAGS = ("enabled", "auto_reload", "can_purchase", "has_credits", "unlimited")
 AMOUNTS = ("balance", "used", "limit", "cap")
 SOURCES = {"claude": "claude.native_usage", "codex": "codex.account/rateLimits/read",
-           "copilot": "copilot.account.getQuota", "antigravity": "antigravity.native_usage"}
+           "copilot": "copilot.account.getQuota", "antigravity": "antigravity.native_usage", "cursor": "cursor.native_dashboard"}
 AGY_SETTINGS_SOURCE = "antigravity.cli_settings"
 AGY_DEFAULTS_SOURCE = "antigravity.cli_defaults"
 CONTROLS = {"useG1Credits", "tokenBasedBilling", "hasQuota", "usageAllowedWithExhaustedQuota", "overageAllowedWithExhaustedQuota"}

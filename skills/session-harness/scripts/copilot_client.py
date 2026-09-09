@@ -157,9 +157,7 @@ def execute(artifact, timeout, capability, *, task):
             if (before['entitlementRequests'] != after['entitlementRequests']
                     or before['inactive_pools'] != after['inactive_pools']
                     or after['usedRequests'] < before['usedRequests']
-                    or after['remainingPercentage'] > before['remainingPercentage']
-                    or (after['usedRequests'] == before['usedRequests']
-                        and after['remainingPercentage'] == before['remainingPercentage'])):
+                    or after['remainingPercentage'] > before['remainingPercentage']):
                 raise harness.HarnessError('usage_unaccounted', 'Copilot chat-pool consumption could not be verified; inspect the retained unresolved job.')
             finished_client, client = client, None
             finished_client.close()
@@ -168,7 +166,10 @@ def execute(artifact, timeout, capability, *, task):
                     'prompt_tokens': sum(row['inputTokens'] for row in usages),
                     'completion_tokens': sum(row['outputTokens'] for row in usages),
                     'quota_evidence': {'pool': 'chat:token_billing', 'before': before, 'after': after,
-                                       'attribution': 'aggregate_account_change_not_exclusive_task_cost'},
+                                       'attribution': 'aggregate_account_change_not_exclusive_task_cost',
+                                       'delta_lower_bound_percent': before['remainingPercentage'] - after['remainingPercentage'],
+                                       'per_task_charge': 'unknown',
+                                       'counter_precision': 'rounded_or_delayed_values_can_remain_unchanged'},
                     'requested_model': choice['model'], 'requested_effort': choice['effort'],
                     'isolation': 'empty tool surface, configuration discovery/hooks/skills disabled; tool callbacks rejected'}
     except supervision.Stop:

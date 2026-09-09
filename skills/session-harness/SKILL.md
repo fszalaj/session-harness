@@ -137,7 +137,7 @@ dispatch outcomes stop the configured free group until inspected.
 - With the selected skill directory as the working directory, run
   `python3 scripts/harness.py discover --session CLIENT`.
   Replace `CLIENT` with the actual session identity: `codex`, `claude`, or
-  `antigravity` or `copilot`. Copilot auto cannot establish a strongest manager or
+  `antigravity`, `copilot` or `cursor`. Copilot and Cursor Auto cannot establish a strongest manager or
   independent provider family; use it for admitted supervised text work.
   Run `harness.py inventory` for Cursor, Gemini CLI, Kimi,
   OpenCode, Aider, Continue and Ollama discovery. Installed clients, advertised
@@ -148,8 +148,8 @@ dispatch outcomes stop the configured free group until inspected.
   Direct API text routes cover OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi,
   Z.ai and OpenRouter; Z.ai catalog discovery remains unsupported. Additional
   native clients require verified quota, selection and execution adapters.
-  For Cursor or another unsupported host, establish session identity from its native
-  controls rather than supplying an unsupported `discover --session` value.
+  For another unsupported host, establish session identity from its native controls
+  rather than supplying an unsupported `discover --session` value.
   Use auto-detection only when identity is unknown; installed
   binaries do not identify the current session. Conflicting evidence stays unknown.
 - Prefer the current session's advertised model/effort capabilities over another
