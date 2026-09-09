@@ -13,7 +13,7 @@ Installed release maintenance uses `ai-session version`, `ai-session update --ch
 and the confirmed `ai-session update`. For exact rollback, use
 `ai-session update --version VERSION --apply`, replacing `VERSION` with the chosen
 published numeric version. For this release, run
-`ai-session update --version 0.3.0 --apply`, then restart affected clients.
+`ai-session update --version 0.3.1 --apply`, then restart affected clients.
 Preserve private policy and usage history. Updates never follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
 **Available in v0.2.0:** `ai-session auto-update` adds an explicit opt-in for automatic stable
@@ -179,6 +179,9 @@ provider guidance when capability or successor relationships remain uncertain.
   Compare versions numerically within a provider family, never lexicographically
   or across vendors. An alias alone does not prove current-generation eligibility:
   check its resolved model against available successors before assigning a worker.
+- Default to the newest available generation within each family. Opaque platform
+  Auto is an explicit exception, never evidence of a current model. Automatic native
+  `work` uses Codex, Claude or Antigravity; Copilot/Cursor requires an explicit provider.
 - Prefer a cheaper **current-generation** model for bounded work. If none exists,
   use the current flagship at medium effort instead of an older cheap model.
 - Only use effort levels advertised by that model/client. Normal workers use

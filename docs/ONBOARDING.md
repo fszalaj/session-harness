@@ -9,8 +9,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.3.0, run
-`ai-session update --version 0.3.0 --apply`, then restart affected clients.
+for an authorized version change. To select v0.3.1, run
+`ai-session update --version 0.3.1 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -179,7 +179,7 @@ separate money mode and bounded dispatch. Never reveal keys, buy credits, enable
 automatic reload or infer API entitlement from a subscription. Installation itself
 creates no paid allowance and changes no authentication.
 
-Version 0.3.0 offer a [reviewed coding profile](../skills/session-harness/references/coding-models.md)
+Version 0.3.0 offers a [reviewed coding profile](../skills/session-harness/references/coding-models.md)
 for five additional model families through one OpenRouter account. Inspect it with
 `ai-session api coding-models` before choosing an exact ID. Follow the guide to add
 private key delivery and explicit API money authorization; public catalog access
@@ -192,7 +192,12 @@ before configuring it. Select one execution host and use its SSH interface from
 other computers. A saved key alone does not enable dispatch; missing evidence
 keeps a provider disabled. No monetary budget or billing upgrade is created.
 
-For version 0.3.0 installations, a user requesting even native
+Use the newest available generation within each model family by default. In v0.3.1,
+automatic native `work` selects Codex, Claude or Antigravity and resolves its current
+worker model. To choose platform Auto explicitly, use `work --provider copilot` or
+`work --provider cursor`; these routes do not verify newest-generation selection.
+
+For version 0.3.1 installations, a user requesting even native
 subscription use can enable [shared fractional pacing](../skills/session-harness/references/balancing.md).
 Use only configured services with protected execution adapters. API money budgets
 and inventory-only clients remain separate; installation does not opt anyone in.
@@ -208,7 +213,7 @@ See [stop recovery](../skills/session-harness/references/usage-and-context.md#wh
 
 Inspect the requested and actual worker model in each receipt. Development Claude
 selection resolves current aliases and prefers a current Sonnet for bounded work.
-Fable and overall weekly limits are separate. Version 0.3.0 check the actual
+Fable and overall weekly limits are separate. Version 0.3.0 checks the actual
 model and can resume on current Opus after a verified Fable-only stop.
 See [model allowances and recovery](../skills/session-harness/references/model-allowances.md)
 for the shared-authority check command and supported interactive launch controls.

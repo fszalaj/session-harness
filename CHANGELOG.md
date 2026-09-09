@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1
+
+- Default automatic native work to adapters that resolve the newest available model
+  generation. Keep Copilot and Cursor Auto available through explicit provider requests.
+- Record automatic eligibility separately from all-participant quota drift. Recheck
+  the same selection domain at reserve and start; all configured quota stops still apply.
+- Deny legacy reserved automatic Auto jobs at start, releasing the slot while keeping
+  history. Preserve explicit requests, running jobs, budgets and idempotency.
+- Clarify newest-generation defaults and retain Extra High manager effort.
+
 ## 0.3.0
 
 - Add Copilot native launch and supervised text execution with finite chat-pool
