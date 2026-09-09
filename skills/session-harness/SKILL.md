@@ -33,12 +33,13 @@ Claude command hooks (`ai-session hooks --install --apply`) enforce supported pr
 and tool boundaries without model calls. Missing authority connectivity blocks.
 Direct unhooked sessions and streaming text remain outside exact enforcement.
 
-Keep the manager's maximum effort for planning and reconciliation. Select the
-highest standalone reasoning level, such as `max`,
-and do not add Codex `ultra` or Claude `ultracode` automatic orchestration as a default.
-This is a control-policy choice, not a claim that identical labels are comparable.
-Version 0.2.0 includes automatic selector repairs; check the
-[client adapter limits](references/clients.md) for their scope.
+Default the manager to Extra High (`xhigh`). If unavailable, select the highest
+advertised reasoning level below `max`, normally `high`. Use `max` only by explicit
+task-level selection for an extremely difficult task, then return to the default.
+Do not enable Codex `ultra` or Claude `ultracode` automatic orchestration by default.
+Effort labels are not comparable across providers. This default is a development
+change; published v0.2.0 still selects the highest standalone level. Check the
+[client adapter limits](references/clients.md) before launching an older release.
 Delegate execution with explicit current-tier model and medium effort; gathering normally uses low.
 Use a fresh leaf packet (in native spawn APIs, no full-history fork). Include only
 objective, owned files, relevant contracts and acceptance. Target 2-4 KiB input and
@@ -122,7 +123,7 @@ or process work, read [platform support](references/platforms.md).
   client's catalog. See [client adapters](references/clients.md) for CLI details.
   Never read credentials or transcripts to guess identity or entitlements.
 - The manager/planner uses the strongest available **active-provider** model and
-  its highest advertised standalone reasoning effort. Use a supported model switch or launch
+  Extra High (`xhigh`), or the highest advertised level below `max` when unavailable. Use a supported model switch or launch
   a fresh manager through `harness.py launch <client> --execute` when necessary.
   A running model cannot promote itself by writing instructions. If switching is
   unavailable, report the mismatch, prepare a handoff, and keep planning explicitly
@@ -149,8 +150,8 @@ provider guidance when capability or successor relationships remain uncertain.
   use the current flagship at medium effort instead of an older cheap model.
 - Only use effort levels advertised by that model/client. Normal workers use
   medium; simple evidence collection may use low; complex implementation and
-  final review use high. Reserve maximum effort for manager/planner and difficult
-  plan decisions. Do not force global max effort onto workers through environment.
+  final review use high. Reserve `max` for explicit task-level escalation on
+  extremely difficult tasks. Do not force global max effort onto workers through environment.
 - No fixed provider-to-specialty stereotype. Choose from demonstrated capability,
   task risk, required tools, context size, latency and remaining subscription quota.
   Use native workers from the manager's model family by default: OpenAI workers
@@ -159,13 +160,14 @@ provider guidance when capability or successor relationships remain uncertain.
   Installed Claude investigator/implementer roles use the rolling `sonnet` alias
   (investigator: low; implementer: medium) and the verifier inherits the manager
   model at high effort; pass a per-call model only for a verified better fit. Keep leaf work off the
-  flagship and off maximum effort unless a concrete failure requires escalation.
+  flagship unless task fit requires escalation; maximum effort requires an
+  explicitly selected, extremely difficult task.
   Another provider may implement in an isolated
   worktree when its supported client offers a material benefit.
 
 | Role | Model and effort | Ownership |
 | --- | --- | --- |
-| Manager/planner | Strongest current session model, highest supported standalone effort | Plan, reconciliation, integration, final verification |
+| Manager/planner | Strongest current session model, `xhigh` by default; highest advertised level below `max` if unavailable | Plan, reconciliation, integration, final verification |
 | Two plan reviewers | Current suitable models from two other distinct provider families, medium; high for demonstrated difficult risks | Independent findings on the same plan |
 | Investigator | Current suitable model, low/medium | Bounded evidence gathering, no edits |
 | Implementer | Current suitable model, medium; high for hard changes | One non-overlapping file/task scope |

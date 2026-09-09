@@ -248,8 +248,11 @@ enabled, malformed or unreadable settings block. The harness never changes billi
 settings. Native extra-credit accounting retains reported units and does not prove
 protected paid execution.
 
-Select the strongest account-available hosting-provider model as manager at its
-highest supported standalone effort. Use bounded fresh-context native workers at
+Select the strongest account-available hosting-provider model as manager at Extra
+High (`xhigh`), falling back to the highest advertised level below `max` if needed.
+Use `max` only by explicit task-level selection for an extremely difficult task.
+The development launcher applies this default; published v0.2.0 still selects the
+highest standalone level, so verify and adjust its native effort control before work. Use bounded fresh-context native workers at
 medium effort, low for gathering. Two distinct other-provider families review the
 same plan independently, normally at medium effort. Reconcile findings and report
 missing reviews accurately. Do not start a new harness cycle for trivial or leaf work.

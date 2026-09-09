@@ -37,13 +37,15 @@ ranking; multiple candidates require explicit provider capability evidence. The
 helper refuses ambiguous manager ranking. Worker suggestions still require the
 manager to verify task fit, tools and cost.
 
-Use the exact runtime-selected ID and highest supported standalone reasoning effort
-for the manager. Codex `ultra` combines maximum reasoning with automatic delegation;
-the v0.2.0 selector excludes `ultra`, selects `max` when advertised and owns
-delegation through its existing review, role and budget rules. If `max` is unavailable, select the highest advertised
-standalone level. Version 0.1.2 did not exclude `ultra` automatically; verify
-its effective selection before launching. The catalog still reports `ultra`; it
-is not a manager policy default.
+Use the exact runtime-selected ID with Extra High (`xhigh`) for the manager. The
+development selector chooses the highest advertised reasoning level below `max`
+when `xhigh` is unavailable. Use `max` only for an extremely difficult task,
+selected explicitly through the client's supported model/effort control; return
+to the default afterwards. This does not add a launcher `--effort` option.
+Published v0.2.0 still selects `max` when advertised and excludes `ultra`; v0.1.2
+did not exclude `ultra`. Verify older releases' effective selection and change it
+with supported native controls before work. Codex `ultra` combines maximum
+reasoning with automatic delegation and remains outside the default policy.
 See [Codex models](https://learn.chatgpt.com/docs/models). Claude's `max` is a reasoning
 level, while `ultracode` is a separate orchestration mode. Effort labels across clients
 do not establish equal cost or quality, and this choice makes no savings guarantee.
@@ -88,7 +90,9 @@ unresolved. Never build a model list from a subscription name. A smaller alias s
 only a candidate: reject it if its resolved generation has been superseded under
 the current policy, and use the current manager model at lower effort instead.
 
-The manager launcher uses the highest reasoning effort supported by the CLI/model.
+The development manager launcher defaults to advertised `xhigh`, otherwise the
+highest advertised reasoning level below `max`. Explicit `max` is reserved for
+extremely difficult tasks.
 Persistent `effortLevel` does not accept every CLI effort value. Do not put a max
 value in an unsupported setting or globally set `CLAUDE_CODE_EFFORT_LEVEL`: that
 environment variable overrides worker effort. `ultracode` is an orchestration mode,

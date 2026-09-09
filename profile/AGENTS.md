@@ -29,7 +29,9 @@ selected runtime per plan. Trivial edits, simple questions
 and already-delegated leaf tasks do not start a new orchestration cycle.
 
 - Identify the actual hosting session. The strongest available model from that
-  session's provider plans and manages, using its highest supported effort.
+  session's provider plans and manages, defaulting to Extra High (`xhigh`). If that
+  level is unavailable, use the highest advertised level below `max`. Use `max`
+  only by explicit task-level selection for an extremely difficult task.
 - Resolve models at runtime from the account-visible catalog and current documented
   aliases. Never pin version IDs, invent a `latest` alias or assume a model exists
   because it appeared in a previous conversation or on another subscription.
@@ -38,7 +40,8 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
 - Choose execution roles, models and effort for the task. Use current generations,
   normally medium effort, low for simple gathering and high for difficult work.
   Leaf roles default to the cheaper current model (Claude: `sonnet`); the flagship
-  and maximum effort are reserved for the manager and the final verifier.
+  is reserved for the manager and the final verifier. Maximum effort is an
+  explicit exception for extremely difficult tasks, never a routine role default.
   If a current cheaper model is unavailable, use the current flagship at lower
   effort rather than an older generation. Keep the manager at its planning tier.
 - Prefer native workers from the manager's model family. Give workers bounded context and non-overlapping
