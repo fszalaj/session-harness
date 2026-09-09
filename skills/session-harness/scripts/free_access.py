@@ -170,7 +170,7 @@ def credentials(config):
         data = private_read(config['credential_file'], 32768).decode('utf-8')
     except (OSError, UnicodeError):
         raise ValueError('free_credential_unavailable') from None
-    keys = re.findall(r'^API key: (sk-or-v1-[0-9a-f]{64})$', data, re.M)
+    keys = re.findall(r'^API key: (sk-or-v1-[0-9a-f]{64})\r?$', data, re.M)
     if len(keys) != 1:
         raise ValueError('free_credential_unavailable')
     return {'Accept': 'application/json', 'Content-Type': 'application/json',

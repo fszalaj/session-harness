@@ -19,7 +19,7 @@ class AccountTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         key = 'dummy-key-for-local-test-only'
         self.credential = self.root / 'key.md'
-        self.credential.write_text('API key: ' + key + '\n')
+        self.credential.write_bytes(('API key: ' + key + '\r\n').encode())
         self.credential.chmod(0o600)
         self.now = time.time()
         self.row = {'enabled': True, 'credential_file': str(self.credential),

@@ -136,7 +136,7 @@ def validate_config(config):
 
 def credential(row):
     raw = legacy.private_read(row['credential_file'], 32768).decode('utf-8')
-    keys = re.findall(r'^API key: ([A-Za-z0-9_-]{16,256})$', raw, re.M)
+    keys = re.findall(r'^API key: ([A-Za-z0-9_-]{16,256})\r?$', raw, re.M)
     if len(keys) != 1 or not hmac.compare_digest(hashlib.sha256(keys[0].encode()).hexdigest(), row['credential_sha256']):
         raise ValueError('free_credential_binding_changed')
     return {'Authorization': 'Bearer ' + keys[0], 'Accept': 'application/json', 'Content-Type': 'application/json'}

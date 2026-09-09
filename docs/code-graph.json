@@ -1,5 +1,5 @@
 {
-  "content_sha256": "3a0d949027a7a20c7ccef2973dca9d50cc048d10d2848b614ca761c08ec4c225",
+  "content_sha256": "38793deedb33e34037049cc5faa711a9e1743fd5b5458679eb8f0f81f2e9561e",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
@@ -37,9 +37,9 @@
       "skills/session-harness/scripts/copilot_migration.py": "a95825c9fc4418c58a6ec29ab525a324c1f2d18dcd77bc2a4cb1cf8c22971000",
       "skills/session-harness/scripts/credits.py": "58d04bb8a27a9dabe20cd55d87b2096de8334b6e649756eadaeca74f8775531a",
       "skills/session-harness/scripts/cursor_client.py": "b295f4f07664039ef51b93f8c64468aedcec714fb13419c5a8b7d77d190bc8ce",
-      "skills/session-harness/scripts/free_access.py": "ac5065dbaa2bc4d93e0640782e7ffb52b013d64269910e9335ee00bc9d715af1",
+      "skills/session-harness/scripts/free_access.py": "2369641cad5089366ba901b7694d72941c3bc8564b1e2cad64a22d1acd7856ab",
       "skills/session-harness/scripts/free_access_cli.py": "96bfaa0becc7cd0d377548d15565ff2082a3961ed69e5c660869a71dd6db1ee8",
-      "skills/session-harness/scripts/free_accounts.py": "41a12cc21d60d8f6179aae36e8507bab10db7bc03c2927af942a8d2dd8b0dda0",
+      "skills/session-harness/scripts/free_accounts.py": "74742308c585d19ca3b697140a42be076f897970aaf285cdbc41c9a0ee8db14c",
       "skills/session-harness/scripts/harness.py": "7935f95d17a92d13c339722679d48755472931e19237e5b62b8e4c3fe5ab8b7d",
       "skills/session-harness/scripts/inventory.py": "5fec32fbb6b1f974f2c031d64baa53e8bb35ed6c98e54620cf95156c4e281e41",
       "skills/session-harness/scripts/local_ollama.py": "688a50049dac1a44f9d6876bd1fc466a24f274180a148402c2be3ef63796fb59",
@@ -73,8 +73,8 @@
       "skills/session-harness/scripts/test_copilot_migration.py": "bcb6be2d58bb757cf9f7c58783996e29b656edb3a22806d5f14732d645b33c9b",
       "skills/session-harness/scripts/test_credits.py": "84c4d7f9d135f3bed9ca0a19065657ab9e8e7bf34cf98965395ee66c911568ef",
       "skills/session-harness/scripts/test_cursor_client.py": "752591d721452e35d5fa0826f736da17ff98a889f4948b18ec06073b541d69e3",
-      "skills/session-harness/scripts/test_free_access.py": "89aeadebfda3deb5eba0691eb33bed9717102dfc05588782aeee437c949010f2",
-      "skills/session-harness/scripts/test_free_accounts.py": "e114df456dbeb4016266912ef98e643ac5f616339392c35c4e75d790f55c5190",
+      "skills/session-harness/scripts/test_free_access.py": "9c6aa5be9b643f34008403dbd490960c2ec070a2c05c34a07d67e1b955b9bec9",
+      "skills/session-harness/scripts/test_free_accounts.py": "6622f621f743462752fd30b238506b0c93fa97bd30f588ada1fbace9b5a7b60e",
       "skills/session-harness/scripts/test_harness.py": "e38e4a22f23498078c913c37f152038077dbc421aab385c1e1523c251bd70e8a",
       "skills/session-harness/scripts/test_inventory.py": "c7347205997794d75897180dd5fbfd0f12463ecd98d72bfb00549eec766d5bbc",
       "skills/session-harness/scripts/test_local_ollama.py": "9e3c111004bb5a3db421331cd55153744e3c29800e5d813dcb32304758615a85",
@@ -26002,7 +26002,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_credentials_are_private_and_not_logged",
       "label": "FreeAccessTests.test_credentials_are_private_and_not_logged",
       "source_file": "skills/session-harness/scripts/test_free_access.py",
-      "source_location": "L185",
+      "source_location": "L186",
       "type": "method"
     },
     {
@@ -26034,7 +26034,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_payload_bounds_and_paid_models_fail_without_requests",
       "label": "FreeAccessTests.test_payload_bounds_and_paid_models_fail_without_requests",
       "source_file": "skills/session-harness/scripts/test_free_access.py",
-      "source_location": "L207",
+      "source_location": "L208",
       "type": "method"
     },
     {
@@ -26050,7 +26050,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_remote_executor_never_recurses_or_falls_back",
       "label": "FreeAccessTests.test_remote_executor_never_recurses_or_falls_back",
       "source_file": "skills/session-harness/scripts/test_free_access.py",
-      "source_location": "L164",
+      "source_location": "L165",
       "type": "method"
     },
     {

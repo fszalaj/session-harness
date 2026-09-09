@@ -156,7 +156,8 @@ class FreeAccessTests(unittest.TestCase):
         config_path = self.root / 'settings.json'
         free.save_config(self.config, config_path)
         self.assertEqual(free.load_config(config_path), self.config)
-        self.assertEqual(config_path.stat().st_mode & 0o777, 0o600)
+        if os.name != 'nt':
+            self.assertEqual(config_path.stat().st_mode & 0o777, 0o600)
         for change in [{'models': ['openai/gpt-6-astra']}, {'mode': 'strict'}, {'schema_version': True}]:
             with self.assertRaises(ValueError):
                 free.validate_config({**self.config, **change})
@@ -184,7 +185,7 @@ class FreeAccessTests(unittest.TestCase):
 
     def test_credentials_are_private_and_not_logged(self):
         path = Path(self.config['credential_file'])
-        path.write_text('API key: sk-or-v1-' + 'a' * 64 + '\n')
+        path.write_bytes(('API key: sk-or-v1-' + 'a' * 64 + '\r\n').encode())
         path.chmod(0o600)
         self.assertTrue(free.credentials(self.config)['Authorization'].startswith('Bearer '))
         if os.name == 'nt':
