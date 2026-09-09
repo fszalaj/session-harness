@@ -31,7 +31,15 @@ quota mode. Read the coordination and budget references for shared accounts and
 policy choices; read API/money guidance only if paid use is requested. Do not enable
 billing, top-up or paid fallback. Strict remains the default unless I choose observed mode.
 
-Resolve models dynamically: strongest hosting-provider manager at Extra High (xhigh),
+After installation and at each new manager session, follow the selected skill's
+references/session-start.md and its reusable task prompt. Discover current configured
+routes, model catalogs, role permissions, budgets, skills and project knowledge access.
+Do not use a remembered client list or fixed reviewer pair. Separate upstream model
+family from the client and billing service. Select only verified reviewer-capable
+routes; preserve restrictions and report missing coverage after checking alternatives.
+
+Resolve models dynamically: newest available generation within each family before
+cost optimization, strongest hosting-provider manager at Extra High (xhigh),
 or the highest advertised level below max if unavailable. Use max only by explicit
 task-level selection for an extremely difficult task. Verify older releases' native
 effort control; instructions cannot change a running session. Use bounded native

@@ -28,6 +28,10 @@ linked by its `AGENTS.md`; otherwise use this installed personal copy. Keep one
 selected runtime per plan. Trivial edits, simple questions
 and already-delegated leaf tasks do not start a new orchestration cycle.
 
+- At each new manager session, follow the selected skill's `references/session-start.md`.
+  Discover current configured routes, catalogs, role permissions, quotas and project
+  skills/knowledge access. Select reviewers by verified upstream family and capability,
+  never a remembered provider pair. Metadata visibility is not execution or review approval.
 - Identify the actual hosting session. The strongest available model from that
   session's provider plans and manages, defaulting to Extra High (`xhigh`). If that
   level is unavailable, use the highest advertised level below `max`. Use `max`
