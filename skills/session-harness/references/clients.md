@@ -5,13 +5,16 @@ The Python helper uses the standard library. Its `discover` and default `launch`
 commands inspect metadata only; `review` and `launch --execute` invoke a model.
 For instruction filenames and skill paths, read the [client instruction map](instructions.md).
 Keep Gemini CLI, Antigravity CLI and their IDE interfaces separate.
+Use the [additional client runbook](../../../docs/CLIENT-EXECUTION.md) for Copilot, Cursor
+and Ollama commands, requirements, receipts and recovery.
 
-| Client or route | Harness support in v0.2.1 |
+| Client or route | Harness support in v0.3.0 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native discovery, quota and launch/review adapters; execution requires admission and the isolation/platform controls below |
-| Copilot CLI | Authenticated model inventory and quota metadata only; no harness launch/review adapter |
-| Cursor CLI | Advertised model inventory only; personal quota and harness launch/review are unsupported |
-| Explicit APIs | Direct text requests with separate credentials and money admission; no native client execution or automatic fallback |
+| Copilot CLI | Native launcher and supervised text worker; requires finite token-billed chat quota and disabled paid overage; no independent auto-model review |
+| Cursor CLI | Personal Free account quota and Auto launch/text work; no routed model identity or independent review |
+| Ollama local | Fixed loopback execution, local-model residency checks and a separate job ledger |
+| Explicit APIs | Direct text including Meta and Ollama Cloud; separate credentials and money admission, no automatic fallback |
 
 With the selected skill directory (containing `SKILL.md`) as your working directory:
 
@@ -77,6 +80,13 @@ Verify the effective effort instead of assuming a spawn argument won.
 
 ## Claude Code
 
+Discovery reads native `claude auth status --json` before querying models. The
+[CLI reference](https://code.claude.com/docs/en/cli-usage) documents exit 1 when signed
+out. Version 0.3.0 adapters recognize the verified signed-out JSON as `auth_required`
+and discard private account fields. Malformed replies and unexpected failures remain
+errors. This check describes the calling execution context; shared quota admission
+does not prove that another terminal or desktop client can access its authentication.
+
 **Since v0.2.0:** prefer concrete account-selectable model IDs when the initialize
 catalog supplies them. Select the newest numeric generation and advertised effort; do not let an
 unresolved `best` or `sonnet` alias override a visible newer generation. When no
@@ -86,14 +96,37 @@ alias-only catalogs remain explicitly unresolved until native session evidence.
 Version 0.1.2 reported unresolved alias suggestions; verify the actual model
 through native session evidence before accepting a manager or reviewer.
 
+**Version 0.3.0:** the same fresh initialize request can supply `resolvedModel`
+for an alias. Validate a concrete identifier, matching tier and any dated suffix;
+retain unresolved status when resolution is missing or the tier is unknown. Duplicate
+aliases share the intersection of their advertised efforts. Resolution is read again
+at discovery, not cached or copied between accounts. Current Sonnet workers may share
+the planning model's major generation while having a different minor revision. Compare
+minor revisions within Sonnet; an older major still falls back to the current planning
+model at medium. The existing manager-selection policy remains unchanged. A returned
+model mismatch rejects the result without an automatic inference retry.
+Malformed resolution metadata rejects the catalog. Equivalent dated and undated
+Sonnet revisions prefer the undated ID deterministically, matching the runtime
+identity guard. That guard ignores the context suffix; it does not verify context size.
+
 Use documented versionless aliases after checking the installed CLI and current
 subscription coverage. `best` chooses the strongest eligible model; the actual
 model must be recorded from runtime metadata. An initialize-only native control
 request lists the current client's selectable options and supported effort, including
-context suffixes. These are not proven account entitlements, and aliases remain
-unresolved. Never build a model list from a subscription name. A smaller alias such as `sonnet` is
+context suffixes. These are not proven account entitlements. Aliases without native
+resolution remain unresolved. Never build a model list from a subscription name. A smaller alias such as `sonnet` is
 only a candidate: reject it if its resolved generation has been superseded under
 the current policy, and use the current manager model at lower effort instead.
+
+Fable on Max, premium Team and seat-based Enterprise can use up to 50% of the regular
+weekly allowance. It also consumes the shared overall limit; this is not additional
+quota. After its model allowance runs out, other Claude models can remain available
+within the overall allowance. Pro and standard Team require paid credits for Fable;
+catalog visibility does not authorize those credits. Verify the account and current
+[Claude plan documentation](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan).
+Version 0.3.0 preserve proven model scopes and support current Opus selection
+after a Fable-only stop, with supervised exact-session resume on supported clients.
+Common limits and unknown scopes remain required; see [model allowances](model-allowances.md).
 
 Since v0.2.1, the manager launcher defaults to advertised `xhigh`, otherwise the
 highest advertised reasoning level below `max`. Explicit `max` is reserved for
@@ -213,10 +246,13 @@ to a task; do not load an unrelated plugin's skill merely because it is installe
 
 For OpenAI, Anthropic, Gemini, xAI/Grok, DeepSeek, Kimi/Moonshot, Z.ai/GLM and
 OpenRouter direct text requests, follow [API and money setup](api-and-spend.md).
+Version 0.3.0 also offer a [reviewed coding profile](coding-models.md) through
+OpenRouter for Kimi, GLM, DeepSeek, MiniMax and Qwen. Its live catalog filter and
+supervised text execution do not add a native client adapter or independent review.
 These routes use separate credentials and explicit monetary caps. They do not
 consume a native subscription allowance or become an automatic fallback.
 Z.ai catalog discovery and generic model-specific API effort controls are unsupported.
-Recurring free API pools and mixed native/free routing are not included in v0.2.1.
+Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).
 
 Native quota discovery is separate from paid-credit eligibility. **Since v0.2.0:**
 Codex supports a private owner confirmation that automatic top-up is disabled for the authenticated

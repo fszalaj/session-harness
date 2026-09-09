@@ -1,0 +1,11 @@
+---
+description: Shared coding workflow across projects
+alwaysApply: true
+---
+
+Read and follow `~/.agents/AGENTS.md` before substantive work in any project.
+Use `~/.agents/skills/session-harness/SKILL.md` for planning, execution and review.
+Use the current project's instructions, skills, wiki and code graph when provided.
+Verify client execution support, service selection and quota admission before
+dispatch. Record the actual provider and model. Installed software alone does not
+establish execution support or authorize spending.

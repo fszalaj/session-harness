@@ -183,7 +183,7 @@ class ProfileInstallationTests(unittest.TestCase):
         completed = subprocess.run([str(launcher), "codex", "--", "resume", "--last"],
                                    capture_output=True, text=True, check=True)
         self.assertEqual(json.loads(completed.stdout), ["launch", "codex", "--execute", "--", "resume", "--last"])
-        for arguments in (["inventory"], ["budget", "add", "codex", "5", "--id", payload],
+        for arguments in (["inventory"], ["free", "status"], ["budget", "add", "codex", "5", "--id", payload],
                           ["usage", "status", "claude"], ["setup", "--status"], ["setup"],
                           ["configure", "--status"], ["version"], ["update", "--check"],
                           ["discover", "--session", "claude"], ["review", "codex"], ["--help"], ["-h"]):

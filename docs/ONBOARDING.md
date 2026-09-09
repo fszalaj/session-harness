@@ -9,8 +9,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.2.1, run
-`ai-session update --version 0.2.1 --apply`, then restart affected clients.
+for an authorized version change. To select v0.3.0, run
+`ai-session update --version 0.3.0 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -122,8 +122,9 @@ launcher. Keep the reported backup location for rollback.
 
 Custom client homes are rejected when unsupported. Preserve them and configure
 verified instruction paths explicitly. Add `~/.local/bin` to PATH if needed.
-Restart affected clients to reload instructions. Cursor global User Rules require
-its UI; local installation does not configure remote/cloud workers.
+Restart affected clients to reload instructions. The installer also adds a global Cursor
+rule in `~/.cursor/rules/session-harness.mdc`. Local installation does not configure
+remote/cloud workers or editor inline completions.
 
 ## 5. Configure with the owner
 
@@ -178,13 +179,47 @@ separate money mode and bounded dispatch. Never reveal keys, buy credits, enable
 automatic reload or infer API entitlement from a subscription. Installation itself
 creates no paid allowance and changes no authentication.
 
+Version 0.3.0 offer a [reviewed coding profile](../skills/session-harness/references/coding-models.md)
+for five additional model families through one OpenRouter account. Inspect it with
+`ai-session api coding-models` before choosing an exact ID. Follow the guide to add
+private key delivery and explicit API money authorization; public catalog access
+does not establish account entitlement. Keep account records out of project docs.
+
+For recurring free API allowances, use the separate
+[free-access procedure](../skills/session-harness/references/free-access.md).
+Verify the account's no-paid-overage controls, model, rates and remaining allowance
+before configuring it. Select one execution host and use its SSH interface from
+other computers. A saved key alone does not enable dispatch; missing evidence
+keeps a provider disabled. No monetary budget or billing upgrade is created.
+
+For version 0.3.0 installations, a user requesting even native
+subscription use can enable [shared fractional pacing](../skills/session-harness/references/balancing.md).
+Use only configured services with protected execution adapters. API money budgets
+and inventory-only clients remain separate; installation does not opt anyone in.
+The same guide explains optional model/role supervision settings controlled by the
+owner. They apply through the common authority and survive disabling balancing.
+
+Version 0.3.0 installations print a readable explanation when a protected session
+stops. A daily allowance stop ends the owned client process; reopen the client and
+use its resume option after admission is restored. Inspect `ai-session coordination
+status` and run `ai-session budget SERVICE` on the account authority. If cleanup is
+reported as unconfirmed, inspect the retained owner's processes before recovery.
+See [stop recovery](../skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
+
+Inspect the requested and actual worker model in each receipt. Development Claude
+selection resolves current aliases and prefers a current Sonnet for bounded work.
+Fable and overall weekly limits are separate. Version 0.3.0 check the actual
+model and can resume on current Opus after a verified Fable-only stop.
+See [model allowances and recovery](../skills/session-harness/references/model-allowances.md)
+for the shared-authority check command and supported interactive launch controls.
+
 ## 6. Integrate the project and knowledge layer
 
 Keep application rules in the project's `AGENTS.md`. Add a short reference such as:
 
 > For substantive work, use `~/.agents/skills/session-harness/SKILL.md`, unless this
 > repository explicitly selects a maintained project copy. Honor shared usage and
-> context safeguards. Use native same-family workers and independent reviews from
+> context safeguards. Use enabled subscription balancing for bounded workers (otherwise native same-family workers) and independent reviews from
 > the other two provider families when supported. Leaf assignments and trivial
 > tasks do not restart orchestration. Preserve this project's rules.
 
@@ -222,6 +257,14 @@ ai-session usage check SERVICE
 
 Replace `SERVICE` with the configured supported service. For first-time prospective
 observation only, explicitly initialize with `ai-session usage refresh SERVICE --initialize`.
+Run initialization on the quota authority for a shared account, preserving its history.
+In version 0.3.0, `usage check` for Codex, Claude, Antigravity, Copilot and Cursor refreshes
+that configured authority, including when no model is supplied. `usage status` reads
+the local ledger; a remote check does not refresh this local cache, so it can remain
+stale. `usage refresh` updates only the machine where it runs and is not coordinated
+admission. Cursor requires a verified personal Free account with on-demand usage disabled.
+Follow the [additional client runbook](CLIENT-EXECUTION.md) for Copilot and Cursor
+execution, account limits and recovery.
 Retain existing observation history. `usage check` reports
 `environment_setup_required` until `ai-session setup` names that service.
 Initialization starts prospective observation; it cannot recover earlier daily usage. Choose the ledger
@@ -231,6 +274,9 @@ ledger because its dated history is retained. Local projects share a ledger, but
 separate computers do not share a distributed admission lock.
 
 Separate installed, authenticated, account-visible and successfully invoked states.
+For Claude, `auth_required` from discovery means the native client reported no signed-in
+account in that execution context. Check native sign-in in the affected terminal or
+application; a successful shared quota check does not authenticate that client.
 Select current account-visible models and supported effort dynamically, verify
 actual session selection, and distinguish provider family from the service owning
 the quota. Do not pin current model IDs or interpret a model list as review access.

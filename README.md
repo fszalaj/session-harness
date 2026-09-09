@@ -24,7 +24,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.2.1 --apply`, then
+To select this release, run `ai-session update --version 0.3.0 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -74,15 +74,18 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.2.1 |
+| Client or route | Harness support in v0.3.0 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
-| Copilot CLI | Model inventory and quota metadata only; no harness launch/review adapter |
-| Cursor CLI | Advertised model inventory only; no verified personal quota or harness launch/review adapter |
-| Explicit APIs | Direct text requests with separate credentials and monetary authorization; no native client or automatic fallback |
+| Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |
+| Cursor CLI | Personal Free accounts: native quota, launcher and supervised text via Auto; routed model identity and independent review unavailable |
+| Ollama local | Bounded text from installed local models, explicit task IDs and separate local receipts |
+| Explicit APIs | Direct text requests, including Meta and Ollama Cloud, with separate credentials and monetary authorization; no automatic fallback |
 
 See [client adapter boundaries](skills/session-harness/references/clients.md).
-Recurring free API pools and mixed native/free routing are not included in v0.2.1.
+Follow [additional client execution](docs/CLIENT-EXECUTION.md) for Copilot, Cursor, local
+Ollama, explicit Meta/Ollama APIs and remaining inventory-only clients.
+Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).
 
 Version 0.2.0 adds account-bound owner confirmation of disabled Codex Auto top-up
 plus fresh zero-credit evidence; quota and admission controls still apply. It also
@@ -91,6 +94,78 @@ preserved. Version 0.1.2 blocked protected Codex execution because its native
 credit metadata could not establish paid-use disablement.
 Check the [capability guide](docs/PROVIDER-VALIDATION.md) and [release guide](docs/RELEASES.md)
 for your selected version before relying on either feature.
+
+## Balance subscriptions (v0.3.0)
+
+Version 0.3.0 adds opt-in routing across configured native subscriptions.
+A short manager session can distribute bounded text work independently of its model
+family while respecting every provider's daily quota and paid-use guards. Use these commands after installing version 0.3.0:
+
+```sh
+ai-session balance enable
+ai-session balance status
+ai-session work --id unique-task-id < task.txt
+ai-session audit --since 2026-01-01
+```
+
+Enable on the account authority after the owner requests balancing. Selection targets
+equal fractions of daily allowances, using atomic task reservations and fresh native
+observations. It does not promise equal token totals or dollar costs. APIs remain
+separately authorized; inventory-only clients are reported as unsupported for routing.
+The manager must submit useful tasks to `work`; enabling a profile does not transfer
+its interactive conversation to another model. A newer concurrent quota observation
+gets one read-only re-evaluation; failed refreshes and quota denials still stop work.
+See [balancing, supported clients and recovery](skills/session-harness/references/balancing.md).
+Owners can also [configure model supervision](skills/session-harness/references/balancing.md#configure-which-models-need-supervision)
+by model pattern and role. These settings can allow implementation while preventing
+the same model from acting as an independent reviewer; no vendor ranking is built in.
+
+Version 0.3.0 installations also explain protected session stops in the terminal,
+including the reason and recovery commands. Cleanup errors retain the original quota
+reason and report uncertain process termination separately. Worker pacing denials
+report `balance_blocked` and the real reason, such as `max_lead_exceeded`, instead
+of a CLI schema error. An unconfirmed work receipt reports
+`balance_receipt_unavailable`; inspect the task before recovery or another dispatch. See
+[session stop recovery](skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
+
+Use `ai-session usage check SERVICE` for a fresh native admission check through the
+configured authority, with or without a Claude `--model`. `usage status` reads local
+evidence and may stay stale on another computer; `usage refresh` updates only that
+computer's ledger. An unavailable quota read does not establish an exhausted plan.
+Claude discovery reports a verified signed-out response as `auth_required`; native
+sign-in in that execution context is separate from shared quota admission.
+
+Claude alias resolution also uses fresh native `resolvedModel` metadata, allowing
+current Sonnet workers alongside a newer minor revision of the planning tier.
+Version 0.3.0 keeps model-specific and common Claude allowances separate. A
+Fable-only stop can select current Opus and resume the exact protected conversation
+after confirmed cleanup. Common quota and configured role restrictions still apply.
+See [model allowances and recovery](skills/session-harness/references/model-allowances.md).
+
+## Add reviewed coding models (v0.3.0)
+
+The optional [coding profile](skills/session-harness/references/coding-models.md)
+adds Kimi, GLM, DeepSeek, MiniMax and Qwen candidates through OpenRouter. This is
+one access route within the broader native/API harness: five model families can
+share one gateway account, while direct accounts have separate authentication and
+allowances. Choose an [access route](skills/session-harness/references/coding-models.md#choose-the-access-route)
+before creating accounts. Run
+`ai-session api coding-models` to intersect the reviewed allowlist with fresh public
+metadata. Review expiry, missing capabilities and unapproved variants block selection.
+
+Execution with `ai-session api coding-run` requires an OpenRouter key, explicit API
+setup and a monthly money budget. It returns supervised text work for manager
+inspection. API billing stays separate from native subscription balancing, and
+installation does not enable paid inference. The guide explains what to configure;
+keep passwords, keys and deployment records private.
+
+For recurring free allowances, version 0.3.0 also provide
+[`ai-session free`](skills/session-harness/references/free-access.md). OpenRouter
+uses an exact-zero route; direct free accounts use separately verified account
+limits and conservative reservations. One executor serves both computers, keeps
+credentials local, and records actual model identities without paid fallback.
+Explicit `mixed_work` opt-in includes admitted free pools in `ai-session work`.
+Evidence expiry or an unresolved request requires inspection before more work.
 
 ## Find the relevant guide
 

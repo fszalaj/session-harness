@@ -16,7 +16,7 @@ not a claim that every client has a working harness execution adapter.
 | Antigravity IDE | Documents `.agents/rules/`, with legacy `.agent/rules/` | `~/.gemini/GEMINI.md` |
 | Copilot CLI | `AGENTS.md`, `.github/copilot-instructions.md`, scoped instructions and other agent filenames | `~/.copilot/copilot-instructions.md`; modular personal instructions also supported |
 | Copilot in IDEs / GitHub | Depends on feature; `.github/copilot-instructions.md` has broader coverage than `AGENTS.md` | Depends on interface; CLI profile files are not universal personal settings |
-| Cursor editor / CLI | `AGENTS.md` and `.cursor/rules`; CLI also reads root `CLAUDE.md` | User Rules in Cursor UI; no documented universal `~/.cursor/AGENTS.md` |
+| Cursor editor / CLI | `AGENTS.md` and `.cursor/rules`; CLI also reads root `CLAUDE.md` | User Rules in Cursor UI and local rule files in `~/.cursor/rules`; no universal `~/.cursor/AGENTS.md` |
 
 Sources: [Codex instructions](https://developers.openai.com/codex/guides/agents-md),
 [Claude memory](https://code.claude.com/docs/en/memory),
@@ -25,7 +25,7 @@ Sources: [Codex instructions](https://developers.openai.com/codex/guides/agents-
 [Antigravity rules](https://antigravity.google/docs/rules-workflows/),
 [Copilot CLI instructions](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions),
 [Copilot feature matrix](https://docs.github.com/en/copilot/reference/custom-instructions-support),
-[Cursor rules](https://cursor.com/docs/rules) and
+[Cursor rules and global rule files](https://cursor.com/help/customization/rules) and
 [Cursor CLI rules](https://cursor.com/docs/cli/using#rules).
 
 ## Why keep GEMINI.md?
@@ -55,7 +55,9 @@ VS Code Chat supports `AGENTS.md`. Inspect the current feature matrix before add
 
 Cursor supports nested project `AGENTS.md`; its scoped rule metadata must retain
 activation conditions. Global User Rules apply to Agent Chat, not every completion
-or editing feature. A shared project file does not replace those personal UI rules.
+or editing feature. The installer provides a global `session-harness.mdc` rule that
+loads the shared personal policy. Verify rule loading in a new signed-in session;
+local rule files do not sync to remote workers.
 
 ## Skills are a separate discovery mechanism
 
@@ -89,5 +91,6 @@ native view with a drift check when a verified link cannot serve that surface.
 
 Preserve scoped rules and user settings. Check instruction loading, skill discovery,
 model access and supervised execution separately. Gemini CLI has no harness
-execution adapter; Copilot/Cursor execution remains unverified. New clients do not
+execution adapter. Copilot has a supervised execution adapter in version 0.3.0;
+Cursor still needs a verified quota/execution adapter. New clients do not
 become supported merely because they accept `AGENTS.md` or offer a familiar model.

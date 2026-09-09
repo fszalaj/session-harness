@@ -96,3 +96,21 @@ from the actual catalog; fixtures cannot establish the current cheapest tier.
 On v0.1.2, Antigravity clients that omitted a false setting when persisting
 sparse configuration were blocked. Since v0.2.0, the adapter distinguishes a
 documented absent default from invalid settings; test both provenance and denial.
+
+## Subscription balance acceptance (development)
+
+Run `test_balance.py`, `test_balance_cli.py`, `test_model_constraints.py` and `test_usage_audit.py` alongside the
+existing portable suite. Check real SQLite contention, coarse counters, asymmetric
+allowances, strict/credit/stale failures, manual recovery, duplicate task IDs and
+remote protocol refusal. Manager consumption must affect later choices even when
+not recorded as a work dispatch. Preserve the separate provider-review contract.
+Check that configured model/role limits stop independent execution before a native
+call and reject restricted or missing observed identities before returning approval.
+
+For authorized live acceptance, submit useful bounded packets through `work`, record
+requested and observed model identities and private decision receipts, inspect the
+next selection, and verify that repeated IDs never invoke a client again. Validate
+both clients against one authority; no copied ledgers or private evidence in public
+commits. Account quota deltas are aggregate observations, not per-task invoices.
+See the [client and billing matrix](../skills/session-harness/references/balancing.md#other-ai-clients-and-billing-routes)
+for services that support only discovery or explicit monetary routes.

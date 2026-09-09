@@ -2,6 +2,7 @@
 """Validate quota adapters and the inference admission boundary without model calls."""
 import json
 import io
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -9,6 +10,7 @@ from unittest.mock import patch
 
 import harness
 import credits
+import coordination
 import usage
 from quota import Ledger
 
@@ -26,6 +28,100 @@ class UsageTests(unittest.TestCase):
         default.start()
         self.addCleanup(default.stop)
 
+    def command(self, *args):
+        output = io.StringIO()
+        with patch("sys.stdout", output):
+            code = usage.main(list(args))
+        return code, json.loads(output.getvalue())
+
+    def test_remote_check_uses_fresh_authority_and_preserves_local_evidence(self):
+        from test_model_scope import snap, FABLE_SCOPE, OPUS
+        ledger = Ledger()
+        ledger.set_mode("observed")
+        with patch("quota.time.time", return_value=1000):
+            ledger.record(snap(scope=FABLE_SCOPE), initialize=True)
+        coordination.configure(ledger, authority="quota.example.test")
+        with ledger._connect() as db:
+            before = list(db.iterdump())
+        with tempfile.TemporaryDirectory() as directory:
+            authority = Ledger(Path(directory) / "authority.db")
+            authority.complete_setup(services=["claude"], api_services=[], source="test")
+            authority.set_mode("observed")
+            with patch("quota.time.time", return_value=2000):
+                authority.record(snap(ts=2000, scope=FABLE_SCOPE), initialize=True)
+                self.assertFalse(ledger.check("claude")["allowed"])
+                for options in ([], ["--model", OPUS]):
+                    models = {"models": [OPUS]} if options else {}
+                    expected = authority.check("claude", **models)
+                    self.assertTrue(expected["allowed"])
+                    self.assertEqual({row["pool"] for row in expected["pools"]}, {"weekly", "daily"})
+                    response = dict(expected)
+                    if options:
+                        response.update(model_admission_version=1, models=[OPUS])
+                    with patch("platform_runtime.which", return_value="ssh"), \
+                            patch("coordination.subprocess.run", return_value=subprocess.CompletedProcess([], 0, json.dumps(response).encode())) as remote:
+                        code, result = self.command("check", "claude", *options)
+                    self.assertEqual((code, result), (0, response))
+                    packet = json.loads(remote.call_args.kwargs["input"])
+                    self.assertEqual(packet.get("models"), models.get("models"))
+                    self.assertEqual(packet["action"], "check")
+        with ledger._connect() as db:
+            self.assertEqual(before, list(db.iterdump()))
+
+    def test_check_local_authority_refreshes_and_keeps_all_pools(self):
+        from test_model_scope import snap, FABLE_SCOPE
+        ledger = Ledger()
+        ledger.set_mode("observed")
+        with patch("quota.time.time", return_value=1000):
+            ledger.record(snap(daily_used=0, scope=FABLE_SCOPE), initialize=True)
+            self.assertTrue(ledger.check("claude")["allowed"])
+        with patch("quota.time.time", return_value=1001), \
+                patch("native_quota.read_snapshot", return_value=snap(ts=1001, daily_used=100, scope=FABLE_SCOPE)) as native:
+            code, result = self.command("check", "claude")
+        native.assert_called_once_with("claude")
+        self.assertEqual(code, 2)
+        self.assertFalse(result["allowed"])
+        self.assertEqual({row["pool"] for row in result["pools"]}, {"weekly", "daily"})
+
+    def test_failed_authority_check_never_uses_cached_local_approval(self):
+        from test_model_scope import snap
+        ledger = Ledger()
+        ledger.set_mode("observed")
+        with patch("quota.time.time", return_value=1000):
+            ledger.record(snap(), initialize=True)
+            self.assertTrue(ledger.check("claude")["allowed"])
+            coordination.configure(ledger, authority="quota.example.test")
+            failures = [subprocess.TimeoutExpired("private-command", 1),
+                        subprocess.CompletedProcess([], 1, b"private-output"),
+                        subprocess.CompletedProcess([], 0, b"private-non-json"),
+                        subprocess.CompletedProcess([], 0, b'{"allowed":"yes"}'),
+                        subprocess.CompletedProcess([], 0, b'[]')]
+            for failure in failures:
+                with self.subTest(failure=type(failure).__name__), \
+                        patch("platform_runtime.which", return_value="ssh"), \
+                        patch("coordination.subprocess.run", **({"side_effect": failure} if isinstance(failure, Exception) else {"return_value": failure})), \
+                        patch.object(Ledger, "check", side_effect=AssertionError("No local fallback")):
+                    code, result = self.command("check", "claude")
+                self.assertEqual(code, 2)
+                self.assertIs(result["allowed"], False)
+                self.assertNotIn("private", json.dumps(result))
+
+    def test_status_remains_local_and_never_refreshes(self):
+        with patch("coordination.dispatch", side_effect=AssertionError("No authority call")), \
+                patch("usage.refresh", side_effect=AssertionError("No refresh")):
+            code, result = self.command("status", "claude")
+        self.assertEqual(code, 0)
+        self.assertFalse(result["allowed"])
+
+    def test_new_clients_require_authority_admission(self):
+        for service in ("cursor", "copilot"):
+            with patch("coordination.dispatch", return_value={"allowed": False, "reasons": ["quota_refresh_failed"]}) as dispatch:
+                code, result = self.command("check", service)
+            self.assertEqual(code, 2)
+            self.assertFalse(result["allowed"])
+            self.assertIn("quota_refresh_failed", result["reasons"])
+            dispatch.assert_called_once()
+
     def test_codex_keeps_every_window_and_omits_identity_and_reset_credits(self):
         row = {"primary": {"usedPercent": 42, "windowDurationMins": 10080, "resetsAt": 9999},
                "secondary": {"usedPercent": 8, "windowDurationMins": 300, "resetsAt": 8888}}
@@ -38,13 +134,13 @@ class UsageTests(unittest.TestCase):
     def test_unsupported_refresh_cannot_admit_manually_recorded_evidence(self):
         with tempfile.TemporaryDirectory() as directory:
             ledger = Ledger(Path(directory) / "quota.db")
-            ledger.complete_setup(services=["codex", "claude", "antigravity", "copilot", "cursor"], api_services=[], source="test")
+            ledger.complete_setup(services=["codex", "claude", "antigravity", "copilot", "unsupported-client"], api_services=[], source="test")
             ledger.set_mode("observed")
             with patch("quota.time.time", return_value=100):
-                ledger.record(usage.snapshot("cursor", [{"pool": "monthly", "used_percent": 0,
+                ledger.record(usage.snapshot("unsupported-client", [{"pool": "monthly", "used_percent": 0,
                               "resets_at": 9999}], "fixture", now=100), initialize=True)
-                self.assertTrue(ledger.check("cursor")["allowed"])
-                result = usage.require_admission("cursor", ledger=ledger)
+                self.assertTrue(ledger.check("unsupported-client")["allowed"])
+                result = usage.require_admission("unsupported-client", ledger=ledger)
         self.assertFalse(result["allowed"])
         self.assertIn("unsupported_quota_refresh", result["reasons"])
 

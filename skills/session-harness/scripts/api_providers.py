@@ -20,6 +20,8 @@ SERVICES = {
     'kimi': ('https://api.moonshot.ai', '/v1', 'MOONSHOT_API_KEY'),
     'zai': ('https://api.z.ai', '/api/paas/v4', 'ZAI_API_KEY'),
     'openrouter': ('https://openrouter.ai', '/api/v1', 'OPENROUTER_API_KEY'),
+    'meta': ('https://api.meta.ai', '/v1', 'META_API_KEY'),
+    'ollama': ('https://ollama.com', '/api', 'OLLAMA_API_KEY'),
 }
 EXACT_COST_SERVICES = frozenset({'xai', 'openrouter'})
 SAFE_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9._:/-]{0,199}\Z')
@@ -75,6 +77,8 @@ def preflight(service, model, prompt, max_output_tokens, effort=None):
     """Validate locally before money reservation; retain credentials only in memory."""
     origin, prefix, _ = _service(service)
     model = _model(model)
+    if service == 'meta' and 'contributor' in model.lower():
+        raise APIError('training_tier_not_supported')
     if service == 'gemini' and model.startswith('models/'):
         model = _model(model[7:])
     if (type(max_output_tokens) is not int or not 1 <= max_output_tokens <= MAX_TOKENS):
@@ -94,7 +98,11 @@ def preflight(service, model, prompt, max_output_tokens, effort=None):
     except UnicodeError:
         raise APIError('invalid_api_prompt') from None
     headers = _headers(service)
-    if service == 'anthropic':
+    if service == 'ollama':
+        path = prefix + '/chat'
+        body = {'model': model, 'messages': [{'role': 'user', 'content': prompt}],
+                'stream': False, 'options': {'num_predict': max_output_tokens}}
+    elif service == 'anthropic':
         path = prefix + '/messages'
         body = {'model': model, 'messages': [{'role': 'user', 'content': prompt}],
                 'max_tokens': max_output_tokens, 'stream': False}
@@ -166,6 +174,9 @@ def _details(usage, key, allowed):
 
 def normalize_usage(service, data):
     """Return disjoint billable token classes; never sum overlapping reasoning."""
+    if service == 'ollama':
+        return {'input_tokens': _count(data.get('prompt_eval_count')),
+                'output_tokens': _count(data.get('eval_count'))}
     usage = data.get('usageMetadata' if service == 'gemini' else 'usage')
     if not isinstance(usage, dict):
         raise APIError('missing_api_usage')
@@ -252,6 +263,13 @@ def normalize_usage(service, data):
 
 
 def _text_result(service, data):
+    if service == 'ollama':
+        message = data.get('message')
+        if (data.get('done') is not True or not isinstance(message, dict)
+                or message.get('role') != 'assistant' or message.get('tool_calls')
+                or not isinstance(message.get('content'), str)):
+            raise APIError('unexpected_api_content')
+        return message['content'], data.get('model'), None, data.get('done_reason')
     if service == 'anthropic':
         if data.get('type') != 'message' or data.get('role') != 'assistant':
             raise APIError('unexpected_api_content')
@@ -310,7 +328,8 @@ def normalize_response(service, data):
             raise APIError('unexpected_api_content')
         if reason not in {'stop', 'length', 'end_turn', 'max_tokens', 'stop_sequence', 'STOP', 'MAX_TOKENS'}:
             raise APIError('unexpected_api_content')
-        if not isinstance(response_id, str) or not re.fullmatch(r'[A-Za-z0-9._:/+=-]{1,256}', response_id):
+        if not (service == 'ollama' and response_id is None) and (
+                not isinstance(response_id, str) or not re.fullmatch(r'[A-Za-z0-9._:/+=-]{1,256}', response_id)):
             raise APIError('unexpected_api_content')
         result.update(text=text, model=_model(model), response_id=response_id,
                       output_valid=True, status='completed', inference_verified=True,
@@ -355,20 +374,20 @@ def models(service, *, timeout=15):
             query = {'pageSize': 100}
             if cursor:
                 query['pageToken'] = cursor
-        path = prefix + '/models' + ('?' + urlencode(query) if query else '')
+        path = prefix + ('/tags' if service == 'ollama' else '/models') + ('?' + urlencode(query) if query else '')
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             raise APIError('api_timeout')
         data = request_json(origin, path, headers=headers, timeout=remaining)
         if service == 'anthropic' and type(data.get('has_more')) is not bool:
             raise APIError('invalid_api_catalog')
-        page = data.get('models' if service == 'gemini' else 'data')
+        page = data.get('models' if service in {'gemini', 'ollama'} else 'data')
         if not isinstance(page, list):
             raise APIError('invalid_api_catalog')
         for row in page:
             if not isinstance(row, dict):
                 raise APIError('invalid_api_catalog')
-            ident = _model(row.get('name' if service == 'gemini' else 'id'))
+            ident = _model(row.get('name' if service in {'gemini', 'ollama'} else 'id'))
             if service == 'gemini' and ident.startswith('models/'):
                 ident = ident[7:]
             if ident in seen:
@@ -376,7 +395,7 @@ def models(service, *, timeout=15):
             seen.add(ident)
             item = {'id': ident, 'service': service, 'account_visible': True if service == 'xai' else None,
                     'entitlement_verified': False, 'inference_verified': False,
-                    'evidence': {'kind': 'authenticated_catalog', 'source': prefix + '/models'}}
+                    'evidence': {'kind': 'authenticated_catalog', 'source': path}}
             for key in ('context_length', 'inputTokenLimit', 'outputTokenLimit'):
                 if key in row:
                     item[key] = _count(row[key])

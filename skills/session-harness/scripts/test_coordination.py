@@ -176,7 +176,7 @@ class CoordinationTests(unittest.TestCase):
         data = {'effortLevel': 'high', 'hooks': {'PreToolUse': [{'hooks': [{'type': 'command', 'command': 'existing'}]}]}}
         path.write_text(json.dumps(data))
         original = path.read_bytes()
-        self.assertEqual(5, len(claude_gate.install(home=self.home)['changed_events']))
+        self.assertEqual(len(claude_gate.EVENTS), len(claude_gate.install(home=self.home)['changed_events']))
         self.assertEqual(original, path.read_bytes())
         claude_gate.install(True, self.home)
         self.assertEqual([], claude_gate.install(home=self.home)['changed_events'])

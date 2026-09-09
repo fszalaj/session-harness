@@ -18,6 +18,27 @@ def chat(**changes):
 
 
 class ProviderTests(unittest.TestCase):
+    def test_meta_fixed_origin_and_ollama_native_response(self):
+        with patch.dict(os.environ, {'META_API_KEY': 'test-key', 'OLLAMA_API_KEY': 'test-key'}):
+            request = api.preflight('meta', 'muse-test', 'text', 10)
+            self.assertEqual((request.origin, request.path), ('https://api.meta.ai', '/v1/chat/completions'))
+            with self.assertRaisesRegex(APIError, 'training_tier_not_supported'):
+                api.preflight('meta', 'muse-contributor-test', 'text', 10)
+            self.assertEqual(api.preflight('ollama', 'model:20b', 'text', 10).origin, 'https://ollama.com')
+        data = {'model': 'model:20b', 'done': True, 'done_reason': 'stop', 'created_at': '2026-09-09T00:00:00Z',
+                'message': {'role': 'assistant', 'content': 'Answer'},
+                'prompt_eval_count': 12, 'eval_count': 3}
+        result = api.normalize_response('ollama', data)
+        self.assertTrue(result['output_valid'])
+        self.assertTrue(result['usage_complete'])
+        self.assertEqual(result['usage'], {'input_tokens': 12, 'output_tokens': 3})
+        self.assertIsNone(result['response_id'])
+        self.assertIsNone(result['actual_cost_ticks'])
+        data['eval_count'] = True
+        self.assertFalse(api.normalize_response('ollama', data)['usage_complete'])
+        data['message']['tool_calls'] = [{'function': {'name': 'shell'}}]
+        self.assertFalse(api.normalize_response('ollama', data)['output_valid'])
+
     def setUp(self):
         self.env = patch.dict(os.environ, {row[2]: 'test-private-key' for row in api.SERVICES.values()}, clear=True)
         self.env.start()
@@ -41,6 +62,9 @@ class ProviderTests(unittest.TestCase):
                     elif service == 'anthropic':
                         self.assertEqual(body['max_tokens'], 100)
                         self.assertEqual(prepared.path, '/v1/messages')
+                    elif service == 'ollama':
+                        self.assertEqual(body['options'], {'num_predict': 100})
+                        self.assertEqual(prepared.path, '/api/chat')
                     else:
                         limit = 'max_completion_tokens' if service in {'openai', 'kimi'} else 'max_tokens'
                         self.assertEqual(body[limit], 100)

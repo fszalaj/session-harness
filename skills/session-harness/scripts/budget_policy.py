@@ -4,7 +4,7 @@ import re
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
-WINDOW_SOURCES = {"codex.windowDurationMins", "claude.native_limit_kind", "antigravity.bucket.window"}
+WINDOW_SOURCES = {"codex.windowDurationMins", "claude.native_limit_kind", "antigravity.bucket.window", "copilot.documented_monthly_maximum", "cursor.native_billing_cycle"}
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 
 

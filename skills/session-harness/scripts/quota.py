@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 
 import budget_policy as budgets
 import credits
+import model_scope
 
 
 def default_path():
@@ -418,6 +419,8 @@ class Ledger:
                         or item["window_source"] not in budgets.WINDOW_SOURCES or "window_minutes" not in item):
                     raise ValueError("invalid native window provenance")
                 clean[pool]["window_source"] = item["window_source"]
+            if "model_scope" in item:
+                clean[pool]["model_scope"] = model_scope.validate_scope(item["model_scope"], service, source)
         resources = credits.validate_resources(snapshot.get("credit_resources", credits.missing(service)), service)
         day = self._day(observed)
         with self._connect() as db:
@@ -470,12 +473,15 @@ class Ledger:
             db.execute("INSERT OR REPLACE INTO state VALUES (?, ?)", (key, json.dumps(state)))
         return self.check(service, now=now)
 
-    def check(self, service, *, now=None, strict=None):
+    def check(self, service, *, now=None, strict=None, models=None):
         """Observed-threshold admission is separate from strict (unsupported) admission."""
         now = number(time.time() if now is None else now, "now")
+        model_scope.validate_models(models, service)
         reasons = []
         result = dict(service=service, allowed=False, allowed_by_observed_threshold=False,
                       exact_cap_supported=False, reasons=reasons, pools=[], policy=self.policy)
+        if models is not None:
+            result.update(model_admission_version=1, models=models)
         try:
             with self._connect() as db:
                 db.execute("BEGIN DEFERRED")
@@ -538,14 +544,20 @@ class Ledger:
                     pool_reasons.append("reset_needs_fresh_evidence")
                 if now - value["observed_at"] > self.policy["max_age"]:
                     pool_reasons.append("stale_pool")
+                scope = value.get("model_scope")
+                if scope is not None:
+                    model_scope.validate_scope(scope, service, state["source"])
+                applies = model_scope.applicable(scope, models)
                 result["pools"].append(dict(**budget, pool=pool, remaining_percent=remaining,
+                                             model_scope=scope, applicable=applies,
                                              daily_consumed=entry["consumed"],
                                              history_partial=bool(entry["history_partial"] or entry["unknown"]),
                                              daily_consumption_lower_bound=bool(entry["history_partial"] or entry["unknown"]),
                                              resets_at=value["resets_at"],
                                              reset_schedule_known=value["resets_at"] is not None,
                                              reasons=pool_reasons))
-                reasons.extend(f"{pool}:{reason}" for reason in pool_reasons)
+                reasons.extend(f"{pool}:{reason}" for reason in pool_reasons
+                               if applies or reason not in model_scope.RESOURCE_REASONS)
             result["allowed_by_observed_threshold"] = not reasons
             if strict:
                 reasons.append("exact_request_bound_unavailable")
