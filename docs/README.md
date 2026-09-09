@@ -30,10 +30,12 @@ and only the reference needed for their next action.
 | [Platforms](../skills/session-harness/references/platforms.md) | Operating-system support and limitations |
 | [Design sources](../skills/session-harness/references/sources.md) | Rationale and provider contracts |
 
-This documentation describes the v0.3.1 release. Check `ai-session version` before following
+This documentation describes the v0.3.2 release. Check `ai-session version` before following
 version-specific instructions. Existing installations retain their selected release
 unless the owner requests an update or has already enabled automatic maintenance.
 
 - [Subscription balancing (v0.3.1)](../skills/session-harness/references/balancing.md): shared routing, billing attribution, local usage audit and recovery.
 
 - [Claude model allowances](../skills/session-harness/references/model-allowances.md): common quotas, model selection and exact-session recovery.
+
+- [Dynamic session startup](../skills/session-harness/references/session-start.md): current capabilities, reviewer selection and a reusable task prompt.

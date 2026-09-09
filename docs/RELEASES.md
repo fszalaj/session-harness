@@ -5,6 +5,14 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.3.2
+
+The installed skill and personal profile now use one [dynamic session-start procedure](../skills/session-harness/references/session-start.md).
+It discovers current configured capabilities, model/role eligibility and project
+knowledge access, and includes a reusable task prompt. Reviewer selection uses
+verified upstream families instead of fixed client pairs. Execution adapters,
+account authorization, limits and accounting are unchanged.
+
 ## 0.3.1
 
 Automatic native work now uses adapters that resolve a current model before
@@ -50,7 +58,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.3.1, use `ai-session update --version 0.3.1 --apply`, then restart affected
+For v0.3.2, use `ai-session update --version 0.3.2 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.

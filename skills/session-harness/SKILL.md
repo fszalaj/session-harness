@@ -13,7 +13,7 @@ Installed release maintenance uses `ai-session version`, `ai-session update --ch
 and the confirmed `ai-session update`. For exact rollback, use
 `ai-session update --version VERSION --apply`, replacing `VERSION` with the chosen
 published numeric version. For this release, run
-`ai-session update --version 0.3.1 --apply`, then restart affected clients.
+`ai-session update --version 0.3.2 --apply`, then restart affected clients.
 Preserve private policy and usage history. Updates never follow `main`;
 project-owned copies require their own synchronization. See [release maintenance](references/releases.md).
 **Available in v0.2.0:** `ai-session auto-update` adds an explicit opt-in for automatic stable
@@ -127,6 +127,11 @@ dispatch outcomes stop the configured free group until inspected.
 
 ## 1. Establish the manager
 
+Follow the [session startup procedure](references/session-start.md) to discover the
+current configured capabilities, model-role policy and project knowledge access.
+Use that single procedure in new sessions; do not carry a fixed provider panel
+from a previous conversation. Read-only discovery does not authorize inference.
+
 - If assigned a leaf task, or `SESSION_HARNESS_LEAF=1`, perform only that task.
   Do not discover providers, invoke this skill recursively or spawn reviewers.
 - If a repository explicitly links this skill, select that repository copy; otherwise
@@ -228,14 +233,12 @@ findings using evidence; majority voting does not erase a concrete defect.
    plan artifact or private run directory, not a new committed progress log.
 2. Hash the exact review packet. Include sufficient relevant code/contracts inline,
    sanitize secrets and personal data, and omit irrelevant conversation history.
-3. Give the same packet separately to two other distinct provider families. For Codex
-   manager use Claude + Gemini; for Claude use Codex + Gemini; for Antigravity/Gemini
-   use Codex + Claude. A Claude model accessed through Antigravity is still Claude.
-   Other managers, including Grok, DeepSeek, Kimi and GLM, use the same rule:
-   select two available different families, excluding the manager's family. An
-   API route requires its explicit money policy and records actual effort as
-   unsupported when the adapter cannot select it. Reviewers do not see each
-   other's verdict before their first response.
+3. Use the [session startup procedure](references/session-start.md) to select two
+   eligible upstream model families different from each other and the manager.
+   Resolve the model family separately from its client, gateway and billing service.
+   Give both the same packet; reviewers do not see each other's first verdict.
+   Honor current role restrictions, model selection, isolation and admission.
+   Inventory-only, opaque Auto and supervised-only routes do not fill the panel.
 4. Request `approve`, `revise` or `blocked`, with concrete findings, severity,
    evidence, missing assumptions and required checks. A completed process is not
    approval. Do not ask for private reasoning traces.

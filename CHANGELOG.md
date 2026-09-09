@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.2
+
+- Add one canonical dynamic session-start procedure and reusable task prompt to the
+  skill, profile and onboarding workflow. Discover configured capabilities, roles,
+  model catalogs, quotas and project knowledge access at startup.
+- Select independent reviewers by verified upstream family and capability instead
+  of fixed provider pairs. Preserve supervised-only limits and precise review gaps.
+- Clarify the manual verification boundary for explicitly authorized API reviews.
+
 ## 0.3.1
 
 - Default automatic native work to adapters that resolve the newest available model

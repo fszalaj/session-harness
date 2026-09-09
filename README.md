@@ -25,7 +25,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.3.1 --apply`, then
+To select this release, run `ai-session update --version 0.3.2 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -49,6 +49,10 @@ and add `--link-mode copy` to both installer commands when symlinks are unavaila
 Checked copies protect subsequent user edits. Use PowerShell 7.3+ with the installed
 `ai-session.ps1`, or invoke `ai-session.py` with Python; add the reported launcher
 directory to PATH. See [platform support](skills/session-harness/references/platforms.md).
+
+For each new substantive task, use the [dynamic session startup procedure and prompt](skills/session-harness/references/session-start.md).
+It discovers configured capabilities and selects reviewers by upstream family and
+permitted role instead of a fixed provider pair.
 
 ## Configure and run
 
@@ -75,7 +79,7 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.3.1 |
+| Client or route | Harness support in v0.3.2 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
 | Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |

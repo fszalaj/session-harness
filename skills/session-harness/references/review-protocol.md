@@ -60,6 +60,13 @@ blocker is explicit; it cannot be turned into PASS by majority vote or elapsed t
 
 ## Explicit API reviews
 
+General `api run` is a transport, not an automatic reviewer adapter. It does not
+validate reviewer-role policy, upstream family or exact returned identity on the
+manager's behalf. Before accepting an API verdict, independently establish those
+properties and verify complete output, absence of tool events and the accounting
+receipt. Do not use this route to bypass native model-role restrictions. The
+supervised `api coding-run` and free-worker contracts do not supply independent approval.
+
 Use `harness.py api run SERVICE` only with explicit monetary authorization and
 [API admission](api-and-spend.md). Its text stdin limit is 256 KiB and timeout is
 1 through 600 seconds. It uses bounded HTTPS transport and monetary reservations,

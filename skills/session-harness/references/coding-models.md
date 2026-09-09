@@ -1,6 +1,6 @@
 # Reviewed coding models
 
-Development feature, not included in the published v0.2.0 release. The harness
+Available since v0.3.0; not included in the published v0.2.0 release. The harness
 supports native subscriptions and explicit API routes; the reviewed coding profile
 currently uses OpenRouter for supervised text tasks across five additional model
 families. It does not install OmniRoute or make an API model a protected native client.
