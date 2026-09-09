@@ -221,7 +221,8 @@ def balance_local(operation, payload, ledger):
     fields = {'status': set(), 'role_admission': {'service', 'model', 'role', 'supervised'},
               'reserve': {'request', 'client_services'}, 'start': {'id'},
               'finish': {'id', 'status', 'metadata'},
-              'reconcile': {'id', 'confirm_stopped'}}
+              'reconcile': {'id', 'confirm_stopped'},
+              'work_route': {'id', 'fingerprint', 'proposed'}}
     if operation not in fields or not isinstance(payload, dict) or set(payload) != fields[operation]:
         raise ValueError('invalid balance operation or fields')
     return {'protocol_version': 1, **getattr(balance, operation)(ledger, **payload)}

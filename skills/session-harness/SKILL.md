@@ -116,6 +116,12 @@ even usage. Do not infer equal spending from equal task counts or dollar estimat
 Honor the owner's configured model/role supervision settings. Supervised output is
 not independent review approval; report any review gap caused by those settings.
 
+For explicitly requested recurring free API access, read [free account pools](references/free-access.md).
+Use one execution host, verified no-paid-overage account evidence and the separate
+free ledger. Never equate free credits with zero token prices, infer a monthly
+refill, or create a paid money budget for this route. Expired evidence and unknown
+dispatch outcomes stop the configured free group until inspected.
+
 ## 1. Establish the manager
 
 - If assigned a leaf task, or `SESSION_HARNESS_LEAF=1`, perform only that task.

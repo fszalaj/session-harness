@@ -139,6 +139,14 @@ inspection. API billing stays separate from native subscription balancing, and
 installation does not enable paid inference. The guide explains what to configure;
 keep passwords, keys and deployment records private.
 
+For recurring free allowances, development builds also provide
+[`ai-session free`](skills/session-harness/references/free-access.md). OpenRouter
+uses an exact-zero route; direct free accounts use separately verified account
+limits and conservative reservations. One executor serves both computers, keeps
+credentials local, and records actual model identities without paid fallback.
+Explicit `mixed_work` opt-in includes admitted free pools in `ai-session work`.
+Evidence expiry or an unresolved request requires inspection before more work.
+
 ## Find the relevant guide
 
 Browse the [documentation index](docs/README.md) or choose a task below.

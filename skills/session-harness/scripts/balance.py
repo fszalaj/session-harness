@@ -108,6 +108,32 @@ def _save(db, value):
 def _table(db):
     db.execute('CREATE TABLE IF NOT EXISTS balance_jobs (id TEXT PRIMARY KEY, service TEXT NOT NULL, day TEXT NOT NULL, status TEXT NOT NULL, value TEXT NOT NULL)')
     db.execute("CREATE UNIQUE INDEX IF NOT EXISTS balance_open_service ON balance_jobs(service) WHERE status IN ('reserved', 'running')")
+    db.execute('CREATE TABLE IF NOT EXISTS work_routes (id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, route TEXT NOT NULL)')
+
+
+def work_route(ledger, id, fingerprint, proposed):
+    _identifier(id, 'id')
+    if not isinstance(fingerprint, str) or not re.fullmatch('[0-9a-f]{64}', fingerprint):
+        raise ValueError('invalid fingerprint')
+    if proposed not in {None, 'native', 'recurring_free'}:
+        raise ValueError('invalid work route')
+    with ledger._connect() as db:
+        db.execute('BEGIN IMMEDIATE')
+        _table(db)
+        old = db.execute('SELECT value FROM balance_jobs WHERE id=?', (id,)).fetchone()
+        bound = db.execute('SELECT fingerprint,route FROM work_routes WHERE id=?', (id,)).fetchone()
+        if old:
+            job = json.loads(old[0])
+            if not hmac.compare_digest(job['fingerprint'], fingerprint):
+                return _reply('fingerprint_mismatch')
+            return _reply(route='native', bound=True)
+        if bound:
+            if not hmac.compare_digest(bound[0], fingerprint):
+                return _reply('fingerprint_mismatch')
+            return _reply(route=bound[1], bound=True)
+        if proposed is not None:
+            db.execute('INSERT INTO work_routes VALUES (?,?,?)', (id, fingerprint, proposed))
+        return _reply(route=proposed, bound=proposed is not None)
 
 
 def _snapshot(db, settings=False):
@@ -375,6 +401,9 @@ def reserve(ledger, request, client_services=None):
         configured = _client_services(ledger, db, client_services)
         if not set(_load(db)['services']).issubset(configured):
             return _reply('service_not_configured_on_client')
+        route = db.execute('SELECT fingerprint,route FROM work_routes WHERE id=?', (request['id'],)).fetchone()
+        if route and (route[1] != 'native' or not hmac.compare_digest(route[0], request['fingerprint'])):
+            return _reply('work_route_conflict')
         row = db.execute('SELECT value FROM balance_jobs WHERE id=?', (request['id'],)).fetchone()
     if row:
         job = json.loads(row[0])
@@ -389,6 +418,9 @@ def reserve(ledger, request, client_services=None):
         configured = _client_services(ledger, db, client_services)
         if not set(_load(db)['services']).issubset(configured):
             return _reply('service_not_configured_on_client')
+        route = db.execute('SELECT fingerprint,route FROM work_routes WHERE id=?', (request['id'],)).fetchone()
+        if route and (route[1] != 'native' or not hmac.compare_digest(route[0], request['fingerprint'])):
+            return _reply('work_route_conflict')
         row = db.execute('SELECT value FROM balance_jobs WHERE id=?', (request['id'],)).fetchone()
         if row:
             job = json.loads(row[0])

@@ -2,6 +2,7 @@
 import argparse
 import copy
 import json
+import math
 from pathlib import Path
 import re
 import socket
@@ -72,6 +73,13 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None):
     artifact.decode('utf-8')
     if not 1 <= timeout <= 180:
         raise ValueError('work deadline must be between 1 and 180 seconds')
+    if provider == 'auto':
+        import free_access
+        config = free_access.load_config(optional=True)
+        if config and config['enabled'] and config['mixed_work']:
+            result = mixed_work(artifact, task_id, timeout, ledger)
+            if result is not None:
+                return result
     job = coordination.balance_dispatch('reserve', {
         'request': request(ledger, task_id, artifact, 'worker', provider)}, ledger)
     if not job.get('allowed') or job.get('status') != 'reserved':
@@ -110,6 +118,36 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None):
             'billing_route': 'native_subscription', 'task_id': task_id, 'balance': receipt,
             'automatic_retry': False,
             'verdict': 'worker output requires manager inspection; not an independent plan review'}
+
+
+def mixed_work(artifact, task_id, timeout, ledger):
+    import balance
+    import free_access
+    payload = {'id': task_id, 'fingerprint': balance.fingerprint(ledger, artifact), 'proposed': None}
+    route = coordination.balance_dispatch('work_route', payload, ledger)
+    if route.get('allowed') is not True:
+        return route
+    native = coordination.balance_dispatch('status', {}, ledger)
+    if native.get('allowed') is not True or native.get('enabled') is not True:
+        return native
+    if not route.get('bound'):
+        state = free_access.dispatch('status')
+        if state.get('allowed') is not True:
+            return state
+        values = [row.get('progress') for row in native.get('services', {}).values()]
+        fraction = state.get('progress')
+        if (not values or any(type(x) not in (int, float) or not math.isfinite(x) or x < 0 for x in [*values, fraction])):
+            raise ValueError('mixed_work_usage_unverified')
+        proposed = 'recurring_free' if fraction <= min(values) else 'native'
+        route = coordination.balance_dispatch('work_route', {**payload, 'proposed': proposed}, ledger)
+        if route.get('allowed') is not True:
+            return route
+    if route.get('route') == 'native':
+        return None
+    if route.get('route') != 'recurring_free':
+        raise ValueError('mixed_work_route_unverified')
+    return free_access.dispatch('run', {'id': task_id, 'model': 'auto',
+        'prompt': artifact.decode('utf-8'), 'max_output_tokens': 4096, 'timeout': timeout})
 
 
 def run_interactive(provider, response, environment, *, ledger=None, capability=None):
@@ -193,7 +231,7 @@ def main(argv=None):
         else:
             result = coordination.balance_dispatch('status', {}, ledger)
         print(json.dumps(result, indent=2))
-        return 0 if result.get('allowed') or result.get('status') in {'disabled', 'audit', 'reconciled'} else 2
+        return 0 if result.get('allowed') or result.get('status') in {'disabled', 'audit', 'reconciled', 'completed'} else 2
     except (ValueError, OSError, KeyError, TypeError) as exc:
         print(json.dumps({'allowed': False, 'status': 'balance_error', 'message': str(exc),
                           'automatic_retry': False}))

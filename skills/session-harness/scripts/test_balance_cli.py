@@ -8,6 +8,7 @@ import unittest
 from unittest.mock import patch
 
 import balance_cli
+import free_access
 import coordination
 import harness
 from quota import Ledger
@@ -15,11 +16,37 @@ from quota import Ledger
 
 class WorkTests(unittest.TestCase):
     def setUp(self):
+        free_config = patch.object(free_access, 'load_config', return_value=None)
+        free_config.start()
+        self.addCleanup(free_config.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.ledger = Ledger(Path(self.temp.name) / 'ledger.sqlite3')
         self.ledger.complete_setup(services=['codex', 'claude', 'antigravity'], api_services=[], source='test')
         self.capability = {'worker': {'model': 'example-current', 'effort': 'medium'}}
+
+    def test_mixed_free_selection_and_native_stop(self):
+        replies = [{'allowed': True, 'bound': False},
+                   {'allowed': True, 'enabled': True, 'services': {'claude': {'progress': 0.4}}},
+                   {'allowed': True, 'bound': True, 'route': 'recurring_free'}]
+        with patch.object(free_access, 'load_config', return_value={'enabled': True, 'mixed_work': True}), \
+             patch.object(coordination, 'balance_dispatch', side_effect=replies) as authority, \
+             patch.object(free_access, 'dispatch', side_effect=[{'allowed': True, 'progress': 0.02}, {'status': 'completed'}]) as free:
+            result = balance_cli.run_work(b'Bounded task', task_id='mixed-one', ledger=self.ledger)
+            self.assertEqual(result['status'], 'completed')
+            self.assertEqual(authority.call_args.args[1]['proposed'], 'recurring_free')
+            self.assertEqual(free.call_args.args[0], 'run')
+        for bound in (False, True):
+            with patch.object(coordination, 'balance_dispatch', side_effect=[{'allowed': True, 'bound': bound, 'route': 'recurring_free'}, {'allowed': False, 'status': 'quota_denied'}]), \
+                 patch.object(free_access, 'dispatch') as free:
+                result = balance_cli.mixed_work(b'task', 'stopped', 60, self.ledger)
+                self.assertFalse(result['allowed'])
+                free.assert_not_called()
+
+        with patch.object(balance_cli, 'run_work', return_value={'status': 'completed'}), \
+             patch.object(balance_cli, 'Ledger', return_value=self.ledger), \
+             patch('sys.stdin', io.TextIOWrapper(io.BytesIO(b'bounded task'))), patch('sys.stdout', io.StringIO()):
+            self.assertEqual(balance_cli.main(['work', '--id', 'completed-free']), 0)
 
     def test_real_adapter_entry_uses_current_worker_and_native_service(self):
         replies = [{'allowed': True, 'status': 'reserved', 'service': 'claude'},

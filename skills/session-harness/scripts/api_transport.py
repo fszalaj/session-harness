@@ -15,6 +15,9 @@ ORIGINS = frozenset({
     'https://generativelanguage.googleapis.com', 'https://api.x.ai',
     'https://api.deepseek.com', 'https://api.moonshot.ai',
     'https://api.z.ai', 'https://openrouter.ai',
+    'https://api.groq.com', 'https://api.mistral.ai',
+    'https://router.huggingface.co', 'https://huggingface.co',
+    'https://api.morphllm.com', 'https://integrate.api.nvidia.com',
 })
 MAX_BODY = 2_000_000
 MAX_RESPONSE = 8_000_000
@@ -22,8 +25,9 @@ MAX_RESPONSE = 8_000_000
 
 class APIError(ValueError):
     """Public errors contain a fixed status only, never provider diagnostics."""
-    def __init__(self, status):
+    def __init__(self, status, http_status=None):
         self.status = status
+        self.http_status = http_status if type(http_status) is int and 100 <= http_status <= 599 else None
         super().__init__(status)
 
 
@@ -125,7 +129,7 @@ def request_json(origin, path, method='GET', *, headers=None, body=b'', timeout=
             connection.request(method, path, body=body or None, headers=headers)
             response = connection.getresponse()
             if not 200 <= response.status < 300:
-                raise APIError('api_http_error')
+                raise APIError('api_http_error', response.status)
             encoding = response.getheader('Content-Encoding')
             if encoding and encoding.lower() != 'identity':
                 raise APIError('unsupported_api_encoding')
@@ -152,7 +156,7 @@ def request_json(origin, path, method='GET', *, headers=None, body=b'', timeout=
         except Exception as exc:
             status = exc.status if isinstance(exc, APIError) else 'api_transport_error'
             if not cancelled.is_set():
-                output.put_nowait((False, status))
+                output.put_nowait((False, (status, getattr(exc, 'http_status', None))))
         finally:
             connection.close()
 
@@ -165,7 +169,7 @@ def request_json(origin, path, method='GET', *, headers=None, body=b'', timeout=
     try:
         success, value = output.get(timeout=max(0.001, deadline - time.monotonic()))
         if not success:
-            raise APIError(value)
+            raise APIError(*value)
         return value
     except queue.Empty:
         raise APIError('api_timeout') from None

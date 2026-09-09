@@ -182,6 +182,13 @@ for five additional model families through one OpenRouter account. Inspect it wi
 private key delivery and explicit API money authorization; public catalog access
 does not establish account entitlement. Keep account records out of project docs.
 
+For recurring free API allowances, use the separate
+[free-access procedure](../skills/session-harness/references/free-access.md).
+Verify the account's no-paid-overage controls, model, rates and remaining allowance
+before configuring it. Select one execution host and use its SSH interface from
+other computers. A saved key alone does not enable dispatch; missing evidence
+keeps a provider disabled. No monetary budget or billing upgrade is created.
+
 For development installations supporting `balance`, an owner requesting even native
 subscription use can enable [shared fractional pacing](../skills/session-harness/references/balancing.md).
 Use only configured services with protected execution adapters. API money budgets

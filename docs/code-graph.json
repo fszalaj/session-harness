@@ -1,30 +1,30 @@
 {
-  "content_sha256": "e0ad97d67b4551c324bbc3faa18115e0b22b557fd1cf9ae2ec85a969f307ac6b",
+  "content_sha256": "1a6d0a5026d0d5f26093b6e9bf8602e5d77679a150f6491ef0af0ef1c28d7828",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 2556,
+    "edge_count": 2718,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1385,
+    "node_count": 1465,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
       "scripts/code_graph.py": "fa7c041129167808a7a3cc44fed5534c57ba31da2bf42cddc470f549e3fd58b3",
       "scripts/code_graph.test.py": "5baef7e0c95ef579828bfbceab61c7b3792c05c160714378bdfe6580ce40d423",
-      "scripts/install-agent-profile.py": "21ea77e37a800bfa60020820d85e5359a2c609d83c2e099ac26d048bcc11637f",
-      "scripts/install-agent-profile.test.py": "3fcdfc3f9cdeb785063c4e94beaae2168516ce2af9664a26d4dcb7293101e688",
+      "scripts/install-agent-profile.py": "c70833db8b963c70d57b092d082798f88ec4eb671ea5010f509dc3360eb218d0",
+      "scripts/install-agent-profile.test.py": "95a892a7e2cd4fd4762dea0abe95922b806b529fe236b45ead4c0c7149b8fcc5",
       "scripts/release.py": "711b3c849d21285dd7932338e1ed145e9e5a1566dfc7c6d7e3f0876f424c53db",
       "scripts/release.test.py": "c0cabc31299955487c013852d4d1956b4c05c785ac7dd78927a360960027dcaa",
       "scripts/test.py": "ea279177805e95a35922f421f8e167cadf0d275cbcb851535aa9a4e8550fe38a",
       "skills/session-harness/scripts/agy_quota.py": "21e1f1d597b6e76acdcfa36c22437e9689a5b115ea83538508966a217e25829e",
       "skills/session-harness/scripts/api_execution.py": "d32ac415aea843ed15fb2826f2a0293a1d595831b774e9fc2bde1053ed06a34d",
       "skills/session-harness/scripts/api_providers.py": "274cea4c40c494a18895ba346af9c7ec16ff8f191486157a04df4692302cb687",
-      "skills/session-harness/scripts/api_transport.py": "3e06e183260978018619b8b2fe4d4dfa3d0a0961273e360cfb687789f884546c",
+      "skills/session-harness/scripts/api_transport.py": "95e565e954124fa8ee8a1aaaff90b8e14bdf1fb04bd21dd1cff6bc45d5b6426d",
       "skills/session-harness/scripts/auto_install.py": "d706fea12603b9e9d0179ad93a9ba1c352948d7c3940df8316c0a6741f4e713c",
       "skills/session-harness/scripts/auto_scheduler.py": "b8f8bd43374bb6206eee6804f94a43f8bfc6e3d9e5f8de29dc5fcff6b3062563",
       "skills/session-harness/scripts/auto_update.py": "e239364ffb34a1bd1d9ee3e08c837bcaabcc5a569ebce2ed867302ccf5df1706",
-      "skills/session-harness/scripts/balance.py": "dc7641db309da3d3e00f3b006c3079c002e298bfc2e11c0f6e4cbfdc0062e9f9",
-      "skills/session-harness/scripts/balance_cli.py": "bf4f9405c565f2253343e5505c79fb1673df275f37b898dbfb9b17a24d871299",
+      "skills/session-harness/scripts/balance.py": "dac772f1c0c88bd67388e50e2eea606ec4238bff22691435994f513b11a39b70",
+      "skills/session-harness/scripts/balance_cli.py": "bd2cbdbeb42e4e043bb0170c01025ea49642c0d338b98f2be7da29755f7d2aec",
       "skills/session-harness/scripts/budget_cli.py": "a6f6d39897920b29247e9cac91678e30a3050939d0ae38fd8492c3d29b60a68f",
       "skills/session-harness/scripts/budget_policy.py": "1d436917270dd50ad553b5d87f76b5219d8f67f39d822312f402822cc9553906",
       "skills/session-harness/scripts/claude_admission.py": "9959e40a09b5b8d8a9253260a78314cb670a09d284e5060fdf6b187f18ef5897",
@@ -32,9 +32,12 @@
       "skills/session-harness/scripts/claude_models.py": "4f3978013faea78ec36b4bd769fbd0589d57dc5a4e3ae21a2fe5fd1b35756098",
       "skills/session-harness/scripts/claude_session.py": "d43e869e5c90e50d828e2014c94490590791f48e3041d48b3c794ecb93a52963",
       "skills/session-harness/scripts/coding_models.py": "76f740e86f58142111fb576f64c2d217c8ad6efb396c5d43b1b8501845d1db56",
-      "skills/session-harness/scripts/coordination.py": "53436f5baed7cb50064eb97db4379167ce2f184b653c40d569fbc27c6b858d82",
+      "skills/session-harness/scripts/coordination.py": "378dea29b311e9e92175cb9ae2150ac28fcdadaa982d9ed1e0ffa8adc8e54a11",
       "skills/session-harness/scripts/credits.py": "9a57841b5faa96898b0e2cfae69ea5d836f0d03b7e0f130df474cce0cb2075d4",
-      "skills/session-harness/scripts/harness.py": "b78ae17ab03c51d31e573b2bbdf1b05ce98050cf6368450e1a5ab9b95bb70f65",
+      "skills/session-harness/scripts/free_access.py": "bcfc87d774ab02feb985671333be6bbe1a90ddb12d2cb2a1074acaac49846321",
+      "skills/session-harness/scripts/free_access_cli.py": "96bfaa0becc7cd0d377548d15565ff2082a3961ed69e5c660869a71dd6db1ee8",
+      "skills/session-harness/scripts/free_accounts.py": "41a12cc21d60d8f6179aae36e8507bab10db7bc03c2927af942a8d2dd8b0dda0",
+      "skills/session-harness/scripts/harness.py": "d774c82ee5eca5f00b22033227142424ed6875843677b1e439312862314e0092",
       "skills/session-harness/scripts/inventory.py": "a25b6663c9b00b95202ade571daf574b5264bd69292d00fb84402aecdd9640a3",
       "skills/session-harness/scripts/model_scope.py": "028bbeaeaf3a16b8be86e8a03a0e0d0c6f10fc4932c0b45ab58bdd7649837d7b",
       "skills/session-harness/scripts/native_quota.py": "013a8450940d8c6f9871e1423e82667b760279978badedc948b9531ce5d03cad",
@@ -53,7 +56,7 @@
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
       "skills/session-harness/scripts/test_auto_update.py": "12bea9d08b262c3e32e5f7f8545ee530f58308820cae763f332f093fc9179701",
       "skills/session-harness/scripts/test_balance.py": "d86f56161ebde49e98405338d234aea28b358110a5acdce3f54e00122694712c",
-      "skills/session-harness/scripts/test_balance_cli.py": "7b7c44e48a57eb6da131df5d2bb5bbb73a863a44f137267b6b49c670a24fc095",
+      "skills/session-harness/scripts/test_balance_cli.py": "cfefcc0bf954fd03d869144dd5b67cc99a5b6f99f2807599e3650aab1e8d1831",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "56f5522d46e76201981426d222144ccc07e680cdc2d5ba2f827c38cb0b7a7cf3",
@@ -63,6 +66,8 @@
       "skills/session-harness/scripts/test_coding_models.py": "4fca5d2cff8c375e808f1720be5465c400c662296efa8116090bdf00510867fe",
       "skills/session-harness/scripts/test_coordination.py": "d90066dc72b2519703e5c3ac8559fb9bfec5396c921800ffc5bf5690ff209217",
       "skills/session-harness/scripts/test_credits.py": "84c4d7f9d135f3bed9ca0a19065657ab9e8e7bf34cf98965395ee66c911568ef",
+      "skills/session-harness/scripts/test_free_access.py": "140ce0cc695c1cc7174570a9c85319ba85761d8412e3adb0d8d59fe9a5b3d89d",
+      "skills/session-harness/scripts/test_free_accounts.py": "e114df456dbeb4016266912ef98e643ac5f616339392c35c4e75d790f55c5190",
       "skills/session-harness/scripts/test_harness.py": "d95b92987a7cd1bc1538e6a6451ecf6ba702df1128427f0fa461d516c70be67f",
       "skills/session-harness/scripts/test_inventory.py": "3d460c6cfe3c679e600ee4be1fc9b2980f906551a259e3b6ce70d89979c6957c",
       "skills/session-harness/scripts/test_maintenance.py": "25b1b96761f7e4d614af5cceb4eb79c54b51c729d43173b1de2d29ba88a8ca76",
@@ -1919,6 +1924,12 @@
     },
     {
       "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/balance.py",
+      "target": "pyfunc:skills/session-harness/scripts/balance.py:work_route"
+    },
+    {
+      "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/balance_cli.py",
       "target": "extmodule:argparse"
@@ -1934,6 +1945,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/balance_cli.py",
       "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/balance_cli.py",
+      "target": "extmodule:math"
     },
     {
       "confidence": "EXTRACTED",
@@ -1987,6 +2004,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/balance_cli.py",
+      "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/balance_cli.py",
       "target": "module:skills/session-harness/scripts/harness.py"
     },
     {
@@ -2024,6 +2047,12 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/balance_cli.py",
       "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:main"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/balance_cli.py",
+      "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:mixed_work"
     },
     {
       "confidence": "EXTRACTED",
@@ -3006,6 +3035,354 @@
     {
       "confidence": "EXTRACTED",
       "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:contextlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:datetime"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:decimal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:hmac"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:re"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:secrets"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:sqlite3"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:stat"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:subprocess"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "extmodule:time"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "module:skills/session-harness/scripts/coding_models.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "module:skills/session-harness/scripts/free_accounts.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:catalog"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:credentials"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:evidence"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:load_config"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:private_read"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:run"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:save_config"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:validate_config"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:zero"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:zero_prices"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "extmodule:argparse"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "extmodule:decimal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "extmodule:sys"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "module:skills/session-harness/scripts/free_accounts.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_access_cli.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_access_cli.py:main"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:contextlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:decimal"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:hmac"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:re"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:time"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "extmodule:unicodedata"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:credential"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:number"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:preflight"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:stamp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/free_accounts.py",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:validate_config"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
       "source": "module:skills/session-harness/scripts/harness.py",
       "target": "extmodule:argparse"
     },
@@ -3152,6 +3529,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/harness.py",
       "target": "module:skills/session-harness/scripts/coordination.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/harness.py",
+      "target": "module:skills/session-harness/scripts/free_access_cli.py"
     },
     {
       "confidence": "EXTRACTED",
@@ -5233,6 +5616,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_balance_cli.py",
+      "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_balance_cli.py",
       "target": "module:skills/session-harness/scripts/harness.py"
     },
     {
@@ -6002,6 +6391,138 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/test_credits.py",
       "target": "pyfunc:skills/session-harness/scripts/test_credits.py:money"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:concurrent"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:copy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:sqlite3"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:concurrent"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:copy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:hashlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:json"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:time"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "module:skills/session-harness/scripts/api_transport.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "module:skills/session-harness/scripts/free_accounts.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "target": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests"
     },
     {
       "confidence": "EXTRACTED",
@@ -7938,6 +8459,114 @@
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.__init__"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.connect"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.existing"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.fingerprint"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.finish"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.reconcile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.reserve"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.snapshot"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.status"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.__init__"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.bind"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.clock"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.complete"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.connect"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.reconcile_account"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.renew_period"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.state"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "target": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.states"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/harness.py:CodexRPC",
       "target": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.__init__"
     },
@@ -9265,6 +9894,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_mixed_free_selection_and_native_stop"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
       "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service"
     },
     {
@@ -10466,6 +11101,192 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_credits.py:CreditMetadataTests",
       "target": "pymethod:skills/session-harness/scripts/test_credits.py:CreditMetadataTests.test_purchase_reload_or_conflicting_enablement_deny_disabled_claude"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.execute"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.response"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_completed_request_has_zero_price_controls_and_rotates_models"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_config_change_during_preflight_blocks_before_reservation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_config_roundtrip_preserves_explicit_opt_in_and_rejects_paid_ids"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_credentials_are_private_and_not_logged"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_daily_and_minute_limits_are_shared_across_models"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_key_cap_must_be_explicit_zero"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_missing_cost_nonzero_cost_and_wrong_identity_retain_request"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_payload_bounds_and_paid_models_fail_without_requests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_real_sqlite_concurrency_admits_only_one_worker"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_remote_executor_never_recurses_or_falls_back"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_repeat_is_accounting_only_and_changed_prompt_conflicts"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_transport_failure_does_not_auto_retry_or_release"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_unresolved_request_blocks_other_model_and_next_day"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_zero_gate_rejects_invalid_values_and_hidden_charges"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.execute"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.setUp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_completed_receipt_cannot_be_abandoned_and_billing_needs_reverification"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_completion_and_duplicate_do_not_repeat_post"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_configuration_and_account_change_fail_closed"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_credit_reservation_retained_and_pending_blocks_period_change"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_evidence_bindings_and_numeric_validation"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_expiry_disables_dispatch_without_fallback"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_failure_and_reconcile_never_refund_or_retry"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_hf_fixed_provider_rate_and_account_checks"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_identity_and_usage_failure_hide_output"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_legacy_group_pending_and_separate_file_invariants"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_rolling_windows_reservation_and_clock_guard"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "target": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_sqlite_concurrency_and_durability"
     },
     {
       "confidence": "EXTRACTED",
@@ -13752,6 +14573,24 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/balance.py:work_route",
+      "target": "pyfunc:skills/session-harness/scripts/balance.py:_identifier"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/balance.py:work_route",
+      "target": "pyfunc:skills/session-harness/scripts/balance.py:_reply"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/balance.py:work_route",
+      "target": "pyfunc:skills/session-harness/scripts/balance.py:_table"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/balance_cli.py:main",
       "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_work"
     },
@@ -13766,6 +14605,12 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_interactive",
       "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:request"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_work",
+      "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:mixed_work"
     },
     {
       "confidence": "INFERRED",
@@ -14486,6 +15331,138 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/credits.py:validate_resources",
       "target": "pyfunc:skills/session-harness/scripts/credits.py:resource"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:catalog",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:zero_prices"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:credentials",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:private_read"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:dispatch",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:catalog"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:dispatch",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:evidence"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:dispatch",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:load_config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:dispatch",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:run"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:evidence",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:catalog"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:evidence",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:credentials"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:evidence",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:zero"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:load_config",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:private_read"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:load_config",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:validate_config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:evidence"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:load_config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:run",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:zero"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:save_config",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:validate_config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_access.py:zero_prices",
+      "target": "pyfunc:skills/session-harness/scripts/free_access.py:zero"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_accounts.py:dispatch",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:preflight"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_accounts.py:dispatch",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:validate_config"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_accounts.py:preflight",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:credential"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_accounts.py:preflight",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:number"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_accounts.py:validate_config",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:number"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/free_accounts.py:validate_config",
+      "target": "pyfunc:skills/session-harness/scripts/free_accounts.py:stamp"
     },
     {
       "confidence": "INFERRED",
@@ -15589,6 +16566,9 @@
       "id": "extmodule:tty"
     },
     {
+      "id": "extmodule:unicodedata"
+    },
+    {
       "id": "extmodule:unittest"
     },
     {
@@ -15776,6 +16756,27 @@
       "id": "module:skills/session-harness/scripts/credits.py",
       "label": "skills/session-harness/scripts/credits.py",
       "source_file": "skills/session-harness/scripts/credits.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/free_access.py",
+      "label": "skills/session-harness/scripts/free_access.py",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/free_access_cli.py",
+      "label": "skills/session-harness/scripts/free_access_cli.py",
+      "source_file": "skills/session-harness/scripts/free_access_cli.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/free_accounts.py",
+      "label": "skills/session-harness/scripts/free_accounts.py",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
       "type": "module"
     },
     {
@@ -15979,6 +16980,20 @@
       "id": "module:skills/session-harness/scripts/test_credits.py",
       "label": "skills/session-harness/scripts/test_credits.py",
       "source_file": "skills/session-harness/scripts/test_credits.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_free_access.py",
+      "label": "skills/session-harness/scripts/test_free_access.py",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_free_accounts.py",
+      "label": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
       "type": "module"
     },
     {
@@ -16213,7 +17228,7 @@
       "id": "pyclass:skills/session-harness/scripts/api_transport.py:APIError",
       "label": "APIError",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L23",
+      "source_location": "L26",
       "type": "class"
     },
     {
@@ -16221,7 +17236,7 @@
       "id": "pyclass:skills/session-harness/scripts/api_transport.py:_Connection",
       "label": "_Connection",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L85",
+      "source_location": "L89",
       "type": "class"
     },
     {
@@ -16237,7 +17252,23 @@
       "id": "pyclass:skills/session-harness/scripts/balance_cli.py:InteractiveStop",
       "label": "InteractiveStop",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L15",
+      "source_location": "L16",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
+      "label": "FreeLedger",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L190",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/free_accounts.py:AccountsLedger",
+      "label": "AccountsLedger",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L172",
       "type": "class"
     },
     {
@@ -16397,7 +17428,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
       "label": "WorkTests",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "type": "class"
     },
     {
@@ -16534,6 +17565,22 @@
       "label": "CreditMetadataTests",
       "source_file": "skills/session-harness/scripts/test_credits.py",
       "source_location": "L24",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
+      "label": "FreeAccessTests",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L14",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_free_accounts.py:AccountTests",
+      "label": "AccountTests",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L15",
       "type": "class"
     },
     {
@@ -17245,7 +18292,7 @@
       "id": "pyfunc:skills/session-harness/scripts/api_transport.py:_invalid_constant",
       "label": "_invalid_constant",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L39",
+      "source_location": "L43",
       "type": "function"
     },
     {
@@ -17253,7 +18300,7 @@
       "id": "pyfunc:skills/session-harness/scripts/api_transport.py:_json_decimal",
       "label": "_json_decimal",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L43",
+      "source_location": "L47",
       "type": "function"
     },
     {
@@ -17261,7 +18308,7 @@
       "id": "pyfunc:skills/session-harness/scripts/api_transport.py:_unique",
       "label": "_unique",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L30",
+      "source_location": "L34",
       "type": "function"
     },
     {
@@ -17269,7 +18316,7 @@
       "id": "pyfunc:skills/session-harness/scripts/api_transport.py:decode_json",
       "label": "decode_json",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L49",
+      "source_location": "L53",
       "type": "function"
     },
     {
@@ -17277,7 +18324,7 @@
       "id": "pyfunc:skills/session-harness/scripts/api_transport.py:request_json",
       "label": "request_json",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L110",
+      "source_location": "L114",
       "type": "function"
     },
     {
@@ -17285,7 +18332,7 @@
       "id": "pyfunc:skills/session-harness/scripts/api_transport.py:validate_request",
       "label": "validate_request",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L60",
+      "source_location": "L64",
       "type": "function"
     },
     {
@@ -17605,7 +18652,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_client_services",
       "label": "_client_services",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L353",
+      "source_location": "L379",
       "type": "function"
     },
     {
@@ -17613,7 +18660,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_compact",
       "label": "_compact",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L285",
+      "source_location": "L311",
       "type": "function"
     },
     {
@@ -17629,7 +18676,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_evaluate",
       "label": "_evaluate",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L214",
+      "source_location": "L240",
       "type": "function"
     },
     {
@@ -17645,7 +18692,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_identifier",
       "label": "_identifier",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L347",
+      "source_location": "L373",
       "type": "function"
     },
     {
@@ -17653,7 +18700,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_job_reply",
       "label": "_job_reply",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L341",
+      "source_location": "L367",
       "type": "function"
     },
     {
@@ -17669,7 +18716,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_metadata",
       "label": "_metadata",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L428",
+      "source_location": "L460",
       "type": "function"
     },
     {
@@ -17677,7 +18724,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_policy",
       "label": "_policy",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L125",
+      "source_location": "L151",
       "type": "function"
     },
     {
@@ -17685,7 +18732,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_public",
       "label": "_public",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L333",
+      "source_location": "L359",
       "type": "function"
     },
     {
@@ -17693,7 +18740,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_reply",
       "label": "_reply",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L144",
+      "source_location": "L170",
       "type": "function"
     },
     {
@@ -17709,7 +18756,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_snapshot",
       "label": "_snapshot",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L113",
+      "source_location": "L139",
       "type": "function"
     },
     {
@@ -17717,7 +18764,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_status_job",
       "label": "_status_job",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L326",
+      "source_location": "L352",
       "type": "function"
     },
     {
@@ -17733,7 +18780,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_transition",
       "label": "_transition",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L446",
+      "source_location": "L478",
       "type": "function"
     },
     {
@@ -17749,7 +18796,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:configure",
       "label": "configure",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L148",
+      "source_location": "L174",
       "type": "function"
     },
     {
@@ -17757,7 +18804,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:fingerprint",
       "label": "fingerprint",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L196",
+      "source_location": "L222",
       "type": "function"
     },
     {
@@ -17765,7 +18812,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:finish",
       "label": "finish",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L521",
+      "source_location": "L553",
       "type": "function"
     },
     {
@@ -17773,7 +18820,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:reconcile",
       "label": "reconcile",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L552",
+      "source_location": "L584",
       "type": "function"
     },
     {
@@ -17781,7 +18828,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:reserve",
       "label": "reserve",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L363",
+      "source_location": "L389",
       "type": "function"
     },
     {
@@ -17805,7 +18852,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:start",
       "label": "start",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L470",
+      "source_location": "L502",
       "type": "function"
     },
     {
@@ -17813,7 +18860,15 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:status",
       "label": "status",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L304",
+      "source_location": "L330",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/balance.py:work_route",
+      "label": "work_route",
+      "source_file": "skills/session-harness/scripts/balance.py",
+      "source_location": "L114",
       "type": "function"
     },
     {
@@ -17821,7 +18876,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:_interactive_dispatch",
       "label": "_interactive_dispatch",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L42",
+      "source_location": "L43",
       "type": "function"
     },
     {
@@ -17829,7 +18884,15 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L145",
+      "source_location": "L183",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:mixed_work",
+      "label": "mixed_work",
+      "source_file": "skills/session-harness/scripts/balance_cli.py",
+      "source_location": "L123",
       "type": "function"
     },
     {
@@ -17837,7 +18900,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:request",
       "label": "request",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L61",
+      "source_location": "L62",
       "type": "function"
     },
     {
@@ -17845,7 +18908,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_interactive",
       "label": "run_interactive",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L115",
+      "source_location": "L153",
       "type": "function"
     },
     {
@@ -17853,7 +18916,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_work",
       "label": "run_work",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L67",
+      "source_location": "L68",
       "type": "function"
     },
     {
@@ -18269,7 +19332,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:balance_dispatch",
       "label": "balance_dispatch",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L230",
+      "source_location": "L231",
       "type": "function"
     },
     {
@@ -18309,7 +19372,7 @@
       "id": "pyfunc:skills/session-harness/scripts/coordination.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/coordination.py",
-      "source_location": "L267",
+      "source_location": "L268",
       "type": "function"
     },
     {
@@ -18478,6 +19541,150 @@
       "label": "validate_resources",
       "source_file": "skills/session-harness/scripts/credits.py",
       "source_location": "L169",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:catalog",
+      "label": "catalog",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L133",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:credentials",
+      "label": "credentials",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L162",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:dispatch",
+      "label": "dispatch",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L373",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:evidence",
+      "label": "evidence",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L174",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:load_config",
+      "label": "load_config",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L82",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:private_read",
+      "label": "private_read",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L68",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:run",
+      "label": "run",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L298",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:save_config",
+      "label": "save_config",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L91",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:validate_config",
+      "label": "validate_config",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L30",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:zero",
+      "label": "zero",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L111",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access.py:zero_prices",
+      "label": "zero_prices",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L121",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_access_cli.py:main",
+      "label": "main",
+      "source_file": "skills/session-harness/scripts/free_access_cli.py",
+      "source_location": "L13",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_accounts.py:credential",
+      "label": "credential",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L137",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_accounts.py:dispatch",
+      "label": "dispatch",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L330",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_accounts.py:number",
+      "label": "number",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L31",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_accounts.py:preflight",
+      "label": "preflight",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L145",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_accounts.py:stamp",
+      "label": "stamp",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L43",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/free_accounts.py:validate_config",
+      "label": "validate_config",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L49",
       "type": "function"
     },
     {
@@ -20077,7 +21284,7 @@
       "id": "pymethod:skills/session-harness/scripts/api_transport.py:APIError.__init__",
       "label": "APIError.__init__",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L25",
+      "source_location": "L28",
       "type": "method"
     },
     {
@@ -20085,7 +21292,7 @@
       "id": "pymethod:skills/session-harness/scripts/api_transport.py:_Connection.__init__",
       "label": "_Connection.__init__",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L86",
+      "source_location": "L90",
       "type": "method"
     },
     {
@@ -20093,7 +21300,7 @@
       "id": "pymethod:skills/session-harness/scripts/api_transport.py:_Connection._remaining",
       "label": "_Connection._remaining",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L91",
+      "source_location": "L95",
       "type": "method"
     },
     {
@@ -20101,7 +21308,7 @@
       "id": "pymethod:skills/session-harness/scripts/api_transport.py:_Connection.connect",
       "label": "_Connection.connect",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L97",
+      "source_location": "L101",
       "type": "method"
     },
     {
@@ -20109,7 +21316,7 @@
       "id": "pymethod:skills/session-harness/scripts/api_transport.py:_Connection.send",
       "label": "_Connection.send",
       "source_file": "skills/session-harness/scripts/api_transport.py",
-      "source_location": "L102",
+      "source_location": "L106",
       "type": "method"
     },
     {
@@ -20117,7 +21324,7 @@
       "id": "pymethod:skills/session-harness/scripts/balance_cli.py:InteractiveStop.__init__",
       "label": "InteractiveStop.__init__",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "type": "method"
     },
     {
@@ -20125,7 +21332,151 @@
       "id": "pymethod:skills/session-harness/scripts/balance_cli.py:InteractiveStop.details",
       "label": "InteractiveStop.details",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L37",
+      "source_location": "L38",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.__init__",
+      "label": "FreeLedger.__init__",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L191",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.connect",
+      "label": "FreeLedger.connect",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L209",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.existing",
+      "label": "FreeLedger.existing",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L250",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.fingerprint",
+      "label": "FreeLedger.fingerprint",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L218",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.finish",
+      "label": "FreeLedger.finish",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L278",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.reconcile",
+      "label": "FreeLedger.reconcile",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L288",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.reserve",
+      "label": "FreeLedger.reserve",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L261",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.snapshot",
+      "label": "FreeLedger.snapshot",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L224",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.status",
+      "label": "FreeLedger.status",
+      "source_file": "skills/session-harness/scripts/free_access.py",
+      "source_location": "L246",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.__init__",
+      "label": "AccountsLedger.__init__",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L181",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.bind",
+      "label": "AccountsLedger.bind",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L238",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.clock",
+      "label": "AccountsLedger.clock",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L191",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.complete",
+      "label": "AccountsLedger.complete",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L274",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.connect",
+      "label": "AccountsLedger.connect",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L174",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.reconcile_account",
+      "label": "AccountsLedger.reconcile_account",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L285",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.renew_period",
+      "label": "AccountsLedger.renew_period",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L313",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.state",
+      "label": "AccountsLedger.state",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L198",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/free_accounts.py:AccountsLedger.states",
+      "label": "AccountsLedger.states",
+      "source_file": "skills/session-harness/scripts/free_accounts.py",
+      "source_location": "L232",
       "type": "method"
     },
     {
@@ -21813,7 +23164,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.interactive",
       "label": "WorkTests.interactive",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L135",
+      "source_location": "L162",
       "type": "method"
     },
     {
@@ -21821,7 +23172,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.interactive_replies",
       "label": "WorkTests.interactive_replies",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L130",
+      "source_location": "L157",
       "type": "method"
     },
     {
@@ -21829,7 +23180,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.setUp",
       "label": "WorkTests.setUp",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "type": "method"
     },
     {
@@ -21837,7 +23188,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_denial_and_duplicate_never_execute_or_switch",
       "label": "WorkTests.test_denial_and_duplicate_never_execute_or_switch",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L40",
+      "source_location": "L67",
       "type": "method"
     },
     {
@@ -21845,7 +23196,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_failure_retains_terminal_attempt_and_never_retries",
       "label": "WorkTests.test_failure_retains_terminal_attempt_and_never_retries",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L49",
+      "source_location": "L76",
       "type": "method"
     },
     {
@@ -21853,7 +23204,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_disabled_shape_and_successful_execution",
       "label": "WorkTests.test_interactive_disabled_shape_and_successful_execution",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L161",
+      "source_location": "L188",
       "type": "method"
     },
     {
@@ -21861,7 +23212,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_quota_stop_remains_primary_and_retains_job",
       "label": "WorkTests.test_interactive_quota_stop_remains_primary_and_retains_job",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L179",
+      "source_location": "L206",
       "type": "method"
     },
     {
@@ -21869,7 +23220,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_receipt_denial_is_not_process_success",
       "label": "WorkTests.test_interactive_receipt_denial_is_not_process_success",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L111",
+      "source_location": "L138",
       "type": "method"
     },
     {
@@ -21877,7 +23228,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_transport_and_malformed_replies_preserve_phase_without_retry",
       "label": "WorkTests.test_interactive_transport_and_malformed_replies_preserve_phase_without_retry",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L139",
+      "source_location": "L166",
       "type": "method"
     },
     {
@@ -21885,7 +23236,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_worker_lead_denial_before_process",
       "label": "WorkTests.test_interactive_worker_lead_denial_before_process",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L120",
+      "source_location": "L147",
       "type": "method"
     },
     {
@@ -21893,7 +23244,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_lost_receipt_preserves_output_without_second_dispatch",
       "label": "WorkTests.test_lost_receipt_preserves_output_without_second_dispatch",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L84",
+      "source_location": "L111",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_mixed_free_selection_and_native_stop",
+      "label": "WorkTests.test_mixed_free_selection_and_native_stop",
+      "source_file": "skills/session-harness/scripts/test_balance_cli.py",
+      "source_location": "L28",
       "type": "method"
     },
     {
@@ -21901,7 +23260,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service",
       "label": "WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L24",
+      "source_location": "L51",
       "type": "method"
     },
     {
@@ -21909,7 +23268,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_fixed_schema_never_accepts_extra_fields",
       "label": "WorkTests.test_remote_fixed_schema_never_accepts_extra_fields",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L97",
+      "source_location": "L124",
       "type": "method"
     },
     {
@@ -21917,7 +23276,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_missing_protocol_and_transport_fail_closed",
       "label": "WorkTests.test_remote_missing_protocol_and_transport_fail_closed",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L74",
+      "source_location": "L101",
       "type": "method"
     },
     {
@@ -21925,7 +23284,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_reserve_transmits_client_setup_and_timeout_is_safe",
       "label": "WorkTests.test_remote_reserve_transmits_client_setup_and_timeout_is_safe",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L103",
+      "source_location": "L130",
       "type": "method"
     },
     {
@@ -21933,7 +23292,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_unresolved_actual_model_preserves_output_and_valid_receipt",
       "label": "WorkTests.test_unresolved_actual_model_preserves_output_and_valid_receipt",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L61",
+      "source_location": "L88",
       "type": "method"
     },
     {
@@ -21941,7 +23300,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_worker_cli_reports_policy_denial_in_imported_and_script_namespaces",
       "label": "WorkTests.test_worker_cli_reports_policy_denial_in_imported_and_script_namespaces",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L189",
+      "source_location": "L216",
       "type": "method"
     },
     {
@@ -23502,6 +24861,254 @@
       "label": "CreditMetadataTests.test_purchase_reload_or_conflicting_enablement_deny_disabled_claude",
       "source_file": "skills/session-harness/scripts/test_credits.py",
       "source_location": "L84",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.execute",
+      "label": "FreeAccessTests.execute",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L35",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.response",
+      "label": "FreeAccessTests.response",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L31",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.setUp",
+      "label": "FreeAccessTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L15",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_completed_request_has_zero_price_controls_and_rotates_models",
+      "label": "FreeAccessTests.test_completed_request_has_zero_price_controls_and_rotates_models",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L50",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_config_change_during_preflight_blocks_before_reservation",
+      "label": "FreeAccessTests.test_config_change_during_preflight_blocks_before_reservation",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L136",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_config_roundtrip_preserves_explicit_opt_in_and_rejects_paid_ids",
+      "label": "FreeAccessTests.test_config_roundtrip_preserves_explicit_opt_in_and_rejects_paid_ids",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L155",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_credentials_are_private_and_not_logged",
+      "label": "FreeAccessTests.test_credentials_are_private_and_not_logged",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L185",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_daily_and_minute_limits_are_shared_across_models",
+      "label": "FreeAccessTests.test_daily_and_minute_limits_are_shared_across_models",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L121",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_key_cap_must_be_explicit_zero",
+      "label": "FreeAccessTests.test_key_cap_must_be_explicit_zero",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L145",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_missing_cost_nonzero_cost_and_wrong_identity_retain_request",
+      "label": "FreeAccessTests.test_missing_cost_nonzero_cost_and_wrong_identity_retain_request",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L76",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_payload_bounds_and_paid_models_fail_without_requests",
+      "label": "FreeAccessTests.test_payload_bounds_and_paid_models_fail_without_requests",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L199",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_real_sqlite_concurrency_admits_only_one_worker",
+      "label": "FreeAccessTests.test_real_sqlite_concurrency_admits_only_one_worker",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L112",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_remote_executor_never_recurses_or_falls_back",
+      "label": "FreeAccessTests.test_remote_executor_never_recurses_or_falls_back",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L164",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_repeat_is_accounting_only_and_changed_prompt_conflicts",
+      "label": "FreeAccessTests.test_repeat_is_accounting_only_and_changed_prompt_conflicts",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L65",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_transport_failure_does_not_auto_retry_or_release",
+      "label": "FreeAccessTests.test_transport_failure_does_not_auto_retry_or_release",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L94",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_unresolved_request_blocks_other_model_and_next_day",
+      "label": "FreeAccessTests.test_unresolved_request_blocks_other_model_and_next_day",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L105",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_zero_gate_rejects_invalid_values_and_hidden_charges",
+      "label": "FreeAccessTests.test_zero_gate_rejects_invalid_values_and_hidden_charges",
+      "source_file": "skills/session-harness/scripts/test_free_access.py",
+      "source_location": "L41",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.execute",
+      "label": "AccountTests.execute",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L46",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.setUp",
+      "label": "AccountTests.setUp",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L16",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_completed_receipt_cannot_be_abandoned_and_billing_needs_reverification",
+      "label": "AccountTests.test_completed_receipt_cannot_be_abandoned_and_billing_needs_reverification",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L183",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_completion_and_duplicate_do_not_repeat_post",
+      "label": "AccountTests.test_completion_and_duplicate_do_not_repeat_post",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L51",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_configuration_and_account_change_fail_closed",
+      "label": "AccountTests.test_configuration_and_account_change_fail_closed",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L171",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_credit_reservation_retained_and_pending_blocks_period_change",
+      "label": "AccountTests.test_credit_reservation_retained_and_pending_blocks_period_change",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L76",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_evidence_bindings_and_numeric_validation",
+      "label": "AccountTests.test_evidence_bindings_and_numeric_validation",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L123",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_expiry_disables_dispatch_without_fallback",
+      "label": "AccountTests.test_expiry_disables_dispatch_without_fallback",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L142",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_failure_and_reconcile_never_refund_or_retry",
+      "label": "AccountTests.test_failure_and_reconcile_never_refund_or_retry",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L91",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_hf_fixed_provider_rate_and_account_checks",
+      "label": "AccountTests.test_hf_fixed_provider_rate_and_account_checks",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L152",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_identity_and_usage_failure_hide_output",
+      "label": "AccountTests.test_identity_and_usage_failure_hide_output",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L103",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_legacy_group_pending_and_separate_file_invariants",
+      "label": "AccountTests.test_legacy_group_pending_and_separate_file_invariants",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L195",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_rolling_windows_reservation_and_clock_guard",
+      "label": "AccountTests.test_rolling_windows_reservation_and_clock_guard",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L111",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_free_accounts.py:AccountTests.test_sqlite_concurrency_and_durability",
+      "label": "AccountTests.test_sqlite_concurrency_and_durability",
+      "source_file": "skills/session-harness/scripts/test_free_accounts.py",
+      "source_location": "L65",
       "type": "method"
     },
     {

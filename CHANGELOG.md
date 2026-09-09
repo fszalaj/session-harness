@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add explicitly configured recurring free account pools, shared request identities,
+  conservative token/credit reservations, manual reconciliation and fixed-provider
+  HTTPS dispatch. Preserve legacy OpenRouter exact-zero guards, native budgets and
+  monetary accounting. Free-account evidence expires and never invents a refill.
+
 - Report interactive worker pacing denials with their own status and bounded reason
   codes instead of a CLI schema error. Identify uncertain receipts without retrying
   work or releasing its journal; preserve quota supervision and cleanup failures.

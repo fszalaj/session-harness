@@ -121,7 +121,7 @@ Match work against verified adapter capabilities:
 | Codex, Claude Code, Antigravity CLI | Protected native execution | Fresh native quota readers; balance fractions of local daily budgets |
 | Copilot, Cursor | Inventory; no protected execution | Copilot also reads quota; catalog presence never grants dispatch |
 | Gemini CLI, Kimi CLI, OpenCode, Aider, Continue, Ollama | Discovery or local inventory | No verified protected execution or native quota adapter |
-| OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi, Z.ai, OpenRouter APIs | Explicit text requests | Separate monthly money admission; never subscription fallback |
+| Paid OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi, Z.ai, OpenRouter APIs | Explicit text requests | Separate monthly money admission; never subscription fallback |
 
 Resolve the **billing service** independently from the **model family**. For example,
 a third-party model through Antigravity would use Antigravity's resources, not that
@@ -133,6 +133,9 @@ excluded API services appear explicitly in balance status.
 The development [reviewed coding profile](coding-models.md) adds explicit OpenRouter
 text work across five model families. It remains in the separate API money ledger;
 `api coding-run` does not consume or balance native subscription allowances.
+The separate [recurring free account pools](free-access.md) can participate in
+`work` only with explicit `mixed_work` configuration and verified no-overage
+entitlement. They use a dedicated shared executor and free quota ledger.
 
 For a multi-model platform, distinguish the billing service, its account pool, the
 requested and observed model IDs, and the model's vendor. Claude through Copilot

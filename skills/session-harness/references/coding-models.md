@@ -11,11 +11,13 @@ Select the model family and billing service separately. One gateway account can
 expose several families. A direct account is useful when its selected route adds
 verified allowance or capabilities; creating one account per model is unnecessary.
 Native subscription access never establishes direct API credits.
+For verified recurring free accounts, use [free account pools](free-access.md).
+That separate route does not require or inherit paid API money authorization.
 
 | Access route | What an administrator adds | Current harness execution |
 | --- | --- | --- |
 | Codex, Claude Code, Antigravity | Native sign-in, shared quota authority and chosen budget/role policy | Protected native sessions and balanced supervised workers |
-| OpenRouter | One gateway account/key, exact reviewed model and explicit API money setup | Reviewed Kimi, GLM, DeepSeek, MiniMax and Qwen text work |
+| Paid OpenRouter | One gateway account/key, exact reviewed model and explicit API money setup | Reviewed Kimi, GLM, DeepSeek, MiniMax and Qwen text work |
 | Direct DeepSeek, Moonshot/Kimi, Z.ai | Separate service account/key, direct model ID and current billing rates | General explicit text API; outside the reviewed OpenRouter selector |
 | Direct OpenAI, Anthropic, Gemini, xAI | Separate API credentials and monetary authorization | General explicit text API; outside native subscription balancing |
 | Direct MiniMax, Qwen | A future verified direct adapter as well as service credentials | Direct execution adapter absent; the reviewed gateway route is available |
@@ -86,7 +88,7 @@ ranking: vendor reports use different agents, effort and evaluation conditions.
 | `qwen/qwen3.8-max-0902` | [Qwen's exact model page](https://www.qwencloud.com/models/qwen3.8-max-0902) describes the engineering update; [Arena's changelog](https://arena.ai/company/leaderboard-changelog) records the same revision in Code Arena without establishing a rank here. |
 
 These are reviewed candidates, not locally benchmarked or authenticated accounts.
-No candidate is marked free. Catalog prices, zero-price metadata and an OmniRoute
+No candidate in this paid coding profile is marked free. Catalog prices, zero-price metadata and an OmniRoute
 listing never establish free entitlement. A successful catalog check is not a
 successful inference or coding acceptance test.
 

@@ -1076,7 +1076,7 @@ def main(argv=None):
         print(json.dumps({"status": "recursion_blocked"}))
         return 2
     if (len(arguments) >= 3 and arguments[0] == "launch"
-            and arguments[1] in {"balance", "work", "audit"} and arguments[2] == "--execute"):
+            and arguments[1] in {"balance", "work", "audit", "free"} and arguments[2] == "--execute"):
         arguments = [arguments[1], *arguments[3:]]
     if arguments and arguments[0] in {"setup", "configure"}:
         import setup_environment
@@ -1093,6 +1093,9 @@ def main(argv=None):
     if arguments and arguments[0] == "coordination":
         import coordination
         return coordination.main(arguments[1:])
+    if arguments and arguments[0] == "free":
+        import free_access_cli
+        return free_access_cli.main(arguments[1:])
     if arguments and arguments[0] in {"spend", "api"}:
         import api_execution
         import spend_cli
