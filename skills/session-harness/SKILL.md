@@ -72,6 +72,9 @@ discovery, refresh and accounting stay available. Never complete setup on the
 owner's behalf; report it as the next step.
 
 Use `harness.py usage refresh <service>` and `harness.py usage check <service>`.
+Development native `check` refreshes the configured authority with or without a model;
+`status` reads local evidence and `refresh` updates only the local ledger. Diagnose
+shared admission with `check`, since remote checks leave local cached status unchanged.
 Refresh persisted policy before a stop and report its actual reserve; loaded
 instructions may describe stale settings. There is no mandatory 10% floor.
 Global reserve defaults do not replace existing service/pool overrides.

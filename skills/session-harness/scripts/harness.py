@@ -537,6 +537,23 @@ def discover_agy(executable, offline=False):
                        "reason": "Verify custom leaf discovery and init metadata; reject tool/subagent steps and unsuccessful or empty results."}}
 
 
+def claude_auth_status(executable):
+    code, stdout, _ = run([executable, "auth", "status", "--json"], timeout=15)
+    if code not in (0, 1):
+        raise HarnessError("provider_error", "Claude authentication status could not be verified.")
+    try:
+        status = json.loads(stdout)
+        if not isinstance(status, dict):
+            raise ValueError("Auth status must be an object")
+    except ValueError as exc:
+        raise HarnessError("schema_error", "Claude auth status is not a JSON object.") from exc
+    if code == 1 and status.get("loggedIn") is False and status.get("authMethod") == "none" and status.get("apiProvider") == "firstParty":
+        raise HarnessError("auth_required", "Claude reports no signed-in account in this execution context; check native sign-in there.")
+    if code:
+        raise HarnessError("provider_error", "Claude authentication status could not be verified.")
+    return status
+
+
 def discover_claude(executable, offline=False):
     help_text = checked([executable, "--help"])
     match = re.search(r"--effort[^\n]*\n?\s*[^\n]*\(([^)]+)\)", help_text)
@@ -545,12 +562,7 @@ def discover_claude(executable, offline=False):
         raise HarnessError("unsupported_capability", "Installed Claude CLI does not advertise reasoning efforts.")
     auth = {"status": "unverified"}
     if not offline:
-        try:
-            status = json.loads(checked([executable, "auth", "status", "--json"]))
-            if not isinstance(status, dict):
-                raise ValueError("Auth status must be an object")
-        except ValueError as exc:
-            raise HarnessError("schema_error", "Claude auth status is not JSON.") from exc
+        status = claude_auth_status(executable)
         subscribed = status.get("loggedIn") is True and status.get("authMethod") == "claude.ai" and status.get("apiProvider") == "firstParty"
         auth = {"status": "subscription" if subscribed else "auth_required",
                 "type": "claude.ai" if subscribed else "unverified",

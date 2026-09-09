@@ -102,6 +102,17 @@ command>'` forwards its original input/output after allowlisted recording. Do no
 commit or retain the raw native payload. Installation does not replace statuslines
 or hooks automatically; prepare a reversible merge for the actual client config.
 
+**Development behavior:** `usage check` for Codex, Claude and Antigravity performs a
+fresh check through the configured quota authority, including without `--model`.
+Missing transport or invalid authority evidence denies with exit 2; local cached
+approval is never substituted. `usage status` remains a local diagnostic and can
+stay stale after a successful remote check. `usage refresh` updates that local
+ledger only; initialize shared accounting on its authority. Copilot/Cursor keep
+their existing diagnostic readers but return `unsupported_protected_coordination`
+for protected checks. A quota read failure does not establish subscription exhaustion.
+Claude native sign-in and shared quota admission are separate checks; discovery
+reports a verified signed-out response as `auth_required` in the calling context.
+
 Claude's `usage.py hook claude` follows persisted admission, emitting a synchronous
 UserPromptSubmit block when denied. Native
 hook timeout can fail open and the hook does not gate all autonomous inference.

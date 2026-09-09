@@ -247,6 +247,13 @@ ai-session usage check SERVICE
 
 Replace `SERVICE` with the configured supported service. For first-time prospective
 observation only, explicitly initialize with `ai-session usage refresh SERVICE --initialize`.
+Run initialization on the quota authority for a shared account, preserving its history.
+In development installations, `usage check` for Codex, Claude and Antigravity refreshes
+that configured authority, including when no model is supplied. `usage status` reads
+the local ledger; a remote check does not refresh this local cache, so it can remain
+stale. `usage refresh` updates only the machine where it runs and is not coordinated
+admission. Copilot/Cursor retain their diagnostic capabilities; protected `check`
+returns `unsupported_protected_coordination` until an execution adapter is available.
 Retain existing observation history. `usage check` reports
 `environment_setup_required` until `ai-session setup` names that service.
 Initialization starts prospective observation; it cannot recover earlier daily usage. Choose the ledger
@@ -256,6 +263,9 @@ ledger because its dated history is retained. Local projects share a ledger, but
 separate computers do not share a distributed admission lock.
 
 Separate installed, authenticated, account-visible and successfully invoked states.
+For Claude, `auth_required` from discovery means the native client reported no signed-in
+account in that execution context. Check native sign-in in the affected terminal or
+application; a successful shared quota check does not authenticate that client.
 Select current account-visible models and supported effort dynamically, verify
 actual session selection, and distinguish provider family from the service owning
 the quota. Do not pin current model IDs or interpret a model list as review access.

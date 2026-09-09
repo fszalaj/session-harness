@@ -14,7 +14,8 @@ ai-session usage check claude --model CONCRETE_ID
 ai-session usage status claude --model CONCRETE_ID
 ```
 
-`check` refreshes the shared authority. `status` reads local evidence, which may be
+`check`, including without `--model`, refreshes the configured authority. Without a
+model it conservatively checks every reported pool. `status` reads local evidence, which may be
 stale on a coordinated client. Each pool retains its `model_scope`, `applicable`
 flag and diagnostic `reasons`. An unscoped check conservatively includes all pools.
 Shared weekly/session budgets, reserve, calendar, dated grants, fresh complete

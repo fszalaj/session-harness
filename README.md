@@ -105,6 +105,13 @@ including the reason and recovery commands. Cleanup errors retain the original q
 reason and report uncertain process termination separately. See
 [session stop recovery](skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
 
+Use `ai-session usage check SERVICE` for a fresh native admission check through the
+configured authority, with or without a Claude `--model`. `usage status` reads local
+evidence and may stay stale on another computer; `usage refresh` updates only that
+computer's ledger. An unavailable quota read does not establish an exhausted plan.
+Claude discovery reports a verified signed-out response as `auth_required`; native
+sign-in in that execution context is separate from shared quota admission.
+
 Claude alias resolution also uses fresh native `resolvedModel` metadata, allowing
 current Sonnet workers alongside a newer minor revision of the planning tier.
 Development builds keep model-specific and common Claude allowances separate. A

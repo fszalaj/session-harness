@@ -70,6 +70,13 @@ Verify the effective effort instead of assuming a spawn argument won.
 
 ## Claude Code
 
+Discovery reads native `claude auth status --json` before querying models. The
+[CLI reference](https://code.claude.com/docs/en/cli-usage) documents exit 1 when signed
+out. Development adapters recognize the verified signed-out JSON as `auth_required`
+and discard private account fields. Malformed replies and unexpected failures remain
+errors. This check describes the calling execution context; shared quota admission
+does not prove that another terminal or desktop client can access its authentication.
+
 **Since v0.2.0:** prefer concrete account-selectable model IDs when the initialize
 catalog supplies them. Select the newest numeric generation and advertised effort; do not let an
 unresolved `best` or `sonnet` alias override a visible newer generation. When no

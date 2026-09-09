@@ -298,10 +298,39 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(result["planner"]["model"], "gpt-99.10-leader")
         self.assertIn(("model/list", {"includeHidden": False, "limit": 100, "cursor": "page-two"}), RPC.calls)
 
+    def test_claude_signed_out_exit_is_auth_required_without_private_output(self):
+        data = {"loggedIn": False, "authMethod": "none", "apiProvider": "firstParty", "email": "private-account"}
+        with patch("platform_runtime.which", return_value="mock-claude"), \
+                patch.object(harness, "checked", return_value="--effort <level> Effort (low, medium, high)"), \
+                patch.object(harness, "run", return_value=(1, json.dumps(data), "private-stderr")) as probe, \
+                patch("claude_models.discover", side_effect=AssertionError("No catalog without auth")):
+            result = harness.discover_provider("claude")
+        self.assertEqual(result["status"], "auth_required")
+        self.assertNotIn("private", json.dumps(result))
+        self.assertIn("execution context", result["reason"])
+        probe.assert_called_once_with(["mock-claude", "auth", "status", "--json"], timeout=15)
+
+    def test_claude_auth_rejects_failed_or_malformed_probes(self):
+        signed_out = {"loggedIn": False, "authMethod": "none", "apiProvider": "firstParty"}
+        cases = [(code, json.dumps(data), "provider_error") for code, data in [
+            (2, signed_out), (1, dict(signed_out, loggedIn=0)),
+            (1, dict(signed_out, loggedIn="false")), (1, dict(signed_out, loggedIn=True)),
+            (1, dict(signed_out, authMethod="claude.ai")), (1, dict(signed_out, apiProvider=None))]]
+        cases += [(code, text, "schema_error" if code in (0, 1) else "provider_error")
+                  for code in (0, 1, 2) for text in ("private-not-json", "[]", "null")]
+        for code, stdout, expected in cases:
+            with self.subTest(code=code, stdout=stdout), \
+                    patch.object(harness, "run", return_value=(code, stdout, "private-stderr")):
+                with self.assertRaises(harness.HarnessError) as failure:
+                    harness.claude_auth_status("mock-claude")
+            self.assertEqual(failure.exception.status, expected)
+            self.assertNotIn("private", str(failure.exception))
+
     def test_claude_auth_output_excludes_personal_account_fields(self):
         help_text = "--effort <level> Effort (low, medium, high, max)\n--safe-mode --tools --strict-mcp-config --disable-slash-commands --no-session-persistence --permission-mode --mcp-config"
         auth = {"loggedIn": True, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max", "email": "private@example.test", "orgName": "private"}
-        with patch.object(harness, "checked", side_effect=[help_text, json.dumps(auth), "2.1.251 (Claude Code)"]), \
+        with patch.object(harness, "checked", side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                 patch("claude_models.discover", return_value={"models": [], "status": "client_selectable_metadata"}):
             result = harness.discover_claude("mock-claude")
         self.assertEqual(result["auth"]["status"], "subscription")
@@ -312,7 +341,8 @@ class DiscoveryTests(unittest.TestCase):
     def test_claude_truthy_auth_does_not_probe_models(self):
         auth = {"loggedIn": "true", "authMethod": "private", "apiProvider": "firstParty",
                 "subscriptionType": "private"}
-        with patch.object(harness, "checked", side_effect=["--effort <level> Effort (low, high)", json.dumps(auth), "2.1.251 (Claude Code)"]), \
+        with patch.object(harness, "checked", side_effect=["--effort <level> Effort (low, high)", "2.1.251 (Claude Code)"]), \
+                patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                 patch("claude_models.discover") as probe:
             result = harness.discover_claude("mock-claude")
         self.assertEqual(result["auth"]["status"], "auth_required")
@@ -325,7 +355,8 @@ class DiscoveryTests(unittest.TestCase):
         models = [{"id": name, "account_selectable": True,
                    "native_controls": {"reasoning_efforts": ["low", "medium", "high", "max"]}}
                   for name in ["best", "sonnet", "claude-opus-99-9", "claude-fable-99-10[1m]"]]
-        with patch.object(harness, "checked", side_effect=[help_text, json.dumps(auth), "2.1.251 (Claude Code)"]), \
+        with patch.object(harness, "checked", side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                 patch("claude_models.discover", return_value={"models": models, "status": "client_selectable_metadata"}):
             result = harness.discover_claude("mock-claude")
         self.assertEqual("claude-fable-99-10[1m]", result["planner"]["model"])
@@ -348,7 +379,8 @@ class DiscoveryTests(unittest.TestCase):
             for model in models:
                 model['account_selectable'] = True
             with self.subTest(sonnet_major=sonnet_major), \
-                    patch.object(harness, 'checked', side_effect=[help_text, json.dumps(auth), "2.1.251 (Claude Code)"]), \
+                    patch.object(harness, 'checked', side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                            patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                     patch('claude_models.discover', return_value={'models': models, 'status': 'client_selectable_metadata'}):
                 result = harness.discover_claude('mock-claude')
             self.assertEqual(result['planner']['model'], 'claude-fable-99-10')
@@ -369,7 +401,8 @@ class DiscoveryTests(unittest.TestCase):
             models = [{'id': name, 'account_selectable': True,
                        'native_controls': {'reasoning_efforts': ['low', 'medium', 'high', 'max']}}
                       for name in order]
-            with patch.object(harness, 'checked', side_effect=[help_text, json.dumps(auth), "2.1.251 (Claude Code)"]), \
+            with patch.object(harness, 'checked', side_effect=[help_text, "2.1.251 (Claude Code)"]), \
+                    patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                     patch('claude_models.discover', return_value={'models': models, 'status': 'client_selectable_metadata'}):
                 result = harness.discover_claude('mock-claude')
             self.assertEqual(result['worker']['model'], 'claude-sonnet-99')
@@ -406,14 +439,15 @@ class DiscoveryTests(unittest.TestCase):
             [manager_entry, sonnet_alias_2, sonnet_alias_1],
         ):
             with self.subTest(catalog_order=[m['id'] for m in catalog]):
-                with patch.object(harness, 'checked', side_effect=[help_text, json.dumps(auth), "2.1.251 (Claude Code)"]) as mock_checked, \
+                with patch.object(harness, 'checked', side_effect=[help_text, "2.1.251 (Claude Code)"]) as mock_checked, \
+                        patch.object(harness, "run", return_value=(0, json.dumps(auth), "")), \
                      patch('claude_models.discover', return_value={'models': catalog, 'status': 'client_selectable_metadata'}):
                     res = harness.discover_claude('mock-claude')
                     self.assertEqual(res['planner']['model'], 'claude-fable-99-1')
                     self.assertEqual(res['planner']['effort'], 'max')
                     self.assertEqual(res['worker']['model'], 'claude-sonnet-99')
                     self.assertEqual(res['worker']['effort'], 'low')
-                    self.assertEqual(mock_checked.call_count, 3)
+                self.assertEqual(mock_checked.call_count, 2)
 
 
 class ExecutionTests(unittest.TestCase):

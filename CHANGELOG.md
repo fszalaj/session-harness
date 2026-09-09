@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Route native `usage check` through the configured authority even without a model
+  argument. Keep local status/refresh diagnostic, deny unsupported protected clients
+  explicitly, and preserve quotas and paid-credit guards on every admitted response.
+- Recognize Claude's signed-out auth-status exit as `auth_required` without exposing
+  native account output or confusing sign-in with quota exhaustion.
+
 - Add a reviewed coding profile for Kimi, GLM, DeepSeek, MiniMax and Qwen through
   OpenRouter. Intersect expiring evidence with fresh catalog capabilities and prices;
   reject unreviewed variants and returned-model mismatches. Keep supervised text

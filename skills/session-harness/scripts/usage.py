@@ -253,9 +253,13 @@ def main(argv=None):
                 result = ledger.record(client_snapshot(args.service, payload), initialize=args.initialize)
                 result["context"] = context_status(payload)
             else:
-                if args.model and args.action == "check":
+                if args.action == "check":
                     import coordination
-                    result = coordination.dispatch("check", args.service, "usage-preflight", ledger, models=[args.model])
+                    if args.service not in coordination.SERVICES:
+                        result = dict(allowed=False, reasons=["unsupported_protected_coordination"])
+                    else:
+                        result = coordination.dispatch("check", args.service, "usage-preflight", ledger,
+                                                       **({"models": [args.model]} if args.model else {}))
                 else:
                     result = ledger.check(args.service, **({"models": [args.model]} if args.model else {}))
             credits.gate(result, args.service)
