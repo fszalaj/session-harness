@@ -12,6 +12,7 @@ import budget_policy
 import usage
 
 NATIVE = frozenset({'codex', 'claude', 'antigravity', 'copilot', 'cursor'})
+AUTOMATIC_NATIVE = frozenset({'codex', 'claude', 'antigravity'})
 OPEN = {'reserved', 'running'}
 TERMINAL = {'completed', 'failed', 'denied'}
 KEY = 'balance_v1'
@@ -295,7 +296,8 @@ def _evaluate(ledger, config=None, override=False, refresh=True):
                                        for service in config['services'])}
     if refresh and reasons and not settings_changed and set(reasons).issubset(changed_only):
         return _evaluate(ledger, config, override=override, refresh=False)
-    result = _reply(services=summaries, max_lead=config['max_lead'])
+    result = _reply(services=summaries, max_lead=config['max_lead'],
+                    automatic_selection=_selection(summaries))
     progress_values = [v['progress'] for v in summaries.values() if v['progress'] is not None]
     result['drift'] = (max(progress_values) - min(progress_values)) if len(progress_values) == len(summaries) else None
     result['drift_status'] = ('unavailable' if result['drift'] is None else
@@ -306,6 +308,16 @@ def _evaluate(ledger, config=None, override=False, refresh=True):
         result.update(allowed=False, status='paused', reasons=reasons)
     return result, snapshot
 
+
+
+def _selection(services, provider='auto'):
+    automatic = provider in {'auto', 'native'}
+    eligible = sorted(set(services) & AUTOMATIC_NATIVE if automatic else services)
+    progress = [services[s]['progress'] for s in eligible]
+    return dict(mode='current_model' if automatic else 'explicit_provider',
+                eligible_services=eligible,
+                explicit_only_services=sorted(set(services) - AUTOMATIC_NATIVE),
+                minimum_progress=min(progress) if progress and all(p is not None for p in progress) else None)
 
 
 def _compact(summary):
@@ -433,8 +445,14 @@ def reserve(ledger, request, client_services=None):
             return _reply('evidence_unavailable')
         jobs = [json.loads(r[0]) for r in db.execute("SELECT value FROM balance_jobs WHERE status IN ('reserved', 'running')")]
         busy = {j['service'] for j in jobs if j['status'] in OPEN}
-        minimum = min(v['progress'] for v in result['services'].values())
-        band = [s for s, v in result['services'].items() if v['progress'] <= minimum + config['max_lead'] + 1e-12]
+        selection = _selection(result['services'], provider)
+        if not selection['eligible_services']:
+            return _reply('current_model_selection_required', selection=selection)
+        minimum = selection['minimum_progress']
+        if minimum is None:
+            return _reply('evidence_unavailable', selection=selection)
+        band = [s for s in selection['eligible_services']
+                if result['services'][s]['progress'] <= minimum + config['max_lead'] + 1e-12]
         if provider in NATIVE and provider not in result['services']:
             return _reply('service_not_participating')
         if provider in NATIVE and provider not in band:
@@ -444,13 +462,13 @@ def reserve(ledger, request, client_services=None):
             return _reply('busy', jobs=[_public(j) for j in jobs if j['status'] in OPEN], services=result['services'])
         counts = dict(db.execute('SELECT service, COUNT(*) FROM balance_jobs WHERE day=? GROUP BY service', (day,)))
         selected = min(candidates, key=lambda s: (counts.get(s, 0), s))
-        job = dict(request, service=selected, day=day, status='reserved', created_at=now, updated_at=now,
+        job = dict(request, provider=provider, service=selected, day=day, status='reserved', created_at=now, updated_at=now,
                    usage_attribution='aggregate_account_only',
                    balance_policy_hash=hashlib.sha256(snapshot[KEY].encode()).hexdigest(),
                    before={s: _compact(v) for s, v in result['services'].items()},
                    decision=dict(max_lead=config['max_lead'], drift=result['drift'],
-                                 drift_status=result['drift_status'], minimum_progress=minimum,
-                                 dispatch_counts_today=counts))
+                                 drift_status=result['drift_status'],
+                                 dispatch_counts_today=counts, **selection))
         db.execute('INSERT INTO balance_jobs VALUES (?, ?, ?, ?, ?)',
                    (job['id'], selected, day, 'reserved', json.dumps(job)))
         result.update(_job_reply(job))
@@ -526,15 +544,18 @@ def start(ledger, id):
         if snapshot is None or current != snapshot:
             reasons.append('state_changed')
         now = time.time()
+        selection = _selection(admission.get('services', {}), job.get('provider', 'auto'))
         if admission.get('allowed'):
             config = _load(db)
             services = admission['services']
             if job['service'] not in config['services'] or job['service'] not in services:
                 reasons.append('service_not_participating')
-            else:
-                minimum = min(summary['progress'] for summary in services.values())
-                if services[job['service']]['progress'] > minimum + config['max_lead'] + 1e-12:
-                    reasons.append('max_lead_exceeded')
+            elif job['service'] not in selection['eligible_services']:
+                reasons.append('current_model_selection_required')
+            elif selection['minimum_progress'] is None:
+                reasons.append('evidence_unavailable')
+            elif services[job['service']]['progress'] > selection['minimum_progress'] + config['max_lead'] + 1e-12:
+                reasons.append('max_lead_exceeded')
             for service, summary in services.items():
                 if (not ledger._fresh(ledger._service(db, service), now)
                         or summary['day'] != ledger._day(now)):
@@ -542,7 +563,7 @@ def start(ledger, id):
         elif not reasons:
             reasons.append('admission_denied')
         job.update(status='denied' if reasons else 'running', updated_at=now,
-                   start_admission=dict(allowed=not reasons, reasons=reasons,
+                   start_admission=dict(allowed=not reasons, reasons=reasons, **selection,
                                         services={s: _compact(v) for s, v in admission.get('services', {}).items()}))
         db.execute('UPDATE balance_jobs SET status=?, value=? WHERE id=?', (job['status'], json.dumps(job), id))
         result = _job_reply(job)

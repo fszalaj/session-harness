@@ -35,6 +35,8 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
 - Resolve models at runtime from the account-visible catalog and current documented
   aliases. Never pin version IDs, invent a `latest` alias or assume a model exists
   because it appeared in a previous conversation or on another subscription.
+  Select the newest available generation in each family before optimizing cost.
+  Opaque Auto routing requires an explicit choice and never proves current-generation selection.
 - Two other distinct provider families independently review the same plan before
   implementation. They have equal standing; reconcile every material finding.
   Honor configured model supervision limits and report unavailable independent reviews.
@@ -59,6 +61,7 @@ selected model because Markdown cannot switch an already-running model. Do not
 claim maximum-model execution if the client could not select it.
 Copilot and Cursor Auto do not verify a strongest model before execution; record that
 selection limit and use its bounded text worker only as supervised output.
+Automatic native work excludes these Auto routes; select their provider explicitly.
 
 Complete `ai-session setup` with the owner before inference; it names the native
 and API services allowed to run, and an agent never finishes it with `--yes`.

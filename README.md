@@ -8,7 +8,8 @@ below `max` if unavailable. Since v0.2.1, the launcher excludes `max` and `ultra
 from default manager selection. Reserve `max` for explicitly selected, extremely
 difficult tasks through native controls.
 Two other provider families review the same plan independently. Models are resolved
-at runtime rather than pinned in policy.
+at runtime rather than pinned in policy. Select the newest available generation
+within each family before optimizing cost; an older cheaper tier is not a default.
 
 ## Start here
 
@@ -24,7 +25,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.3.0 --apply`, then
+To select this release, run `ai-session update --version 0.3.1 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -74,7 +75,7 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.3.0 |
+| Client or route | Harness support in v0.3.1 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
 | Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |
@@ -95,11 +96,14 @@ credit metadata could not establish paid-use disablement.
 Check the [capability guide](docs/PROVIDER-VALIDATION.md) and [release guide](docs/RELEASES.md)
 for your selected version before relying on either feature.
 
-## Balance subscriptions (v0.3.0)
+## Balance subscriptions
 
-Version 0.3.0 adds opt-in routing across configured native subscriptions.
+Version 0.3.1 defaults automatic native work to Codex, Claude or Antigravity,
+whose adapters select a current model. Copilot and Cursor Auto require an explicit
+`--provider copilot` or `--provider cursor` request; their Auto selection does not
+verify the newest model generation. All configured services still undergo quota checks.
 A short manager session can distribute bounded text work independently of its model
-family while respecting every provider's daily quota and paid-use guards. Use these commands after installing version 0.3.0:
+family while respecting every provider's daily quota and paid-use guards. Use these commands after installing version 0.3.1:
 
 ```sh
 ai-session balance enable
@@ -159,7 +163,7 @@ inspection. API billing stays separate from native subscription balancing, and
 installation does not enable paid inference. The guide explains what to configure;
 keep passwords, keys and deployment records private.
 
-For recurring free allowances, version 0.3.0 also provide
+For recurring free allowances, version 0.3.0 also provides
 [`ai-session free`](skills/session-harness/references/free-access.md). OpenRouter
 uses an exact-zero route; direct free accounts use separately verified account
 limits and conservative reservations. One executor serves both computers, keeps

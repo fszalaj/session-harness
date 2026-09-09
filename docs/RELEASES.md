@@ -5,6 +5,15 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.3.1
+
+Automatic native work now uses adapters that resolve a current model before
+execution. Copilot and Cursor Auto remain available through explicit provider
+commands. Their configured quotas still constrain every coordinated batch.
+Legacy reserved automatic Auto jobs are denied at start and retain their history;
+running jobs are not restarted. Inspect the new selection domain in status and
+receipts. See [balancing](../skills/session-harness/references/balancing.md).
+
 ## 0.3.0
 
 Version 0.3.0 adds opt-in subscription balancing, bounded text work and
@@ -41,7 +50,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.3.0, use `ai-session update --version 0.3.0 --apply`, then restart affected
+For v0.3.1, use `ai-session update --version 0.3.1 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.

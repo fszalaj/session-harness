@@ -53,7 +53,23 @@ refresh, quota denial or policy change still stops dispatch. The final snapshot
 comparison remains mandatory; this mitigates the sequential-refresh race rather
 than promising an atomic multi-provider backend snapshot.
 
-The next useful chunk comes from services within the configured lead of the least
+Since v0.3.1, automatic native requests (`auto`, including an omitted provider)
+rank only Codex, Claude and Antigravity, whose adapters resolve a current worker
+model. Copilot and Cursor Auto require an explicit provider request. All configured
+services still participate in quota/evidence admission; an excluded Auto route with
+a genuine stop still pauses the batch. No service or accounting history is removed.
+
+Status reports `automatic_selection`; reservation `decision` and `start_admission`
+record the mode, eligible services, explicit-only services and minimum progress.
+Automatic lead checks use that eligible domain at both reserve and start. Explicit
+provider requests retain the all-participant lead check. All-participant drift stays
+informational and may exceed the tolerance while automatic work remains admitted.
+No eligible automatic service returns `current_model_selection_required`; busy
+eligible services return `busy`. Legacy reserved automatic Auto jobs become denied
+at start, freeing their slot atomically while retaining history. Running jobs and
+repeated IDs never redispatch. Missing saved provider intent means automatic.
+
+The next useful chunk comes from eligible services within the configured lead of the least
 consumed fraction. Within that band, choose the fewest recorded dispatches today,
 then the service name. This rotates ties when native counters remain rounded to
 zero. Atomic reservations allow one open work item per billing service. A reservation
@@ -146,8 +162,8 @@ constraints and the platform's available allowance answer different questions.
 
 Current selection resolves the supported native worker from the account catalog
 after choosing its billing service by quota fraction. It does not rank every model
-in Copilot or Cursor for implementation/review. Their Auto routes produce supervised
-text. Copilot reports the routed model; Cursor currently exposes only Auto. OpenRouter requests require
+in Copilot or Cursor for implementation/review. Their explicitly selected Auto routes produce supervised
+text; automatic native routing excludes them. Copilot reports the routed model; Cursor currently exposes only Auto. OpenRouter requests require
 an explicit model and monetary admission; they do not participate in native balancing.
 The native model/role configuration above does not claim enforcement in those
 unsupported role adapters. Adding a platform requires verified quota/billing units,
