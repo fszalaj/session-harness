@@ -19,6 +19,7 @@ import time
 
 import supervision
 import platform_runtime
+import balance_cli
 
 
 PROVIDERS = {"codex": "codex", "claude": "claude", "antigravity": "agy"}
@@ -1100,7 +1101,6 @@ def main(argv=None):
         import budget_cli
         return budget_cli.main(arguments[1:])
     if arguments and arguments[0] in {"balance", "work", "audit"}:
-        import balance_cli
         return balance_cli.main(arguments)
     if arguments and arguments[0] == "usage":
         import usage
@@ -1177,7 +1177,6 @@ def main(argv=None):
                     environment = child_env(leaf=args.role == "worker")
                     environment[SESSION_MARKER] = args.provider
                     if args.role == 'worker':
-                        import balance_cli
                         return balance_cli.run_interactive(args.provider, response, environment, capability=capability)
                     if args.provider == "claude":
                         import claude_session
@@ -1191,13 +1190,24 @@ def main(argv=None):
         response.setdefault("runtime", {"path": RUNTIME_PATH, "sha256": RUNTIME_SHA256})
         print(json.dumps(response, indent=2))
         return 0
-    except (HarnessError, supervision.Stop, BrokenPipeError, OSError) as exc:
-        status = exc.status if isinstance(exc, HarnessError) else (
+    except (HarnessError, balance_cli.InteractiveStop, supervision.Stop, BrokenPipeError, OSError) as exc:
+        status = exc.status if isinstance(exc, (HarnessError, balance_cli.InteractiveStop)) else (
             "quota_blocked" if isinstance(exc, supervision.Stop) else "provider_error")
         message = ("Operating-system operation failed" + (f" (errno {exc.errno})" if exc.errno is not None else "")
                    if isinstance(exc, OSError) else str(exc))
         failure = {"schema_version": 1, "status": status, "error": message,
                    "runtime": {"path": RUNTIME_PATH, "sha256": RUNTIME_SHA256}}
+        if isinstance(exc, balance_cli.InteractiveStop):
+            failure.update(exc.details())
+            try:
+                print('\n' + str(exc), file=sys.stderr)
+                print('Reason: ' + ', '.join(exc.reasons), file=sys.stderr)
+                print('Inspect shared pacing: ai-session balance status', file=sys.stderr)
+                if exc.task_id:
+                    print('Task: ' + exc.task_id + '. Inspect its state and processes before '
+                          'reconciliation; do not automatically retry.', file=sys.stderr)
+            except OSError:
+                pass
         stop = exc if isinstance(exc, supervision.Stop) else getattr(exc, "quota_stop", None)
         cleanup = getattr(exc, "session_cleanup", None) or getattr(stop, "session_cleanup", None)
         if isinstance(stop, supervision.Stop):

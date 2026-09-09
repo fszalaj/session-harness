@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Report interactive worker pacing denials with their own status and bounded reason
+  codes instead of a CLI schema error. Identify uncertain receipts without retrying
+  work or releasing its journal; preserve quota supervision and cleanup failures.
+- Clarify coding-model access choices across native subscriptions, direct APIs and
+  gateways, including account setup and the evidence needed before claiming deployment.
+
 - Route native `usage check` through the configured authority even without a model
   argument. Keep local status/refresh diagnostic, deny unsupported protected clients
   explicitly, and preserve quotas and paid-credit guards on every admitted response.

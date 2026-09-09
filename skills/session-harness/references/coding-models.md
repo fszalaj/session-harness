@@ -1,10 +1,38 @@
 # Reviewed coding models
 
-Development feature, not included in the published v0.2.0 release. These commands
-add a reviewed OpenRouter text route for supervised coding tasks. They do not
-install OmniRoute or make an API model a protected native coding client.
+Development feature, not included in the published v0.2.0 release. The harness
+supports native subscriptions and explicit API routes; the reviewed coding profile
+currently uses OpenRouter for supervised text tasks across five additional model
+families. It does not install OmniRoute or make an API model a protected native client.
 
-## What to add
+## Choose the access route
+
+Select the model family and billing service separately. One gateway account can
+expose several families. A direct account is useful when its selected route adds
+verified allowance or capabilities; creating one account per model is unnecessary.
+Native subscription access never establishes direct API credits.
+
+| Access route | What an administrator adds | Current harness execution |
+| --- | --- | --- |
+| Codex, Claude Code, Antigravity | Native sign-in, shared quota authority and chosen budget/role policy | Protected native sessions and balanced supervised workers |
+| OpenRouter | One gateway account/key, exact reviewed model and explicit API money setup | Reviewed Kimi, GLM, DeepSeek, MiniMax and Qwen text work |
+| Direct DeepSeek, Moonshot/Kimi, Z.ai | Separate service account/key, direct model ID and current billing rates | General explicit text API; outside the reviewed OpenRouter selector |
+| Direct OpenAI, Anthropic, Gemini, xAI | Separate API credentials and monetary authorization | General explicit text API; outside native subscription balancing |
+| Direct MiniMax, Qwen | A future verified direct adapter as well as service credentials | Direct execution adapter absent; the reviewed gateway route is available |
+| Copilot, Cursor | Existing platform account and, before execution, verified quota/model/role adapters | Inventory only; Copilot additionally reads quota metadata |
+
+[Moonshot's API setup](https://platform.kimi.ai/docs/overview),
+[DeepSeek's API setup](https://api-docs.deepseek.com/),
+[Z.ai's API setup](https://docs.z.ai/guides/overview/quick-start),
+[MiniMax's account/key procedure](https://platform.minimax.io/docs/guides/quickstart-preparation)
+and [Alibaba Cloud's key procedure](https://www.alibabacloud.com/help/en/model-studio/get-api-key)
+describe their own access contracts. Kimi Code and Moonshot API are distinct routes;
+Z.ai Coding Plan differs from its general API. MiniMax also distinguishes plan keys
+from pay-as-you-go keys. A provider's coding-plan quota cannot be substituted into a
+general API adapter. Verify free allowances on the selected account, including expiry
+and overage behavior; an OmniRoute free-tier listing is not account entitlement.
+
+## Add the reviewed gateway route
 
 1. Inspect `ai-session api coding-models`. This anonymous metadata request needs
    no account, key or money allowance. It reports eligible IDs and exclusion reasons.
@@ -33,6 +61,13 @@ Use the existing API procedure to size it and reconcile costs. In PowerShell, pi
 the same arguments. The manager inspects the returned patch or analysis, applies
 scoped edits and runs relevant tests. This route does not execute tools, apply code
 or supply independent review approval.
+
+Treat setup as complete only after authenticated access, a successful bounded task,
+the requested and returned model identities, and a recorded accounting receipt are
+verified. Repository implementation additionally needs an execution adapter and
+relevant tests; independent verification needs a permitted reviewer role from the
+required model family. Installed instructions, a catalog entry or a saved key alone
+do not satisfy these checks. Keep credentials and account-specific evidence private.
 
 ## Reviewed candidates
 

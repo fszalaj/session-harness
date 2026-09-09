@@ -1,5 +1,7 @@
+import io
 import json
 from pathlib import Path
+import runpy
 import subprocess
 import tempfile
 import unittest
@@ -108,21 +110,111 @@ class WorkTests(unittest.TestCase):
 
     def test_interactive_receipt_denial_is_not_process_success(self):
         with patch.object(coordination, 'balance_dispatch', side_effect=[
-            {'allowed': True, 'enabled': True}, {'allowed': True}, {'allowed': True},
-            {'allowed': False, 'status': 'invalid_transition'}]), \
+            *self.interactive_replies()[:3],
+            {'allowed': False, 'status': 'invalid_transition', 'reasons': ['invalid_transition']}]), \
              patch('supervision.run_terminal', return_value=0):
-            with self.assertRaisesRegex(ValueError, 'receipt unavailable'):
+            with self.assertRaisesRegex(balance_cli.InteractiveStop, 'receipt is unconfirmed'):
                 balance_cli.run_interactive('claude', {'argv': ['claude'],
                     'selection': {'model': 'example', 'effort': 'medium'}}, {}, ledger=self.ledger)
 
     def test_interactive_worker_lead_denial_before_process(self):
         with patch.object(coordination, 'balance_dispatch', side_effect=[
-            {'allowed': True, 'enabled': True},
+            self.interactive_replies()[0],
             {'allowed': False, 'reasons': ['max_lead_exceeded']}]), \
              patch('supervision.run_terminal') as execute:
-            with self.assertRaises(ValueError):
+            with self.assertRaises(balance_cli.InteractiveStop) as caught:
                 balance_cli.run_interactive('claude', {'argv': ['claude']}, {}, ledger=self.ledger)
+            self.assertEqual(caught.exception.reasons, ('max_lead_exceeded',))
             execute.assert_not_called()
+
+    def interactive_replies(self, code=0):
+        return [{'allowed': True, 'status': 'ready', 'reasons': [], 'enabled': True},
+                *[{'allowed': True, 'status': status, 'reasons': [], 'service': 'claude'}
+                  for status in ('reserved', 'running', 'completed' if code == 0 else 'failed')]]
+
+    def interactive(self):
+        return balance_cli.run_interactive('claude', {'argv': ['claude'],
+            'selection': {'model': 'example', 'effort': 'medium'}}, {}, ledger=self.ledger)
+
+    def test_interactive_transport_and_malformed_replies_preserve_phase_without_retry(self):
+        bad_replies = [ValueError('private transport'), OSError(1, 'private path'), None,
+                       {'allowed': 1, 'reasons': []}, {'allowed': True, 'reasons': 'private'},
+                       {'allowed': True, 'status': 'unexpected', 'reasons': []}]
+        for index, phase in enumerate(('status', 'reserve', 'start', 'finish')):
+            for bad in bad_replies:
+                with self.subTest(phase=phase, bad=type(bad).__name__):
+                    with patch.object(coordination, 'balance_dispatch',
+                                      side_effect=[*self.interactive_replies()[:index], bad]) as dispatch, \
+                         patch('supervision.run_terminal', return_value=0) as execute:
+                        with self.assertRaises(balance_cli.InteractiveStop) as caught:
+                            self.interactive()
+                    error = caught.exception
+                    self.assertEqual(error.phase, phase)
+                    self.assertEqual(error.status, 'balance_receipt_unavailable' if phase == 'finish' else 'balance_blocked')
+                    self.assertEqual(execute.call_count, int(phase == 'finish'))
+                    self.assertEqual(dispatch.call_count, index + 1)
+                    self.assertFalse(error.details()['automatic_retry'])
+                    self.assertNotIn('private', str(error) + json.dumps(error.details()))
+                    if index:
+                        self.assertEqual(error.task_id, dispatch.call_args_list[1].args[1]['request']['id'])
+
+    def test_interactive_disabled_shape_and_successful_execution(self):
+        for state in ({'allowed': True, 'status': 'disabled', 'reasons': []},
+                      {'allowed': True, 'status': 'disabled', 'reasons': [], 'enabled': 0},
+                      {'allowed': True, 'status': 'ready', 'reasons': [], 'enabled': False}):
+            with patch.object(coordination, 'balance_dispatch', return_value=state), \
+                 patch('supervision.run_terminal') as execute:
+                with self.assertRaises(balance_cli.InteractiveStop):
+                    self.interactive()
+                execute.assert_not_called()
+        disabled = {'allowed': True, 'status': 'disabled', 'reasons': [], 'enabled': False}
+        for code in (0, 9):
+            for replies in ([disabled], self.interactive_replies(code)):
+                with patch.object(coordination, 'balance_dispatch', side_effect=replies) as dispatch, \
+                     patch('supervision.run_terminal', return_value=code) as execute:
+                    self.assertEqual(self.interactive(), code)
+                execute.assert_called_once()
+                self.assertEqual(dispatch.call_count, len(replies))
+
+    def test_interactive_quota_stop_remains_primary_and_retains_job(self):
+        error = harness.supervision.Stop('claude', ['daily_limit'])
+        error.session_cleanup = {'state': 'unknown', 'owner_retained': True}
+        with patch.object(coordination, 'balance_dispatch', side_effect=self.interactive_replies()) as dispatch, \
+             patch('supervision.run_terminal', side_effect=error):
+            with self.assertRaises(harness.supervision.Stop) as caught:
+                self.interactive()
+        self.assertIs(caught.exception, error)
+        self.assertEqual(dispatch.call_count, 3)
+
+    def test_worker_cli_reports_policy_denial_in_imported_and_script_namespaces(self):
+        fresh = runpy.run_path(str(Path(harness.__file__)))['main']
+        for main in (harness.main, fresh):
+            for phase in ('reserve', 'finish'):
+                replies = self.interactive_replies()[:1 if phase == 'reserve' else 3]
+                replies.append({'allowed': False, 'reasons': ['max_lead_exceeded', 'private-secret\n\x1b']})
+                globals_ = main.__globals__
+                with patch.dict(harness.os.environ, {}, clear=True), \
+                     patch('quota.Ledger', return_value=self.ledger), \
+                     patch.dict(globals_, {
+                         'discover_provider': lambda *a, **kw: {'auth': {'status': 'subscription'}},
+                         'launch_plan': lambda *a, **kw: {'selection': {'model': 'fixture', 'effort': 'medium'}, 'argv': ['fixture']},
+                         'require_role': lambda *a, **kw: {}, 'require_quota': lambda *a, **kw: {}}), \
+                     patch.object(harness.sys.stdin, 'isatty', return_value=True), \
+                     patch.object(coordination, 'balance_dispatch', side_effect=replies), \
+                     patch('supervision.run_terminal', return_value=0) as execute, \
+                     patch('sys.stdout', new_callable=io.StringIO) as output, \
+                     patch('sys.stderr', new_callable=io.StringIO) as diagnostic:
+                    code = main(['launch', 'claude', '--role', 'worker', '--execute'])
+                self.assertEqual(code, 2)
+                result = json.loads(output.getvalue())
+                self.assertEqual(result['status'], 'balance_blocked' if phase == 'reserve' else 'balance_receipt_unavailable')
+                self.assertEqual(result['reasons'], ['max_lead_exceeded', 'unknown'])
+                self.assertEqual(result['phase'], phase)
+                self.assertFalse(result['automatic_retry'])
+                self.assertIn('ai-session balance status', diagnostic.getvalue())
+                self.assertNotIn('private-secret', output.getvalue() + diagnostic.getvalue())
+                self.assertNotIn('schema_error', output.getvalue())
+                self.assertEqual(execute.call_count, int(phase == 'finish'))
 
 
 if __name__ == '__main__':

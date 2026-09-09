@@ -3,12 +3,59 @@ import argparse
 import copy
 import json
 from pathlib import Path
+import re
 import socket
 import sys
 import uuid
 
 import coordination
 from quota import Ledger
+
+
+class InteractiveStop(Exception):
+    """A pacing failure with bounded diagnostics, separate from CLI schema errors."""
+    def __init__(self, service, phase, reasons, task_id=None):
+        known = {'max_lead_exceeded', 'busy', 'state_changed', 'balance_policy_changed',
+                 'service_not_participating', 'service_not_configured_on_client',
+                 'fingerprint_mismatch', 'fingerprint_key_missing', 'job_not_found',
+                 'invalid_transition', 'admission_denied', 'evidence_unavailable',
+                 'quota_denied', 'balance_disabled', 'authority_unavailable',
+                 'invalid_balance_response', 'daily_limit', 'reserve_floor'}
+        self.reasons = tuple(dict.fromkeys(
+            reason if isinstance(reason, str) and reason in known else 'unknown'
+            for reason in reasons[:16])) or ('unknown',)
+        self.service = service if service in coordination.SERVICES else 'unknown'
+        self.phase = phase if phase in {'status', 'reserve', 'start', 'finish'} else 'unknown'
+        self.task_id = task_id if isinstance(task_id, str) and re.fullmatch(r'interactive-[0-9a-f]{32}', task_id) else None
+        self.status = 'balance_receipt_unavailable' if phase == 'finish' else 'balance_blocked'
+        message = ('Worker receipt is unconfirmed; work may already have completed.' if phase == 'finish'
+                   else 'Worker launch was blocked by shared subscription pacing.')
+        if 'max_lead_exceeded' in self.reasons:
+            message += ' This service is ahead of the configured daily-budget usage balance.'
+        super().__init__(message)
+
+    def details(self):
+        return {'service': self.service, 'phase': self.phase, 'reasons': list(self.reasons),
+                'task_id': self.task_id, 'automatic_retry': False}
+
+
+def _interactive_dispatch(phase, payload, ledger, provider, task_id=None, expected=()):
+    try:
+        reply = coordination.balance_dispatch(phase, payload, ledger)
+    except (TypeError, KeyError):
+        raise InteractiveStop(provider, phase, ['invalid_balance_response'], task_id) from None
+    except (OSError, ValueError):
+        raise InteractiveStop(provider, phase, ['authority_unavailable'], task_id) from None
+    if (not isinstance(reply, dict) or type(reply.get('allowed')) is not bool
+            or not isinstance(reply.get('reasons'), list)):
+        raise InteractiveStop(provider, phase, ['invalid_balance_response'], task_id)
+    if not reply['allowed']:
+        raise InteractiveStop(provider, phase, reply['reasons'] or [reply.get('status')], task_id)
+    if (reply.get('status') not in expected or reply['reasons']
+            or reply.get('duplicate', False) is not False
+            or (phase != 'status' and reply.get('service') != provider)):
+        raise InteractiveStop(provider, phase, ['invalid_balance_response'], task_id)
+    return reply
 
 
 def request(ledger, task_id, artifact, role, provider):
@@ -73,27 +120,25 @@ def run_interactive(provider, response, environment, *, ledger=None, capability=
             import claude_session
             return claude_session.run(capability, response, environment)
         return supervision.run_terminal(response['argv'], environment, provider)
-    state = coordination.balance_dispatch('status', {}, ledger)
-    if not state.get('enabled'):
-        if state.get('reasons'):
-            raise ValueError('balance status unavailable')
+    state = _interactive_dispatch('status', {}, ledger, provider, expected=('ready', 'disabled'))
+    if (type(state.get('enabled')) is not bool
+            or (state['status'] == 'disabled') != (state['enabled'] is False)):
+        raise InteractiveStop(provider, 'status', ['invalid_balance_response'])
+    if not state['enabled']:
         return execute()
     task_id = 'interactive-' + uuid.uuid4().hex
     artifact = json.dumps(response['argv']).encode()
-    reserved = coordination.balance_dispatch('reserve', {
-        'request': request(ledger, task_id, artifact, 'worker', provider)}, ledger)
-    if not reserved.get('allowed'):
-        raise ValueError('worker balance denied: ' + ', '.join(reserved.get('reasons', [])))
-    started = coordination.balance_dispatch('start', {'id': task_id}, ledger)
-    if not started.get('allowed'):
-        raise ValueError('worker balance start denied')
+    _interactive_dispatch('reserve', {
+        'request': request(ledger, task_id, artifact, 'worker', provider)}, ledger,
+        provider, task_id, expected=('reserved',))
+    _interactive_dispatch('start', {'id': task_id}, ledger, provider, task_id, expected=('running',))
     code = execute()
-    receipt = coordination.balance_dispatch('finish', {'id': task_id,
-        'status': 'completed' if code == 0 else 'failed',
+    terminal_status = 'completed' if code == 0 else 'failed'
+    _interactive_dispatch('finish', {'id': task_id,
+        'status': terminal_status,
         'metadata': {'requested_model': response['selection']['model'],
-                     'requested_effort': response['selection']['effort']}}, ledger)
-    if receipt.get('allowed') is not True:
-        raise ValueError('interactive worker receipt unavailable; inspect balance status before recovery')
+                     'requested_effort': response['selection']['effort']}}, ledger,
+        provider, task_id, expected=(terminal_status,))
     return code
 
 

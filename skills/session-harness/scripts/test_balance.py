@@ -51,6 +51,27 @@ class BalanceTests(unittest.TestCase):
             balance.finish(self.ledger, str(n), 'completed', {'exit_code': 0})
         self.assertEqual(services, ['claude', 'codex'] * 3)
 
+    def test_interactive_cli_round_trip_uses_real_authority_contract_and_journal(self):
+        import balance_cli
+        response = {'argv': ['fixture'], 'selection': {'model': 'fixture', 'effort': 'medium'}}
+        for code in (0, 9):
+            with patch('supervision.run_terminal', return_value=code) as execute:
+                self.assertEqual(balance_cli.run_interactive('claude', response, {}, ledger=self.ledger), code)
+            execute.assert_called_once()
+        jobs = balance.status(self.ledger)['jobs']
+        self.assertEqual({job['status'] for job in jobs}, {'completed', 'failed'})
+        self.assertEqual(len(jobs), 2)
+        self.seed('claude', 8)
+        with patch('supervision.run_terminal') as execute:
+            with self.assertRaises(balance_cli.InteractiveStop) as caught:
+                balance_cli.run_interactive('claude', response, {}, ledger=self.ledger)
+        self.assertEqual(caught.exception.reasons, ('max_lead_exceeded',))
+        execute.assert_not_called()
+        balance.configure(self.ledger, False)
+        with patch('supervision.run_terminal', return_value=0):
+            self.assertEqual(balance_cli.run_interactive('claude', response, {}, ledger=self.ledger), 0)
+        self.assertEqual(len(balance.status(self.ledger)['jobs']), 2)
+
     def test_leader_and_manager_overhead(self):
         self.seed('claude', 8)
         result = balance.reserve(self.ledger, self.request(provider='claude'))

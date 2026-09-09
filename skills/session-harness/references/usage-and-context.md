@@ -178,6 +178,14 @@ reason and recovery steps after restoring its output terminal, including leaving
 child's alternate screen. Machine-readable failure JSON remains on stdout;
 redirected streams receive no diagnostic terminal escape sequences.
 
+Interactive worker routing has separate `balance_blocked` diagnostics. A
+`max_lead_exceeded` reason means that service has used a greater fraction of its
+daily allowance than the configured lead permits; quota admission can still have
+headroom. Inspect `ai-session balance status`. An unconfirmed completion receipt
+returns `balance_receipt_unavailable` and exit 2, with the task ID for inspection.
+Do not repeat possibly completed work or reconcile its journal before checking its
+result and process state. See [pacing recovery](balancing.md#stops-and-recovery).
+
 `daily_limit` means today's configured harness allowance was reached. It does not
 establish that the provider subscription is exhausted. Capacity, maintenance,
 reserve and unavailable quota evidence have separate explanations. Inspect

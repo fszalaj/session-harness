@@ -102,7 +102,10 @@ the same model from acting as an independent reviewer; no vendor ranking is buil
 
 Development installations also explain protected session stops in the terminal,
 including the reason and recovery commands. Cleanup errors retain the original quota
-reason and report uncertain process termination separately. See
+reason and report uncertain process termination separately. Worker pacing denials
+report `balance_blocked` and the real reason, such as `max_lead_exceeded`, instead
+of a CLI schema error. An unconfirmed work receipt reports
+`balance_receipt_unavailable`; inspect the task before recovery or another dispatch. See
 [session stop recovery](skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
 
 Use `ai-session usage check SERVICE` for a fresh native admission check through the
@@ -122,7 +125,11 @@ See [model allowances and recovery](skills/session-harness/references/model-allo
 ## Add reviewed coding models (development)
 
 The optional [coding profile](skills/session-harness/references/coding-models.md)
-adds Kimi, GLM, DeepSeek, MiniMax and Qwen candidates through OpenRouter. Run
+adds Kimi, GLM, DeepSeek, MiniMax and Qwen candidates through OpenRouter. This is
+one access route within the broader native/API harness: five model families can
+share one gateway account, while direct accounts have separate authentication and
+allowances. Choose an [access route](skills/session-harness/references/coding-models.md#choose-the-access-route)
+before creating accounts. Run
 `ai-session api coding-models` to intersect the reviewed allowlist with fresh public
 metadata. Review expiry, missing capabilities and unapproved variants block selection.
 

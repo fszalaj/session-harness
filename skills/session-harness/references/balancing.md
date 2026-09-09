@@ -185,6 +185,18 @@ proof of an API invoice.
 
 ## Stops and recovery
 
+Interactive workers report `balance_blocked` with a phase and reason codes when
+pacing prevents launch. `max_lead_exceeded` means that service is ahead of the
+configured fraction of daily budgets; it is not a CLI schema failure or proof that
+the subscription is exhausted. Inspect `ai-session balance status`. Keep useful work
+within the admitted band; changing the lead requires an explicit configuration choice.
+
+After execution, `balance_receipt_unavailable` means the completion receipt is
+unconfirmed, even when the provider process returned success. The command exits 2
+and reports the task ID. Work may have completed; inspect its result, journal and
+process state before recovery. Transport failures at reserve/start can also leave
+an unresolved task. Neither case automatically retries, reconciles or frees a slot.
+
 Missing evidence, unsupported controls or a participant's quota denial pauses the
 coordinated batch. Status distinguishes evidence failures from quota denials. There
 is no silent participant removal, billing-service retry, API fallback, quota grant or
