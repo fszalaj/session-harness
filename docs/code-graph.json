@@ -1,5 +1,5 @@
 {
-  "content_sha256": "a3851ce679995ec993975f8fc63987d4c073c0cda85b5b9fddf9b06cc1126c70",
+  "content_sha256": "3a0d949027a7a20c7ccef2973dca9d50cc048d10d2848b614ca761c08ec4c225",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
@@ -60,7 +60,7 @@
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
       "skills/session-harness/scripts/test_auto_update.py": "5f8ff221c7910f4f5c65bcf90a5739b29e3c32296c5439db0bf4d14a735b864d",
       "skills/session-harness/scripts/test_balance.py": "b77b01538b91c818569303de9dfbc2956af221952151797d7810a94bf6048dc2",
-      "skills/session-harness/scripts/test_balance_cli.py": "2355db74759e65a7fa32f2feb4ae303ef8fbeb4ec8b7922f09705ced9e0925d7",
+      "skills/session-harness/scripts/test_balance_cli.py": "ce32c268fd80991af7048cc41911b5daebaec69cd527575c19d7ff9a8794b44b",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "56f5522d46e76201981426d222144ccc07e680cdc2d5ba2f827c38cb0b7a7cf3",

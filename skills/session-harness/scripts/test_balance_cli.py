@@ -221,6 +221,7 @@ class WorkTests(unittest.TestCase):
                 replies.append({'allowed': False, 'reasons': ['max_lead_exceeded', 'private-secret\n\x1b']})
                 globals_ = main.__globals__
                 with patch.dict(harness.os.environ, {}, clear=True), \
+                     patch('quota.Ledger', return_value=self.ledger), \
                      patch.object(balance_cli, 'Ledger', return_value=self.ledger), \
                      patch.dict(globals_, {
                          'discover_provider': lambda *a, **kw: {'auth': {'status': 'subscription'}},
