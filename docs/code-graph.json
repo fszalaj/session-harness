@@ -1,9 +1,9 @@
 {
-  "content_sha256": "e320e65d7dbaa8f4819bf7f2447df96ab1d98d7c5ab2058232bf3d439833471d",
+  "content_sha256": "a3851ce679995ec993975f8fc63987d4c073c0cda85b5b9fddf9b06cc1126c70",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 2841,
+    "edge_count": 2843,
     "extractor": "knowledge-gateway==0.11.0",
     "node_count": 1509,
     "root": "session-harness",
@@ -37,7 +37,7 @@
       "skills/session-harness/scripts/copilot_migration.py": "a95825c9fc4418c58a6ec29ab525a324c1f2d18dcd77bc2a4cb1cf8c22971000",
       "skills/session-harness/scripts/credits.py": "58d04bb8a27a9dabe20cd55d87b2096de8334b6e649756eadaeca74f8775531a",
       "skills/session-harness/scripts/cursor_client.py": "b295f4f07664039ef51b93f8c64468aedcec714fb13419c5a8b7d77d190bc8ce",
-      "skills/session-harness/scripts/free_access.py": "bcfc87d774ab02feb985671333be6bbe1a90ddb12d2cb2a1074acaac49846321",
+      "skills/session-harness/scripts/free_access.py": "ac5065dbaa2bc4d93e0640782e7ffb52b013d64269910e9335ee00bc9d715af1",
       "skills/session-harness/scripts/free_access_cli.py": "96bfaa0becc7cd0d377548d15565ff2082a3961ed69e5c660869a71dd6db1ee8",
       "skills/session-harness/scripts/free_accounts.py": "41a12cc21d60d8f6179aae36e8507bab10db7bc03c2927af942a8d2dd8b0dda0",
       "skills/session-harness/scripts/harness.py": "7935f95d17a92d13c339722679d48755472931e19237e5b62b8e4c3fe5ab8b7d",
@@ -60,7 +60,7 @@
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
       "skills/session-harness/scripts/test_auto_update.py": "5f8ff221c7910f4f5c65bcf90a5739b29e3c32296c5439db0bf4d14a735b864d",
       "skills/session-harness/scripts/test_balance.py": "b77b01538b91c818569303de9dfbc2956af221952151797d7810a94bf6048dc2",
-      "skills/session-harness/scripts/test_balance_cli.py": "cfefcc0bf954fd03d869144dd5b67cc99a5b6f99f2807599e3650aab1e8d1831",
+      "skills/session-harness/scripts/test_balance_cli.py": "2355db74759e65a7fa32f2feb4ae303ef8fbeb4ec8b7922f09705ced9e0925d7",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "56f5522d46e76201981426d222144ccc07e680cdc2d5ba2f827c38cb0b7a7cf3",
@@ -73,9 +73,9 @@
       "skills/session-harness/scripts/test_copilot_migration.py": "bcb6be2d58bb757cf9f7c58783996e29b656edb3a22806d5f14732d645b33c9b",
       "skills/session-harness/scripts/test_credits.py": "84c4d7f9d135f3bed9ca0a19065657ab9e8e7bf34cf98965395ee66c911568ef",
       "skills/session-harness/scripts/test_cursor_client.py": "752591d721452e35d5fa0826f736da17ff98a889f4948b18ec06073b541d69e3",
-      "skills/session-harness/scripts/test_free_access.py": "140ce0cc695c1cc7174570a9c85319ba85761d8412e3adb0d8d59fe9a5b3d89d",
+      "skills/session-harness/scripts/test_free_access.py": "89aeadebfda3deb5eba0691eb33bed9717102dfc05588782aeee437c949010f2",
       "skills/session-harness/scripts/test_free_accounts.py": "e114df456dbeb4016266912ef98e643ac5f616339392c35c4e75d790f55c5190",
-      "skills/session-harness/scripts/test_harness.py": "4aac0d39dbbd36af9e5133ad71c2c18e8464ee91a04c02db95f4b1c3e4223963",
+      "skills/session-harness/scripts/test_harness.py": "e38e4a22f23498078c913c37f152038077dbc421aab385c1e1523c251bd70e8a",
       "skills/session-harness/scripts/test_inventory.py": "c7347205997794d75897180dd5fbfd0f12463ecd98d72bfb00549eec766d5bbc",
       "skills/session-harness/scripts/test_local_ollama.py": "9e3c111004bb5a3db421331cd55153744e3c29800e5d813dcb32304758615a85",
       "skills/session-harness/scripts/test_maintenance.py": "25b1b96761f7e4d614af5cceb4eb79c54b51c729d43173b1de2d29ba88a8ca76",
@@ -3309,6 +3309,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/free_access.py",
       "target": "module:skills/session-harness/scripts/free_accounts.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/free_access.py",
+      "target": "module:skills/session-harness/scripts/windows_security.py"
     },
     {
       "confidence": "EXTRACTED",
@@ -6957,6 +6963,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_free_access.py",
       "target": "module:skills/session-harness/scripts/free_access.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_free_access.py",
+      "target": "module:skills/session-harness/scripts/windows_security.py"
     },
     {
       "confidence": "EXTRACTED",
@@ -18062,7 +18074,7 @@
       "id": "pyclass:skills/session-harness/scripts/free_access.py:FreeLedger",
       "label": "FreeLedger",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L190",
+      "source_location": "L196",
       "type": "class"
     },
     {
@@ -20454,7 +20466,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:catalog",
       "label": "catalog",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L133",
+      "source_location": "L139",
       "type": "function"
     },
     {
@@ -20462,7 +20474,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:credentials",
       "label": "credentials",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L162",
+      "source_location": "L168",
       "type": "function"
     },
     {
@@ -20470,7 +20482,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:dispatch",
       "label": "dispatch",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L373",
+      "source_location": "L382",
       "type": "function"
     },
     {
@@ -20478,7 +20490,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:evidence",
       "label": "evidence",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L174",
+      "source_location": "L180",
       "type": "function"
     },
     {
@@ -20486,7 +20498,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:load_config",
       "label": "load_config",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L82",
+      "source_location": "L85",
       "type": "function"
     },
     {
@@ -20502,7 +20514,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:run",
       "label": "run",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L298",
+      "source_location": "L307",
       "type": "function"
     },
     {
@@ -20510,7 +20522,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:save_config",
       "label": "save_config",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L91",
+      "source_location": "L94",
       "type": "function"
     },
     {
@@ -20526,7 +20538,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:zero",
       "label": "zero",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L111",
+      "source_location": "L117",
       "type": "function"
     },
     {
@@ -20534,7 +20546,7 @@
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:zero_prices",
       "label": "zero_prices",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L121",
+      "source_location": "L127",
       "type": "function"
     },
     {
@@ -22310,7 +22322,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.__init__",
       "label": "FreeLedger.__init__",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L191",
+      "source_location": "L197",
       "type": "method"
     },
     {
@@ -22318,7 +22330,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.connect",
       "label": "FreeLedger.connect",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L209",
+      "source_location": "L218",
       "type": "method"
     },
     {
@@ -22326,7 +22338,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.existing",
       "label": "FreeLedger.existing",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L250",
+      "source_location": "L259",
       "type": "method"
     },
     {
@@ -22334,7 +22346,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.fingerprint",
       "label": "FreeLedger.fingerprint",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L218",
+      "source_location": "L227",
       "type": "method"
     },
     {
@@ -22342,7 +22354,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.finish",
       "label": "FreeLedger.finish",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L278",
+      "source_location": "L287",
       "type": "method"
     },
     {
@@ -22350,7 +22362,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.reconcile",
       "label": "FreeLedger.reconcile",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L288",
+      "source_location": "L297",
       "type": "method"
     },
     {
@@ -22358,7 +22370,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.reserve",
       "label": "FreeLedger.reserve",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L261",
+      "source_location": "L270",
       "type": "method"
     },
     {
@@ -22366,7 +22378,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.snapshot",
       "label": "FreeLedger.snapshot",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L224",
+      "source_location": "L233",
       "type": "method"
     },
     {
@@ -22374,7 +22386,7 @@
       "id": "pymethod:skills/session-harness/scripts/free_access.py:FreeLedger.status",
       "label": "FreeLedger.status",
       "source_file": "skills/session-harness/scripts/free_access.py",
-      "source_location": "L246",
+      "source_location": "L255",
       "type": "method"
     },
     {
@@ -26022,7 +26034,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.test_payload_bounds_and_paid_models_fail_without_requests",
       "label": "FreeAccessTests.test_payload_bounds_and_paid_models_fail_without_requests",
       "source_file": "skills/session-harness/scripts/test_free_access.py",
-      "source_location": "L199",
+      "source_location": "L207",
       "type": "method"
     },
     {

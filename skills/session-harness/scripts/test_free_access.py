@@ -187,6 +187,14 @@ class FreeAccessTests(unittest.TestCase):
         path.write_text('API key: sk-or-v1-' + 'a' * 64 + '\n')
         path.chmod(0o600)
         self.assertTrue(free.credentials(self.config)['Authorization'].startswith('Bearer '))
+        if os.name == 'nt':
+            import windows_security
+            command = "$a=Get-Acl -LiteralPath '" + str(path).replace("'", "''") + "'; [Console]::Write($a.AreAccessRulesProtected)"
+            self.assertEqual(free.subprocess.check_output(['pwsh', '-NoProfile', '-Command', command], text=True).strip(), 'True')
+            with patch.object(windows_security, 'protect', side_effect=OSError('unsafe ACL')):
+                with self.assertRaisesRegex(ValueError, 'free_credential_unavailable'):
+                    free.credentials(self.config)
+            return
         path.chmod(0o644)
         with self.assertRaisesRegex(ValueError, 'free_private_file_permissions'):
             free.credentials(self.config)

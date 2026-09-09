@@ -807,7 +807,7 @@ class QuotaProcessIntegrationTests(unittest.TestCase):
                      'os.close(1); os.close(2); time.sleep(30)')
             with patch('usage.require_admission', side_effect=[{'allowed': True},
                         {'allowed': False, 'reasons': ['daily_limit']}]), \
-                    patch.object(harness.supervision, 'Watch', side_effect=lambda service: original(service, interval=.25)):
+                    patch.object(harness.supervision, 'Watch', side_effect=lambda service, **kw: original(service, interval=.25, **kw)):
                 with self.assertRaises(harness.supervision.Stop):
                     harness.run([sys.executable, '-c', child], timeout=5, quota_service='codex')
             parent_pid, grandchild_pid = json.loads(pid_file.read_text())

@@ -41,7 +41,7 @@ Other enabled entries have these fields (see `free_accounts.validate_config`):
 
 | Field | Required evidence or purpose |
 | --- | --- |
-| `credential_file` | Absolute private file containing one `API key: VALUE` line; mode 0600, current owner, no symlink |
+| `credential_file` | Absolute private file containing one `API key: VALUE` line; mode 0600 on POSIX, current owner, no symlink |
 | `credential_sha256`, `account_sha256` | Private key/account binding; a different account must not inherit allowance |
 | `model`, `response_models`, `family` | Reviewed exact request ID, bounded expected response identities and actual model family |
 | `context_tokens`, `max_output_tokens` | Verified model capacities; local output ceiling at most 8192 |
@@ -71,6 +71,8 @@ beginning with `ssh` and invoking the executor's `harness.py free serve`. It has
 no `accounts` or credentials. Preserve trusted host verification and authentication.
 The server refuses another SSH hop. Test reachability and compare status from both
 clients before enabling mixed work. Secrets stay exclusively at the executor.
+
+On Windows, reading a credential applies a protected current-user/SYSTEM ACL to that file. The helper accepts the current user or the verified token default owner, normalizing the latter to the user, and rejects other owners and reparse paths. Configuration and ledgers protect their dedicated session-harness directories. These native name-based checks have a reopen race and assume trusted local state directories; they are not equivalent to POSIX descriptor-based ownership checks. POSIX requires mode 0600.
 
 ## Admission and receipts
 

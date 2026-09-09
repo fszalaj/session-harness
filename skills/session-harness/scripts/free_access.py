@@ -67,10 +67,13 @@ def validate_config(config):
 
 def private_read(path, limit):
     path = Path(path)
+    if os.name == 'nt':
+        from windows_security import protect
+        protect(path)
     descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
     with os.fdopen(descriptor, 'rb') as source:
         info = os.fstat(source.fileno())
-        if (not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) & 0o077
+        if (not stat.S_ISREG(info.st_mode) or (os.name != 'nt' and stat.S_IMODE(info.st_mode) & 0o077)
                 or (hasattr(os, 'getuid') and info.st_uid != os.getuid())):
             raise ValueError('free_private_file_permissions')
         data = source.read(limit + 1)
@@ -92,6 +95,9 @@ def save_config(config, path=CONFIG):
     config = validate_config(config)
     path = Path(path)
     path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    if os.name == 'nt':
+        from windows_security import protect
+        protect(path.parent)
     fd, temporary = tempfile.mkstemp(prefix='.free-access-', dir=path.parent)
     try:
         with os.fdopen(fd, 'w') as target:
@@ -191,7 +197,10 @@ class FreeLedger:
     def __init__(self, path=DATABASE):
         self.path = Path(path)
         self.path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-        if self.path.exists():
+        if os.name == 'nt':
+            from windows_security import prepare_private_file
+            prepare_private_file(self.path)
+        elif self.path.exists():
             info = self.path.lstat()
             if (not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) & 0o077
                     or (hasattr(os, 'getuid') and info.st_uid != os.getuid())):
