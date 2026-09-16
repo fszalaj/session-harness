@@ -117,7 +117,29 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
     number(session["total_duration_ms"], 15000)
     rates = data["rate_limits"]
     allowed = {"five_hour", "seven_day", "seven_day_opus", "seven_day_sonnet", "limits",
-               "model_scoped", "extra_usage", "spend", "member_dashboard_available"}
+               "model_scoped", "extra_usage", "spend", "member_dashboard_available", "seven_day_breakdown"}
+    breakdown = rates.get("seven_day_breakdown")
+    if breakdown is not None:
+        if not isinstance(breakdown, dict) or set(breakdown) != {"as_of", "window_started_at", "rows"}:
+            invalid()
+        for key in ("as_of", "window_started_at"):
+            if breakdown[key] is None:
+                invalid()
+            timestamp(breakdown[key], observed_at)
+        if timestamp(breakdown["window_started_at"], observed_at) > timestamp(breakdown["as_of"], observed_at):
+            invalid()
+        if not isinstance(breakdown["rows"], list):
+            invalid()
+        keys = set()
+        for row in breakdown["rows"]:
+            if not isinstance(row, dict) or set(row) != {"key", "display_name", "percent"}:
+                invalid()
+            if any(not isinstance(row[key], str) or not row[key] for key in ("key", "display_name")):
+                invalid()
+            if row["key"] in keys:
+                invalid()
+            keys.add(row["key"])
+            number(row["percent"], 100)
     credit_resources = credits.claude_resources(rates)
     if "member_dashboard_available" in rates and not isinstance(rates["member_dashboard_available"], bool):
         invalid()

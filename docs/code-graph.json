@@ -1,11 +1,11 @@
 {
-  "content_sha256": "1d3e5f7c3e719bcc55a560817f3232cfce2f32d214237afd60364d35b372bb4d",
+  "content_sha256": "535ec9c3f23af6d61f136c612573bca15057f005ee0d54aacf332d03a0da304c",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 2950,
+    "edge_count": 2952,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1564,
+    "node_count": 1566,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -44,7 +44,7 @@
       "skills/session-harness/scripts/inventory.py": "5fec32fbb6b1f974f2c031d64baa53e8bb35ed6c98e54620cf95156c4e281e41",
       "skills/session-harness/scripts/local_ollama.py": "688a50049dac1a44f9d6876bd1fc466a24f274180a148402c2be3ef63796fb59",
       "skills/session-harness/scripts/model_scope.py": "028bbeaeaf3a16b8be86e8a03a0e0d0c6f10fc4932c0b45ab58bdd7649837d7b",
-      "skills/session-harness/scripts/native_quota.py": "013a8450940d8c6f9871e1423e82667b760279978badedc948b9531ce5d03cad",
+      "skills/session-harness/scripts/native_quota.py": "a94f24322e46fef0069177a045397a1b94109344502312beb776191c6802275d",
       "skills/session-harness/scripts/onboard.py": "dec95abb87a5e220fa37a5d715392593c1b586727e997fa3018a2118a7994dad",
       "skills/session-harness/scripts/optional_clients.py": "6a8192702eb2f0a7b9722a5352e6dcbcd628456ed3bbf2f75cc1217ed36e496c",
       "skills/session-harness/scripts/platform_runtime.py": "874a3adcf735cd2620ea3df2ad2eaef3c88c764acb58294e1adcff0361c3cbec",
@@ -82,7 +82,7 @@
       "skills/session-harness/scripts/test_maintenance.py": "25b1b96761f7e4d614af5cceb4eb79c54b51c729d43173b1de2d29ba88a8ca76",
       "skills/session-harness/scripts/test_model_constraints.py": "adb9d866adf67814e85500173721687b703cdabecc8d9766ed5445a25229b8af",
       "skills/session-harness/scripts/test_model_scope.py": "1028f122ad201846f3c451ca1de17e6f41626b8e18ee726e7c4f90e0b731cb17",
-      "skills/session-harness/scripts/test_native_quota.py": "88dbbdec4498d9437b5b8e30891984362aec08cd377065fb7a6244f50ba359a7",
+      "skills/session-harness/scripts/test_native_quota.py": "79d21837ab570a3794d7f50dc7e662f45454b811d65c8c61f41b4f03ea58febf",
       "skills/session-harness/scripts/test_onboard.py": "1a76ef5324e79e86fa36919a23fc6366185f45a58f0f22919ba1e5172592596b",
       "skills/session-harness/scripts/test_optional_clients.py": "39bc13b222daf9636301b2df66f648d1c860dad0218ca553bfb9051b0d938766",
       "skills/session-harness/scripts/test_platform_runtime.py": "361f83baa81bce13abe74186090be8ae90bcf49d519a24f68b233842a9204df5",
@@ -13216,6 +13216,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_native_quota.py:NativeTests",
+      "target": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_malformed_product_breakdown_rejected"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_native_quota.py:NativeTests",
       "target": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_missing_unknown_enabled_or_disagreeing_limits"
     },
     {
@@ -13223,6 +13229,12 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_native_quota.py:NativeTests",
       "target": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_native_unknown_reset_and_future_pool_retained"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_native_quota.py:NativeTests",
+      "target": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_product_breakdown_does_not_change_quota_or_credit_pools"
     },
     {
       "confidence": "EXTRACTED",
@@ -21828,7 +21840,7 @@
       "id": "pyfunc:skills/session-harness/scripts/native_quota.py:antigravity_pools",
       "label": "antigravity_pools",
       "source_file": "skills/session-harness/scripts/native_quota.py",
-      "source_location": "L192",
+      "source_location": "L214",
       "type": "function"
     },
     {
@@ -21884,7 +21896,7 @@
       "id": "pyfunc:skills/session-harness/scripts/native_quota.py:read_snapshot",
       "label": "read_snapshot",
       "source_file": "skills/session-harness/scripts/native_quota.py",
-      "source_location": "L224",
+      "source_location": "L246",
       "type": "function"
     },
     {
@@ -28172,7 +28184,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_agy_all_pools_full_precision_and_additional_groups",
       "label": "NativeTests.test_agy_all_pools_full_precision_and_additional_groups",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L111",
+      "source_location": "L151",
       "type": "method"
     },
     {
@@ -28180,7 +28192,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_agy_unknown_missing_duplicate_pools",
       "label": "NativeTests.test_agy_unknown_missing_duplicate_pools",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L122",
+      "source_location": "L162",
       "type": "method"
     },
     {
@@ -28188,7 +28200,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_all_reset_kinds_retained_without_guessing_renewal",
       "label": "NativeTests.test_all_reset_kinds_retained_without_guessing_renewal",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L144",
+      "source_location": "L184",
       "type": "method"
     },
     {
@@ -28196,7 +28208,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_ambiguous_legacy_scope_preserved_without_aggregation",
       "label": "NativeTests.test_ambiguous_legacy_scope_preserved_without_aggregation",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L158",
+      "source_location": "L198",
       "type": "method"
     },
     {
@@ -28204,7 +28216,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_antigravity_uses_owned_force_refresh_only",
       "label": "NativeTests.test_antigravity_uses_owned_force_refresh_only",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L207",
+      "source_location": "L247",
       "type": "method"
     },
     {
@@ -28220,7 +28232,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_cached_and_protocol_rejected",
       "label": "NativeTests.test_claude_cached_and_protocol_rejected",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L50",
+      "source_location": "L90",
       "type": "method"
     },
     {
@@ -28228,7 +28240,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_legacy_scoped_alias_must_match_and_is_not_duplicated",
       "label": "NativeTests.test_claude_legacy_scoped_alias_must_match_and_is_not_duplicated",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L99",
+      "source_location": "L139",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_malformed_product_breakdown_rejected",
+      "label": "NativeTests.test_claude_malformed_product_breakdown_rejected",
+      "source_file": "skills/session-harness/scripts/test_native_quota.py",
+      "source_location": "L67",
       "type": "method"
     },
     {
@@ -28236,7 +28256,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_missing_unknown_enabled_or_disagreeing_limits",
       "label": "NativeTests.test_claude_missing_unknown_enabled_or_disagreeing_limits",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L61",
+      "source_location": "L101",
       "type": "method"
     },
     {
@@ -28244,7 +28264,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_native_unknown_reset_and_future_pool_retained",
       "label": "NativeTests.test_claude_native_unknown_reset_and_future_pool_retained",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L77",
+      "source_location": "L117",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_claude_product_breakdown_does_not_change_quota_or_credit_pools",
+      "label": "NativeTests.test_claude_product_breakdown_does_not_change_quota_or_credit_pools",
+      "source_file": "skills/session-harness/scripts/test_native_quota.py",
+      "source_location": "L50",
       "type": "method"
     },
     {
@@ -28252,7 +28280,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_failures_redact_raw_diagnostics",
       "label": "NativeTests.test_failures_redact_raw_diagnostics",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L225",
+      "source_location": "L265",
       "type": "method"
     },
     {
@@ -28260,7 +28288,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_invalid_percent_reset_and_duplicate_json",
       "label": "NativeTests.test_invalid_percent_reset_and_duplicate_json",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L133",
+      "source_location": "L173",
       "type": "method"
     },
     {
@@ -28268,7 +28296,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_only_metadata_commands_and_sanitized_environment",
       "label": "NativeTests.test_only_metadata_commands_and_sanitized_environment",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L179",
+      "source_location": "L219",
       "type": "method"
     },
     {
@@ -28276,7 +28304,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_pool_identifier_matches_ledger_bound",
       "label": "NativeTests.test_pool_identifier_matches_ledger_bound",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L173",
+      "source_location": "L213",
       "type": "method"
     },
     {
@@ -28284,7 +28312,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_native_quota.py:NativeTests.test_windows_antigravity_rejects_before_discovery_or_spawn",
       "label": "NativeTests.test_windows_antigravity_rejects_before_discovery_or_spawn",
       "source_file": "skills/session-harness/scripts/test_native_quota.py",
-      "source_location": "L238",
+      "source_location": "L278",
       "type": "method"
     },
     {

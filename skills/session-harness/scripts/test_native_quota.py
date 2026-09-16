@@ -47,6 +47,46 @@ class NativeTests(unittest.TestCase):
         self.assertEqual([12, 18, 7], [row["used_percent"] for row in result["pools"]])
         self.assertNotIn("Example Model", json.dumps(result))
 
+    def test_claude_product_breakdown_does_not_change_quota_or_credit_pools(self):
+        data = claude_data()
+        data["rate_limits"]["future_quota"] = dict(utilization=33.125, resets_at=RESET)
+        expected = native.claude_snapshot(stream(data), DEBUG, IDS, NOW)
+        breakdown = dict(as_of="2026-09-16T12:00:00Z", window_started_at="2026-09-15T12:00:00Z",
+                         rows=[dict(key=key, display_name=name, percent=percent) for key, name, percent in
+                               (("claude_code", "Claude Code", 100), ("chat", "Chats", 0),
+                                ("cowork", "Cowork", 0), ("other", "Other", 0))])
+        for value in (None, breakdown, dict(breakdown, rows=[])):
+            data["rate_limits"]["seven_day_breakdown"] = value
+            self.assertEqual(expected, native.claude_snapshot(stream(data), DEBUG, IDS, NOW))
+        data["rate_limits"]["seven_day_breakdown"] = breakdown
+        for value in ({}, dict(utilization=1, resets_at=RESET, unknown=True), breakdown):
+            data["rate_limits"]["unknown_field"] = value
+            with self.assertRaises(native.NativeQuotaError):
+                native.claude_snapshot(stream(data), DEBUG, IDS, NOW)
+
+    def test_claude_malformed_product_breakdown_rejected(self):
+        good = dict(as_of="2026-09-16T12:00:00Z", window_started_at="2026-09-15T12:00:00Z",
+                    rows=[dict(key="claude_code", display_name="Claude Code", percent=100)])
+        mutations = [lambda b: b.update(extra=True), lambda b: b.pop("as_of"),
+                     lambda b: b.update(as_of=None), lambda b: b.update(as_of="invalid"),
+                     lambda b: b.update(as_of="2026-09-16T12:00:00"),
+                     lambda b: b.update(window_started_at="2026-09-17T12:00:00Z"),
+                     lambda b: b.update(rows={}), lambda b: b["rows"].append(None),
+                     lambda b: b["rows"].append(copy.deepcopy(b["rows"][0])),
+                     lambda b: b["rows"][0].update(extra=True),
+                     lambda b: b["rows"][0].update(key=""),
+                     lambda b: b["rows"][0].update(display_name=1)]
+        mutations.extend(lambda b, value=value: b["rows"][0].update(percent=value)
+                         for value in (True, -1, 101, float("nan"), float("inf"), "100"))
+        for mutate in mutations:
+            data = claude_data()
+            breakdown = copy.deepcopy(good)
+            mutate(breakdown)
+            data["rate_limits"]["seven_day_breakdown"] = breakdown
+            with self.subTest(breakdown=breakdown):
+                with self.assertRaises(native.NativeQuotaError):
+                    native.claude_snapshot(stream(data), DEBUG, IDS, NOW)
+
     def test_claude_cached_and_protocol_rejected(self):
         raw = stream(claude_data())
         for debug, stdout in (("", raw), (DEBUG.splitlines()[0], raw),

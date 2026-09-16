@@ -111,6 +111,9 @@ ledger only; initialize shared accounting on its authority. Copilot and Cursor
 admission also stops after an unresolved worker execution; inspect
 and reconcile that job before continuing. A quota read failure does not establish
 subscription exhaustion.
+Claude product statistics in `seven_day_breakdown` are validated informational
+metadata, not quota pools. Session, weekly and model-scoped limits remain
+authoritative; malformed statistics or unknown limit shapes still block refresh.
 Claude native sign-in and shared quota admission are separate checks; discovery
 reports a verified signed-out response as `auth_required` in the calling context.
 
