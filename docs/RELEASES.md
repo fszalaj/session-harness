@@ -5,6 +5,19 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.4.4
+
+Claude native quota refresh accepts the optional `seven_day_breakdown` product
+statistics returned by current clients. Its validated rows do not become quota
+pools. Session, weekly, model-scoped and unknown quota limits still undergo the
+existing checks; credit eligibility and accounting are unchanged. Malformed
+breakdown metadata continues to stop refresh.
+
+Run `ai-session update` to install the published release on each maintained
+computer. Retry fresh shared-authority admission with
+`ai-session usage check claude`. No setup, quota-ledger reset, authentication or
+paid-usage change is needed.
+
 ## 0.4.3
 
 The onboarding prompt includes its official source and archive bootstrap. README
@@ -119,7 +132,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.4.3, use `ai-session update --version 0.4.3 --apply`, then restart affected
+For v0.4.4, use `ai-session update --version 0.4.4 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.4
+
+- Accept validated Claude seven-day product breakdown statistics without changing quota pools, credit eligibility or accounting.
+- Preserve fail-closed handling of malformed metadata and unrecognized quota fields.
+
 ## 0.4.3
 
 - Make the onboarding prompt usable without an existing checkout by naming the
