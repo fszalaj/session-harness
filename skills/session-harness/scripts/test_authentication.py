@@ -73,6 +73,13 @@ class AuthenticationTests(unittest.TestCase):
             auth.startup(self.ledger)
         execute.assert_not_called()
 
+    def test_unavailable_history_does_not_replace_native_admission(self):
+        with patch.object(auth, 'Ledger', side_effect=RuntimeError('Could not determine home directory.')), patch.object(auth, 'login') as login, patch.object(auth.sys, 'stderr', io.StringIO()):
+            result = auth.startup()
+        self.assertEqual(result['status'], 'authentication_unavailable')
+        self.assertFalse(result['admission_verified'])
+        login.assert_not_called()
+
     def test_optional_free_configuration_without_home_is_unverified(self):
         with patch('builtins.__import__', side_effect=RuntimeError('Could not determine home directory.')):
             self.assertEqual(auth.free_status(), {'configuration': {'status': 'unverified'}})

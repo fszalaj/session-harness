@@ -1,11 +1,11 @@
 {
-  "content_sha256": "ace12090121432a6bceff569e013afc4de4030410aa55ad073c7e41c3710fc70",
+  "content_sha256": "be7b04b5c05174d26d17ce9296b166064930ccc98142e129fb3f88b08f6cb60b",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 3002,
+    "edge_count": 3003,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1590,
+    "node_count": 1591,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -20,7 +20,7 @@
       "skills/session-harness/scripts/api_execution.py": "d32ac415aea843ed15fb2826f2a0293a1d595831b774e9fc2bde1053ed06a34d",
       "skills/session-harness/scripts/api_providers.py": "99e0e72275478523914714c40016e702a312e918cb02bbde02383e34dea6aed3",
       "skills/session-harness/scripts/api_transport.py": "86fcb0093632ef3f5febf5299be120a3ff499e555be622d9a758af7809975144",
-      "skills/session-harness/scripts/authentication.py": "de6eeb415daeca4c273d6335807d8419fa5edd133ca4fcfa7a452865ace6784f",
+      "skills/session-harness/scripts/authentication.py": "3a78e5462584817df2430a27912cc03f7f36b1256c4381f8629465341d8b9ec0",
       "skills/session-harness/scripts/auto_install.py": "20352c5a9e233cef368f14f19352ffe4a9e2cd0018b3449eee8ea54f6be219b9",
       "skills/session-harness/scripts/auto_scheduler.py": "b8f8bd43374bb6206eee6804f94a43f8bfc6e3d9e5f8de29dc5fcff6b3062563",
       "skills/session-harness/scripts/auto_update.py": "e239364ffb34a1bd1d9ee3e08c837bcaabcc5a569ebce2ed867302ccf5df1706",
@@ -60,7 +60,7 @@
       "skills/session-harness/scripts/test_api_execution.py": "b420773d3b2d3d05558e6e73580ffe7b6c6387206c53194301f8d99aea898d88",
       "skills/session-harness/scripts/test_api_providers.py": "443378e5da5fcf36653ee37d4335bb66f297e5dab6481d5f2acc391c5e8ca1bd",
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
-      "skills/session-harness/scripts/test_authentication.py": "25d5e32e8ea567fe8e9162b31a988457f83d4c175e807c6336614bbec3d9988f",
+      "skills/session-harness/scripts/test_authentication.py": "ccd5e88f2a9e4d8bd4bbc44b59b3ab4cf5e75715e6173bf7a801b12fcafdb5a8",
       "skills/session-harness/scripts/test_auto_update.py": "5f8ff221c7910f4f5c65bcf90a5739b29e3c32296c5439db0bf4d14a735b864d",
       "skills/session-harness/scripts/test_balance.py": "ad98ca96795e05528fc0265b4b81c969a9cfbc53c400793605995feec5e0905a",
       "skills/session-harness/scripts/test_balance_cli.py": "c7580dbbef4c5d531067b5d9c7840f4f4974d21bfc167e54e94b6b7919891884",
@@ -10487,6 +10487,12 @@
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_authentication.py:AuthenticationTests",
+      "target": "pymethod:skills/session-harness/scripts/test_authentication.py:AuthenticationTests.test_unavailable_history_does_not_replace_native_admission"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests",
       "target": "pymethod:skills/session-harness/scripts/test_auto_update.py:AutoSchedulerTests.setUp"
     },
@@ -20223,7 +20229,7 @@
       "id": "pyfunc:skills/session-harness/scripts/authentication.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/authentication.py",
-      "source_location": "L199",
+      "source_location": "L203",
       "type": "function"
     },
     {
@@ -24711,7 +24717,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_authentication.py:AuthenticationTests.test_deadline_stop_from_real_watch_is_reported_without_traceback",
       "label": "AuthenticationTests.test_deadline_stop_from_real_watch_is_reported_without_traceback",
       "source_file": "skills/session-harness/scripts/test_authentication.py",
-      "source_location": "L90",
+      "source_location": "L97",
       "type": "method"
     },
     {
@@ -24719,7 +24725,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_authentication.py:AuthenticationTests.test_expired_plan_is_not_a_logout_and_browser_requires_explicit_tty",
       "label": "AuthenticationTests.test_expired_plan_is_not_a_logout_and_browser_requires_explicit_tty",
       "source_file": "skills/session-harness/scripts/test_authentication.py",
-      "source_location": "L80",
+      "source_location": "L87",
       "type": "method"
     },
     {
@@ -24735,7 +24741,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_authentication.py:AuthenticationTests.test_login_rechecks_status_and_cleans_up_timeout",
       "label": "AuthenticationTests.test_login_rechecks_status_and_cleans_up_timeout",
       "source_file": "skills/session-harness/scripts/test_authentication.py",
-      "source_location": "L101",
+      "source_location": "L108",
       "type": "method"
     },
     {
@@ -24751,7 +24757,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_authentication.py:AuthenticationTests.test_optional_free_configuration_without_home_is_unverified",
       "label": "AuthenticationTests.test_optional_free_configuration_without_home_is_unverified",
       "source_file": "skills/session-harness/scripts/test_authentication.py",
-      "source_location": "L76",
+      "source_location": "L83",
       "type": "method"
     },
     {
@@ -24760,6 +24766,14 @@
       "label": "AuthenticationTests.test_regression_requires_verified_history_and_unknown_preserves_it",
       "source_file": "skills/session-harness/scripts/test_authentication.py",
       "source_location": "L22",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_authentication.py:AuthenticationTests.test_unavailable_history_does_not_replace_native_admission",
+      "label": "AuthenticationTests.test_unavailable_history_does_not_replace_native_admission",
+      "source_file": "skills/session-harness/scripts/test_authentication.py",
+      "source_location": "L76",
       "type": "method"
     },
     {

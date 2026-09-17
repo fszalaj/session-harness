@@ -178,7 +178,11 @@ def login(provider, ledger=None):
 
 
 def startup(ledger=None):
-    report = status(ledger)
+    try:
+        report = status(ledger)
+    except (OSError, ValueError, sqlite3.Error, RuntimeError):
+        print('Authentication report unavailable; native sign-in and quota checks still apply.', file=sys.stderr)
+        return {'status': 'authentication_unavailable', 'admission_verified': False}
     for provider, state in report['providers'].items():
         print(f"Authentication: {provider}: {state['status']}", file=sys.stderr)
         if state['status'] in {'signed_out', 'lost_login'}:
@@ -205,7 +209,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         result = status() if args.command == 'status' else login(args.provider)
-    except (OSError, ValueError, sqlite3.Error, AttributeError):
+    except (OSError, ValueError, sqlite3.Error, AttributeError, RuntimeError):
         result = {'status': 'authentication_unavailable'}
     print(json.dumps(result, indent=2))
     return 0 if result['status'] in {'authentication_report', 'authenticated'} else 2
