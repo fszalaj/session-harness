@@ -63,7 +63,7 @@ def launcher_content(runtime: Path) -> bytes:
         "    forwarded = ['--help']\n"
         "elif len(args) >= 2 and args[1] == 'onboard':\n"
         "    forwarded = ['onboard', args[0], *args[2:]]\n"
-        "elif args[0] in {'onboard', 'setup', 'configure', 'version', 'update', 'auto-update', 'coordination', 'hooks', 'budget', 'balance', 'work', 'audit', 'inventory', 'usage', 'api', 'free', 'ollama', 'spend', 'discover', 'review', '--help', '-h'}:\n"
+        "elif args[0] in {'auth', 'onboard', 'setup', 'configure', 'version', 'update', 'auto-update', 'coordination', 'hooks', 'budget', 'balance', 'work', 'audit', 'inventory', 'usage', 'api', 'free', 'ollama', 'spend', 'discover', 'review', '--help', '-h'}:\n"
         "    forwarded = args\n"
         "else:\n"
         "    forwarded = ['launch', *args[:1], '--execute', *args[1:]]\n"

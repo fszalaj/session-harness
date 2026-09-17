@@ -1151,8 +1151,11 @@ def main(argv=None):
         import local_ollama
         return local_ollama.main(arguments[1:])
     if (len(arguments) >= 3 and arguments[0] == "launch"
-            and arguments[1] in {"balance", "work", "audit", "free"} and arguments[2] == "--execute"):
+            and arguments[1] in {"balance", "work", "audit", "free", "auth"} and arguments[2] == "--execute"):
         arguments = [arguments[1], *arguments[3:]]
+    if arguments and arguments[0] == 'auth':
+        import authentication
+        return authentication.main(arguments[1:])
     if arguments and arguments[0] in {"setup", "configure"}:
         import setup_environment
         return setup_environment.main(arguments[1:])
@@ -1232,6 +1235,11 @@ def main(argv=None):
                 Ledger().require_setup("native", args.provider)
             except ValueError as exc:
                 raise HarnessError("setup_required", str(exc)) from exc
+            if args.command == "launch" and args.execute:
+                markers = (SESSION_MARKER, "CODEX_THREAD_ID", "CODEX_TURN_ID", "CLAUDECODE", "CLAUDE_CODE_ENTRYPOINT", "AGY_SESSION_ID", "ANTIGRAVITY_SESSION_ID")
+                if not any(os.environ.get(marker) for marker in markers) and sys.stdin.isatty():
+                    import authentication
+                    authentication.startup()
             capability = discover_provider(args.provider)
             if args.command == "launch":
                 if args.provider == "claude" and capability.get("model_switch_hooks_supported") and os.name == "posix":

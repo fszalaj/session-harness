@@ -12,7 +12,7 @@ import budget_policy
 import usage
 
 NATIVE = frozenset({'codex', 'claude', 'antigravity', 'copilot', 'cursor'})
-AUTOMATIC_NATIVE = frozenset({'codex', 'claude', 'antigravity'})
+AUTOMATIC_NATIVE = NATIVE
 OPEN = {'reserved', 'running'}
 TERMINAL = {'completed', 'failed', 'denied'}
 KEY = 'balance_v1'
@@ -138,7 +138,7 @@ def work_route(ledger, id, fingerprint, proposed):
 
 
 def _snapshot(db, settings=False):
-    result = dict(db.execute('SELECT key, value FROM state'))
+    result = dict(db.execute("SELECT key, value FROM state WHERE key != 'auth_history_v1'"))
     if settings:
         result = {k: v for k, v in result.items() if not k.startswith('service:')}
         if 'budget_v1' in result:
@@ -314,9 +314,10 @@ def _selection(services, provider='auto'):
     automatic = provider in {'auto', 'native'}
     eligible = sorted(set(services) & AUTOMATIC_NATIVE if automatic else services)
     progress = [services[s]['progress'] for s in eligible]
-    return dict(mode='current_model' if automatic else 'explicit_provider',
+    return dict(mode='supervised_worker' if automatic else 'explicit_provider',
                 eligible_services=eligible,
                 explicit_only_services=sorted(set(services) - AUTOMATIC_NATIVE),
+                supervised_auto_services=sorted(set(services) & {'copilot', 'cursor'}),
                 minimum_progress=min(progress) if progress and all(p is not None for p in progress) else None)
 
 

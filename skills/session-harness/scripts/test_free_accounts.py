@@ -149,6 +149,41 @@ class AccountTests(unittest.TestCase):
         self.assertEqual(result['status'], 'free_blocked')
         transport.assert_not_called()
 
+    def test_expired_account_isolated_but_pending_and_quota_still_stop_group(self):
+        healthy = copy.deepcopy(self.row)
+        self.row['evidence']['expires_at'] = self.now - 1
+        for accounts in ({'groq': self.row, 'nvidia': healthy}, {'nvidia': healthy, 'groq': self.row}):
+            self.config['accounts'] = accounts
+            with patch.object(free, 'preflight', return_value={}) as preflight:
+                status = free.dispatch(self.config, 'status', ledger=self.ledger)
+            self.assertTrue(status['allowed'])
+            self.assertFalse(status['accounts']['groq']['allowed'])
+            preflight.assert_called_once_with('nvidia', healthy, unittest.mock.ANY)
+        denied, transport = self.execute()
+        self.assertEqual(denied['status'], 'free_blocked')
+        transport.assert_not_called()
+        self.packet['model'] = 'auto'
+        result, transport = self.execute()
+        self.assertEqual(result['billing_service'], 'nvidia')
+        self.assertEqual(transport.call_count, 1)
+        self.row['evidence']['expires_at'] = self.now + 1000
+        self.ledger.bind(self.config, {**self.packet, 'id': 'pending', 'model': 'groq'}, time.time())
+        self.row['evidence']['expires_at'] = self.now - 1
+        self.packet['id'] = 'after-pending'
+        result, transport = self.execute()
+        self.assertEqual(result['status'], 'free_blocked')
+        transport.assert_not_called()
+        self.ledger.complete('pending', 'completed', {})
+        self.row['limits']['rpd'] = 1
+        result, transport = self.execute()
+        self.assertEqual(result['status'], 'free_blocked')
+        transport.assert_not_called()
+
+    def test_preflight_set_can_only_narrow_and_expiry_rechecked_at_bind(self):
+        self.assertEqual(self.ledger.bind(self.config, self.packet, self.now, verified=set())['status'], 'free_blocked')
+        self.row['evidence']['expires_at'] = self.now - 1
+        self.assertEqual(self.ledger.bind(self.config, self.packet, self.now, verified={'groq'})['status'], 'free_blocked')
+
     def test_hf_fixed_provider_rate_and_account_checks(self):
         row = copy.deepcopy(self.row)
         row['model'] = 'qwen-test:novita'

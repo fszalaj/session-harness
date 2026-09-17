@@ -235,7 +235,7 @@ class AccountsLedger(legacy.FreeLedger):
             self.clock(db, now)
             return {p: self.state(db, p, row, now) for p, row in config['accounts'].items()}
 
-    def bind(self, config, packet, now):
+    def bind(self, config, packet, now, *, verified=None, config_path=None):
         fingerprint = self.fingerprint(packet)
         with self.connect() as db:
             db.execute('BEGIN IMMEDIATE')
@@ -245,12 +245,19 @@ class AccountsLedger(legacy.FreeLedger):
                 if not hmac.compare_digest(fingerprint, old[0]):
                     raise ValueError('free_request_id_conflict')
                 return {'status': 'free_duplicate', 'provider': old[1], 'request_status': old[2], 'receipt': json.loads(old[3]) if old[3] else None}
+            if config_path is not None and legacy.load_config(config_path) != config:
+                raise ValueError('free_configuration_changed')
             states = {p: self.state(db, p, row, now) for p, row in config['accounts'].items() if row['enabled']}
-            if not states or any(not s['allowed'] for s in states.values()):
+            eligible = eligible_accounts(states)
+            if verified is not None:
+                eligible &= verified
+            if not eligible:
                 return {'status': 'free_blocked', 'allowed': False, 'accounts': states}
-            provider = min(states, key=lambda p: (states[p]['progress'], p)) if packet['model'] == 'auto' else packet['model']
+            provider = min(eligible, key=lambda p: (states[p]['progress'], p)) if packet['model'] == 'auto' else packet['model']
             if provider not in states:
                 raise ValueError('free_provider_not_enabled')
+            if provider not in eligible:
+                return {'status': 'free_blocked', 'allowed': False, 'accounts': states}
             row = config['accounts'][provider]
             reservation = {'tokens': 0, 'credit_usd': '0'}
             if provider != 'openrouter':
@@ -327,6 +334,14 @@ class AccountsLedger(legacy.FreeLedger):
         return {'status': 'free_reconciled', 'provider': provider, 'period_start': start, 'history_preserved': True}
 
 
+def eligible_accounts(states):
+    """Only expired evidence is isolated; accounting stops retain their scope."""
+    if any(not state['allowed'] and set(state.get('reasons', [])) != {'free_account_evidence_expired'}
+           for state in states.values()):
+        return set()
+    return {provider for provider, state in states.items() if state['allowed']}
+
+
 def dispatch(config, action, packet=None, *, config_path=None, ledger=None):
     validate_config(config)
     if config['authority'] != 'local':
@@ -350,25 +365,30 @@ def dispatch(config, action, packet=None, *, config_path=None, ledger=None):
                 raise ValueError('free_request_id_conflict')
             return {'status': 'free_duplicate', 'provider': old[1], 'request_status': old[2], 'receipt': json.loads(old[3]) if old[3] else None}
     headers = {}
+    verified = set()
     for provider, row in config['accounts'].items():
         if row['enabled']:
+            if provider != 'openrouter' and not row['evidence']['observed_at'] <= now < row['evidence']['expires_at']:
+                continue
             if provider == 'openrouter':
                 legacy.evidence(row)
             else:
                 headers[provider] = preflight(provider, row, now)
+            verified.add(provider)
     if config_path is not None and legacy.load_config(config_path) != config:
         raise ValueError('free_configuration_changed')
     states = ledger.states(config, time.time())
-    enabled = [v for p, v in states.items() if config['accounts'][p]['enabled']]
+    enabled = {p: v for p, v in states.items() if config['accounts'][p]['enabled']}
+    eligible = eligible_accounts(enabled) & verified
     if action in {'status', 'models'}:
-        return {'status': 'free_ready' if enabled and all(s['allowed'] for s in enabled) else 'free_blocked',
-                'allowed': bool(enabled) and all(s['allowed'] for s in enabled), 'accounts': states,
-                'progress': min((s['progress'] for s in enabled), default=0), 'mixed_work': config['mixed_work'],
+        return {'status': 'free_ready' if eligible else 'free_blocked',
+                'allowed': bool(eligible), 'accounts': states,
+                'progress': min((states[p]['progress'] for p in eligible), default=0), 'mixed_work': config['mixed_work'],
                 'models': {p: row.get('model', row.get('models')) for p, row in config['accounts'].items() if row['enabled']},
                 'paid_fallback': False, 'automatic_retry': False}
     if action != 'run':
         raise ValueError('invalid_free_action')
-    bound = ledger.bind(config, packet, time.time())
+    bound = ledger.bind(config, packet, time.time(), verified=verified, config_path=config_path)
     if bound['status'] != 'reserved':
         return bound
     provider = bound['provider']

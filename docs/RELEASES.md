@@ -5,6 +5,36 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.5.0
+
+Automatic native work now includes configured Copilot and Cursor Auto routes as
+supervised text workers. Their output requires manager inspection and cannot serve
+as an independent review or proof of the newest model generation. Existing quota,
+paid-overage, role, concurrency and request-id checks remain in force. Cursor
+catalog parsing accepts combined current/default markers without weakening model
+or sign-in verification.
+
+`ai-session auth status` reports configured native sign-in and detects lost sign-in
+from private local history. Managed interactive startup offers native login through
+`ai-session auth login PROVIDER`; supported POSIX flows use the existing supervised
+terminal with a ten-minute deadline and process cleanup. Windows receives the native
+command to run manually. Direct app sessions use the startup command explicitly.
+Unknown metadata, missing clients, quota exhaustion and expired free-plan evidence
+are not reported as a confirmed logout. No tokens or account names enter history.
+
+For configured free providers, explicit login opens the account page; opening it
+does not verify a plan or renew evidence. An account whose only denial is expired
+free-plan evidence no longer blocks other verified accounts. Credit, quota,
+unresolved-request and binding denials still stop the group. All-expired groups
+remain blocked; explicit requests never silently switch accounts.
+
+Upgrade with `ai-session update --version 0.5.0 --apply`, then restart clients.
+Preserve setup, accounting and private policy; no reauthorization or billing change
+is required. Registered identical skill overlays are absorbed by automatic updates;
+conflicting local changes require reconciliation. Authentication reports do not
+prove a provider can execute: fresh admission and successful execution remain
+separate checks.
+
 ## 0.4.4
 
 Claude native quota refresh accepts the optional `seven_day_breakdown` product
@@ -132,7 +162,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.4.4, use `ai-session update --version 0.4.4 --apply`, then restart affected
+For v0.5.0, use `ai-session update --version 0.5.0 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.
