@@ -88,7 +88,7 @@ class CursorTests(unittest.TestCase):
         self.assertEqual(harness.launch_plan('cursor','planner',cap)['argv'], ['cursor-agent','--model','composer-9'])
 
     def test_discovery_free_route_strips_catalog_markers(self):
-        with patch.object(harness, 'checked', side_effect=['{"isAuthenticated":true}', 'auto - Auto (default)\ncomposer-9 - Composer 9 (current)']), \
+        with patch.object(harness, 'checked', side_effect=['{"isAuthenticated":true}', 'auto - Auto (current, default)\ncomposer-9 - Composer 9 (current)']), \
              patch.object(cursor_client, 'metadata', return_value=quota()):
             result=cursor_client.discover('/mock/cursor')
         self.assertEqual(result['worker']['model'], 'auto')

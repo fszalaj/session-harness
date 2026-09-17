@@ -53,20 +53,21 @@ class BalanceTests(unittest.TestCase):
         self.ledger.record(cursor_client.quota_snapshot(cursor_quota()), initialize=True)
         self.assertTrue(balance.configure(self.ledger, True, services=services)['allowed'])
 
-    def test_current_model_domain_at_reserve_and_start(self):
+    def test_supervised_worker_domain_at_reserve_and_start(self):
         self.add_auto_services()
         self.seed('claude', 8)
         self.seed('codex', 8)
         state = balance.status(self.ledger)
         self.assertEqual(state['drift_status'], 'above_tolerance')
         self.assertTrue(state['allowed'])
-        self.assertEqual(state['automatic_selection']['explicit_only_services'], ['copilot', 'cursor'])
+        self.assertEqual(state['automatic_selection']['explicit_only_services'], [])
+        self.assertEqual(state['automatic_selection']['supervised_auto_services'], ['copilot', 'cursor'])
         for n, provider in enumerate(({}, {'provider': 'auto'}, {'provider': 'native'})):
             result = balance.reserve(self.ledger, self.request(str(n), **provider))
             self.assertTrue(result['allowed'], result)
-            self.assertIn(result['service'], ['claude', 'codex'])
+            self.assertIn(result['service'], ['claude', 'codex', 'copilot', 'cursor'])
             decision = result['job']['decision']
-            self.assertEqual(decision['eligible_services'], ['claude', 'codex'])
+            self.assertEqual(decision['eligible_services'], ['claude', 'codex', 'copilot', 'cursor'])
             started = balance.start(self.ledger, str(n))
             self.assertTrue(started['allowed'], started)
             self.assertEqual(started['job']['start_admission']['minimum_progress'], decision['minimum_progress'])
@@ -77,30 +78,16 @@ class BalanceTests(unittest.TestCase):
         self.assertEqual(len(explicit['job']['decision']['eligible_services']), 4)
         self.assertTrue(balance.start(self.ledger, 'explicit')['allowed'])
 
-    def test_no_current_model_busy_and_legacy_auto_reservations(self):
+    def test_auto_clients_rotate_and_remain_bounded(self):
         self.add_auto_services(['copilot', 'cursor'])
-        self.assertEqual(balance.reserve(self.ledger, self.request())['status'], 'current_model_selection_required')
-        self.assertEqual(balance.status(self.ledger)['jobs'], [])
-        for provider in (None, 'auto', 'native'):
-            task = 'legacy-' + str(provider)
-            balance.reserve(self.ledger, self.request(task, provider='copilot'))
-            with self.ledger._connect() as db:
-                job = json.loads(db.execute('SELECT value FROM balance_jobs WHERE id=?', (task,)).fetchone()[0])
-                job.pop('provider')
-                if provider is not None:
-                    job['provider'] = provider
-                db.execute('UPDATE balance_jobs SET value=? WHERE id=?', (json.dumps(job), task))
-            denied = balance.start(self.ledger, task)
-            self.assertEqual(denied['reasons'], ['current_model_selection_required'])
-            self.assertEqual(denied['job']['status'], 'denied')
-            self.assertFalse(balance.start(self.ledger, task)['dispatch_required'])
-        explicit = balance.reserve(self.ledger, self.request('explicit', provider='copilot'))
-        self.assertTrue(explicit['allowed'], explicit)
-        self.assertTrue(balance.start(self.ledger, 'explicit')['allowed'])
-        self.add_auto_services()
-        balance.reserve(self.ledger, self.request('native-1'))
-        balance.reserve(self.ledger, self.request('native-2'))
-        self.assertEqual(balance.reserve(self.ledger, self.request('native-3'))['status'], 'busy')
+        first = balance.reserve(self.ledger, self.request('first'))
+        second = balance.reserve(self.ledger, self.request('second', provider='native'))
+        self.assertEqual({first['service'], second['service']}, {'copilot', 'cursor'})
+        self.assertTrue(balance.start(self.ledger, 'first')['allowed'])
+        self.assertTrue(balance.start(self.ledger, 'second')['allowed'])
+        self.assertEqual(balance.reserve(self.ledger, self.request('third'))['status'], 'busy')
+        balance.finish(self.ledger, 'first', 'completed')
+        self.assertTrue(balance.reserve(self.ledger, self.request('third'))['allowed'])
 
     def test_explicit_only_stops_remain_global_and_explicit_lead_is_preserved(self):
         self.add_auto_services()
@@ -113,6 +100,15 @@ class BalanceTests(unittest.TestCase):
         self.assertFalse(stopped['allowed'])
         self.assertTrue(any('copilot:quota_denied:' in r for r in stopped['reasons']), stopped)
         self.assertEqual(balance.status(self.ledger)['jobs'], [])
+
+    def test_authentication_history_does_not_invalidate_quota_snapshot(self):
+        with self.ledger._connect() as db:
+            before = balance._snapshot(db)
+            db.execute("INSERT INTO state VALUES ('auth_history_v1', ?)", (json.dumps({'claude': time.time()}),))
+            self.assertEqual(balance._snapshot(db), before)
+            self.assertNotIn('auth_history_v1', balance._snapshot(db, settings=True))
+        self.assertTrue(balance.reserve(self.ledger, self.request())['allowed'])
+        self.assertTrue(balance.start(self.ledger, 'task')['allowed'])
 
     def test_zero_rotation_and_lifecycle(self):
         services = []

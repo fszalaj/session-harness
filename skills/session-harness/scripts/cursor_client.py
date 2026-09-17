@@ -64,7 +64,7 @@ def discover(executable, offline=False):
         raise harness.HarnessError('auth_required', 'Sign in with agent login.')
     raw = harness.checked([executable, 'models'], timeout=15, env=inventory.child_env())
     names = dict(re.findall(r'^([a-z0-9][a-z0-9._/-]+) - (.+)$', raw, re.M))
-    names = {key: re.sub(r'(?: \((?:default|current)\))+$', '', value) for key, value in names.items()}
+    names = {key: re.sub(r'(?: \((?:default|current)(?:, (?:default|current))*\))+$', '', value) for key, value in names.items()}
     if 'auto' not in names:
         raise harness.HarnessError('model_unavailable', 'Cursor does not advertise the Free plan Auto route.')
     selected = 'auto'

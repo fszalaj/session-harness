@@ -68,7 +68,8 @@ selected model because Markdown cannot switch an already-running model. Do not
 claim maximum-model execution if the client could not select it.
 Copilot and Cursor Auto do not verify a strongest model before execution; record that
 selection limit and use its bounded text worker only as supervised output.
-Automatic native work excludes these Auto routes; select their provider explicitly.
+Automatic native work can select these configured Auto routes as supervised text
+workers. Inspect their output; they never satisfy independent review.
 
 Complete `ai-session setup` with the owner before inference; it names the native
 and API services allowed to run, and an agent never finishes it with `--yes`.

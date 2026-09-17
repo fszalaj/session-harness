@@ -116,8 +116,9 @@ provider guidance when capability or successor relationships remain uncertain.
   or across vendors. An alias alone does not prove current-generation eligibility:
   check its resolved model against available successors before assigning a worker.
 - Default to the newest available generation within each family. Opaque platform
-  Auto is an explicit exception, never evidence of a current model. Automatic native
-  `work` uses Codex, Claude or Antigravity; Copilot/Cursor requires an explicit provider.
+  Auto is never evidence of a current model. Automatic native `work` includes
+  configured Copilot/Cursor Auto only as supervised text workers; their output
+  requires manager inspection and cannot satisfy independent review.
 - Prefer a cheaper **current-generation** model for bounded work. If none exists,
   use the current flagship at medium effort instead of an older cheap model.
 - At each native leaf dispatch, pass both the current catalog-selected model and

@@ -4,9 +4,9 @@ Use the commands supplied by your selected release. Inspect the client separatel
 from the model provider and the account that pays for execution. Inventory
 `execution_supported` identifies an implemented adapter; `execution_admission`
 remains `not_checked` until a protected command verifies the account and quota.
-Since v0.3.1, automatic native work selects a current model through Codex, Claude
-or Antigravity. Copilot and Cursor Auto are explicit choices using the commands
-below; Auto cannot establish newest-generation selection before execution.
+Automatic native work can select configured Copilot and Cursor Auto workers.
+Their output requires manager inspection; Auto does not establish the strongest
+model or an independent reviewer. Explicit provider requests remain available.
 
 ## Copilot CLI
 

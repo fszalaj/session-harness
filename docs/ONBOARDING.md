@@ -9,8 +9,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.4.4, run
-`ai-session update --version 0.4.4 --apply`, then restart affected clients.
+for an authorized version change. To select v0.5.0, run
+`ai-session update --version 0.5.0 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -245,6 +245,14 @@ Fable and overall weekly limits are separate. Version 0.3.0 checks the actual
 model and can resume on current Opus after a verified Fable-only stop.
 See [model allowances and recovery](../skills/session-harness/references/model-allowances.md)
 for the shared-authority check command and supported interactive launch controls.
+
+### Sign-in recovery
+
+Run `ai-session auth status` after setup and when starting a direct app session.
+For a signed-out native client, use `ai-session auth login PROVIDER` in a terminal.
+Managed interactive launches offer this action themselves. Free-account pages can
+be opened by the same explicit command, but allowance evidence must be verified
+separately. Unknown status is not proof of logout or permission to infer.
 
 ## 6. Integrate the project and knowledge layer
 

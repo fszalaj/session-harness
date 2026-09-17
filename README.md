@@ -27,7 +27,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.4.4 --apply`, then
+To select this release, run `ai-session update --version 0.5.0 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -129,7 +129,7 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.4.4 |
+| Client or route | Harness support in v0.5.0 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
 | Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |
@@ -150,12 +150,25 @@ credit metadata could not establish paid-use disablement.
 Check the [capability guide](docs/PROVIDER-VALIDATION.md) and [release guide](docs/RELEASES.md)
 for your selected version before relying on either feature.
 
+## Restore sign-in
+
+`ai-session auth status` checks configured native clients without inference and
+reports lost sign-in using private local history. Managed interactive launches show
+the report and offer `ai-session auth login PROVIDER`, which starts the native
+browser/device flow with a ten-minute deadline. Direct app sessions use the same
+status command from their startup instructions. Unknown metadata is not a logout.
+
+For configured free providers, the login action opens a fixed account page.
+Browser sign-in and free-plan evidence still require verification; opening the page
+does not renew a plan, quota, key or evidence timestamp. Shared account administrators
+retain control of sign-in. No billing settings are enabled.
+
 ## Balance subscriptions
 
-Version 0.3.1 defaults automatic native work to Codex, Claude or Antigravity,
-whose adapters select a current model. Copilot and Cursor Auto require an explicit
-`--provider copilot` or `--provider cursor` request; their Auto selection does not
-verify the newest model generation. All configured services still undergo quota checks.
+Automatic native work includes every configured native worker service, including
+Copilot and Cursor Auto. These two routes produce supervised text and do not verify
+the newest model generation or provide independent review. All configured services
+still undergo quota checks.
 A short manager session can distribute bounded text work independently of its model
 family while respecting every provider's daily quota and paid-use guards. Use these commands after installing version 0.3.1:
 

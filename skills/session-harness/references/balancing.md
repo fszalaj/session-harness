@@ -53,21 +53,16 @@ refresh, quota denial or policy change still stops dispatch. The final snapshot
 comparison remains mandatory; this mitigates the sequential-refresh race rather
 than promising an atomic multi-provider backend snapshot.
 
-Since v0.3.1, automatic native requests (`auto`, including an omitted provider)
-rank only Codex, Claude and Antigravity, whose adapters resolve a current worker
-model. Copilot and Cursor Auto require an explicit provider request. All configured
-services still participate in quota/evidence admission; an excluded Auto route with
-a genuine stop still pauses the batch. No service or accounting history is removed.
+Automatic native requests (`auto`, including an omitted provider) rank all
+configured native worker services. Copilot and Cursor Auto are supervised text
+workers, not evidence of a current model or an independent verdict. Every configured
+service still participates in quota/evidence admission; genuine stops pause the batch.
 
 Status reports `automatic_selection`; reservation `decision` and `start_admission`
-record the mode, eligible services, explicit-only services and minimum progress.
-Automatic lead checks use that eligible domain at both reserve and start. Explicit
-provider requests retain the all-participant lead check. All-participant drift stays
-informational and may exceed the tolerance while automatic work remains admitted.
-No eligible automatic service returns `current_model_selection_required`; busy
-eligible services return `busy`. Legacy reserved automatic Auto jobs become denied
-at start, freeing their slot atomically while retaining history. Running jobs and
-repeated IDs never redispatch. Missing saved provider intent means automatic.
+record mode `supervised_worker`, eligible services, `supervised_auto_services`, and
+minimum progress. Reserve and start both enforce the same lead domain. Busy eligible
+services return `busy`. Running jobs and repeated IDs never redispatch; missing saved
+provider intent means automatic. Accounting history is retained.
 
 The next useful chunk comes from eligible services within the configured lead of the least
 consumed fraction. Within that band, choose the fewest recorded dispatches today,
@@ -77,7 +72,8 @@ is a concurrency slot, never an invented quota debit. Manager, native workers an
 reviews affect future choices through aggregate account counters even when they
 are absent from the work journal.
 
-`work` selects a current model at supported worker effort and runs one text-only
+`work` selects a current model at supported worker effort where the client exposes
+those controls, or supervised Auto on Copilot/Cursor, and runs one text-only
 leaf through the existing restricted native adapter. Supply the complete task and
 relevant source excerpts, at most 8 KiB. It can draft text, propose a patch or analyze
 test cases; the manager inspects and applies its result. The worker cannot execute
@@ -162,8 +158,8 @@ constraints and the platform's available allowance answer different questions.
 
 Current selection resolves the supported native worker from the account catalog
 after choosing its billing service by quota fraction. It does not rank every model
-in Copilot or Cursor for implementation/review. Their explicitly selected Auto routes produce supervised
-text; automatic native routing excludes them. Copilot reports the routed model; Cursor currently exposes only Auto. OpenRouter requests require
+in Copilot or Cursor for implementation/review. Their Auto routes produce supervised
+text and can participate in automatic native routing. Copilot reports the routed model; Cursor currently exposes only Auto. OpenRouter requests require
 an explicit model and monetary admission; they do not participate in native balancing.
 The native model/role configuration above does not claim enforcement in those
 unsupported role adapters. Adding a platform requires verified quota/billing units,

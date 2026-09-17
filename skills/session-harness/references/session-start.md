@@ -10,10 +10,19 @@ this procedure adds no inference, background polling or new account authorizatio
    compare the installed profile and any project copy. Use the selected release's
    help and references. A project copy can differ from the global installation.
    Preserve existing update opt-ins; update only within authorized maintenance.
-2. Identify the actual hosting client from native session controls. Read
+2. Run `ai-session auth status`. It checks configured native sign-in without inference,
+   records previous successful sign-in privately on this machine, and distinguishes
+   `lost_login`, `signed_out`, `unverified` and `missing_cli`. Offer the returned
+   `ai-session auth login PROVIDER` action when sign-in is missing. That command
+   invokes the native browser/device flow in a terminal; it never enables billing.
+   Free-account evidence expiry is `account_verification_required`, not logout.
+   Its explicit login action opens the account page; it does not renew evidence.
+   Managed interactive launches show this report and offer native sign-in. Direct
+   app sessions must run this command themselves; Markdown cannot intercept startup.
+3. Identify the actual hosting client from native session controls. Read
    `ai-session configure --status`, `ai-session coordination status` and
    `ai-session budget`. Keep configured services, authority, reserves and role policy.
-3. Run `ai-session discover --session CLIENT` with the actual supported client and
+4. Run `ai-session discover --session CLIENT` with the actual supported client and
    `ai-session inventory`. Inspect each configured candidate through its implemented
    adapter. Distinguish detected software, public catalog, account-selectable model,
    supported execution, supported roles and current admission. None implies the next.
@@ -22,11 +31,11 @@ this procedure adds no inference, background polling or new account authorizatio
    SSH can correctly return unknown; conflicting markers return ambiguous. Confirm
    the real client before passing an explicit `--session CLIENT`; that value is an
    operator declaration, not an independent detection result.
-4. Read `ai-session balance status` for configured participants, model-role
+5. Read `ai-session balance status` for configured participants, model-role
    restrictions and automatic selection eligibility. Its native quota refreshes can
    update observations and native authentication caches; they do not submit prompts
    or change authorization. Missing or denied evidence remains a stop.
-5. Include registered API/free routes in the capability inventory. For an explicitly
+6. Include registered API/free routes in the capability inventory. For an explicitly
    configured API, use `ai-session api models SERVICE` and `ai-session spend status`
    on its authority; for a configured free route, use `ai-session free status` and
    its catalog command from `ai-session free --help`. Use the current route reference.
@@ -34,7 +43,7 @@ this procedure adds no inference, background polling or new account authorizatio
    A public catalog or saved key is not authorization. Do not dump credentials,
    enable billing, or discover unrelated accounts. Local models have their own
    explicit catalog and residency checks (`ai-session ollama models`).
-6. Check project skills and knowledge access from the actual checkout. Use its
+7. Check project skills and knowledge access from the actual checkout. Use its
    configured wiki/MCP and code graph. A global skill link does not prove that a
    project vault exists or that every client can connect. Text-only workers receive
    bounded excerpts from the manager when their adapter forbids tools.

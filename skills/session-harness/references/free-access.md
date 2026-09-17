@@ -145,3 +145,14 @@ and [OpenRouter limits](https://openrouter.ai/docs/api_reference/limits).
 Live acceptance should perform one bounded useful task per eligible account and
 verify model, usage and shared accounting from both hosts. A unit test or catalog
 response does not prove account entitlement or a live successful request.
+
+## Expired account evidence
+
+In the multi-account executor, an account whose only denial is expired free-plan
+evidence is reported and excluded from automatic selection. Other verified accounts
+remain eligible. Quota, credit, unresolved-request and account-binding denials still
+stop the group, including when combined with expiry. Explicit requests never switch
+providers; all-expired groups remain blocked. Expiry does not erase reservations,
+renew credits or extend evidence. `ai-session auth status` reports accounts needing
+verification; `ai-session auth login PROVIDER` opens the configured provider's account
+page in an interactive terminal. Verify the plan before updating private evidence.
