@@ -73,6 +73,10 @@ class AuthenticationTests(unittest.TestCase):
             auth.startup(self.ledger)
         execute.assert_not_called()
 
+    def test_optional_free_configuration_without_home_is_unverified(self):
+        with patch('builtins.__import__', side_effect=RuntimeError('Could not determine home directory.')):
+            self.assertEqual(auth.free_status(), {'configuration': {'status': 'unverified'}})
+
     def test_expired_plan_is_not_a_logout_and_browser_requires_explicit_tty(self):
         config = {'enabled': True, 'authority': 'local', 'accounts': {
             'groq': {'enabled': True, 'evidence': {'expires_at': 1}}}}

@@ -109,8 +109,8 @@ def status(ledger=None):
 
 
 def free_status():
-    import free_access
     try:
+        import free_access
         config = free_access.load_config(optional=True)
         if not config or not config['enabled']:
             return {}
@@ -122,7 +122,7 @@ def free_status():
                     else 'login_unverified', 'action': ['ai-session', 'auth', 'login', p],
                     'account_page': ACCOUNT_PAGES[p]}
                 for p, row in accounts.items() if row['enabled']}
-    except (OSError, ValueError, KeyError):
+    except (OSError, ValueError, KeyError, RuntimeError):
         return {'configuration': {'status': 'unverified'}}
 
 
