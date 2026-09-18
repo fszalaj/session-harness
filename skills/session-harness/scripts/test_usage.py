@@ -131,6 +131,123 @@ class UsageTests(unittest.TestCase):
         self.assertNotIn("private", json.dumps(data))
         self.assertEqual(data["pools"][0]["window_source"], "codex.windowDurationMins")
 
+    def test_explicit_pool_retirement_preserves_history_and_reactivates(self):
+        ledger = Ledger()
+        ledger.set_mode("observed")
+        ledger.budget_defaults(strategy="fixed", reserve=0, now=0)
+        def snap(ts, extra=True, used=10, complete=True):
+            rows = {"main": {"primary": {"usedPercent": used, "windowDurationMins": 10080, "resetsAt": 99999}}}
+            if extra:
+                rows["optional"] = {"primary": {"usedPercent": used, "windowDurationMins": 300, "resetsAt": 99999}}
+            result = usage.codex_snapshot({"rateLimitsByLimitId": rows}, now=ts)
+            result["complete"] = complete
+            return result
+        ledger.record(snap(1000), now=1000, initialize=True)
+        ledger.record(snap(1001, used=12), now=1001)
+        ledger.record(snap(1002, extra=False, used=13), now=1002)
+        self.assertIn("incomplete_pools", ledger.check("codex", now=1002)["reasons"])
+        with ledger._connect() as db:
+            before = ledger._service(db, "codex")
+        for names, confirmed, now in [(["optional:primary"], False, 1002),
+                                      (["main:primary"], True, 1002),
+                                      (["optional:primary"], True, 1200),
+                                      (["missing"], True, 1002)]:
+            with self.assertRaises(ValueError):
+                ledger.retire_missing_codex_pools(names, confirmed=confirmed, now=now)
+        ledger.retire_missing_codex_pools(["optional:primary"], confirmed=True, now=1002)
+        with ledger._connect() as db:
+            after = ledger._service(db, "codex")
+        self.assertEqual(before["days"], after["days"])
+        self.assertEqual(before["resets"], after["resets"])
+        self.assertEqual(before["pools"]["optional:primary"], after["retired_pools"]["optional:primary"])
+        self.assertEqual(after["missing_pools"], [])
+        with patch("credits.native_reasons", return_value=[]):
+            self.assertTrue(ledger.check("codex", now=1002)["allowed"])
+        ledger.record(snap(1003, extra=False, used=14), now=1003)
+        self.assertNotIn("incomplete_pools", ledger.check("codex", now=1003)["reasons"])
+        ledger.record(snap(1004, used=35), now=1004)
+        result = ledger.check("codex", now=1004)
+        optional = next(p for p in result["pools"] if p["pool"] == "optional:primary")
+        self.assertEqual(optional["daily_consumed"], 25)
+        self.assertIn("optional:primary:daily_limit", result["reasons"])
+        self.assertFalse(result["allowed"])
+        with ledger._connect() as db:
+            self.assertEqual(ledger._service(db, "codex")["retired_pools"], {})
+
+    def test_reconcile_cli_and_cross_day_reset(self):
+        ledger = Ledger()
+        ledger.set_mode("observed")
+        ledger.budget_defaults(strategy="fixed", reserve=0, now=0)
+        def snap(ts, names, used, reset):
+            result = usage.snapshot("codex", [dict(pool=n, used_percent=used, resets_at=reset)
+                                             for n in names], "codex.account/rateLimits/read", now=ts)
+            return result
+        ledger.record(snap(1000, ["main", "optional"], 10, 90000), now=1000, initialize=True)
+        ledger.record(snap(1001, ["main", "optional"], 15, 90000), now=1001)
+        clock = iter([1002, 1003])
+        def refresh(*args, **kwargs):
+            ts = next(clock)
+            return kwargs["ledger"].record(snap(ts, ["main"], 16, 90000), now=ts)
+        with patch("usage._refresh", side_effect=refresh), patch("quota.time.time", return_value=1002):
+            code, result = self.command("reconcile-pools", "codex", "--retire-pool", "optional", "--confirm-retired")
+        self.assertEqual(code, 0)
+        self.assertEqual(result["retired_pools"], ["optional"])
+        ledger.record(snap(91000, ["main", "optional"], 3, 190000), now=91000)
+        result = ledger.check("codex", now=91000)
+        optional = next(p for p in result["pools"] if p["pool"] == "optional")
+        self.assertEqual(optional["daily_consumed"], 3)
+        self.assertTrue(optional["history_partial"])
+        with ledger._connect() as db:
+            state = ledger._service(db, "codex")
+            self.assertEqual(state["days"][ledger._day(1000)]["optional"]["consumed"], 5)
+        self.assertTrue(any(r["pool"] == "optional" and r["usage_drop"] for r in result["reset_history"]))
+
+    def test_retirement_rejects_remote_authority_and_failed_refresh(self):
+        ledger = Ledger()
+        coordination.configure(ledger, authority="quota.example.test")
+        args = ("reconcile-pools", "codex", "--retire-pool", "optional:primary", "--confirm-retired")
+        with patch("usage._refresh") as refresh:
+            self.assertEqual(self.command(*args)[0], 2)
+            refresh.assert_not_called()
+        coordination.configure(ledger, authority="local")
+        with patch("usage._refresh", side_effect=ValueError("unavailable")), \
+                patch.object(Ledger, "retire_missing_codex_pools") as retire:
+            self.assertEqual(self.command(*args)[0], 2)
+            retire.assert_not_called()
+
+    def test_malformed_native_refresh_and_post_retirement_failure(self):
+        class RPC:
+            def request(self, method, params):
+                return {"rateLimitsByLimitId": []} if method == "account/rateLimits/read" else {}
+            def notify(self, *args): pass
+            def close(self): pass
+        with patch("usage.shutil.which", return_value="codex"), patch("harness.CodexRPC", return_value=RPC()):
+            code, result = self.command("refresh", "codex")
+            self.assertEqual((code, result["error"]), (2, "ValueError"))
+        ledger = Ledger()
+        ledger.record(usage.snapshot("codex", [dict(pool="main", used_percent=1, resets_at=9999),
+                      dict(pool="optional", used_percent=1, resets_at=9999)],
+                      "codex.account/rateLimits/read", now=1000), now=1000)
+        calls = []
+        def refresh(*args, **kwargs):
+            calls.append(1)
+            if len(calls) == 2:
+                raise ValueError("post-refresh failed")
+            return kwargs["ledger"].record(usage.snapshot("codex", [dict(pool="main", used_percent=2,
+                resets_at=9999)], "codex.account/rateLimits/read", now=1001), now=1001)
+        with patch("usage._refresh", side_effect=refresh), patch("quota.time.time", return_value=1001):
+            code, result = self.command("reconcile-pools", "codex", "--retire-pool", "optional", "--confirm-retired")
+        self.assertEqual(code, 2)
+        with ledger._connect() as db:
+            self.assertIn("optional", ledger._service(db, "codex")["retired_pools"])
+
+    def test_malformed_codex_map_cannot_authorize_reconciliation(self):
+        legacy = {"primary": {"usedPercent": 5, "windowDurationMins": 300, "resetsAt": 9999}}
+        for rows in ({}, {"main": legacy, "broken": {}}, {"main": legacy, "broken": None}):
+            self.assertFalse(usage.codex_snapshot({"rateLimitsByLimitId": rows, "rateLimits": legacy})["complete"])
+        with self.assertRaises(ValueError):
+            usage.codex_snapshot({"rateLimitsByLimitId": [], "rateLimits": legacy})
+
     def test_unsupported_refresh_cannot_admit_manually_recorded_evidence(self):
         with tempfile.TemporaryDirectory() as directory:
             ledger = Ledger(Path(directory) / "quota.db")

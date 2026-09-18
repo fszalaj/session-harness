@@ -9,8 +9,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.5.0, run
-`ai-session update --version 0.5.0 --apply`, then restart affected clients.
+for an authorized version change. To select v0.5.1, run
+`ai-session update --version 0.5.1 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -382,3 +382,10 @@ When vendoring the harness, copy its root `LICENSE` and `NOTICE` into the
 vendored skill directory. The installer includes both files with the shared
 profile and installed skill. Preserve these Apache 2.0 licensing files in
 maintained source copies.
+
+### Missing historical Codex pools
+
+If fresh admission reports a pool that the provider no longer supplies, use the
+[explicit reconciliation procedure](RELEASES.md#codex-reports-missing-historical-pools)
+on the configured authority. Never rerun setup, reset accounting or enable billing
+to clear missing evidence. Reconciliation requires runtime 0.5.1 or newer on consumers.

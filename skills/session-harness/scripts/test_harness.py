@@ -24,6 +24,29 @@ def model(ident, rank=0, description="", efforts=None):
 
 
 class LegacyLauncherTests(unittest.TestCase):
+    def test_cli_discovery_catches_adapter_error_from_imported_harness(self):
+        code = """
+import runpy, sys, types
+import platform_runtime
+platform_runtime.which = lambda name: '/synthetic/cursor-agent' if name == 'cursor-agent' else None
+adapter = types.ModuleType('cursor_client')
+def discover(*args):
+    import harness
+    raise harness.HarnessError('quota_exhausted', 'Synthetic quota stop')
+adapter.discover = discover
+sys.modules['cursor_client'] = adapter
+sys.argv = ['harness.py', 'discover', '--session', 'codex']
+runpy.run_path(sys.argv[0], run_name='__main__')
+"""
+        env = os.environ.copy()
+        env.pop(harness.LEAF_MARKER, None)
+        result = subprocess.run([sys.executable, '-c', code], cwd=Path(harness.__file__).parent,
+                                env=env, capture_output=True, text=True, timeout=15)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        data = json.loads(result.stdout)
+        self.assertEqual(data['providers']['cursor']['status'], 'quota_exhausted')
+        self.assertEqual(data['providers']['codex']['status'], 'missing_cli')
+
     def test_legacy_commands_preserve_arguments(self):
         for command in ('balance', 'work', 'audit'):
             with self.subTest(command=command), patch('balance_cli.main', return_value=7) as handler:
