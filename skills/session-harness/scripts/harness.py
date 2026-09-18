@@ -17,6 +17,9 @@ import tempfile
 import threading
 import time
 
+if __name__ == "__main__":
+    sys.modules["harness"] = sys.modules[__name__]
+
 import supervision
 import platform_runtime
 import balance_cli

@@ -32,15 +32,19 @@ def snapshot(service, pools, source, complete=True, now=None):
 
 def codex_snapshot(payload, now=None):
     rows = payload.get("rateLimitsByLimitId")
-    if not isinstance(rows, dict) or not rows:
+    if rows is None:
         primary = payload.get("rateLimits")
         rows = {primary.get("limitId", "default"): primary} if isinstance(primary, dict) else {}
+    if not isinstance(rows, dict):
+        raise ValueError("Invalid Codex limit map")
     pools = []
     complete = bool(rows)
     for key, row in rows.items():
         if not isinstance(row, dict):
             complete = False
             continue
+        if not any(row.get(name) is not None for name in ("primary", "secondary")):
+            complete = False
         for name in ("primary", "secondary"):
             window = row.get(name)
             if window is None:
@@ -231,7 +235,9 @@ def require_admission(service, *, ledger=None, models=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("refresh", "status", "check", "capture", "context", "hook", "credit-policy"))
+    parser.add_argument("action", choices=("refresh", "status", "check", "capture", "context", "hook", "credit-policy", "reconcile-pools"))
+    parser.add_argument("--retire-pool", action="append", default=[])
+    parser.add_argument("--confirm-retired", action="store_true")
     parser.add_argument("service", nargs="?", choices=("codex", "claude", "antigravity", "copilot", "cursor"))
     parser.add_argument("--initialize", action="store_true", help="Explicit prospective first baseline; prior daily use stays unknown")
     parser.add_argument("--model", help="Concrete Claude model for a scoped check or status")
@@ -244,6 +250,11 @@ def main(argv=None):
     args = parser.parse_args(argv)
     raw = None
     try:
+        if args.action == "reconcile-pools":
+            if args.service != "codex" or not args.retire_pool or not args.confirm_retired or args.initialize or args.model:
+                parser.error("reconcile-pools requires codex, explicit --retire-pool names and --confirm-retired")
+        elif args.retire_pool or args.confirm_retired:
+            parser.error("pool retirement options require reconcile-pools")
         if args.model and (args.service != "claude" or args.action not in {"check", "status"}):
             parser.error("--model requires Claude check or status")
         if args.action == "credit-policy":
@@ -267,7 +278,18 @@ def main(argv=None):
             if not args.service:
                 parser.error("service is required")
             ledger = Ledger(args.db, timezone=args.timezone)
-            if args.action == "refresh":
+            if args.action == "reconcile-pools":
+                import coordination
+                with ledger._connect() as db:
+                    if coordination._settings(db)["authority"] != "local":
+                        raise ValueError("run reconciliation on the configured authority")
+                from quota_refresh import serialized
+                with serialized(ledger, args.service):
+                    _refresh(args.service, ledger=ledger)
+                    result = ledger.retire_missing_codex_pools(args.retire_pool, confirmed=True)
+                    result = _refresh(args.service, ledger=ledger)
+                result["retired_pools"] = args.retire_pool
+            elif args.action == "refresh":
                 result = refresh(args.service, ledger=ledger, initialize=args.initialize)
             elif args.action == "capture":
                 result = ledger.record(client_snapshot(args.service, payload), initialize=args.initialize)

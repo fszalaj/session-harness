@@ -362,7 +362,10 @@ class Ledger:
                         or type(entry["unknown"]) is not bool
                         or type(entry["history_partial"]) is not bool):
                     raise ValueError("invalid stored accounting")
-        for pool, value in state["pools"].items():
+        archived = state.get("retired_pools", {})
+        if not isinstance(archived, dict) or set(archived) & set(state["pools"]):
+            raise ValueError("invalid retired pools")
+        for pool, value in {**archived, **state["pools"]}.items():
             budgets.label(pool, "stored pool")
             observed = number(value["observed_at"], "stored pool observation")
             state["days"][self._day(observed)][pool]
@@ -441,6 +444,8 @@ class Ledger:
             daily = state["days"].setdefault(day, {})
             for pool, current in clean.items():
                 old = state["pools"].get(pool)
+                if old is None:
+                    old = state.get("retired_pools", {}).pop(pool, None)
                 entry = daily.setdefault(pool, {"consumed": 0.0, "unknown": False,
                                                 "history_partial": old is None})
                 if old is None:
@@ -472,6 +477,32 @@ class Ledger:
             self._save_budgets(db, config)
             db.execute("INSERT OR REPLACE INTO state VALUES (?, ?)", (key, json.dumps(state)))
         return self.check(service, now=now)
+
+    def retire_missing_codex_pools(self, pools, *, confirmed=False, now=None):
+        """Explicitly archive absent pools without discarding their accounting."""
+        now = number(time.time() if now is None else now, "now")
+        if confirmed is not True or not pools or len(set(pools)) != len(pools):
+            raise ValueError("explicit confirmation and distinct pool names required")
+        with self._connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            state = self._service(db, "codex")
+            if (not state or state["source"] != "codex.account/rateLimits/read"
+                    or not state["complete"] or self._day(state["observed_at"]) != self._day(now)
+                    or not 0 <= now - state["observed_at"] <= self.policy["max_age"]
+                    or not set(pools).issubset(state["missing_pools"])):
+                raise ValueError("fresh native observation and absent pool names required")
+            retained = {k: v for k, v in state["pools"].items() if k not in state["missing_pools"]}
+            if not retained or any(not 0 <= now - v["observed_at"] <= self.policy["max_age"]
+                                   for v in retained.values()):
+                raise ValueError("fresh remaining pools required")
+            archived = state.setdefault("retired_pools", {})
+            for pool in pools:
+                archived[pool] = state["pools"].pop(pool)
+            state["missing_pools"] = sorted(set(state["missing_pools"]) - set(pools))
+            state.setdefault("pool_reconciliations", []).append(
+                dict(at=now, observed_at=state["observed_at"], retired=sorted(pools)))
+            db.execute("INSERT OR REPLACE INTO state VALUES ('service:codex', ?)", (json.dumps(state),))
+        return self.check("codex", now=now)
 
     def check(self, service, *, now=None, strict=None, models=None):
         """Observed-threshold admission is separate from strict (unsupported) admission."""

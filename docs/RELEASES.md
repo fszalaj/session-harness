@@ -5,6 +5,23 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.5.1
+
+Add explicit Codex missing-pool reconciliation on the account authority, preserving
+all consumption and policy. Disappearing pools still fail closed until the owner
+verifies and names them; reappearing pools resume accounting from their archived
+observation. Empty nonnull limit maps and malformed rows are now explicitly
+incomplete rather than silently falling back to a legacy response.
+
+CLI discovery now catches errors from adapters importing the running harness,
+so one provider's quota/metadata failure does not crash the entire inventory.
+The failed provider remains unavailable; no fallback or admission guard is changed.
+
+Upgrade with `ai-session update --version 0.5.1 --apply` on every consumer and
+restart clients. Reconciliation is optional and is never run by the installer.
+After reconciling, keep 0.5.1 or newer for archived-pool reactivation support; do not
+restore accounting to downgrade. See the [recovery procedure](#codex-reports-missing-historical-pools).
+
 ## 0.5.0
 
 Automatic native work now includes configured Copilot and Cursor Auto routes as
@@ -162,7 +179,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.5.0, use `ai-session update --version 0.5.0 --apply`, then restart affected
+For v0.5.1, use `ai-session update --version 0.5.1 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.
@@ -217,6 +234,37 @@ Claude hook installation is separate and idempotent; review and apply a hook ref
 when release notes require it. Updates do not rewrite unrelated settings or hooks.
 
 ## Recovery
+
+## Codex reports missing historical pools
+
+A pool disappearing from a quota response still blocks admission. First inspect
+`ai-session usage check codex` and verify that the named pool is no longer applicable;
+a partial outage or missing telemetry is not permission to retire it. Back up the
+ledger with SQLite's backup API before changing accounting metadata.
+
+On the configured **account authority**, explicitly reconcile only those names:
+
+```sh
+ai-session usage reconcile-pools codex --retire-pool 'optional:primary' --confirm-retired
+ai-session usage check codex
+```
+
+Repeat `--retire-pool` for each verified obsolete pool. Remote clients refuse local
+reconciliation; run the command on their authority. A fresh, complete native read is
+required. Empty or malformed quota maps and partial rows remain blocked, including
+during reconciliation. Legacy responses without a limit map remain supported.
+
+Reconciliation archives the last observations without deleting daily consumption,
+reset history, budget anchors, grants or policy. A reappearing pool resumes accounting
+from its archived observation and again participates in all limits. This command
+neither grants quota nor changes strict/observed mode or paid-usage settings.
+
+A failed final refresh can leave an already committed retirement. Inspect
+`ai-session usage status codex`, then retry `ai-session usage check codex`; do not
+blindly repeat retirement. A midnight boundary can require another fresh attempt.
+Keep runtime 0.5.1 or newer after reconciliation: older versions do not understand
+reactivating archived observations. Never restore an old ledger to roll back code.
+
 
 ### Claude reports account_session_busy
 
