@@ -67,6 +67,12 @@ for receipt fields, checkpoint reuse and matched-task comparisons.
 
 ## Configure and run
 
+Development builds include [Jev decisions through OpenRouter](skills/session-harness/references/decisions.md).
+Prefer an authorized, available Jev route for classification, triage, filtering,
+candidate selection and scoring. `api decision-models` discovers the current catalog;
+`api decide openrouter` submits typed questions through existing money controls.
+This feature is not in unmodified 0.5.1 and does not replace coding models or reviewers.
+
 Add one provider with the [interactive provider wizard](skills/session-harness/references/provider-onboarding.md):
 
 ```sh

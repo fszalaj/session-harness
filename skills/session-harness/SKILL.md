@@ -44,6 +44,9 @@ Load only the procedure needed for the selected operation:
   policy changes, shared authority, capacity and exact-owner maintenance/recovery.
 - [API and spend](references/api-and-spend.md): explicit API money authorization,
   cost reservations and native paid-credit eligibility. No automatic paid fallback.
+- [Jev decisions](references/decisions.md): prefer authorized, available Jev for
+  narrow classification, filtering, candidate selection and rubric scoring. Use
+  budgeted `api decide`, never raw paid SDK calls. It is not a manager, writer or reviewer.
 - [Balancing](references/balancing.md): when enabled, route bounded work through
   `ai-session work` using fresh account evidence. When disabled, use native
   same-family workers. Preserve model-role restrictions in either case.

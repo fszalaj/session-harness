@@ -4,6 +4,12 @@ Use the [short onboarding prompt](ONBOARDING-PROMPT.md) to delegate this procedu
 The result should be a working discovery setup, preserved project conventions and
 a clear account of what can actually execute. Installation alone is not acceptance.
 
+For Jev classification and scoring, follow the optional
+[OpenRouter decision setup](../skills/session-harness/references/decisions.md)
+after ordinary installation. It requires a build exposing `api decide`, separate
+API authorization and a monetary cap; it is not in unmodified 0.5.1. Verify a small
+synthetic decision and its billed receipt before declaring the route operational.
+
 ## 1. Select and verify the release
 
 For an existing installation, run `ai-session version` and inspect its recorded

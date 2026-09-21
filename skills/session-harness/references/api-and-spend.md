@@ -60,6 +60,11 @@ charges rounded upward. Status also provides readable decimal amounts.
 | `zai` | `ZAI_API_KEY` | General API only; catalog unavailable, explicit model/rates required |
 | `openrouter` | `OPENROUTER_API_KEY` | Advertised model catalog; response `usage.cost` is billed USD |
 
+Development builds also support [Jev structured decisions](decisions.md) through
+`api decision-models` and `api decide openrouter`. Jev uses the separate OpenRouter
+alpha decision endpoint with the same monetary authority and accounting. It does
+not use chat completions or the coding-model allowlist.
+
 ```sh
 ai-session api models xai
 ai-session api run xai --model ACCOUNT_MODEL --max-output-tokens 1000 --reserve-cost 0.25 < plan.txt

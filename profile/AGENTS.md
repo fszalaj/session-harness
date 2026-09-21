@@ -108,6 +108,16 @@ distinct from money; unsupported paid eligibility cannot authorize inference. Re
 providers accurately. Client-specific setup and reasoning controls belong in the
 skill's references, not duplicated here.
 
+## Structured decisions
+
+For narrow semantic classification, triage, filtering, candidate selection and
+rubric scoring, prefer Jev when the installed harness supports it and the account,
+monetary budget and current model are admitted. Follow the session-harness
+`references/decisions.md` procedure and use budgeted `api decide openrouter`.
+Do not bypass it with raw SDK calls. Keep deterministic logic in code; general
+models handle writing, coding and reasoning. Jev never manages or independently
+reviews work. Uncertainty does not authorize an action or a fallback around stops.
+
 ## Context discipline
 
 Read applicable repository instructions and only relevant skills/references. Use

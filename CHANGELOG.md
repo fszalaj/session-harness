@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Add OpenRouter Jev decisions with dynamic catalog selection, typed input/output
+  validation and existing monetary admission, receipts and unresolved-liability handling.
+- Prefer admitted Jev for suitable classification, triage and scoring tasks; document
+  setup, optional upstream skill, privacy, alpha limitations and rollback.
+- Keep paid routes opt-in and preserve native workers, independent reviews and
+  existing account configuration. No automatic retry, funding or provider fallback.
+
 ## 0.4.4
 
 - Accept validated Claude seven-day product breakdown statistics without changing quota pools, credit eligibility or accounting.

@@ -9,7 +9,7 @@ from spend import SpendLedger, estimate
 
 
 def execute(service, model, prompt, max_output_tokens, reserve_cost, *, request_id=None,
-            ledger=None, effort=None, timeout=120, coding_policy=None):
+            ledger=None, effort=None, timeout=120, coding_policy=None, decision=False):
     if os.environ.get("SESSION_HARNESS_LEAF"):
         return {"status": "recursion_blocked"}
     import api_providers
@@ -19,10 +19,16 @@ def execute(service, model, prompt, max_output_tokens, reserve_cost, *, request_
     if coordination.settings(ledger.ledger)["authority"] != "local":
         raise ValueError("API dispatch must run on the monetary authority machine")
     coding = None
+    if decision and coding_policy is not None:
+        raise ValueError("decisions are not coding requests")
     if coding_policy is not None:
         import coding_models
         coding = coding_models.require_model(service, model, max_output_tokens, coding_policy)
-    prepared = api_providers.preflight(service, model, prompt, max_output_tokens, effort)
+    if decision:
+        import decisions
+        prepared = decisions.preflight(service, model, prompt, max_output_tokens, effort)
+    else:
+        prepared = api_providers.preflight(service, model, prompt, max_output_tokens, effort)
     rates = None
     if service not in {"xai", "openrouter"}:
         rates = ledger.rates(service, model)
@@ -46,8 +52,12 @@ def execute(service, model, prompt, max_output_tokens, reserve_cost, *, request_
             accounting = ledger.unresolved(identifier)
         mismatch = coding is not None and result.get("model") != model
         valid = result.get("output_valid", False) and not mismatch
+        if decision:
+            valid = valid and actual is not None
         return {"status": "model_mismatch" if mismatch else "completed" if valid else "output_rejected", "request_id": identifier,
-                "model": result.get("model"), "text": result.get("text") if valid else None,
+                "model": result.get("model"),
+                **({"answers": result.get("answers") if valid else None, "requested_model": prepared.model}
+                   if decision else {"text": result.get("text") if valid else None}),
                 "accounting": accounting,
                 **({"coding": coding} if coding is not None else {}),
                 "budget_note": "Observed estimates and reservations cannot guarantee an exact provider charge."}
@@ -90,25 +100,32 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="action", required=True)
     models = sub.add_parser("models")
     models.add_argument("service", choices=api_providers.SERVICES)
+    sub.add_parser("decision-models", help="Inspect the public OpenRouter Jev decision catalog")
     coding_models_parser = sub.add_parser("coding-models", help="Intersect reviewed coding models with fresh public metadata")
     coding_models_parser.add_argument("--policy", help="Reviewed JSON policy; defaults to the bundled coding profile")
-    for action in ("run", "coding-run"):
+    for action in ("run", "coding-run", "decide"):
         run = sub.add_parser(action)
-        if action == "run":
-            run.add_argument("service", choices=api_providers.SERVICES)
+        if action in {"run", "decide"}:
+            run.add_argument("service", choices=("openrouter",) if action == "decide" else api_providers.SERVICES)
         else:
             run.set_defaults(service="openrouter")
             run.add_argument("--policy", help="Reviewed JSON coding policy")
-        run.add_argument("--model", required=True)
-        run.add_argument("--max-output-tokens", required=True, type=int)
+        run.add_argument("--model", required=action != "decide")
+        if action == "decide":
+            run.set_defaults(max_output_tokens=None, effort=None)
+        else:
+            run.add_argument("--max-output-tokens", required=True, type=int)
+            run.add_argument("--effort")
         run.add_argument("--reserve-cost", required=True, help="Observed liability allowance, not a provider maximum charge")
         run.add_argument("--id")
-        run.add_argument("--effort")
         run.add_argument("--timeout", type=float, default=120)
     args = parser.parse_args(argv)
     try:
         if args.action == "models":
             result = api_providers.models(args.service)
+        elif args.action == "decision-models":
+            import decisions
+            result = decisions.catalog()
         elif args.action == "coding-models":
             import coding_models
             result = coding_models.catalog(args.policy or coding_models.DEFAULT_POLICY)
@@ -124,9 +141,10 @@ def main(argv=None):
                 policy = args.policy or coding_models.DEFAULT_POLICY
             result = execute(args.service, args.model, artifact.decode("utf-8"), args.max_output_tokens,
                              args.reserve_cost, request_id=args.id, ledger=SpendLedger(args.db),
-                             effort=args.effort, timeout=args.timeout, coding_policy=policy)
+                             effort=args.effort, timeout=args.timeout, coding_policy=policy,
+                             decision=args.action == "decide")
         print(json.dumps(result, indent=2))
-        return 0 if result.get("status") in {"completed", "ok", "available", "catalog_available", "catalog_metadata", "coding_catalog"} else 2
+        return 0 if result.get("status") in {"completed", "ok", "available", "catalog_available", "catalog_metadata", "coding_catalog", "decision_catalog"} else 2
     except (ValueError, TypeError, KeyError, OSError, sqlite3.Error, api_providers.APIError) as exc:
         message = str(exc) if type(exc) is ValueError else "API capability or configuration is unavailable."
         print(json.dumps({"status": "api_error", "error": message}))

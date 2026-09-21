@@ -42,6 +42,7 @@ class PreparedRequest:
     path: str
     headers: dict = field(repr=False, compare=False)
     body: bytes = field(repr=False)
+    expected_models: tuple = ()
 
 
 def _service(service):
@@ -77,6 +78,8 @@ def preflight(service, model, prompt, max_output_tokens, effort=None):
     """Validate locally before money reservation; retain credentials only in memory."""
     origin, prefix, _ = _service(service)
     model = _model(model)
+    if service == 'openrouter' and model.startswith('typesafe/jev-'):
+        raise APIError('use_api_decide_for_jev')
     if service == 'meta' and 'contributor' in model.lower():
         raise APIError('training_tier_not_supported')
     if service == 'gemini' and model.startswith('models/'):
@@ -349,6 +352,9 @@ def execute(prepared, timeout=120, *, admission=None):
     admission.claim(prepared)
     data = request_json(prepared.origin, prepared.path, 'POST', headers=prepared.headers,
                         body=prepared.body, timeout=timeout)
+    if prepared.service == 'openrouter' and prepared.path == '/api/alpha/decisions':
+        import decisions
+        return decisions.normalize_response(prepared, data)
     return normalize_response(prepared.service, data)
 
 
