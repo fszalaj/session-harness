@@ -36,6 +36,50 @@ execution. Inspect `actual_model` and token counts in the completed worker recei
 Copilot auto is not an independent provider-family reviewer. An absent effort
 control is recorded as unavailable; no effort value is invented.
 
+### Explicit models (development)
+
+These controls require a build containing this change; unmodified v0.5.1 does not
+provide them. Copilot supports `--model` and `--effort`, and interactive `/model`
+shows account-selectable IDs. A Free account may expose only Auto; flags cannot
+grant access to models outside its catalog. Paid account and organization policies
+still determine which named models are available.
+
+Copy exact IDs from fresh `ai-session inventory` output, choosing the newest
+eligible generation in each family. The following placeholders are not model IDs:
+
+```sh
+ai-session launch copilot --model MODEL_ID --effort medium --execute
+ai-session work --provider copilot --model MODEL_ID --effort medium --id unique-task-id < task.txt
+ai-session review copilot --model CLAUDE_MODEL_ID --manager-family openai --effort medium < plan.txt
+ai-session review copilot --model GEMINI_MODEL_ID --manager-family openai --effort medium < plan.txt
+```
+
+Use only advertised effort labels; omitting effort selects medium or the highest
+routine level below it for workers/reviews, and the planning tier for launches.
+No advertised effort means the field is omitted. These flags are Copilot-only;
+automatic routing is unchanged. Model and effort bind a worker's existing task ID,
+so changing either requires a new task ID, not a retry of a completed request.
+
+Named reviews use separate sessions with the same isolation as text workers and
+require a declared actual manager family. Auto, unknown families and the manager's
+family cannot review. Compare the two receipts' `model_family` values as well:
+they must differ from each other and the manager. Both use the **same Copilot
+account quota**. Existing role restrictions, finite token-billed allowance and
+disabled-overage requirements still apply; premium-request-only plans are unsupported.
+
+The execution process rechecks the model and effort before creating the session.
+Every reported usage model must exactly equal the requested catalog ID. Missing
+identity, aliases that resolve to a different string or model fallback stop the
+request; do not loosen matching without separately verified alias evidence.
+Effort is requested but not confirmed by usage telemetry. A model name in a text
+answer is not identity evidence. Interactive launches cannot verify a strongest
+model merely because an explicit ID was supplied.
+
+Named Claude/Gemini execution requires a first-account smoke test. A Free-only
+catalog permits metadata and rejection checks, not proof that named execution
+works on a paid account. Test each named route before relying on its review.
+See GitHub's [CLI command reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference).
+
 A legacy quota upgrade archives the original service state. Active pool identifiers
 and their daily usage, policies and grants move to verified billing-unit names.
 Native `hasQuota:false` pools leave current admission but retain their historical

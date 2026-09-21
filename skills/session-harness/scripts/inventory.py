@@ -69,6 +69,7 @@ def normalize_models(payload, service, authenticated=None, *, evidence_kind=None
         if not isinstance(efforts, list):
             efforts = []
         result.append({'id': ident, 'service': service, 'model_vendor': model_vendor(ident),
+                       'policy_state': row.get('policy', {}).get('state') if isinstance(row.get('policy'), dict) else None,
                        'generation': model_generation(ident), 'account_visible': None,
                        'account_selectable': True if selectable and authenticated is True else None,
                        'client_selectable': True if selectable else None,

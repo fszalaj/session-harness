@@ -228,8 +228,11 @@ keeps a provider disabled. No monetary budget or billing upgrade is created.
 
 Use the newest available generation within each model family by default. In v0.3.1,
 automatic native `work` selects Codex, Claude or Antigravity and resolves its current
-worker model. To choose platform Auto explicitly, use `work --provider copilot` or
-`work --provider cursor`; these routes do not verify newest-generation selection.
+worker model. Current automatic native work also includes configured supervised
+Copilot and Cursor routes. Platform Auto does not verify newest-generation selection.
+Development builds add Copilot `--model` selection for launch, work and isolated
+reviews; see [exact model selection and first-account verification](CLIENT-EXECUTION.md#explicit-models-development).
+An account catalog containing only Auto cannot provide named reviewer families.
 
 For version 0.3.1 installations, a user requesting even native
 subscription use can enable [shared fractional pacing](../skills/session-harness/references/balancing.md).

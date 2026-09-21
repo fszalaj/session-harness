@@ -1020,7 +1020,7 @@ def checked_role_response(provider, response, artifact, task, *, started=None, e
     return response
 
 
-def review(provider, artifact, timeout, capability, effort=None, *, task=False):
+def review(provider, artifact, timeout, capability, effort=None, *, task=False, model=None, manager_family=None):
     started = time.monotonic()
     effort_source = "default" if effort is None else "explicit"
     if os.environ.get(LEAF_MARKER):
@@ -1031,6 +1031,14 @@ def review(provider, artifact, timeout, capability, effort=None, *, task=False):
         artifact.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise HarnessError("invalid_encoding", "Review artifact must be valid UTF-8 text.") from exc
+    if model is not None:
+        if provider != 'copilot':
+            raise HarnessError('invalid_arguments', 'Explicit --model is supported only for Copilot.')
+        import copilot_client
+        capability = copilot_client.select_model(capability, model, effort, role='worker' if task else 'reviewer',
+                                                 manager_family=manager_family)
+    elif manager_family is not None:
+        raise HarnessError('invalid_arguments', '--manager-family requires an explicit Copilot model.')
     review_status = capability.get("review", {}).get("status")
     if review_status != "available" and not (task and provider in {'copilot', 'cursor'} and review_status == 'supervised_only'):
         raise HarnessError("unsupported_capability", capability.get("review", {}).get("reason", "No verified review isolation."))
@@ -1213,10 +1221,15 @@ def main(argv=None):
     launch_parser.add_argument("provider", choices=PROVIDERS)
     launch_parser.add_argument("--role", choices=("planner", "worker"), default="planner")
     launch_parser.add_argument("--execute", action="store_true")
+    launch_parser.add_argument('--model', help='Exact account-selectable Copilot model ID')
+    launch_parser.add_argument('--effort', help='Advertised effort for explicit Copilot model')
     review_parser = sub.add_parser("review", help="Review a bounded stdin artifact with a verified leaf adapter")
     review_parser.add_argument("provider", choices=PROVIDERS)
     review_parser.add_argument("--timeout", type=float, default=180)
     review_parser.add_argument("--effort", help="Optional advertised reviewer effort; defaults to medium when supported")
+    review_parser.add_argument('--model', help='Exact account-selectable Copilot model ID')
+    review_parser.add_argument('--manager-family', choices=('openai', 'anthropic', 'google', 'xai', 'deepseek', 'moonshot', 'zai'),
+                               help='Actual manager upstream family; required for named Copilot reviews')
     arguments = list(sys.argv[1:] if argv is None else argv)
     forwarded = []
     if "--" in arguments:
@@ -1229,6 +1242,12 @@ def main(argv=None):
             raise HarnessError("recursion_blocked", "Leaf reviewers cannot invoke the harness.")
         if forwarded and args.command != "launch":
             raise HarnessError("invalid_arguments", "Client arguments after -- are supported only by launch.")
+        if getattr(args, 'model', None) is not None and args.provider != 'copilot':
+            raise HarnessError('invalid_arguments', '--model is supported only for Copilot.')
+        if args.command == 'launch' and args.effort is not None and args.model is None:
+            raise HarnessError('invalid_arguments', '--effort requires an explicit Copilot --model.')
+        if getattr(args, 'manager_family', None) is not None and (args.provider != 'copilot' or args.model is None):
+            raise HarnessError('invalid_arguments', '--manager-family requires an explicit Copilot --model.')
         if args.command == "discover":
             response = {"schema_version": 1, "session": detect_session(args.session),
                         "providers": {provider: discover_provider(provider, args.offline) for provider in PROVIDERS}}
@@ -1245,6 +1264,10 @@ def main(argv=None):
                     authentication.startup()
             capability = discover_provider(args.provider)
             if args.command == "launch":
+                if args.model is not None:
+                    import copilot_client
+                    capability = copilot_client.select_model(capability, args.model, args.effort,
+                                                             role='manager' if args.role == 'planner' else 'worker')
                 if args.provider == "claude" and capability.get("model_switch_hooks_supported") and os.name == "posix":
                     import claude_admission
                     choice, receipt = claude_admission.choose(capability, args.role)
@@ -1278,7 +1301,8 @@ def main(argv=None):
                 if not 1 <= args.timeout <= 10800:
                     raise HarnessError("invalid_timeout", "Review timeout must be between 1 and 10800 seconds; the manager owns the overall deadline.")
                 artifact = sys.stdin.buffer.read(MAX_INPUT + 1)
-                response = review(args.provider, artifact, args.timeout, capability, args.effort)
+                response = review(args.provider, artifact, args.timeout, capability, args.effort,
+                                  model=args.model, manager_family=args.manager_family)
         response.setdefault("runtime", {"path": RUNTIME_PATH, "sha256": RUNTIME_SHA256})
         print(json.dumps(response, indent=2))
         return 0

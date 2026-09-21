@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add explicit account-selectable Copilot model/effort controls for launch and
+  bounded work, plus isolated named-model reviews outside the declared manager
+  family. Preserve Auto supervision, shared quota and disabled-overage checks.
 - Validate explicit OpenRouter reasoning effort against fresh per-model metadata;
   distinguish requested settings from unverified actual effort and expose truncation.
 - Document an optional maintainer role workflow without publishing private setup.

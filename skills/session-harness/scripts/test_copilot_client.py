@@ -24,6 +24,94 @@ def quota(used=2):
 
 
 class CopilotTests(unittest.TestCase):
+    def named_capability(self, model='claude-99.1'):
+        return {'executable': 'copilot', 'auth': {'status': 'subscription'},
+                'review': {'status': 'supervised_only'},
+                'models': inventory.normalize_models({'models': [{'id': model,
+                    'supportedReasoningEfforts': ['low', 'medium', 'high']}]}, 'copilot', True)}
+
+    def test_named_selection_requires_catalog_effort_policy_and_other_family(self):
+        capability = self.named_capability()
+        selected = copilot.select_model(capability, 'claude-99.1', role='reviewer', manager_family='openai')
+        self.assertEqual(selected['planner']['effort'], 'medium')
+        self.assertEqual(selected['review']['status'], 'available')
+        pending = dict(capability, status='model_selection_required')
+        self.assertEqual(copilot.select_model(pending, 'claude-99.1')['status'], 'available')
+        for model, effort, family in [('missing', None, 'openai'), ('claude-99.1', 'max', 'openai'),
+                                     ('claude-99.1', None, 'anthropic'), ('claude-99.1', None, None)]:
+            with self.assertRaises(harness.HarnessError):
+                copilot.select_model(capability, model, effort, role='reviewer', manager_family=family)
+        for model in ('auto', 'opaque-model'):
+            with self.assertRaises(harness.HarnessError):
+                copilot.select_model(self.named_capability(model), model, role='reviewer', manager_family='openai')
+        capability['models'][0]['policy_state'] = 'disabled'
+        with self.assertRaises(harness.HarnessError):
+            copilot.select_model(capability, 'claude-99.1')
+        self.assertEqual(inventory.normalize_models({'models': [{'id': 'claude-99.1',
+                         'policy': {'state': 'disabled'}}]}, 'copilot', True)[0]['policy_state'], 'disabled')
+
+    def test_no_named_default_requires_selection_without_invoking_execution(self):
+        data = self.named_capability()
+        data['models'] += self.named_capability('gemini-99.1')['models']
+        with patch.object(inventory, 'discover_copilot', return_value=dict(data, authenticated=True)):
+            capability = copilot.discover('copilot')
+        self.assertEqual(capability['status'], 'model_selection_required')
+        with patch.object(copilot, 'execute') as execute:
+            with self.assertRaises(harness.HarnessError) as error:
+                harness.review('copilot', b'Artifact', 30, capability, 'high')
+            self.assertEqual(error.exception.status, 'unsupported_capability')
+            execute.assert_not_called()
+
+    def test_named_review_uses_fresh_catalog_exact_identity_and_existing_role_gates(self):
+        for scenario in ('success', 'mismatch', 'catalog-removed', 'effort-removed'):
+            with self.subTest(scenario=scenario):
+                client = MagicMock()
+                def rpc(method, params=None):
+                    if method == 'account.getQuota':
+                        return quota()
+                    if method == 'models.list':
+                        return {'models': [] if scenario == 'catalog-removed' else [{'id': 'claude-99.1',
+                            'supportedReasoningEfforts': [] if scenario == 'effort-removed' else ['medium']}]}
+                    if method == 'session.create':
+                        self.assertEqual(params['model'], 'claude-99.1')
+                        self.assertEqual(params['reasoningEffort'], 'medium')
+                        self.assertEqual(params['availableTools'], [])
+                        self.assertEqual(params['excludedTools'], ['*'])
+                        self.assertEqual(params['mcpServers'], {})
+                        for control in ('enableConfigDiscovery', 'enableSkills', 'enableFileHooks',
+                                        'enableHostGitOperations', 'enableSessionStore', 'enableOnDemandInstructionDiscovery'):
+                            self.assertFalse(params[control])
+                        self.assertIn('independent leaf reviewer', params['systemMessage']['content'])
+                        return {'sessionId': 'fixture'}
+                    if method == 'session.send':
+                        for kind, data in [('assistant.message', {'content': 'Approve with checks.'}),
+                                           ('assistant.usage', {'model': 'gemini-99.1' if scenario == 'mismatch' else 'claude-99.1',
+                                                                'inputTokens': 20, 'outputTokens': 10}), ('session.idle', {})]:
+                            client.on_message({'method': 'session.event', 'params': {'sessionId': 'fixture',
+                                               'event': {'type': kind, 'data': data}}})
+                    return {}
+                client.request.side_effect = client._request.side_effect = rpc
+                with patch.object(inventory, 'MetadataRPC', return_value=client), patch('supervision.Watch') as watch, \
+                     patch.object(harness, 'require_quota') as admission, \
+                     patch.object(harness, 'require_role', return_value={}) as role:
+                    if scenario == 'success':
+                        result = harness.review('copilot', b'Artifact', 30, self.named_capability(),
+                                                model='claude-99.1', manager_family='openai')
+                        self.assertEqual(result['status'], 'reviewed')
+                        self.assertEqual(result['model_family'], 'anthropic')
+                        self.assertTrue(result['independent_judgment'])
+                        self.assertIsNone(result['actual_effort'])
+                        admission.assert_called_once_with('copilot')
+                        self.assertEqual(role.call_count, 2)
+                    else:
+                        with self.assertRaises(harness.HarnessError):
+                            harness.review('copilot', b'Artifact', 30, self.named_capability(),
+                                           model='claude-99.1', manager_family='openai')
+                        if scenario.endswith('removed'):
+                            self.assertFalse(any(call.args[0] == 'session.create' for call in client._request.call_args_list))
+                    watch.return_value.close.assert_called_once()
+                client.close.assert_called_once()
+
     def test_interactive_overrides_cannot_replace_native_billing_or_effort(self):
         capability = {'executable': 'copilot', 'planner': {'model': 'auto', 'effort': None}}
         for flag in ('--reasoning-effort=max', '--provider', '--config-dir', '--headless'):

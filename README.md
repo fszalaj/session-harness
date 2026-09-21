@@ -142,7 +142,7 @@ not prove protected execution or a successful independent review.
 | Client or route | Harness support in v0.5.1 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
-| Copilot CLI | Native launcher and supervised text worker with fresh quota, paid-overage checks and actual model/usage receipts; auto routing cannot independently review |
+| Copilot CLI | Native launcher and supervised text worker; development builds add explicit catalog-selected reviews with manager-family and exact usage-identity checks; Auto cannot independently review |
 | Cursor CLI | Personal Free accounts: native quota, launcher and supervised text via Auto; routed model identity and independent review unavailable |
 | Ollama local | Bounded text from installed local models, explicit task IDs and separate local receipts |
 | Explicit APIs | Direct text requests, including Meta and Ollama Cloud, with separate credentials and monetary authorization; no automatic fallback |

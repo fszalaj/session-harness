@@ -8,10 +8,10 @@ Keep Gemini CLI, Antigravity CLI and their IDE interfaces separate.
 Use the [additional client runbook](../../../docs/CLIENT-EXECUTION.md) for Copilot, Cursor
 and Ollama commands, requirements, receipts and recovery.
 
-| Client or route | Harness support in v0.3.0 |
+| Client or route | Harness support (development additions marked) |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native discovery, quota and launch/review adapters; execution requires admission and the isolation/platform controls below |
-| Copilot CLI | Native launcher and supervised text worker; requires finite token-billed chat quota and disabled paid overage; no independent auto-model review |
+| Copilot CLI | Native launcher and supervised text worker; development explicit catalog-selected reviews require another declared manager family and exact usage identity; finite token-billed chat quota and disabled paid overage; no Auto review |
 | Cursor CLI | Personal Free account quota and Auto launch/text work; no routed model identity or independent review |
 | Ollama local | Fixed loopback execution, local-model residency checks and a separate job ledger |
 | Explicit APIs | Direct text including Meta and Ollama Cloud; separate credentials and money admission, no automatic fallback |
@@ -28,6 +28,21 @@ python3 scripts/harness.py review claude < /absolute/path/to/plan-packet.md
 Reviews default to 180 seconds. POSIX input redirection is shown; in PowerShell,
 pipe `Get-Content -Raw -Encoding utf8` from the packet file into the review command.
 The execution commands still require setup, fresh admission and review isolation.
+
+Development Copilot controls accept an exact ID from fresh `inventory` metadata:
+`launch copilot --model MODEL_ID --effort medium`,
+`work --provider copilot --model MODEL_ID --effort medium --id UNIQUE_ID`, and
+`review copilot --model MODEL_ID --manager-family openai --effort medium`.
+Replace placeholders and declare the actual manager family. Omit unsupported
+effort controls; defaults use advertised routine effort for work/review. Named
+reviews reject Auto, unknown families, the manager family and any returned model
+ID that differs from the requested ID. Compare both reviewer receipts to establish
+two different upstream families; all Copilot routes share its quota. Effort is
+requested, not confirmed by usage events. Paid account policies determine named
+model availability. A Free-only catalog cannot test named execution: run a synthetic
+first-account probe before relying on Claude/Gemini reviews. These controls are
+absent from unmodified v0.5.1. Interactive selection alone does not establish that
+the selected model is the strongest available manager.
 
 Use `--session claude` or `--session antigravity` when that client owns the current
 conversation. Automatic environment/ancestor detection is a fallback. Presence of

@@ -15,6 +15,26 @@ from quota import Ledger
 
 
 class WorkTests(unittest.TestCase):
+    def test_explicit_copilot_controls_bind_fingerprint_and_reject_before_reserving(self):
+        import inventory
+        capability = {'models': inventory.normalize_models({'models': [
+            {'id': 'gemini-99.1', 'supportedReasoningEfforts': ['low', 'medium']},
+            {'id': 'claude-99.1', 'supportedReasoningEfforts': ['low', 'medium']}]}, 'copilot', True)}
+        fingerprints = []
+        for model, effort in [('gemini-99.1', 'low'), ('gemini-99.1', 'medium'), ('claude-99.1', 'medium')]:
+            with patch.object(harness, 'discover_provider', return_value=capability), \
+                 patch.object(balance_cli.coordination, 'balance_dispatch', return_value={'allowed': False}) as dispatch:
+                balance_cli.run_work(b'task', task_id='same-id', provider='copilot', model=model, effort=effort, ledger=self.ledger)
+                fingerprints.append(dispatch.call_args.args[1]['request']['fingerprint'])
+        self.assertEqual(len(set(fingerprints)), 3)
+        for provider, model, effort in [('auto', 'gemini-99.1', None), ('copilot', None, 'medium'),
+                                        ('copilot', 'unavailable', None), ('copilot', 'gemini-99.1', 'max')]:
+            with patch.object(harness, 'discover_provider', return_value=capability), \
+                 patch.object(balance_cli.coordination, 'balance_dispatch') as dispatch:
+                with self.assertRaises((ValueError, harness.HarnessError)):
+                    balance_cli.run_work(b'task', task_id='one', provider=provider, model=model, effort=effort, ledger=self.ledger)
+                dispatch.assert_not_called()
+
     def setUp(self):
         free_config = patch.object(free_access, 'load_config', return_value=None)
         free_config.start()

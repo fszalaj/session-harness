@@ -66,7 +66,7 @@ def request(ledger, task_id, artifact, role, provider):
             'host': socket.gethostname(), 'role': role, 'provider': provider}
 
 
-def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None):
+def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None, model=None, effort=None):
     import harness
     ledger = ledger or Ledger()
     if not artifact.strip() or len(artifact) > 8192:
@@ -74,6 +74,15 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None):
     artifact.decode('utf-8')
     if not 1 <= timeout <= 180:
         raise ValueError('work deadline must be between 1 and 180 seconds')
+    if (model is not None and provider != 'copilot') or (effort is not None and model is None):
+        raise ValueError('model/effort controls require --provider copilot and an explicit --model')
+    selected = None
+    fingerprint_artifact = artifact
+    if model is not None:
+        import copilot_client
+        selected = copilot_client.select_model(harness.discover_provider(provider), model, effort)
+        fingerprint_artifact = json.dumps({'model': model, 'effort': selected['worker']['effort'],
+                                          'packet': artifact.decode('utf-8')}, sort_keys=True).encode()
     if provider == 'auto':
         import free_access
         config = free_access.load_config(optional=True)
@@ -82,12 +91,12 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None):
             if result is not None:
                 return result
     job = coordination.balance_dispatch('reserve', {
-        'request': request(ledger, task_id, artifact, 'worker', provider)}, ledger)
+        'request': request(ledger, task_id, fingerprint_artifact, 'worker', provider)}, ledger)
     if not job.get('allowed') or job.get('status') != 'reserved':
         return job
     service = job['service']
     try:
-        capability = copy.deepcopy(harness.discover_provider(service))
+        capability = copy.deepcopy(selected if selected is not None else harness.discover_provider(service))
         if not capability.get('worker'):
             raise harness.HarnessError('unsupported_capability', 'No verified current worker model')
         capability['planner'] = capability['worker']
@@ -183,6 +192,7 @@ def run_interactive(provider, response, environment, *, ledger=None, capability=
 
 
 def main(argv=None):
+    import harness
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     policy = sub.add_parser('balance', help='Inspect or explicitly configure native fractional pacing')
@@ -201,6 +211,8 @@ def main(argv=None):
     work.add_argument('--id', required=True, help='Stable unique task ID; repeat never redispatches')
     work.add_argument('--provider', default='auto', choices=('auto', *coordination.SERVICES))
     work.add_argument('--timeout', type=float, default=180)
+    work.add_argument('--model', help='Exact account-selectable Copilot model ID')
+    work.add_argument('--effort', help='Advertised effort for explicit Copilot model')
     audit = sub.add_parser('audit', help='Read allowlisted usage metadata without model inference')
     audit.add_argument('--since', help='First UTC date (YYYY-MM-DD) for token metadata')
     args = parser.parse_args(argv)
@@ -209,7 +221,7 @@ def main(argv=None):
         ledger = Ledger()
         if args.command == 'work':
             result = run_work(sys.stdin.buffer.read(8193), task_id=args.id,
-                              provider=args.provider, timeout=args.timeout, ledger=ledger)
+                              provider=args.provider, timeout=args.timeout, ledger=ledger, model=args.model, effort=args.effort)
         elif args.command == 'audit':
             import usage_audit
             result = usage_audit.report(ledger, since=args.since)
@@ -234,8 +246,8 @@ def main(argv=None):
             result = coordination.balance_dispatch('status', {}, ledger)
         print(json.dumps(result, indent=2))
         return 0 if result.get('allowed') or result.get('status') in {'disabled', 'audit', 'reconciled', 'completed'} else 2
-    except (ValueError, OSError, KeyError, TypeError) as exc:
-        print(json.dumps({'allowed': False, 'status': 'balance_error', 'message': str(exc),
+    except (ValueError, OSError, KeyError, TypeError, harness.HarnessError) as exc:
+        print(json.dumps({'allowed': False, 'status': getattr(exc, 'status', 'balance_error'), 'message': str(exc),
                           'automatic_retry': False}))
         return 2
 
