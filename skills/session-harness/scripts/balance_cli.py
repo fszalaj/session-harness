@@ -209,7 +209,7 @@ def main(argv=None):
     recover.add_argument('--confirm-stopped', action='store_true', required=True)
     work = sub.add_parser('work', help='Run one useful bounded text task; no tools or automatic retry')
     work.add_argument('--id', required=True, help='Stable unique task ID; repeat never redispatches')
-    work.add_argument('--provider', default='auto', choices=('auto', *coordination.SERVICES))
+    work.add_argument('--provider', default='auto', choices=('auto', 'native', *coordination.SERVICES))
     work.add_argument('--timeout', type=float, default=180)
     work.add_argument('--model', help='Exact account-selectable Copilot model ID')
     work.add_argument('--effort', help='Advertised effort for explicit Copilot model')

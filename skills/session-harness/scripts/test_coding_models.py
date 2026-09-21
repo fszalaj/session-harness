@@ -159,6 +159,20 @@ class CodingExecutionTests(PolicyFixture, unittest.TestCase):
             self.assertEqual(ticks('0.01'), result['accounting']['charged_ticks'])
             self.assertEqual(1, post.call_count)
 
+    def test_only_catalog_bound_canonical_response_is_accepted(self):
+        canonical = MODEL + '-20260910'
+        self.fetch.return_value = {'data': [dict(model(), canonical_slug=canonical)]}
+        with patch.object(api_providers, 'execute', return_value=self.response(canonical)):
+            result = self.run_request()
+        self.assertEqual('completed', result['status'])
+        self.assertEqual(canonical, result['model'])
+        self.assertEqual(MODEL, result['coding']['requested_model'])
+        self.assertEqual('SETTLED', result['accounting']['status'])
+        for invalid in ('another/model', MODEL + ':free', True):
+            self.fetch.return_value = {'data': [dict(model(), canonical_slug=invalid)]}
+            with self.assertRaises(ValueError):
+                self.run_request()
+
     def test_mismatch_with_unknown_cost_retains_reservation(self):
         with patch.object(api_providers, 'execute', return_value=self.response('another/model', None)):
             result = self.run_request()

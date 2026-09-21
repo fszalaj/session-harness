@@ -315,6 +315,7 @@ def _selection(services, provider='auto'):
     eligible = sorted(set(services) & AUTOMATIC_NATIVE if automatic else services)
     progress = [services[s]['progress'] for s in eligible]
     return dict(mode='supervised_worker' if automatic else 'explicit_provider',
+                ranking='fractional_daily_consumption_then_dispatch_count',
                 eligible_services=eligible,
                 explicit_only_services=sorted(set(services) - AUTOMATIC_NATIVE),
                 supervised_auto_services=sorted(set(services) & {'copilot', 'cursor'}),
@@ -323,11 +324,11 @@ def _selection(services, provider='auto'):
 
 def _compact(summary):
     fields = ('pool', 'strategy', 'daily_consumed', 'daily_ceiling', 'resets_at',
-              'window_minutes', 'window_source', 'history_partial', 'daily_consumption_lower_bound')
+              'window_minutes', 'window_source', 'history_partial', 'daily_consumption_lower_bound', 'model_scope')
     pools = [{key: pool.get(key) for key in fields} for pool in summary.get('pools', [])]
     pacing = []
     for pool in pools:
-        if pool['strategy'] in {'adaptive', 'fixed'}:
+        if pool['strategy'] in {'adaptive', 'fixed'} and pool.get('model_scope') is None:
             try:
                 ceiling = budget_policy.numeric(pool['daily_ceiling'], 'daily ceiling')
                 consumed = budget_policy.numeric(pool['daily_consumed'], 'daily consumption')
@@ -462,7 +463,7 @@ def reserve(ledger, request, client_services=None):
         if not candidates:
             return _reply('busy', jobs=[_public(j) for j in jobs if j['status'] in OPEN], services=result['services'])
         counts = dict(db.execute('SELECT service, COUNT(*) FROM balance_jobs WHERE day=? GROUP BY service', (day,)))
-        selected = min(candidates, key=lambda s: (counts.get(s, 0), s))
+        selected = min(candidates, key=lambda s: (result['services'][s]['progress'], counts.get(s, 0), s))
         job = dict(request, provider=provider, service=selected, day=day, status='reserved', created_at=now, updated_at=now,
                    usage_attribution='aggregate_account_only',
                    balance_policy_hash=hashlib.sha256(snapshot[KEY].encode()).hexdigest(),

@@ -132,7 +132,13 @@ def catalog(path=DEFAULT_POLICY, *, now=None):
                 if not isinstance(pricing, dict):
                     raise ValueError('coding_price_unknown')
                 rates = {key: _price(pricing.get(key)) for key in ('prompt', 'completion')}
-                metadata = {'context_tokens': context, 'max_output_tokens': output,
+                canonical = row.get('canonical_slug', ident)
+                if canonical is None:
+                    canonical = ident
+                canonical = _model(canonical)
+                if canonical.split('/')[0] != entry['publisher'] or (':' in canonical and canonical != ident):
+                    raise ValueError('coding_model_identity_unverified')
+                metadata = {'canonical_slug': canonical, 'context_tokens': context, 'max_output_tokens': output,
                             'catalog_usd_per_token': rates,
                             'catalog_price_is_spending_cap': False}
             except ValueError as exc:
@@ -161,4 +167,5 @@ def require_model(service, model, max_output_tokens, path=DEFAULT_POLICY):
         raise ValueError('coding_output_limit_exceeded')
     return {'policy_sha256': result['policy_sha256'], 'checked_at': result['checked_at'],
             'model_family': row['family'], 'billing_service': 'openrouter',
-            'requested_model': model, 'requires_manager_inspection': True}
+            'requested_model': model, 'accepted_response_models': sorted({model, row['canonical_slug']}),
+            'requires_manager_inspection': True}

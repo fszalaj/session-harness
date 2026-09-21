@@ -202,7 +202,10 @@ ai-session audit --since 2026-01-01
 
 Enable on the account authority after the owner requests balancing. Selection targets
 equal fractions of daily allowances, using atomic task reservations and fresh native
-observations. It does not promise equal token totals or dollar costs. APIs remain
+observations. The current development revision ranks the least-consumed fraction
+first, using daily dispatch counts only for ties. Manager and review usage enters
+through account counters; `audit` separates authority accounting from local session
+telemetry. These fixes require the matching runtime or a reviewed registered overlay. It does not promise equal token totals or dollar costs. APIs remain
 separately authorized; inventory-only clients are reported as unsupported for routing.
 The manager must submit useful tasks to `work`; enabling a profile does not transfer
 its interactive conversation to another model. A newer concurrent quota observation

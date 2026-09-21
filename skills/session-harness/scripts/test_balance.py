@@ -80,6 +80,38 @@ class BalanceTests(unittest.TestCase):
         self.assertEqual(len(explicit['job']['decision']['eligible_services']), 4)
         self.assertTrue(balance.start(self.ledger, 'explicit')['allowed'])
 
+    def test_lower_fraction_wins_even_with_more_previous_dispatches(self):
+        first = balance.reserve(self.ledger, self.request('first', provider='claude'))
+        self.assertTrue(first['allowed'])
+        self.assertTrue(balance.start(self.ledger, 'first')['allowed'])
+        balance.finish(self.ledger, 'first', 'completed')
+        self.seed('codex', 1)
+        result = balance.reserve(self.ledger, self.request('next'))
+        self.assertEqual(result['service'], 'claude')
+        balance.start(self.ledger, 'next')
+        balance.finish(self.ledger, 'next', 'completed')
+        self.seed('claude', 2)
+        result = balance.reserve(self.ledger, self.request('rebalance'))
+        self.assertEqual(result['service'], 'codex')
+
+    def test_unequal_daily_budgets_use_fraction_not_raw_consumption(self):
+        self.ledger.budget_set('claude', 'fixed', pool='weekly', daily_limit=40)
+        self.ledger.budget_set('codex', 'fixed', pool='weekly', daily_limit=10)
+        self.seed('claude', 2)
+        self.seed('codex', 1)
+        result = balance.reserve(self.ledger, self.request('unequal'))
+        self.assertTrue(result['allowed'], result)
+        self.assertEqual(result['service'], 'claude')
+
+    def test_compact_excludes_scoped_pacing_like_evaluation(self):
+        pools = [dict(pool='weekly', strategy='fixed', daily_consumed=2, daily_ceiling=20),
+                 dict(pool='scoped', strategy='fixed', daily_consumed=19, daily_ceiling=20,
+                      model_scope={'tiers': ['fable']})]
+        result = balance._compact({'pools': pools})
+        self.assertEqual(result['progress'], .1)
+        self.assertEqual(result['binding_pool'], 'weekly')
+        self.assertEqual(result['pools'][1]['model_scope'], {'tiers': ['fable']})
+
     def test_auto_clients_rotate_and_remain_bounded(self):
         self.add_auto_services(['copilot', 'cursor'])
         first = balance.reserve(self.ledger, self.request('first'))

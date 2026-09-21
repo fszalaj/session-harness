@@ -43,7 +43,7 @@ def validate_scope(scope, service, source):
     if (not isinstance(scope, dict) or set(scope) != {'version', 'family', 'tiers', 'source'}
             or type(scope['version']) is not int or scope['version'] != 1
             or scope['family'] != 'anthropic' or scope['source'] != SOURCE
-            or service != 'claude' or source != OBSERVATION_SOURCE
+            or service != 'claude' or source not in {OBSERVATION_SOURCE, 'claude.native_account_bound_cache'}
             or not isinstance(scope['tiers'], list) or not 1 <= len(scope['tiers']) <= len(TIERS)
             or any(not isinstance(t, str) or t not in TIERS for t in scope['tiers'])
             or len(set(scope['tiers'])) != len(scope['tiers'])):

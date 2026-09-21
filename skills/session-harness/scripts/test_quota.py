@@ -249,6 +249,56 @@ class QuotaTests(unittest.TestCase):
         self.assertEqual(result["pools"][0]["daily_consumed"], 3)
         self.assertFalse(self.ledger.check("codex-personal", now=2121)["allowed"])
 
+    def test_same_window_drop_and_rebound_count_only_new_high_water(self):
+        self.ledger.set_mode('observed')
+        self.record(1000, 0)
+        for ts, used, expected in [(1001, 2, 2), (1002, 1, 2), (1003, 2, 2), (1004, 3, 3)]:
+            result = self.record(ts, used)
+            self.assertEqual(result['pools'][0]['daily_consumed'], expected)
+            self.assertEqual(result['reset_history'], [])
+        self.assertTrue(result['pools'][0]['history_partial'])
+        reset = self.record(1005, 1, reset=200000)
+        self.assertEqual(reset['pools'][0]['daily_consumed'], 4)
+        self.assertEqual(len(reset['reset_history']), 1)
+
+    def test_reset_jitter_uses_fixed_anchor_not_chained_timestamps(self):
+        self.record(1000, 0)
+        self.record(1001, 2, reset=100000.6)
+        correction = self.record(1002, 1, reset=99999.6)
+        self.assertEqual(correction['pools'][0]['daily_consumed'], 2)
+        self.assertEqual(correction['reset_history'], [])
+        result = self.record(1003, .5, reset=100001.2)
+        self.assertEqual(result['pools'][0]['daily_consumed'], 2.5)
+        self.assertEqual(len(result['reset_history']), 1)
+
+    def test_high_water_survives_day_rollover_without_refunding_history(self):
+        self.record(82798, 0, reset=200000)
+        self.record(82799, 2, reset=200000)
+        result = self.record(82800, 1, reset=200000)
+        self.assertEqual(result['pools'][0]['daily_consumed'], 0)
+        result = self.record(82801, 3, reset=200000)
+        self.assertEqual(result['pools'][0]['daily_consumed'], 1)
+        with self.ledger._connect() as db:
+            state = self.ledger._service(db, 'codex-personal')
+        self.assertEqual(state['days']['1970-01-01']['weekly']['consumed'], 2)
+
+    def test_invalid_high_water_metadata_is_not_silently_reinitialized(self):
+        self.record(1000, 2)
+        with self.ledger._connect() as db:
+            state = self.ledger._service(db, 'codex-personal')
+            state['pools']['weekly']['high_water_used_percent'] = 1
+            db.execute('UPDATE state SET value=? WHERE key=?', (json.dumps(state), 'service:codex-personal'))
+        self.assertIn('invalid_ledger', self.ledger.check('codex-personal', now=1000)['reasons'])
+        with self.assertRaises(ValueError):
+            self.record(1001, 3)
+
+    def test_backward_reset_shift_with_monotone_use_counts_delta_and_marks_uncertainty(self):
+        self.record(1000, 5)
+        result = self.record(1001, 7, reset=90000)
+        self.assertEqual(result['pools'][0]['daily_consumed'], 2)
+        self.assertTrue(result['pools'][0]['history_partial'])
+        self.assertEqual(result['reset_history'], [])
+
     def test_observed_reset_drop_counts_new_window_use_and_stops_at_limit(self):
         self.ledger.set_mode("observed")
         self.record(1000, 40)

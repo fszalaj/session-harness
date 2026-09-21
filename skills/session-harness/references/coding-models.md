@@ -125,3 +125,14 @@ allowances, and do not join native `balance`/`work` routing. Copilot, Cursor and
 hosts retain their own selection, billing and verification boundaries; sharing a
 model name does not share a quota pool. See [client support](clients.md) and
 [subscription balancing](balancing.md).
+
+## Empty responses and deadlines
+
+The development runtime accepts only the requested model or its freshly advertised
+canonical catalog identity. An empty answer after a reasoning token limit remains
+rejected, with identity, cost and truncation preserved. `empty_output` is not a
+model mismatch. Transport timeouts retain the reservation until billing evidence
+is reconciled; do not retry automatically. Inspect the receipt, then choose a new
+bounded task with adequate output tokens and an explicit deadline (up to 600 seconds).
+Raising the token limit alone does not extend the deadline. API work remains separate
+from native allowance balancing and never enables paid fallback.

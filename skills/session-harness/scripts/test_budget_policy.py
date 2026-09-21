@@ -106,6 +106,7 @@ class BudgetTests(unittest.TestCase):
         self.adaptive()
         self.ledger.budget_add("account", 5, grant_id="extra", now=self.now)
         self.record(43, now=self.now + 1)
+        self.reset += 60
         result = self.record(2, now=self.now + 2)
         pool = self.pool(result)
         self.assertEqual(15, pool["daily_consumed"])
@@ -190,6 +191,7 @@ class BudgetTests(unittest.TestCase):
         first = self.ledger.budget_use_rest("account", grant_id="rest", now=self.now)
         self.assertEqual(70, self.pool(first["status"])["daily_ceiling"])
         self.record(80, now=self.now + 1)
+        self.reset += 60
         result = self.record(1, now=self.now + 2,
                              extra={"pool": "new", "used_percent": 20, "resets_at": self.reset})
         pools = {p["pool"]: p for p in result["pools"]}
@@ -265,6 +267,7 @@ class BudgetTests(unittest.TestCase):
         self.ledger.budget_set("account", "window", reserve=0, now=self.now)
         self.record(0)
         self.record(90, now=self.now + 1)
+        self.reset += 60
         self.record(1, now=self.now + 2)
         result = self.record(80, now=self.now + 3)
         self.assertEqual(170, self.pool(result)["daily_consumed"])
@@ -273,6 +276,7 @@ class BudgetTests(unittest.TestCase):
         self.assertEqual(20, self.pool(result)["spendable_percent"])
         result = self.ledger.budget_use_rest("account", now=self.now + 3)["status"]
         self.assertEqual(190, self.pool(result)["daily_ceiling"])
+        self.reset += 60
         result = self.record(1, now=self.now + 4)
         self.assertEqual(19, self.pool(result)["spendable_percent"])
         self.assertEqual(190, self.pool(result)["daily_ceiling"])
@@ -281,6 +285,7 @@ class BudgetTests(unittest.TestCase):
         self.adaptive()
         self.ledger.budget_use_rest("account", now=self.now)
         self.record(70, now=self.now + 1)
+        self.reset += 60
         result = self.record(2, now=self.now + 2)
         self.assertEqual(70, self.pool(result)["daily_ceiling"])
         result = self.ledger.budget_set("account", "fixed", daily_limit=100, reserve=10,
@@ -315,6 +320,7 @@ class BudgetTests(unittest.TestCase):
         self.record(0)
         self.ledger.budget_add("account", 10, now=self.now)
         self.record(25, now=self.now + 1)
+        self.reset += 60
         result = self.record(1, now=self.now + 2)
         self.assertEqual(26, self.pool(result)["daily_consumed"])
         self.assertEqual(30, self.pool(result)["daily_ceiling"])

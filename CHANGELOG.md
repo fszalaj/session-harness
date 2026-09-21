@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- Rank bounded native work by fresh fractional daily consumption before dispatch
+  count, including usage from managers and independent reviews through account counters.
+- Avoid double-counting quota corrections and rebounds inside a verified reset window;
+  preserve uncertainty, existing daily history and conservative reset accounting.
+- Accept Claude's account-bound sub-minute native cache with original observation
+  time and idempotent replay; expired or ambiguous evidence still stops admission.
+- Attribute local token metadata to deduplicated sessions and observed roles; fetch
+  shared quota, work and monetary summaries from the configured authority.
+- Verify OpenRouter coding aliases against fresh canonical catalog identities,
+  preserve identity/cost for empty truncated output and report safe transport causes.
+- Require stage-level delegation evidence or a manager-only reason in session guidance.
+
 ## 0.6.1
 
 - Discover Copilot models from an isolated session catalog, including models

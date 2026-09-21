@@ -86,12 +86,30 @@ def validate_native_limit(row, observed_at):
         invalid()
 
 
-def claude_snapshot(stdout, stderr, request_ids, observed_at):
+def claude_cache_metadata():
+    """Read only account-bound quota provenance from the default native store."""
+    from pathlib import Path
+    if os.environ.get("CLAUDE_CONFIG_DIR"):
+        return None
+    try:
+        with (Path.home() / ".claude.json").open("rb") as stream:
+            raw = stream.read(2 * 1024 * 1024 + 1)
+        if len(raw) > 2 * 1024 * 1024:
+            return None
+        data = decode(raw)
+        return {"account": data["oauthAccount"]["accountUuid"],
+                "cache": data["cachedUsageUtilization"]}
+    except (ValueError, TypeError, KeyError, OSError):
+        return None
+
+
+def claude_snapshot(stdout, stderr, request_ids, observed_at, cache_before=None, cache_after=None):
     import hashlib
     markers = ("fetchUtilization: GET /api/oauth/usage (attempt 1)",
                "fetchUtilization: 200 after 1 attempt(s)")
-    if any(stderr.count(marker) != 1 for marker in markers) or stderr.index(markers[0]) >= stderr.index(markers[1]):
-        invalid()
+    live = (all(stderr.count(marker) == 1 for marker in markers)
+            and stderr.index(markers[0]) < stderr.index(markers[1]))
+    cached = not live
     responses = {}
     for line in stdout.splitlines():
         if not line.strip():
@@ -116,6 +134,21 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
             invalid()
     number(session["total_duration_ms"], 15000)
     rates = data["rate_limits"]
+    if cached:
+        if ("fetchUtilization:" in stderr
+                or len(re.findall(r"Usage read answered from a snapshot \d+s old; endpoint not asked", stderr)) != 1
+                or not isinstance(cache_before, dict) or cache_before != cache_after):
+            invalid()
+        account, cache = cache_before["account"], cache_before["cache"]
+        if (not isinstance(account, str) or not account
+                or not isinstance(cache, dict) or cache.get("accountUuid") != account):
+            invalid()
+        fetched = number(cache["fetchedAtMs"], observed_at * 1000) / 1000
+        if not 0 <= observed_at - fetched < 60:
+            invalid()
+        if cache["utilization"] != {key: value for key, value in rates.items() if key != "model_scoped"}:
+            invalid()
+        observed_at = fetched
     allowed = {"five_hour", "seven_day", "seven_day_opus", "seven_day_sonnet", "limits",
                "model_scoped", "extra_usage", "spend", "member_dashboard_available", "seven_day_breakdown"}
     breakdown = rates.get("seven_day_breakdown")
@@ -207,6 +240,8 @@ def claude_snapshot(stdout, stderr, request_ids, observed_at):
         validate_native_limit(row, observed_at)
         add_pool(pools, "native:" + key, row["utilization"], row["resets_at"], observed_at)
     result = envelope("claude", pools, observed_at)
+    if cached:
+        result.update(source="claude.native_account_bound_cache", freshness="native_original_fetched_at")
     result["credit_resources"] = credit_resources
     return result
 
@@ -272,6 +307,7 @@ def read_snapshot(service):
                 from windows_security import prepare_private_file
                 prepare_private_file(debug)
                 argv[argv.index('--debug-file') + 1] = str(debug)
+            cache_before = claude_cache_metadata()
             observed_at = time.time()
             code, stdout, stderr = harness.run(argv, stdin=stdin, timeout=15, cwd=directory,
                                                env=harness.child_env(leaf=True))
@@ -283,6 +319,7 @@ def read_snapshot(service):
                 stderr += diagnostics.decode('utf-8', 'strict')
         if code or time.time() - observed_at > 15 or time.time() < observed_at:
             invalid()
-        return claude_snapshot(stdout, stderr, request_ids, observed_at)
+        return claude_snapshot(stdout, stderr, request_ids, observed_at,
+                               cache_before, claude_cache_metadata())
     except (ValueError, TypeError, KeyError, AttributeError, OSError, harness.HarnessError):
         raise NativeQuotaError("Native quota metadata could not be verified.") from None
