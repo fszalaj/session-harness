@@ -6,8 +6,8 @@ a clear account of what can actually execute. Installation alone is not acceptan
 
 For Jev classification and scoring, follow the optional
 [OpenRouter decision setup](../skills/session-harness/references/decisions.md)
-after ordinary installation. It requires a build exposing `api decide`, separate
-API authorization and a monetary cap; it is not in unmodified 0.5.1. Verify a small
+after ordinary installation. It requires version 0.6.0 or newer, separate
+API authorization and a monetary cap. Verify a small
 synthetic decision and its billed receipt before declaring the route operational.
 
 ## 1. Select and verify the release
@@ -15,8 +15,8 @@ synthetic decision and its billed receipt before declaring the route operational
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.5.1, run
-`ai-session update --version 0.5.1 --apply`, then restart affected clients.
+for an authorized version change. To select v0.6.0, run
+`ai-session update --version 0.6.0 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -230,8 +230,8 @@ Use the newest available generation within each model family by default. In v0.3
 automatic native `work` selects Codex, Claude or Antigravity and resolves its current
 worker model. Current automatic native work also includes configured supervised
 Copilot and Cursor routes. Platform Auto does not verify newest-generation selection.
-Development builds add Copilot `--model` selection for launch, work and isolated
-reviews; see [exact model selection and first-account verification](CLIENT-EXECUTION.md#explicit-models-development).
+Version 0.6.0 adds Copilot `--model` selection for launch, work and isolated
+reviews; see [exact model selection and first-account verification](CLIENT-EXECUTION.md#explicit-models).
 An account catalog containing only Auto cannot provide named reviewer families.
 
 For version 0.3.1 installations, a user requesting even native
@@ -248,7 +248,7 @@ status` and run `ai-session budget SERVICE` on the account authority. If cleanup
 reported as unconfirmed, inspect the retained owner's processes before recovery.
 See [stop recovery](../skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
 
-Inspect the requested and actual worker model in each receipt. Development Claude
+Inspect the requested and actual worker model in each receipt. Claude
 selection resolves current aliases and prefers a current Sonnet for bounded work.
 Fable and overall weekly limits are separate. Version 0.3.0 checks the actual
 model and can resume on current Opus after a verified Fable-only stop.

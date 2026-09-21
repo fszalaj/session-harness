@@ -36,10 +36,10 @@ execution. Inspect `actual_model` and token counts in the completed worker recei
 Copilot auto is not an independent provider-family reviewer. An absent effort
 control is recorded as unavailable; no effort value is invented.
 
-### Explicit models (development)
+### Explicit models
 
-These controls require a build containing this change; unmodified v0.5.1 does not
-provide them. Copilot supports `--model` and `--effort`, and interactive `/model`
+These controls require harness version 0.6.0 or newer.
+Copilot supports `--model` and `--effort`, and interactive `/model`
 shows account-selectable IDs. A Free account may expose only Auto; flags cannot
 grant access to models outside its catalog. Paid account and organization policies
 still determine which named models are available.

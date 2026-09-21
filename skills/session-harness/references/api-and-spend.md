@@ -60,7 +60,7 @@ charges rounded upward. Status also provides readable decimal amounts.
 | `zai` | `ZAI_API_KEY` | General API only; catalog unavailable, explicit model/rates required |
 | `openrouter` | `OPENROUTER_API_KEY` | Advertised model catalog; response `usage.cost` is billed USD |
 
-Development builds also support [Jev structured decisions](decisions.md) through
+Version 0.6.0 adds [Jev structured decisions](decisions.md) through
 `api decision-models` and `api decide openrouter`. Jev uses the separate OpenRouter
 alpha decision endpoint with the same monetary authority and accounting. It does
 not use chat completions or the coding-model allowlist.
@@ -88,7 +88,7 @@ text-only, one candidate, non-streaming, with no tools. Unsupported model-specif
 effort options fail before dispatch. Z.ai Coding Plan routing is a different
 service contract and is not substituted for the general API.
 
-Development builds accept OpenRouter `--effort` only when the exact model's fresh
+Since version 0.6.0, OpenRouter `--effort` is accepted only when the exact model's fresh
 catalog `reasoning.supported_efforts` allows it. `api models openrouter` exposes
 normalized `reasoning_efforts`; missing labels do not establish support, `null`
 accepts gateway levels, and mandatory reasoning excludes `none`. Other API
@@ -102,7 +102,7 @@ and inspect `truncated` when supplied. `requested_effort` is a request setting;
 `actual_effort: null` means the provider did not attest its execution setting.
 See the [OpenRouter reasoning contract](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens).
 
-Development builds add `api coding-models` and `api coding-run` for a reviewed
+Since version 0.3.0, `api coding-models` and `api coding-run` support a reviewed
 OpenRouter coding allowlist. Read [coding setup and eligibility](coding-models.md)
 before use. Catalog inspection is anonymous; coding execution uses the same money
 authorization and unresolved-liability rules as `api run`. It additionally requires

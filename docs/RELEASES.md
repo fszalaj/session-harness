@@ -5,6 +5,42 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.6.0
+
+This feature release adds budgeted Jev structured decisions through OpenRouter,
+validated OpenRouter reasoning-effort controls, and explicit Copilot model selection
+for launch, bounded text work and isolated reviews. It packages the reviewed runtime
+changes developed after 0.5.1; updating documentation alone does not add these adapters
+to an older installation. See [Jev setup](../skills/session-harness/references/decisions.md)
+and [Copilot selection](CLIENT-EXECUTION.md#explicit-models).
+
+Copilot reviews require a known upstream family outside the declared manager family
+and exact returned model identity. Two reviewer families still share one Copilot
+billing pool. Auto remains supervised-only. Account-selectable models, advertised
+effort, finite token-billed allowance and disabled paid overage are required;
+premium-request-only plans are unsupported. Automatic worker routing is unchanged.
+
+Verification has these limits:
+
+| Route | Evidence and remaining checks |
+| --- | --- |
+| Jev | A synthetic decision verified typed probability, choice and score outputs and actual-cost settlement; the upstream decision API remains alpha |
+| Native Gemini | One bounded coding task passed 18 deterministic checks; this is not evidence of global optimality |
+| Named Copilot Claude/Gemini | Selection, isolation and identity regression fixtures pass; named execution must be verified on the intended paid account before relying on reviews |
+| OpenRouter DeepSeek | The initial coding probe timed out without a verifiable result/cost; its reservation remains unresolved and must not be retried automatically |
+
+The [bounded evaluation](OWNER-WORKFLOW.md#initial-synthetic-evaluation-2026-09-21)
+records observed model identities without making them routing defaults. Requested
+effort is not verified actual effort when telemetry does not report it.
+
+Upgrade with `ai-session update --version 0.6.0 --apply`, then restart clients.
+Installation preserves private policy, authentication, service selection, accounting,
+pending liabilities and existing automatic-update opt-ins. It authorizes no API
+spend, top-up or paid fallback. Identical registered skill overlays can be absorbed;
+changed overlays require explicit reconciliation against the published payload.
+Use the configured activation hook for shared installations. Never restore accounting
+as part of profile rollback; retain 0.5.1 or newer after quota-pool reconciliation.
+
 ## 0.5.1
 
 Add explicit Codex missing-pool reconciliation on the account authority, preserving
@@ -179,7 +215,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.5.1, use `ai-session update --version 0.5.1 --apply`, then restart affected
+For v0.6.0, use `ai-session update --version 0.6.0 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.

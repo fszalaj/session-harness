@@ -1,6 +1,6 @@
 # Jev decisions through OpenRouter
 
-Development feature, not in the unmodified 0.5.1 release. Check that your reviewed
+Available since version 0.6.0. Check that your selected
 installation exposes `api decide` in `ai-session api --help`.
 
 Prefer authorized, available Jev for narrow semantic judgments with defined outputs:

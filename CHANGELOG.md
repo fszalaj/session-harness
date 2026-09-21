@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.0
 
 - Add explicit account-selectable Copilot model/effort controls for launch and
   bounded work, plus isolated named-model reviews outside the declared manager

@@ -43,13 +43,12 @@ Use a reviewed private `--policy`, the selected key's private environment and th
 existing monetary authority. Two keys do not create independent provider families
 or shared accounting between otherwise separate ledgers.
 
-Copilot is a billing service, not a model family. Development builds support
+Copilot is a billing service, not a model family. Version 0.6.0 supports
 explicit catalog-selected models for workers and isolated reviews. Declare the
 actual manager family and verify the returned model identity and two distinct
 reviewer families. Both Copilot reviews share one account quota. Auto remains
 supervised-only, and an account offering only Auto cannot supply named Claude or
-Gemini reviews. Unmodified v0.5.1 lacks these explicit-selection controls. Verify
-each named route on its actual account before relying on the workflow; catalog
+Gemini reviews. Verify each named route on its actual account before relying on the workflow; catalog
 visibility alone is not execution evidence.
 
 See [client boundaries](../skills/session-harness/references/clients.md),

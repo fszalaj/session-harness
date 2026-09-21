@@ -27,7 +27,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.5.1 --apply`, then
+To select this release, run `ai-session update --version 0.6.0 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -67,11 +67,11 @@ for receipt fields, checkpoint reuse and matched-task comparisons.
 
 ## Configure and run
 
-Development builds include [Jev decisions through OpenRouter](skills/session-harness/references/decisions.md).
+Version 0.6.0 includes [Jev decisions through OpenRouter](skills/session-harness/references/decisions.md).
 Prefer an authorized, available Jev route for classification, triage, filtering,
 candidate selection and scoring. `api decision-models` discovers the current catalog;
 `api decide openrouter` submits typed questions through existing money controls.
-This feature is not in unmodified 0.5.1 and does not replace coding models or reviewers.
+Jev handles narrow judgments; coding models and independent reviewers retain their roles.
 
 The [maintainer's role workflow](docs/OWNER-WORKFLOW.md) describes an opt-in division
 of planning, decisions and implementation. It is an example, not another user's
@@ -139,15 +139,18 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.5.1 |
+| Client or route | Harness support in v0.6.0 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
-| Copilot CLI | Native launcher and supervised text worker; development builds add explicit catalog-selected reviews with manager-family and exact usage-identity checks; Auto cannot independently review |
+| Copilot CLI | Native launcher, text worker and explicit catalog-selected reviews with manager-family and exact usage-identity checks; Auto cannot independently review |
 | Cursor CLI | Personal Free accounts: native quota, launcher and supervised text via Auto; routed model identity and independent review unavailable |
 | Ollama local | Bounded text from installed local models, explicit task IDs and separate local receipts |
 | Explicit APIs | Direct text requests, including Meta and Ollama Cloud, with separate credentials and monetary authorization; no automatic fallback |
 
-See [client adapter boundaries](skills/session-harness/references/clients.md).
+Named Copilot execution still requires verification on the intended paid account;
+fixture tests do not prove that route works there. The initial DeepSeek probe
+timed out without a verifiable result. See [release verification limits](docs/RELEASES.md#060)
+and [client adapter boundaries](skills/session-harness/references/clients.md).
 Follow [additional client execution](docs/CLIENT-EXECUTION.md) for Copilot, Cursor, local
 Ollama, explicit Meta/Ollama APIs and remaining inventory-only clients.
 Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).
