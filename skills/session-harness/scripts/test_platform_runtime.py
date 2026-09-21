@@ -53,7 +53,7 @@ class PipeTests(unittest.TestCase):
 
     def test_windows_lookup_prefers_native_extensions_and_rejects_extensionless(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             for name in ('client', 'client.exe', 'client.cmd'):
                 (root / name).write_text('fixture')
             with patch.object(runtime, 'WINDOWS', True), patch.dict(os.environ, {'PATH': directory}):
@@ -66,7 +66,7 @@ class PipeTests(unittest.TestCase):
 
     def test_current_npm_shim_is_resolved_without_a_batch_shell(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory); node = root / 'node.exe'; node.touch()
+            root = Path(directory).resolve(); node = root / 'node.exe'; node.touch()
             script = root / 'node_modules/client/loader.js'; script.parent.mkdir(parents=True); script.touch()
             shim = root / 'client.cmd'
             for program, pathext in [('node.exe', ''), ('node', 'set PATHEXT=%PATHEXT:;.JS;=;% & ')]:
