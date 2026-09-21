@@ -8,7 +8,7 @@ import optional_clients
 
 class OptionalClientsTests(unittest.TestCase):
     def test_absent_registry_never_launches(self):
-        with patch('inventory.shutil.which', return_value=None), patch('inventory.harness.run') as run, patch('inventory.subprocess.Popen') as popen:
+        with patch('inventory.platform_runtime.which', return_value=None), patch('inventory.harness.run') as run, patch('inventory.subprocess.Popen') as popen:
             results = inventory.discover_all()
         self.assertEqual(len(results), 8)
         self.assertTrue(all(row['status'] == 'not_installed' for row in results.values()))

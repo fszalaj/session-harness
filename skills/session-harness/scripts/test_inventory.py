@@ -39,7 +39,7 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(inventory.normalize_quota({'quotaSnapshots': []}), [])
 
     def test_uninstalled_never_launches(self):
-        with patch('inventory.shutil.which', return_value=None), patch('inventory.subprocess.Popen') as popen:
+        with patch('inventory.platform_runtime.which', return_value=None), patch('inventory.subprocess.Popen') as popen:
             self.assertEqual(inventory.discover_copilot()['status'], 'not_installed')
             self.assertEqual(inventory.discover_cursor()['status'], 'not_installed')
             popen.assert_not_called()
@@ -57,6 +57,8 @@ class InventoryTests(unittest.TestCase):
     def test_model_visibility_survives_unavailable_quota(self):
         client = MagicMock()
         client.request.side_effect = [{}, {'isAuthenticated': True}, {'models': [{'id': 'gpt-99'}]}, ValueError('private')]
+        client._request.side_effect = [{'sessionId': 'fixture'}, {'list': [
+            {'id': 'gpt-99', 'model_picker_enabled': True}]}]
         with patch('inventory.MetadataRPC', return_value=client):
             result = inventory.discover_copilot('/mock/copilot')
         self.assertEqual(result['status'], 'account_metadata')
@@ -102,10 +104,32 @@ class InventoryTests(unittest.TestCase):
         client = MagicMock()
         client.request.side_effect = [{}, {'isAuthenticated': True}, {'models': [{'id': 'gpt-99'}]},
                                       {'quotaSnapshots': {'chat': valid, 'other': None}}]
+        client._request.side_effect = [{'sessionId': 'fixture'}, {'list': [
+            {'id': 'gpt-99', 'model_picker_enabled': True}]}]
         with patch('inventory.MetadataRPC', return_value=client):
             result = inventory.discover_copilot('/mock/copilot')
         self.assertEqual(len(result['quota']), 1)
         self.assertFalse(result['quota_complete'])
+
+    def test_session_catalog_adds_missing_model_without_inference_or_private_fields(self):
+        client = MagicMock()
+        client.request.side_effect = [{}, {'isAuthenticated': True}, {'models': [{'id': 'auto'}]}, {}]
+        client._request.side_effect = [{'sessionId': 'fixture'}, {'resolvedAuthLogin': 'private', 'list': [
+            {'id': 'gemini-99.1', 'model_picker_enabled': True,
+             'capabilities': {'supports': {'reasoning_effort': ['low', 'medium', 'high']}}},
+            {'id': 'gemini-hidden', 'model_picker_enabled': False}]}]
+        with patch('inventory.MetadataRPC', return_value=client):
+            result = inventory.discover_copilot('/mock/copilot')
+        self.assertEqual([m['id'] for m in result['models']], ['auto', 'gemini-99.1'])
+        self.assertEqual(result['models'][1]['native_controls']['reasoning_efforts'], ['low', 'medium', 'high'])
+        self.assertEqual(result['models'][1]['evidence']['source'], 'session.model.list')
+        self.assertEqual([c.args[0] for c in client._request.call_args_list], ['session.create', 'session.model.list'])
+        config = client._request.call_args_list[0].args[1]
+        self.assertEqual(config['availableTools'], [])
+        self.assertFalse(config['enableSkills'])
+        self.assertFalse(config['enableFileHooks'])
+        self.assertNotIn('private', json.dumps(result))
+        client.close.assert_called_once()
 
     def test_child_environment_preserves_auth_paths(self):
         env = {'PATH': '/bin', 'COPILOT_HOME': '/native/home', 'HOME': '/home/user',

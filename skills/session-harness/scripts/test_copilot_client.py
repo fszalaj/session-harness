@@ -23,6 +23,14 @@ def quota(used=2):
         **row, 'hasQuota': False, 'entitlementRequests': 0, 'usedRequests': 0, 'remainingPercentage': 0}}}
 
 
+def paid_quota(used=2):
+    row = quota(used)['quotaSnapshots']['chat']
+    unlimited = {**row, 'isUnlimitedEntitlement': True, 'entitlementRequests': 0,
+                 'usedRequests': 0, 'remainingPercentage': 100}
+    return {'quotaSnapshots': {'chat': unlimited, 'completions': dict(unlimited),
+                              'premium_interactions': dict(row)}}
+
+
 class CopilotTests(unittest.TestCase):
     def named_capability(self, model='claude-99.1'):
         return {'executable': 'copilot', 'auth': {'status': 'subscription'},
@@ -63,18 +71,19 @@ class CopilotTests(unittest.TestCase):
             execute.assert_not_called()
 
     def test_named_review_uses_fresh_catalog_exact_identity_and_existing_role_gates(self):
-        for scenario in ('success', 'mismatch', 'catalog-removed', 'effort-removed'):
+        for scenario in ('success', 'mismatch', 'catalog-removed', 'effort-removed', 'deferred', 'wrong-effort'):
             with self.subTest(scenario=scenario):
                 client = MagicMock()
                 def rpc(method, params=None):
                     if method == 'account.getQuota':
                         return quota()
-                    if method == 'models.list':
-                        return {'models': [] if scenario == 'catalog-removed' else [{'id': 'claude-99.1',
-                            'supportedReasoningEfforts': [] if scenario == 'effort-removed' else ['medium']}]}
+                    if method == 'session.model.list':
+                        return {'list': [] if scenario == 'catalog-removed' else [{'id': 'claude-99.1',
+                            'model_picker_enabled': True, 'capabilities': {'supports': {
+                            'reasoning_effort': [] if scenario == 'effort-removed' else ['medium']}}}]}
                     if method == 'session.create':
-                        self.assertEqual(params['model'], 'claude-99.1')
-                        self.assertEqual(params['reasoningEffort'], 'medium')
+                        self.assertEqual(params['model'], 'auto')
+                        self.assertNotIn('reasoningEffort', params)
                         self.assertEqual(params['availableTools'], [])
                         self.assertEqual(params['excludedTools'], ['*'])
                         self.assertEqual(params['mcpServers'], {})
@@ -83,6 +92,12 @@ class CopilotTests(unittest.TestCase):
                             self.assertFalse(params[control])
                         self.assertIn('independent leaf reviewer', params['systemMessage']['content'])
                         return {'sessionId': 'fixture'}
+                    if method == 'session.model.switchTo':
+                        self.assertEqual(params, {'sessionId': 'fixture', 'modelId': 'claude-99.1',
+                                                 'requireAvailable': True, 'reasoningEffort': 'medium'})
+                        return {'status': 'applied', 'deferred': scenario == 'deferred', 'modelId': 'claude-99.1'}
+                    if method == 'session.model.getCurrent':
+                        return {'modelId': 'claude-99.1', 'reasoningEffort': 'low' if scenario == 'wrong-effort' else 'medium'}
                     if method == 'session.send':
                         for kind, data in [('assistant.message', {'content': 'Approve with checks.'}),
                                            ('assistant.usage', {'model': 'gemini-99.1' if scenario == 'mismatch' else 'claude-99.1',
@@ -107,8 +122,8 @@ class CopilotTests(unittest.TestCase):
                         with self.assertRaises(harness.HarnessError):
                             harness.review('copilot', b'Artifact', 30, self.named_capability(),
                                            model='claude-99.1', manager_family='openai')
-                        if scenario.endswith('removed'):
-                            self.assertFalse(any(call.args[0] == 'session.create' for call in client._request.call_args_list))
+                        if scenario != 'mismatch':
+                            self.assertFalse(any(call.args[0] == 'session.send' for call in client._request.call_args_list))
                     watch.return_value.close.assert_called_once()
                 client.close.assert_called_once()
 
@@ -132,7 +147,7 @@ class CopilotTests(unittest.TestCase):
         client.on_message.assert_called_once()
 
     def test_execution_receipt_and_tool_or_unaccounted_response_stop(self):
-        for scenario in ('success', 'tool', 'unknown-model', 'unchanged-quota'):
+        for scenario in ('success', 'tool', 'unknown-model', 'unchanged-quota', 'paid', 'pool-change'):
             with self.subTest(scenario=scenario):
                 client = MagicMock()
                 finished = False
@@ -140,7 +155,8 @@ class CopilotTests(unittest.TestCase):
                 def rpc(method, params=None):
                     nonlocal finished
                     if method == 'account.getQuota':
-                        return quota(3 if finished and scenario != 'unchanged-quota' else 2)
+                        factory = paid_quota if scenario == 'paid' or (scenario == 'pool-change' and not finished) else quota
+                        return factory(3 if finished and scenario != 'unchanged-quota' else 2)
                     if method == 'session.create':
                         self.assertEqual(params['tools'], [])
                         self.assertFalse(params['enableConfigDiscovery'])
@@ -161,10 +177,12 @@ class CopilotTests(unittest.TestCase):
                 client.request.side_effect = rpc
                 capability = {'executable': 'copilot', 'planner': {'model': 'auto', 'effort': None}}
                 with patch.object(inventory, 'MetadataRPC', return_value=client), patch('supervision.Watch'):
-                    if scenario in {'success', 'unchanged-quota'}:
+                    if scenario in {'success', 'unchanged-quota', 'paid'}:
                         result = copilot.execute(b'task', 30, capability, task=True)
                         self.assertEqual(result['actual_model'], 'gpt-test')
                         self.assertEqual(result['completion_tokens'], 10)
+                        self.assertEqual(result['quota_evidence']['pool'],
+                                         'premium_interactions:token_billing' if scenario == 'paid' else 'chat:token_billing')
                         if scenario == 'unchanged-quota':
                             self.assertEqual(result['quota_evidence']['delta_lower_bound_percent'], 0)
                             self.assertEqual(result['quota_evidence']['per_task_charge'], 'unknown')
@@ -184,7 +202,21 @@ class CopilotTests(unittest.TestCase):
             data = copy.deepcopy(raw)
             data['quotaSnapshots']['chat']['overageAllowedWithExhaustedQuota'] = bad
             with self.assertRaises(harness.HarnessError):
-                copilot.chat_pool(data)
+                copilot.billing_pool(data)
+
+    def test_paid_pool_requires_one_known_finite_pool_and_no_overage(self):
+        self.assertEqual(copilot.billing_pool(paid_quota())['pool'], 'premium_interactions')
+        for scenario in ('overage', 'unknown-overage', 'request-billing', 'ambiguous', 'unknown-pool', 'missing-quota'):
+            data = paid_quota()
+            rows = data['quotaSnapshots']
+            if scenario == 'overage': rows['completions']['overageAllowedWithExhaustedQuota'] = True
+            if scenario == 'unknown-overage': rows['chat'].pop('usageAllowedWithExhaustedQuota')
+            if scenario == 'request-billing': rows['premium_interactions']['tokenBasedBilling'] = False
+            if scenario == 'ambiguous': rows['chat'] = dict(rows['premium_interactions'])
+            if scenario == 'unknown-pool': rows['unknown'] = rows.pop('premium_interactions')
+            if scenario == 'missing-quota': rows['premium_interactions'].pop('hasQuota')
+            with self.subTest(scenario=scenario), self.assertRaises(harness.HarnessError):
+                copilot.billing_pool(data)
 
     def test_failed_copilot_job_blocks_admission_until_explicit_reconciliation(self):
         import json

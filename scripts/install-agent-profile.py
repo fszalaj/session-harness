@@ -54,6 +54,8 @@ def launcher_content(runtime: Path) -> bytes:
         '"""Launch the current provider through the shared session harness."""\n'
         "import os\n"
         "import sys\n\n"
+        "sys.dont_write_bytecode = True\n"
+        "os.environ['PYTHONDONTWRITEBYTECODE'] = '1'\n"
         f"python = {sys.executable!r}\n"
         "if os.name != 'nt' and sys.executable != python:\n"
         "    os.execv(python, [python, *sys.argv])\n"

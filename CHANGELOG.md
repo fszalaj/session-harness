@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.6.1
+
+- Discover Copilot models from an isolated session catalog, including models
+  omitted by the global SDK list. Apply and verify the named model and effort
+  before sending text; retain exact usage-event identity and quota checks.
+- Keep installed snapshots free of Python bytecode when the launcher imports the
+  runtime or starts child interpreters, preserving repeat installation checks.
+- Resolve Windows executables before extensionless npm files and support current
+  npm command wrappers without invoking a batch shell or searching the working directory.
+- Keep provider discovery failures isolated and make portable test fixtures work
+  with Windows clocks, virtual environments and unavailable symlink privileges.
+- Allow one configured native service in bounded work, retaining quota admission,
+  task identity, concurrency, unresolved jobs and role checks.
+- Accept one finite token-billed Copilot chat or premium_interactions pool and
+  identify it in receipts. Ambiguous pools, missing controls, paid overage and
+  strict-mode requests without enforceable bounds remain blocked.
+
 ## 0.6.0
 
 - Add explicit account-selectable Copilot model/effort controls for launch and

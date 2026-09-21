@@ -26,6 +26,11 @@ Enable only after the owner requests balancing. Run configuration on the account
 authority; clients on other computers use that same authority for every reservation.
 Existing setup, budgets, calendar, reserves, grants and API money authorization are
 preserved. `enable --services codex,claude` selects a supported subset explicitly.
+Version 0.6.1 also accepts one configured service, for
+example `enable --services copilot`. Version 0.6.0 requires two. Single-service
+work retains the same admission, concurrency slot, task journal and no-replay
+rules; its relative progress comparison has only one participant. Multiple model
+families through Copilot remain one service. Do not add another account to enable work.
 `--max-lead 0.15` sets a maximum lead of 15% of a day's local budget at dispatch.
 It is neither a token cap nor 15 percentage points of a provider's entire quota.
 
@@ -131,7 +136,7 @@ Match work against verified adapter capabilities:
 | Provider or tool | Execution status | Quota and billing scope |
 | --- | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Protected native execution | Fresh native quota readers; balance fractions of local daily budgets |
-| Copilot, Cursor | Native launch and supervised text | Finite Copilot chat pool or personal Cursor Free Auto; fresh no-overage evidence required |
+| Copilot, Cursor | Native launch and supervised text | One finite token-billed Copilot chat or premium_interactions pool (premium support since 0.6.1), or personal Cursor Free Auto; fresh no-overage evidence required |
 | Gemini CLI, Kimi CLI, OpenCode, Aider, Continue | Discovery | No protected native execution adapter |
 | Ollama local | Bounded text with local residency checks | Separate local job ledger, outside subscription balancing |
 | Paid OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi, Z.ai, OpenRouter APIs | Explicit text requests | Separate monthly money admission; never subscription fallback |

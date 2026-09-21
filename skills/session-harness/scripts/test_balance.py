@@ -23,6 +23,7 @@ class BalanceTests(unittest.TestCase):
         owner = patch.object(credits, 'codex_owner_policy', return_value={'confirmed_at': time.time()})
         owner.start()
         self.addCleanup(owner.stop)
+        self.observed = {}
         self.seed('codex')
         self.seed('claude')
         self.guard = patch.object(balance.usage, 'require_admission', side_effect=lambda service, ledger: ledger.check(service))
@@ -35,7 +36,8 @@ class BalanceTests(unittest.TestCase):
         pools = [dict(pool='weekly', used_percent=used, resets_at=time.time() + 604800)]
         pools.extend(extra or [])
         resources = credits.claude_resources({'extra_usage': {'is_enabled': False}}) if service == 'claude' else credits.codex_resources({'native': {'credits': {'hasCredits': False, 'unlimited': False, 'balance': '0'}}})
-        return self.ledger.record(dict(service=service, observed_at=time.time(), complete=True,
+        self.observed[service] = max(time.time(), self.observed.get(service, 0) + .000001)
+        return self.ledger.record(dict(service=service, observed_at=self.observed[service], complete=True,
                                       source='test', pools=pools, credit_resources=resources), initialize=True)
 
     def request(self, id='task', **kwargs):
@@ -88,6 +90,20 @@ class BalanceTests(unittest.TestCase):
         self.assertEqual(balance.reserve(self.ledger, self.request('third'))['status'], 'busy')
         balance.finish(self.ledger, 'first', 'completed')
         self.assertTrue(balance.reserve(self.ledger, self.request('third'))['allowed'])
+
+    def test_single_copilot_service_keeps_journal_concurrency_and_quota_stops(self):
+        import inventory
+        from test_copilot_client import quota
+        self.add_auto_services(['copilot'])
+        first = self.request('single', provider='copilot')
+        self.assertTrue(balance.reserve(self.ledger, first)['allowed'])
+        self.assertEqual(balance.reserve(self.ledger, self.request('busy'))['status'], 'busy')
+        self.assertTrue(balance.start(self.ledger, 'single')['allowed'])
+        balance.finish(self.ledger, 'single', 'completed')
+        self.assertEqual(balance.reserve(self.ledger, first)['job']['status'], 'completed')
+        self.ledger.record(balance.usage.copilot_snapshot(inventory.normalize_quota(quota(200)), complete=True))
+        self.assertFalse(balance.reserve(self.ledger, self.request('exhausted'))['allowed'])
+        self.assertEqual(len(balance.status(self.ledger)['jobs']), 1)
 
     def test_explicit_only_stops_remain_global_and_explicit_lead_is_preserved(self):
         self.add_auto_services()

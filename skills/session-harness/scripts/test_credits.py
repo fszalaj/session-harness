@@ -402,10 +402,19 @@ class AntigravitySettingsTests(unittest.TestCase):
         self.path.unlink()
         self.assertEqual([], credits.native_reasons("antigravity", rows))
 
-    def test_symlink_and_read_errors_are_not_defaults(self):
-        self.path.symlink_to(self.path.with_name("absent"))
+    def symlink(self, target):
+        try:
+            self.path.symlink_to(target)
+        except OSError as error:
+            if getattr(error, 'winerror', None) == 1314:
+                self.skipTest('Windows symlink privilege unavailable')
+            raise
+
+    def test_symlink_is_not_default(self):
+        self.symlink(self.path.with_name("absent"))
         self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
-        self.path.unlink()
+
+    def test_read_errors_are_not_defaults(self):
         self.path.write_text('{}')
         for error in (PermissionError(), FileNotFoundError()):
             with patch("credits.os.open", side_effect=error):
@@ -417,7 +426,7 @@ class AntigravitySettingsTests(unittest.TestCase):
         self.path.unlink()
         target = self.path.with_name('other.json')
         target.write_text('{"useG1Credits":false}')
-        self.path.symlink_to(target)
+        self.symlink(target)
         with patch.object(Path, "lstat", return_value=original):
             self.assertEqual("invalid", credits.antigravity_resources()[0]["metadata_status"])
 

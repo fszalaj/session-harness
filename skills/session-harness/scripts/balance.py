@@ -156,7 +156,7 @@ def _policy(ledger, db, config):
     if config.get('enabled') is not True:
         return 'balance_disabled'
     services = config.get('services')
-    if (not isinstance(services, list) or len(services) < 2 or len(services) != len(set(services))
+    if (not isinstance(services, list) or not services or len(services) != len(set(services))
             or any(s not in NATIVE for s in services)):
         return 'unsupported_participants'
     if not re.fullmatch('[0-9a-f]{64}', config.get('hmac_key', '')):
@@ -190,8 +190,8 @@ def configure(ledger, enabled, services=None, max_lead=.15, solo_blocked=None):
         setup = ledger._setup(db)
         selected = sorted(NATIVE.intersection(setup['services'])) if services is None else services
         if (not isinstance(selected, list) or any(not isinstance(s, str) for s in selected)
-                or len(selected) < 2 or len(selected) != len(set(selected)) or any(s not in NATIVE for s in selected)):
-            raise ValueError('at least two supported native participants required; API routes are unsupported')
+                or not selected or len(selected) != len(set(selected)) or any(s not in NATIVE for s in selected)):
+            raise ValueError('at least one supported native participant required; API routes are unsupported')
         for service in selected:
             ledger._require_setup(db, 'native', service)
         if old.get('enabled') and not old.get('hmac_key'):

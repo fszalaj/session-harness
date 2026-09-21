@@ -5,6 +5,39 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.6.1
+
+This patch repairs Windows executable discovery and immutable launcher snapshots.
+Recognized npm wrappers resolve directly to Node or a contained native executable;
+no batch shell is invoked. Launcher imports and child interpreters no longer add
+bytecode files to installed snapshots, preserving repeat-install checks.
+
+Copilot discovery reads an isolated session catalog, which can include models
+missing from the global SDK list. Named execution applies and verifies the model
+and supported effort before sending text, then requires the exact usage-event
+model identity. The session protocol was checked with Copilot CLI 1.0.86.
+
+Bounded work accepts one configured native billing service. Copilot accepts one
+finite token-billed `chat` or `premium_interactions` pool. Multiple model families
+inside Copilot still share one billing service; independent reviewer-family
+requirements do not change. Quota, role, concurrency and unresolved-job checks
+remain in place.
+
+Strict mode still rejects execution without enforceable bounds. Paid overage must
+remain disabled for the standard native adapter; this release does not authorize
+spending or introduce a hard per-request Copilot cost cap. Account counters may
+lag, and advertised or selected models alone do not prove successful inference.
+
+Verification includes the portable contract suite and an isolated upgrade from
+0.6.0, repeat installation with zero changes, launcher execution without snapshot
+bytecode, and rollback preserving synthetic private settings and accounting.
+Platform-specific checks report explicit skips on other operating systems.
+
+Upgrade with `ai-session update --version 0.6.1 --apply`, then restart clients.
+Private policy, accounting, authentication and automatic-update preferences are
+preserved. See [Copilot execution](CLIENT-EXECUTION.md#explicit-models) and
+[platform boundaries](../skills/session-harness/references/platforms.md).
+
 ## 0.6.0
 
 This feature release adds budgeted Jev structured decisions through OpenRouter,
@@ -215,7 +248,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.6.0, use `ai-session update --version 0.6.0 --apply`, then restart affected
+For v0.6.1, use `ai-session update --version 0.6.1 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.
