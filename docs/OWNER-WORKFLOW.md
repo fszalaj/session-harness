@@ -88,7 +88,12 @@ during reasoning. A separately admitted 4096-token task then returned two valid
 Python assertions in about 92 seconds, with verified identity and settled cost.
 This verifies a bounded route, not general coding quality or actual reasoning effort.
 
-Prefer useful native work by fresh fractional daily allowance use, including Codex
-workers, and Jev for suitable narrow judgments. Keep API work explicitly admitted
+Select task capability before routing. The evaluated complex-work policy compares
+Codex and Claude by whole weekly usage, with current Fable then Opus on Claude and
+explicit high effort on Codex. Lower Codex effort is a bounded-task exception when
+needed; prefer Claude while it has headroom and Codex is ahead. Routine Sonnet,
+Gemini and DeepSeek form an owner-selected execution tier, not a verified universal
+benchmark equivalence. Haiku currently lacks advertised effort controls for this
+adapter. Use Jev for suitable narrow judgments. Keep API work explicitly admitted
 and separately accounted. This small sample does not establish global optimality or
 a provider-wide outage; subscription usage and API money are not directly comparable.

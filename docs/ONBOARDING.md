@@ -216,7 +216,12 @@ mode to bypass an admission failure; see [client execution](CLIENT-EXECUTION.md#
 For multi-service balancing, inspect `ai-session balance status`, submit a useful
 bounded task with `ai-session work --id unique-task-id < task.txt`, and verify its
 terminal receipt. In the current development revision, fractional daily consumption
-ranks before dispatch count. Use `ai-session audit --since YYYY-MM-DD` to distinguish
+ranks before dispatch count. For suitable complex tasks, use `--provider native
+--eligible-services codex,claude --basis weekly --strong-model --worker-effort codex=high`
+to compare whole weekly use while selecting current strongest models. Other configured
+services still undergo admission; this never changes daily budgets. See
+[task selection](../skills/session-harness/references/balancing.md#select-task-capability-and-weekly-balance).
+Use `ai-session audit --since YYYY-MM-DD` to distinguish
 shared accounting from local manager/subagent telemetry. Older installed releases
 retain their own behavior until explicitly updated.
 

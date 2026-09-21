@@ -1,11 +1,11 @@
 {
-  "content_sha256": "761ee3b4eab659b430b78fa8bdc81400ffb7788fc48210ad80f3721ff485e6d7",
+  "content_sha256": "b20d01d9fd14d599ff5443849dcea921e3bbb22dbcd5dca41662e5419c86d991",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 3133,
+    "edge_count": 3144,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1673,
+    "node_count": 1682,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -24,11 +24,11 @@
       "skills/session-harness/scripts/auto_install.py": "20352c5a9e233cef368f14f19352ffe4a9e2cd0018b3449eee8ea54f6be219b9",
       "skills/session-harness/scripts/auto_scheduler.py": "b8f8bd43374bb6206eee6804f94a43f8bfc6e3d9e5f8de29dc5fcff6b3062563",
       "skills/session-harness/scripts/auto_update.py": "e239364ffb34a1bd1d9ee3e08c837bcaabcc5a569ebce2ed867302ccf5df1706",
-      "skills/session-harness/scripts/balance.py": "238a5080ca0254e9a3f5e4cbf07f065648cc8bac62ed94946ec3fc1629bdb63e",
-      "skills/session-harness/scripts/balance_cli.py": "e6cc9bdb2173d979977a98fdf655a80efd3be4acee2fbdb93f1ef610656830f7",
+      "skills/session-harness/scripts/balance.py": "d5238d0eca9b9d9df5776581b56d6d025ddefa2bd9f744091022961af122ce95",
+      "skills/session-harness/scripts/balance_cli.py": "3d0057a524fa7fc385bc75bf6a8aff3341e3e45bc90d45afeb921fbad3c9ca7a",
       "skills/session-harness/scripts/budget_cli.py": "a6f6d39897920b29247e9cac91678e30a3050939d0ae38fd8492c3d29b60a68f",
       "skills/session-harness/scripts/budget_policy.py": "2d2b6d2092544db21d032bdc503d7687716865695e6c5ce02063e3e17f8354ac",
-      "skills/session-harness/scripts/claude_admission.py": "9959e40a09b5b8d8a9253260a78314cb670a09d284e5060fdf6b187f18ef5897",
+      "skills/session-harness/scripts/claude_admission.py": "2f476f019fac7806f098abd89a6f6a4468f8698053ff834ae477e95769e5b3c0",
       "skills/session-harness/scripts/claude_gate.py": "25c9a193f40bab156d5b69a77b5eba9075f820ccf930ce7bba466e809fabc61f",
       "skills/session-harness/scripts/claude_models.py": "4f3978013faea78ec36b4bd769fbd0589d57dc5a4e3ae21a2fe5fd1b35756098",
       "skills/session-harness/scripts/claude_session.py": "d43e869e5c90e50d828e2014c94490590791f48e3041d48b3c794ecb93a52963",
@@ -63,13 +63,13 @@
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
       "skills/session-harness/scripts/test_authentication.py": "ccd5e88f2a9e4d8bd4bbc44b59b3ab4cf5e75715e6173bf7a801b12fcafdb5a8",
       "skills/session-harness/scripts/test_auto_update.py": "15580b9bd48f71b4e859b39fcb7ce9f4263af1461a0502f4e2531b396a2aee68",
-      "skills/session-harness/scripts/test_balance.py": "c661af7bbe7e0cec823454b145788efa5317c30025c640f5e1c61e09ed925284",
-      "skills/session-harness/scripts/test_balance_cli.py": "7dce1ace2d96d97ea10da8e238889634b0c591e884dc27e7616913d58e9fd5e0",
+      "skills/session-harness/scripts/test_balance.py": "e5ae555ffbf9710d47d5e79047f8c7b8080f7c3082759686cb68e2d622cacd18",
+      "skills/session-harness/scripts/test_balance_cli.py": "38ddbb43d9d3da74ce4e5e7f4d28869440a3818d101b25343955764f0d0e9e77",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "0c47a6265593cdf123b61546e59b28ec70c64d3ac63fc8168464dadea2e9f6a0",
       "skills/session-harness/scripts/test_budget_unknown_reset.py": "5120bb55cba23b45ec3f5d6f37d9559aed33027c5798d3b333c51b789de94643",
-      "skills/session-harness/scripts/test_claude_admission.py": "67f2ecc94f02f0b754de37c80d2dbb29e89bc0ab49aeb0379e6b945001b5c7b6",
+      "skills/session-harness/scripts/test_claude_admission.py": "ab69a5acf2e313c940423d34230e38ea6ce4626bda932aa56d90e8b30e3aff70",
       "skills/session-harness/scripts/test_claude_models.py": "297e16906baf5323fe13e03e8ccb2c69fe5e20f53edc362399ff4732eb97ba60",
       "skills/session-harness/scripts/test_coding_models.py": "f2b01c320762fbabbc284dffc788d9533dac36d3500717cdbcca15057049cbbd",
       "skills/session-harness/scripts/test_coordination.py": "479816c73b8892b33a8d144f0be3d95080a9c6bb289aaf092f6dc734aeef3e01",
@@ -2072,6 +2072,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/balance.py",
+      "target": "pyfunc:skills/session-harness/scripts/balance.py:task_options"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/balance.py",
       "target": "pyfunc:skills/session-harness/scripts/balance.py:work_route"
     },
     {
@@ -2199,6 +2205,12 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/balance_cli.py",
       "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:_interactive_dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/balance_cli.py",
+      "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:_worker_choice"
     },
     {
       "confidence": "EXTRACTED",
@@ -11360,6 +11372,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_balance.py:BalanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_task_subset_does_not_bypass_other_service_admission"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance.py:BalanceTests",
       "target": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_unequal_daily_budgets_use_fraction_not_raw_consumption"
     },
     {
@@ -11373,6 +11391,24 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_balance.py:BalanceTests",
       "target": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_unsupported_default_reported_and_explicit_api_rejected"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance.py:BalanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_weekly_basis_uses_whole_allowance_and_ignores_scoped_pools"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance.py:BalanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_weekly_reserve_and_start_fail_closed_without_one_weekly_pool"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance.py:BalanceTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_weekly_start_rechecks_lead_and_releases_denied_slot"
     },
     {
       "confidence": "EXTRACTED",
@@ -11474,6 +11510,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_native_role_controls_bind_fingerprint_and_selected_effort"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
       "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service"
     },
     {
@@ -11499,6 +11541,12 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
       "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_unresolved_actual_model_preserves_output_and_valid_receipt"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_unsupported_worker_effort_fails_reserved_job_before_start"
     },
     {
       "confidence": "EXTRACTED",
@@ -12069,6 +12117,12 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_claude_admission.py:SelectionTests",
       "target": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SelectionTests.test_scope_stop_selects_current_opus_with_common_admission"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_claude_admission.py:SelectionTests",
+      "target": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SelectionTests.test_strong_worker_never_downgrades_to_sonnet"
     },
     {
       "confidence": "EXTRACTED",
@@ -16693,6 +16747,12 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/balance.py:reserve",
+      "target": "pyfunc:skills/session-harness/scripts/balance.py:task_options"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/balance.py:role_admission",
       "target": "pyfunc:skills/session-harness/scripts/balance.py:_constraints"
     },
@@ -16857,6 +16917,12 @@
       "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_interactive",
       "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:request"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_work",
+      "target": "pyfunc:skills/session-harness/scripts/balance_cli.py:_worker_choice"
     },
     {
       "confidence": "INFERRED",
@@ -20113,7 +20179,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_claude_admission.py:SessionTests",
       "label": "SessionTests",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L80",
+      "source_location": "L94",
       "type": "class"
     },
     {
@@ -21385,7 +21451,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_client_services",
       "label": "_client_services",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L393",
+      "source_location": "L413",
       "type": "function"
     },
     {
@@ -21393,7 +21459,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_compact",
       "label": "_compact",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L325",
+      "source_location": "L345",
       "type": "function"
     },
     {
@@ -21425,7 +21491,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_identifier",
       "label": "_identifier",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L387",
+      "source_location": "L407",
       "type": "function"
     },
     {
@@ -21433,7 +21499,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_job_reply",
       "label": "_job_reply",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L381",
+      "source_location": "L401",
       "type": "function"
     },
     {
@@ -21449,7 +21515,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_metadata",
       "label": "_metadata",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L480",
+      "source_location": "L514",
       "type": "function"
     },
     {
@@ -21465,7 +21531,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_public",
       "label": "_public",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L373",
+      "source_location": "L393",
       "type": "function"
     },
     {
@@ -21505,7 +21571,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_status_job",
       "label": "_status_job",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L366",
+      "source_location": "L386",
       "type": "function"
     },
     {
@@ -21521,7 +21587,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:_transition",
       "label": "_transition",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L498",
+      "source_location": "L532",
       "type": "function"
     },
     {
@@ -21553,7 +21619,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:finish",
       "label": "finish",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L576",
+      "source_location": "L611",
       "type": "function"
     },
     {
@@ -21561,7 +21627,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:reconcile",
       "label": "reconcile",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L615",
+      "source_location": "L650",
       "type": "function"
     },
     {
@@ -21569,7 +21635,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:reserve",
       "label": "reserve",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L403",
+      "source_location": "L434",
       "type": "function"
     },
     {
@@ -21593,7 +21659,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:start",
       "label": "start",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L522",
+      "source_location": "L556",
       "type": "function"
     },
     {
@@ -21601,7 +21667,15 @@
       "id": "pyfunc:skills/session-harness/scripts/balance.py:status",
       "label": "status",
       "source_file": "skills/session-harness/scripts/balance.py",
-      "source_location": "L344",
+      "source_location": "L364",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/balance.py:task_options",
+      "label": "task_options",
+      "source_file": "skills/session-harness/scripts/balance.py",
+      "source_location": "L423",
       "type": "function"
     },
     {
@@ -21622,10 +21696,18 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:_worker_choice",
+      "label": "_worker_choice",
+      "source_file": "skills/session-harness/scripts/balance_cli.py",
+      "source_location": "L69",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L194",
+      "source_location": "L234",
       "type": "function"
     },
     {
@@ -21633,7 +21715,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:mixed_work",
       "label": "mixed_work",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L134",
+      "source_location": "L174",
       "type": "function"
     },
     {
@@ -21649,7 +21731,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_interactive",
       "label": "run_interactive",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L164",
+      "source_location": "L204",
       "type": "function"
     },
     {
@@ -21657,7 +21739,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_work",
       "label": "run_work",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L69",
+      "source_location": "L88",
       "type": "function"
     },
     {
@@ -26121,7 +26203,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.add_auto_services",
       "label": "BalanceTests.add_auto_services",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L46",
+      "source_location": "L48",
       "type": "method"
     },
     {
@@ -26129,7 +26211,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.request",
       "label": "BalanceTests.request",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L43",
+      "source_location": "L45",
       "type": "method"
     },
     {
@@ -26153,7 +26235,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_asymmetric_daily_budgets",
       "label": "BalanceTests.test_asymmetric_daily_budgets",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L340",
+      "source_location": "L404",
       "type": "method"
     },
     {
@@ -26161,7 +26243,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_authentication_history_does_not_invalidate_quota_snapshot",
       "label": "BalanceTests.test_authentication_history_does_not_invalidate_quota_snapshot",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L152",
+      "source_location": "L216",
       "type": "method"
     },
     {
@@ -26169,7 +26251,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_auto_clients_rotate_and_remain_bounded",
       "label": "BalanceTests.test_auto_clients_rotate_and_remain_bounded",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L115",
+      "source_location": "L179",
       "type": "method"
     },
     {
@@ -26177,7 +26259,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_bounded_status_preserves_fairness_history",
       "label": "BalanceTests.test_bounded_status_preserves_fairness_history",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L415",
+      "source_location": "L479",
       "type": "method"
     },
     {
@@ -26185,7 +26267,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_busy_laggard_stays_in_progress_comparison",
       "label": "BalanceTests.test_busy_laggard_stays_in_progress_comparison",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L361",
+      "source_location": "L425",
       "type": "method"
     },
     {
@@ -26193,7 +26275,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_client_subset_blocks_before_refresh_without_job",
       "label": "BalanceTests.test_client_subset_blocks_before_refresh_without_job",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L441",
+      "source_location": "L505",
       "type": "method"
     },
     {
@@ -26201,7 +26283,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_client_subset_rechecked_after_config_expansion",
       "label": "BalanceTests.test_client_subset_rechecked_after_config_expansion",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L452",
+      "source_location": "L516",
       "type": "method"
     },
     {
@@ -26209,7 +26291,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_compact_excludes_scoped_pacing_like_evaluation",
       "label": "BalanceTests.test_compact_excludes_scoped_pacing_like_evaluation",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L106",
+      "source_location": "L170",
       "type": "method"
     },
     {
@@ -26217,7 +26299,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_concurrent_refresh_cannot_hide_exhaustion",
       "label": "BalanceTests.test_concurrent_refresh_cannot_hide_exhaustion",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L257",
+      "source_location": "L321",
       "type": "method"
     },
     {
@@ -26225,7 +26307,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_concurrent_refresh_cannot_hide_missing_scoped_pool",
       "label": "BalanceTests.test_concurrent_refresh_cannot_hide_missing_scoped_pool",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L268",
+      "source_location": "L332",
       "type": "method"
     },
     {
@@ -26233,7 +26315,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_concurrent_refresh_reevaluates_new_consumption_without_network_retry",
       "label": "BalanceTests.test_concurrent_refresh_reevaluates_new_consumption_without_network_retry",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L242",
+      "source_location": "L306",
       "type": "method"
     },
     {
@@ -26241,7 +26323,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_concurrent_sqlite_slots",
       "label": "BalanceTests.test_concurrent_sqlite_slots",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L212",
+      "source_location": "L276",
       "type": "method"
     },
     {
@@ -26249,7 +26331,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_constraint_globs_treat_model_brackets_literally",
       "label": "BalanceTests.test_constraint_globs_treat_model_brackets_literally",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L558",
+      "source_location": "L622",
       "type": "method"
     },
     {
@@ -26257,7 +26339,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_constraint_invalid_or_unauthorized_rules_fail_closed",
       "label": "BalanceTests.test_constraint_invalid_or_unauthorized_rules_fail_closed",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L582",
+      "source_location": "L646",
       "type": "method"
     },
     {
@@ -26265,7 +26347,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_constraints_preserved_disabled_and_configure_omission",
       "label": "BalanceTests.test_constraints_preserved_disabled_and_configure_omission",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L565",
+      "source_location": "L629",
       "type": "method"
     },
     {
@@ -26273,7 +26355,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_duplicate_crash_and_disable",
       "label": "BalanceTests.test_duplicate_crash_and_disable",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L198",
+      "source_location": "L262",
       "type": "method"
     },
     {
@@ -26281,7 +26363,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_explicit_only_stops_remain_global_and_explicit_lead_is_preserved",
       "label": "BalanceTests.test_explicit_only_stops_remain_global_and_explicit_lead_is_preserved",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L140",
+      "source_location": "L204",
       "type": "method"
     },
     {
@@ -26289,7 +26371,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_failed_refresh_never_loses_terminal_result",
       "label": "BalanceTests.test_failed_refresh_never_loses_terminal_result",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L406",
+      "source_location": "L470",
       "type": "method"
     },
     {
@@ -26297,7 +26379,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_interactive_cli_round_trip_uses_real_authority_contract_and_journal",
       "label": "BalanceTests.test_interactive_cli_round_trip_uses_real_authority_contract_and_journal",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L171",
+      "source_location": "L235",
       "type": "method"
     },
     {
@@ -26305,7 +26387,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_invalid_requests_metadata_and_no_key",
       "label": "BalanceTests.test_invalid_requests_metadata_and_no_key",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L314",
+      "source_location": "L378",
       "type": "method"
     },
     {
@@ -26313,7 +26395,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_leader_and_manager_overhead",
       "label": "BalanceTests.test_leader_and_manager_overhead",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L192",
+      "source_location": "L256",
       "type": "method"
     },
     {
@@ -26321,7 +26403,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_lower_fraction_wins_even_with_more_previous_dispatches",
       "label": "BalanceTests.test_lower_fraction_wins_even_with_more_previous_dispatches",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L83",
+      "source_location": "L147",
       "type": "method"
     },
     {
@@ -26329,7 +26411,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_malformed_disabled_policy_fails_closed",
       "label": "BalanceTests.test_malformed_disabled_policy_fails_closed",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L431",
+      "source_location": "L495",
       "type": "method"
     },
     {
@@ -26337,7 +26419,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_mixed_refresh_failure_and_race_never_retries",
       "label": "BalanceTests.test_mixed_refresh_failure_and_race_never_retries",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L300",
+      "source_location": "L364",
       "type": "method"
     },
     {
@@ -26345,7 +26427,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_model_constraints_match_role_service_and_supervision",
       "label": "BalanceTests.test_model_constraints_match_role_service_and_supervision",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L539",
+      "source_location": "L603",
       "type": "method"
     },
     {
@@ -26353,7 +26435,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_refresh_outside_transaction_and_policy_drift",
       "label": "BalanceTests.test_refresh_outside_transaction_and_policy_drift",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L230",
+      "source_location": "L294",
       "type": "method"
     },
     {
@@ -26361,7 +26443,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_repeated_race_stops_after_one_read_only_reevaluation",
       "label": "BalanceTests.test_repeated_race_stops_after_one_read_only_reevaluation",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L280",
+      "source_location": "L344",
       "type": "method"
     },
     {
@@ -26369,7 +26451,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_role_admission_arguments_setup_and_legacy_default",
       "label": "BalanceTests.test_role_admission_arguments_setup_and_legacy_default",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L598",
+      "source_location": "L662",
       "type": "method"
     },
     {
@@ -26377,7 +26459,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_safe_decision_and_aggregate_completion_evidence",
       "label": "BalanceTests.test_safe_decision_and_aggregate_completion_evidence",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L390",
+      "source_location": "L454",
       "type": "method"
     },
     {
@@ -26385,7 +26467,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_short_window_gate",
       "label": "BalanceTests.test_short_window_gate",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L327",
+      "source_location": "L391",
       "type": "method"
     },
     {
@@ -26393,7 +26475,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_single_copilot_service_keeps_journal_concurrency_and_quota_stops",
       "label": "BalanceTests.test_single_copilot_service_keeps_journal_concurrency_and_quota_stops",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L126",
+      "source_location": "L190",
       "type": "method"
     },
     {
@@ -26401,7 +26483,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_stale_new_day_and_credit_stop",
       "label": "BalanceTests.test_stale_new_day_and_credit_stop",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L349",
+      "source_location": "L413",
       "type": "method"
     },
     {
@@ -26409,7 +26491,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_start_denies_new_lead_even_when_all_quota_is_allowed",
       "label": "BalanceTests.test_start_denies_new_lead_even_when_all_quota_is_allowed",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L505",
+      "source_location": "L569",
       "type": "method"
     },
     {
@@ -26417,7 +26499,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_start_duplicate_never_refreshes_or_redispatches",
       "label": "BalanceTests.test_start_duplicate_never_refreshes_or_redispatches",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L496",
+      "source_location": "L560",
       "type": "method"
     },
     {
@@ -26425,7 +26507,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_start_rechecks_atomic_snapshot_and_disabled_policy",
       "label": "BalanceTests.test_start_rechecks_atomic_snapshot_and_disabled_policy",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L478",
+      "source_location": "L542",
       "type": "method"
     },
     {
@@ -26433,7 +26515,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_start_refreshes_all_and_denies_unselected_quota_stop",
       "label": "BalanceTests.test_start_refreshes_all_and_denies_unselected_quota_stop",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L467",
+      "source_location": "L531",
       "type": "method"
     },
     {
@@ -26441,7 +26523,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_status_wire_size_preserves_unresolved_jobs",
       "label": "BalanceTests.test_status_wire_size_preserves_unresolved_jobs",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L516",
+      "source_location": "L580",
       "type": "method"
     },
     {
@@ -26449,7 +26531,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_strict_and_missing_evidence_pause_everyone",
       "label": "BalanceTests.test_strict_and_missing_evidence_pause_everyone",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L222",
+      "source_location": "L286",
       "type": "method"
     },
     {
@@ -26457,7 +26539,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_supervised_worker_domain_at_reserve_and_start",
       "label": "BalanceTests.test_supervised_worker_domain_at_reserve_and_start",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L58",
+      "source_location": "L60",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_task_subset_does_not_bypass_other_service_admission",
+      "label": "BalanceTests.test_task_subset_does_not_bypass_other_service_admission",
+      "source_file": "skills/session-harness/scripts/test_balance.py",
+      "source_location": "L135",
       "type": "method"
     },
     {
@@ -26465,7 +26555,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_unequal_daily_budgets_use_fraction_not_raw_consumption",
       "label": "BalanceTests.test_unequal_daily_budgets_use_fraction_not_raw_consumption",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L97",
+      "source_location": "L161",
       "type": "method"
     },
     {
@@ -26473,7 +26563,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_unknown_actual_model_cannot_evade_constraints",
       "label": "BalanceTests.test_unknown_actual_model_cannot_evade_constraints",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L607",
+      "source_location": "L671",
       "type": "method"
     },
     {
@@ -26481,7 +26571,31 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_unsupported_default_reported_and_explicit_api_rejected",
       "label": "BalanceTests.test_unsupported_default_reported_and_explicit_api_rejected",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L382",
+      "source_location": "L446",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_weekly_basis_uses_whole_allowance_and_ignores_scoped_pools",
+      "label": "BalanceTests.test_weekly_basis_uses_whole_allowance_and_ignores_scoped_pools",
+      "source_file": "skills/session-harness/scripts/test_balance.py",
+      "source_location": "L85",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_weekly_reserve_and_start_fail_closed_without_one_weekly_pool",
+      "label": "BalanceTests.test_weekly_reserve_and_start_fail_closed_without_one_weekly_pool",
+      "source_file": "skills/session-harness/scripts/test_balance.py",
+      "source_location": "L118",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_weekly_start_rechecks_lead_and_releases_denied_slot",
+      "label": "BalanceTests.test_weekly_start_rechecks_lead_and_releases_denied_slot",
+      "source_file": "skills/session-harness/scripts/test_balance.py",
+      "source_location": "L100",
       "type": "method"
     },
     {
@@ -26489,7 +26603,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_zero_ceiling_blocks_and_local_fingerprint_is_stable",
       "label": "BalanceTests.test_zero_ceiling_blocks_and_local_fingerprint_is_stable",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L368",
+      "source_location": "L432",
       "type": "method"
     },
     {
@@ -26497,7 +26611,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance.py:BalanceTests.test_zero_rotation_and_lifecycle",
       "label": "BalanceTests.test_zero_rotation_and_lifecycle",
       "source_file": "skills/session-harness/scripts/test_balance.py",
-      "source_location": "L161",
+      "source_location": "L225",
       "type": "method"
     },
     {
@@ -26505,7 +26619,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.interactive",
       "label": "WorkTests.interactive",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L210",
+      "source_location": "L256",
       "type": "method"
     },
     {
@@ -26513,7 +26627,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.interactive_replies",
       "label": "WorkTests.interactive_replies",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L205",
+      "source_location": "L251",
       "type": "method"
     },
     {
@@ -26529,7 +26643,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_copilot_work_preserves_advertised_effort_through_real_review",
       "label": "WorkTests.test_copilot_work_preserves_advertised_effort_through_real_review",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L93",
+      "source_location": "L139",
       "type": "method"
     },
     {
@@ -26537,7 +26651,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_denial_and_duplicate_never_execute_or_switch",
       "label": "WorkTests.test_denial_and_duplicate_never_execute_or_switch",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L115",
+      "source_location": "L161",
       "type": "method"
     },
     {
@@ -26553,7 +26667,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_failure_retains_terminal_attempt_and_never_retries",
       "label": "WorkTests.test_failure_retains_terminal_attempt_and_never_retries",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L124",
+      "source_location": "L170",
       "type": "method"
     },
     {
@@ -26561,7 +26675,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_disabled_shape_and_successful_execution",
       "label": "WorkTests.test_interactive_disabled_shape_and_successful_execution",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L236",
+      "source_location": "L282",
       "type": "method"
     },
     {
@@ -26569,7 +26683,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_quota_stop_remains_primary_and_retains_job",
       "label": "WorkTests.test_interactive_quota_stop_remains_primary_and_retains_job",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L254",
+      "source_location": "L300",
       "type": "method"
     },
     {
@@ -26577,7 +26691,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_receipt_denial_is_not_process_success",
       "label": "WorkTests.test_interactive_receipt_denial_is_not_process_success",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L186",
+      "source_location": "L232",
       "type": "method"
     },
     {
@@ -26585,7 +26699,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_transport_and_malformed_replies_preserve_phase_without_retry",
       "label": "WorkTests.test_interactive_transport_and_malformed_replies_preserve_phase_without_retry",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L214",
+      "source_location": "L260",
       "type": "method"
     },
     {
@@ -26593,7 +26707,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_worker_lead_denial_before_process",
       "label": "WorkTests.test_interactive_worker_lead_denial_before_process",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L195",
+      "source_location": "L241",
       "type": "method"
     },
     {
@@ -26601,13 +26715,21 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_lost_receipt_preserves_output_without_second_dispatch",
       "label": "WorkTests.test_lost_receipt_preserves_output_without_second_dispatch",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L159",
+      "source_location": "L205",
       "type": "method"
     },
     {
       "file_type": "python",
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_mixed_free_selection_and_native_stop",
       "label": "WorkTests.test_mixed_free_selection_and_native_stop",
+      "source_file": "skills/session-harness/scripts/test_balance_cli.py",
+      "source_location": "L94",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_native_role_controls_bind_fingerprint_and_selected_effort",
+      "label": "WorkTests.test_native_role_controls_bind_fingerprint_and_selected_effort",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
       "source_location": "L48",
       "type": "method"
@@ -26617,7 +26739,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service",
       "label": "WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L71",
+      "source_location": "L117",
       "type": "method"
     },
     {
@@ -26625,7 +26747,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_fixed_schema_never_accepts_extra_fields",
       "label": "WorkTests.test_remote_fixed_schema_never_accepts_extra_fields",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L172",
+      "source_location": "L218",
       "type": "method"
     },
     {
@@ -26633,7 +26755,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_missing_protocol_and_transport_fail_closed",
       "label": "WorkTests.test_remote_missing_protocol_and_transport_fail_closed",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L149",
+      "source_location": "L195",
       "type": "method"
     },
     {
@@ -26641,7 +26763,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_reserve_transmits_client_setup_and_timeout_is_safe",
       "label": "WorkTests.test_remote_reserve_transmits_client_setup_and_timeout_is_safe",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L178",
+      "source_location": "L224",
       "type": "method"
     },
     {
@@ -26649,7 +26771,15 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_unresolved_actual_model_preserves_output_and_valid_receipt",
       "label": "WorkTests.test_unresolved_actual_model_preserves_output_and_valid_receipt",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L136",
+      "source_location": "L182",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_unsupported_worker_effort_fails_reserved_job_before_start",
+      "label": "WorkTests.test_unsupported_worker_effort_fails_reserved_job_before_start",
+      "source_file": "skills/session-harness/scripts/test_balance_cli.py",
+      "source_location": "L74",
       "type": "method"
     },
     {
@@ -26657,7 +26787,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_worker_cli_reports_policy_denial_in_imported_and_script_namespaces",
       "label": "WorkTests.test_worker_cli_reports_policy_denial_in_imported_and_script_namespaces",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L264",
+      "source_location": "L310",
       "type": "method"
     },
     {
@@ -27401,7 +27531,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SelectionTests.test_old_remote_authority_cannot_drop_models",
       "label": "SelectionTests.test_old_remote_authority_cannot_drop_models",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L65",
+      "source_location": "L79",
       "type": "method"
     },
     {
@@ -27410,6 +27540,14 @@
       "label": "SelectionTests.test_scope_stop_selects_current_opus_with_common_admission",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
       "source_location": "L39",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SelectionTests.test_strong_worker_never_downgrades_to_sonnet",
+      "label": "SelectionTests.test_strong_worker_never_downgrades_to_sonnet",
+      "source_file": "skills/session-harness/scripts/test_claude_admission.py",
+      "source_location": "L65",
       "type": "method"
     },
     {
@@ -27425,7 +27563,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SessionTests.exercise",
       "label": "SessionTests.exercise",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L81",
+      "source_location": "L95",
       "type": "method"
     },
     {
@@ -27433,7 +27571,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SessionTests.test_explicit_resume_keeps_requested_identity",
       "label": "SessionTests.test_explicit_resume_keeps_requested_identity",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L118",
+      "source_location": "L132",
       "type": "method"
     },
     {
@@ -27441,7 +27579,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SessionTests.test_hook_model_switch_children_and_unknown_identity",
       "label": "SessionTests.test_hook_model_switch_children_and_unknown_identity",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L138",
+      "source_location": "L152",
       "type": "method"
     },
     {
@@ -27449,7 +27587,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SessionTests.test_normal_exit_never_restarts",
       "label": "SessionTests.test_normal_exit_never_restarts",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L123",
+      "source_location": "L137",
       "type": "method"
     },
     {
@@ -27457,7 +27595,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SessionTests.test_scoped_stop_resumes_exact_session_once_after_cleanup",
       "label": "SessionTests.test_scoped_stop_resumes_exact_session_once_after_cleanup",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L113",
+      "source_location": "L127",
       "type": "method"
     },
     {
@@ -27465,7 +27603,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_admission.py:SessionTests.test_unsafe_or_normal_exit_evidence_never_restarts",
       "label": "SessionTests.test_unsafe_or_normal_exit_evidence_never_restarts",
       "source_file": "skills/session-harness/scripts/test_claude_admission.py",
-      "source_location": "L126",
+      "source_location": "L140",
       "type": "method"
     },
     {

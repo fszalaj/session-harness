@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add explicit task-fit native subsets, weekly quota ranking and current strongest
+  worker selection with per-service effort. Preserve all daily admission checks;
+  strong Claude work falls back only to a verified current Opus alternative.
+
 - Rank bounded native work by fresh fractional daily consumption before dispatch
   count, including usage from managers and independent reviews through account counters.
 - Avoid double-counting quota corrections and rebounds inside a verified reset window;

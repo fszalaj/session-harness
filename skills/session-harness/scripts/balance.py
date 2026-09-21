@@ -310,12 +310,32 @@ def _evaluate(ledger, config=None, override=False, refresh=True):
 
 
 
-def _selection(services, provider='auto'):
+def _selection(services, provider='auto', eligible_services=None, basis='daily'):
     automatic = provider in {'auto', 'native'}
     eligible = sorted(set(services) & AUTOMATIC_NATIVE if automatic else services)
-    progress = [services[s]['progress'] for s in eligible]
+    if eligible_services is not None:
+        eligible = sorted(set(eligible) & set(eligible_services))
+    fractions = {s: services[s]['progress'] for s in eligible}
+    if basis == 'weekly':
+        for service in eligible:
+            weekly = []
+            try:
+                for pool in services[service].get('pools', []):
+                    if pool.get('window_minutes') != 10080 or pool.get('model_scope') is not None:
+                        continue
+                    if pool.get('window_source') not in budget_policy.WINDOW_SOURCES:
+                        raise ValueError('unverified weekly window')
+                    remaining = budget_policy.numeric(pool.get('remaining_percent'), 'remaining percentage')
+                    if not 0 <= remaining <= 100:
+                        raise ValueError('invalid remaining percentage')
+                    weekly.append((100 - remaining) / 100)
+                fractions[service] = max(weekly) if weekly else None
+            except ValueError:
+                fractions[service] = None
+    progress = list(fractions.values())
     return dict(mode='supervised_worker' if automatic else 'explicit_provider',
-                ranking='fractional_daily_consumption_then_dispatch_count',
+                ranking=('weekly_quota_fraction' if basis == 'weekly' else 'fractional_daily_consumption') + '_then_dispatch_count',
+                basis=basis, progress_by_service=fractions,
                 eligible_services=eligible,
                 explicit_only_services=sorted(set(services) - AUTOMATIC_NATIVE),
                 supervised_auto_services=sorted(set(services) & {'copilot', 'cursor'}),
@@ -323,7 +343,7 @@ def _selection(services, provider='auto'):
 
 
 def _compact(summary):
-    fields = ('pool', 'strategy', 'daily_consumed', 'daily_ceiling', 'resets_at',
+    fields = ('pool', 'remaining_percent', 'strategy', 'daily_consumed', 'daily_ceiling', 'resets_at',
               'window_minutes', 'window_source', 'history_partial', 'daily_consumption_lower_bound', 'model_scope')
     pools = [{key: pool.get(key) for key in fields} for pool in summary.get('pools', [])]
     pacing = []
@@ -400,8 +420,19 @@ def _client_services(ledger, db, supplied):
     return set(services)
 
 
+def task_options(provider, eligible_services=None, basis='daily'):
+    if basis not in {'daily', 'weekly'}:
+        raise ValueError('invalid ranking basis')
+    if eligible_services is not None and (not isinstance(eligible_services, list) or not eligible_services
+            or any(not isinstance(s, str) or s not in NATIVE for s in eligible_services)
+            or len(eligible_services) != len(set(eligible_services))):
+        raise ValueError('invalid eligible services')
+    if (eligible_services is not None or basis != 'daily') and provider != 'native':
+        raise ValueError('task selection requires an explicit native billing route')
+
+
 def reserve(ledger, request, client_services=None):
-    if not isinstance(request, dict) or set(request) - {'id', 'fingerprint', 'host', 'role', 'provider'}:
+    if not isinstance(request, dict) or set(request) - {'id', 'fingerprint', 'host', 'role', 'provider', 'eligible_services', 'basis'}:
         raise ValueError('invalid request fields')
     for key in ('id', 'host', 'role'):
         _identifier(request.get(key), key)
@@ -410,8 +441,11 @@ def reserve(ledger, request, client_services=None):
     provider = request.get('provider', 'auto')
     if provider not in NATIVE | {'auto', 'native'}:
         raise ValueError('unsupported native provider')
+    task_options(provider, request.get('eligible_services'), request.get('basis', 'daily'))
     with ledger._connect() as db:
         _table(db)
+        if not set(request.get('eligible_services') or []).issubset(_load(db)['services']):
+            return _reply('service_not_participating')
         configured = _client_services(ledger, db, client_services)
         if not set(_load(db)['services']).issubset(configured):
             return _reply('service_not_configured_on_client')
@@ -447,14 +481,14 @@ def reserve(ledger, request, client_services=None):
             return _reply('evidence_unavailable')
         jobs = [json.loads(r[0]) for r in db.execute("SELECT value FROM balance_jobs WHERE status IN ('reserved', 'running')")]
         busy = {j['service'] for j in jobs if j['status'] in OPEN}
-        selection = _selection(result['services'], provider)
+        selection = _selection(result['services'], provider, request.get('eligible_services'), request.get('basis', 'daily'))
         if not selection['eligible_services']:
             return _reply('current_model_selection_required', selection=selection)
         minimum = selection['minimum_progress']
         if minimum is None:
             return _reply('evidence_unavailable', selection=selection)
         band = [s for s in selection['eligible_services']
-                if result['services'][s]['progress'] <= minimum + config['max_lead'] + 1e-12]
+                if selection['progress_by_service'][s] <= minimum + config['max_lead'] + 1e-12]
         if provider in NATIVE and provider not in result['services']:
             return _reply('service_not_participating')
         if provider in NATIVE and provider not in band:
@@ -463,7 +497,7 @@ def reserve(ledger, request, client_services=None):
         if not candidates:
             return _reply('busy', jobs=[_public(j) for j in jobs if j['status'] in OPEN], services=result['services'])
         counts = dict(db.execute('SELECT service, COUNT(*) FROM balance_jobs WHERE day=? GROUP BY service', (day,)))
-        selected = min(candidates, key=lambda s: (result['services'][s]['progress'], counts.get(s, 0), s))
+        selected = min(candidates, key=lambda s: (selection['progress_by_service'][s], counts.get(s, 0), s))
         job = dict(request, provider=provider, service=selected, day=day, status='reserved', created_at=now, updated_at=now,
                    usage_attribution='aggregate_account_only',
                    balance_policy_hash=hashlib.sha256(snapshot[KEY].encode()).hexdigest(),
@@ -546,7 +580,8 @@ def start(ledger, id):
         if snapshot is None or current != snapshot:
             reasons.append('state_changed')
         now = time.time()
-        selection = _selection(admission.get('services', {}), job.get('provider', 'auto'))
+        selection = _selection(admission.get('services', {}), job.get('provider', 'auto'),
+                               job.get('eligible_services'), job.get('basis', 'daily'))
         if admission.get('allowed'):
             config = _load(db)
             services = admission['services']
@@ -556,7 +591,7 @@ def start(ledger, id):
                 reasons.append('current_model_selection_required')
             elif selection['minimum_progress'] is None:
                 reasons.append('evidence_unavailable')
-            elif services[job['service']]['progress'] > selection['minimum_progress'] + config['max_lead'] + 1e-12:
+            elif selection['progress_by_service'][job['service']] > selection['minimum_progress'] + config['max_lead'] + 1e-12:
                 reasons.append('max_lead_exceeded')
             for service, summary in services.items():
                 if (not ledger._fresh(ledger._service(db, service), now)

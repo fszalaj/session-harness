@@ -98,6 +98,37 @@ and bounded metadata enter the journal; prompts and responses are not stored the
 The key is private ledger state, not a signature against someone who controls that
 ledger. Local audit reads only allowlisted token/cost metadata into its report.
 
+## Select task capability and weekly balance
+
+The development revision supports a task-fit subset and weekly quota basis. Choose
+these before dispatch, never as a retry around a stop:
+
+```sh
+ai-session work --provider native --eligible-services codex,claude --basis weekly \
+  --strong-model --worker-effort codex=high --id complex-task < task.txt
+```
+
+`--basis weekly` ranks the highest used fraction of verified, unscoped seven-day
+pools. It compares the whole weekly allowance, not today's consumption. Missing
+weekly evidence stops the task; monthly or model-specific pools do not substitute.
+The existing `max_lead` is measured in this selected basis (0.15 means 15 percentage
+points of weekly usage). Daily admission, reserve and every configured participant's
+quota checks remain unchanged, including services outside `--eligible-services`.
+Reserve and start both use the persisted subset and basis; a denied start releases
+the slot without selecting another provider. Default requests retain daily ranking.
+
+`--strong-model` uses the catalog-selected planning model for supervised work, at
+ordinary supported worker effort. It requires an explicit subset of Codex, Claude
+and/or Antigravity. A Fable or Opus worker can use only a verified current Opus
+alternative; it never silently drops to Sonnet. Common quota stops still block.
+Repeatable `--worker-effort SERVICE=LEVEL` sets only that selected service's effort;
+unsupported model controls fail before inference. All controls enter the task
+fingerprint. Requested and reported effort remain distinct in the receipt.
+
+Choose quality and task capability first, then balance eligible subscriptions.
+Lower effort is an explicit task choice, not a way to avoid a quota stop. These
+controls do not change an active manager or turn supervised work into review.
+
 ## Configure which models need supervision
 
 The owner can restrict independent roles for selected models, without changing the
@@ -225,7 +256,7 @@ proof of an API invoice.
 
 Interactive workers report `balance_blocked` with a phase and reason codes when
 pacing prevents launch. `max_lead_exceeded` means that service is ahead of the
-configured fraction of daily budgets; it is not a CLI schema failure or proof that
+configured lead for the task's daily or weekly basis; it is not a CLI schema failure or proof that
 the subscription is exhausted. Inspect `ai-session balance status`. Keep useful work
 within the admitted band; changing the lead requires an explicit configuration choice.
 

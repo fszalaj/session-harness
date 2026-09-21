@@ -203,7 +203,10 @@ ai-session audit --since 2026-01-01
 Enable on the account authority after the owner requests balancing. Selection targets
 equal fractions of daily allowances, using atomic task reservations and fresh native
 observations. The current development revision ranks the least-consumed fraction
-first, using daily dispatch counts only for ties. Manager and review usage enters
+first, using daily dispatch counts only for ties. Task-fit native subsets can select
+`--basis weekly` to equalize used fractions of whole weekly quotas; `--strong-model`
+and per-service `--worker-effort` retain explicit capability and effort choices.
+Daily admission remains mandatory. Manager and review usage enters
 through account counters; `audit` separates authority accounting from local session
 telemetry. These fixes require the matching runtime or a reviewed registered overlay. It does not promise equal token totals or dollar costs. APIs remain
 separately authorized; inventory-only clients are reported as unsupported for routing.
