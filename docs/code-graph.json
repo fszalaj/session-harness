@@ -1,5 +1,5 @@
 {
-  "content_sha256": "d67c45c1f84e9633983932df1cc54e9a571ff89449f1649af3030531aed9b25a",
+  "content_sha256": "fd6694550946af2a237ed4d141075a1a3d6f48bc7e62b5433b4cefdb5688f09e",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
@@ -12,7 +12,7 @@
       "scripts/code_graph.py": "fa7c041129167808a7a3cc44fed5534c57ba31da2bf42cddc470f549e3fd58b3",
       "scripts/code_graph.test.py": "5baef7e0c95ef579828bfbceab61c7b3792c05c160714378bdfe6580ce40d423",
       "scripts/install-agent-profile.py": "ec797f12970fb10e9990abe5a516104fe667036890d3613ceeb2c59cae85202c",
-      "scripts/install-agent-profile.test.py": "2b18560be5d51e1f9dbb88eadb57b51d8f55767cbd4530546da5fc70da7fae3e",
+      "scripts/install-agent-profile.test.py": "dd6c02cc523f91121ae598f0c30ea7462c73253160798a218da29c9282d11493",
       "scripts/release.py": "711b3c849d21285dd7932338e1ed145e9e5a1566dfc7c6d7e3f0876f424c53db",
       "scripts/release.test.py": "c0cabc31299955487c013852d4d1956b4c05c785ac7dd78927a360960027dcaa",
       "scripts/test.py": "ea279177805e95a35922f421f8e167cadf0d275cbcb851535aa9a4e8550fe38a",
@@ -19493,7 +19493,7 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:CheckedCopyTests",
       "label": "CheckedCopyTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L394",
+      "source_location": "L395",
       "type": "class"
     },
     {
@@ -23781,7 +23781,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.install",
       "label": "CheckedCopyTests.install",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L410",
+      "source_location": "L411",
       "type": "method"
     },
     {
@@ -23789,7 +23789,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.setUp",
       "label": "CheckedCopyTests.setUp",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L395",
+      "source_location": "L396",
       "type": "method"
     },
     {
@@ -23797,7 +23797,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
       "label": "CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L415",
+      "source_location": "L416",
       "type": "method"
     },
     {
@@ -23805,7 +23805,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "label": "CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L445",
+      "source_location": "L446",
       "type": "method"
     },
     {
@@ -23813,7 +23813,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_modified_copy_is_preserved",
       "label": "CheckedCopyTests.test_modified_copy_is_preserved",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L456",
+      "source_location": "L457",
       "type": "method"
     },
     {
@@ -23821,7 +23821,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "label": "CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L477",
+      "source_location": "L478",
       "type": "method"
     },
     {
@@ -23829,7 +23829,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "label": "CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L470",
+      "source_location": "L471",
       "type": "method"
     },
     {
@@ -23837,7 +23837,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "label": "CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L427",
+      "source_location": "L428",
       "type": "method"
     },
     {
@@ -23845,7 +23845,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "label": "CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L463",
+      "source_location": "L464",
       "type": "method"
     },
     {

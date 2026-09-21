@@ -1,8 +1,10 @@
 # Session harness maintenance
 
+Claude Code 2.1.277+ reads `AGENTS.md` natively; keep the built-in `agents-md` plugin enabled.
+
 Use `skills/session-harness/SKILL.md` for substantive work. This is a generic
 coding-client and explicit API harness; do not add application-specific policies or data.
-`CLAUDE.md` and `GEMINI.md` link here. Read only relevant references.
+`GEMINI.md` links here. Read only relevant references.
 
 - Preserve user files and settings. Never commit credentials, quota ledgers, private
   review packets or account identifiers. State belongs under the user state directory.

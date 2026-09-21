@@ -343,7 +343,8 @@ class RepositoryProfileContractTests(unittest.TestCase):
         instructions = canonical.read_text()
         self.assertLess(len(instructions.splitlines()), 200, "Move operational detail into linked procedures")
         self.assertLess(len(instructions), 12_000, "Keep the session entrypoint within its context budget")
-        for name in ("CLAUDE.md", "GEMINI.md"):
+        self.assertFalse((repo / "CLAUDE.md").exists())
+        for name in ("GEMINI.md",):
             entrypoint = repo / name
             with self.subTest(entrypoint=name):
                 if os.name == 'nt' and not entrypoint.is_symlink():
