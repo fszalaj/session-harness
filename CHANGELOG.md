@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.1
 
 - Discover Copilot models from an isolated session catalog, including models
   omitted by the global SDK list. Apply and verify the named model and effort

@@ -26,8 +26,7 @@ model or an independent reviewer. Explicit provider requests remain available.
    ai-session work --provider copilot --id unique-task-id < task.txt
    ```
 
-The single-service enable command is supported by the unreleased development
-version. Release 0.6.0 requires two services. Multiple models through Copilot are
+The single-service enable command is supported by version 0.6.1. Release 0.6.0 requires two services. Multiple models through Copilot are
 one billing service; do not add another account solely to satisfy that old limit.
 With one service, relative balancing has no competing provider, but admission,
 one open task per service, stable task IDs and unresolved-job stops still apply.
@@ -74,7 +73,7 @@ they must differ from each other and the manager. Both use the **same Copilot
 account quota**. Existing role restrictions, finite token-billed allowance and
 disabled-overage requirements still apply; request-billed plans are unsupported.
 
-The unreleased development adapter reads `session.model.list` in an isolated,
+The 0.6.1 adapter reads `session.model.list` in an isolated,
 empty session because the global SDK `models.list` can omit models available in
 the interactive picker. Inventory sends no prompt. This path was checked with
 Copilot CLI 1.0.86; older protocol versions may fail discovery or selection.
@@ -100,7 +99,7 @@ entries and archived observation; they cannot authorize requests. If old and new
 aliases both contain consumption for a day, stop for reconciliation rather than
 counting the same usage twice. Existing newer observations are preserved.
 
-The unreleased worker accepts exactly one active finite token-billed `chat` or
+The 0.6.1 worker accepts exactly one active finite token-billed `chat` or
 `premium_interactions` pool, with any other active pools unlimited. Release 0.6.0
 accepts only finite chat. Missing quota/overage flags, unknown finite pools or
 multiple finite pools stop execution. All pools must report disabled exhaustion

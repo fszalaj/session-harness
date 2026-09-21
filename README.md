@@ -27,7 +27,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.6.0 --apply`, then
+To select this release, run `ai-session update --version 0.6.1 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted
@@ -139,7 +139,7 @@ Explicit observed mode accepts delayed counters and possible in-flight overshoot
 Fresh quota and paid-usage eligibility are still required. Metadata discovery does
 not prove protected execution or a successful independent review.
 
-| Client or route | Harness support in v0.6.0 |
+| Client or route | Harness support in v0.6.1 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
 | Copilot CLI | Native launcher, text worker and explicit catalog-selected reviews with manager-family and exact usage-identity checks; Auto cannot independently review |
@@ -151,10 +151,10 @@ Named Copilot execution still requires verification on the intended paid account
 fixture tests do not prove that route works there. The initial DeepSeek probe
 timed out without a verifiable result. See [release verification limits](docs/RELEASES.md#060)
 and [client adapter boundaries](skills/session-harness/references/clients.md).
-Unreleased development changes allow a single configured service for bounded work
+Version 0.6.1 allows a single configured service for bounded work
 and one finite token-billed Copilot `chat` or `premium_interactions` pool. Version
 0.6.0 requires two balancing services and a finite chat pool. Neither behavior
-permits paid overage or bypasses strict-mode admission. Development also fixes
+permits paid overage or bypasses strict-mode admission. Version 0.6.1 also fixes
 Windows npm lookup and prevents launcher imports from adding cache files to snapshots.
 It also uses an isolated Copilot session catalog to discover models omitted by
 the global SDK list, then verifies model selection before sending a task. These

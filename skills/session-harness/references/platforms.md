@@ -23,7 +23,7 @@ other shells, invoke the installed `ai-session.py` with Python directly. No batc
 wrapper interpolates prompts through `cmd.exe`. Trusted executable lookup excludes
 the current directory; arbitrary `.cmd` files are rejected. Recognized standard
 npm shims are normalized to a direct Node/script argument vector.
-Unreleased fixes prefer `.exe`/`.cmd` over extensionless npm files and recognize
+Version 0.6.1 prefers `.exe`/`.cmd` over extensionless npm files and recognizes
 the current npm `node`/PATHEXT wrapper variant. The wrapper is parsed, never run
 through a shell; npm wrappers targeting a contained native `.exe` are resolved
 directly too. An operating-system failure for one discovered CLI remains a failure

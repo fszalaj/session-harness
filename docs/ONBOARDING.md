@@ -15,8 +15,8 @@ synthetic decision and its billed receipt before declaring the route operational
 For an existing installation, run `ai-session version` and inspect its recorded
 provenance. Keep that selected release unless the owner requests an update;
 `ai-session update --check` is read-only. Use [releases and rollback](RELEASES.md)
-for an authorized version change. To select v0.6.0, run
-`ai-session update --version 0.6.0 --apply`, then restart affected clients.
+for an authorized version change. To select v0.6.1, run
+`ai-session update --version 0.6.1 --apply`, then restart affected clients.
 Do not reinstall from an arbitrary checkout.
 
 For a new installation, open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
@@ -207,8 +207,8 @@ ledger's timezone must remain consistent with its dated history. No mandatory 10
 reserve applies. If the owner defers configuration, report
 `environment_setup_required` and complete the remaining read-only verification.
 
-For owner-requested bounded work through one native billing service, the unreleased
-development version supports `ai-session balance enable --services copilot` after
+For owner-requested bounded work through one native billing service, version 0.6.1
+supports `ai-session balance enable --services copilot` after
 setup and fresh admission. Version 0.6.0 requires two services. Multiple Copilot
 models do not count as separate services. Do not add an account or change strict
 mode to bypass an admission failure; see [client execution](CLIENT-EXECUTION.md#copilot-cli).
@@ -239,7 +239,7 @@ Copilot and Cursor routes. Platform Auto does not verify newest-generation selec
 Version 0.6.0 adds Copilot `--model` selection for launch, work and isolated
 reviews; see [exact model selection and first-account verification](CLIENT-EXECUTION.md#explicit-models).
 An account catalog containing only Auto cannot provide named reviewer families.
-The unreleased development adapter also checks an isolated Copilot session
+The 0.6.1 adapter also checks an isolated Copilot session
 catalog, which can include models missing from the global SDK list. Inventory
 creates no model request; successful selection still requires an actual usage
 receipt before a reviewer is verified. See the runbook above for protocol limits.
