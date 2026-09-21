@@ -73,6 +73,10 @@ candidate selection and scoring. `api decision-models` discovers the current cat
 `api decide openrouter` submits typed questions through existing money controls.
 This feature is not in unmodified 0.5.1 and does not replace coding models or reviewers.
 
+The [maintainer's role workflow](docs/OWNER-WORKFLOW.md) describes an opt-in division
+of planning, decisions and implementation. It is an example, not another user's
+configuration or a change to installed defaults.
+
 Add one provider with the [interactive provider wizard](skills/session-harness/references/provider-onboarding.md):
 
 ```sh

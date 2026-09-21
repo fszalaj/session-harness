@@ -102,6 +102,38 @@ class ProviderTests(unittest.TestCase):
         with patch.dict(os.environ, {'OPENAI_API_KEY': 'another-test-key'}):
             self.assertEqual(original.digest, api.preflight('openai', 'model', 'text', 10).digest)
 
+    def test_openrouter_effort_uses_fresh_labels_and_binds_request(self):
+        row = {'id': 'vendor/model', 'reasoning': {'supported_efforts': ['high', 'low']}}
+        with patch.object(api, 'request_json', return_value={'data': [row]}) as network:
+            low = api.preflight('openrouter', 'vendor/model', 'text', 100, 'low')
+            high = api.preflight('openrouter', 'vendor/model', 'text', 100, 'high')
+            self.assertEqual(2, network.call_count)
+            body = json.loads(low.body)
+            self.assertEqual({'effort': 'low', 'exclude': True}, body['reasoning'])
+            self.assertFalse(body['provider']['allow_fallbacks'])
+            self.assertTrue(body['provider']['require_parameters'])
+            self.assertNotEqual(low.digest, high.digest)
+            for model, effort in [('vendor/model', 'medium'), ('missing', 'low')]:
+                with self.assertRaisesRegex(APIError, 'unsupported_api_effort'):
+                    api.preflight('openrouter', model, 'text', 100, effort)
+            network.reset_mock()
+            with self.assertRaises(APIError):
+                api.preflight('openrouter', 'vendor/model', 'text', 100, 'invented')
+            network.assert_not_called()
+
+    def test_openrouter_reasoning_metadata_semantics(self):
+        self.assertEqual([], api._reasoning_efforts({'supported_parameters': ['reasoning_effort']}))
+        self.assertEqual([], api._reasoning_efforts({'reasoning': {}}))
+        self.assertEqual(list(api.OPENROUTER_EFFORTS), api._reasoning_efforts(
+            {'reasoning': {'supported_efforts': None}}))
+        self.assertNotIn('none', api._reasoning_efforts(
+            {'reasoning': {'supported_efforts': None, 'mandatory': True}}))
+        for metadata in [[], {'mandatory': 'true'}, {'supported_efforts': 'low'},
+                         {'supported_efforts': ['low', 'low']}, {'supported_efforts': ['unknown']},
+                         {'supported_efforts': [False]}]:
+            with self.assertRaises(APIError):
+                api._reasoning_efforts({'reasoning': metadata})
+
     def test_openai_reasoning_already_in_output_cache_disjoint(self):
         data = chat()
         data['usage'].update(prompt_tokens_details={'cached_tokens': 5},

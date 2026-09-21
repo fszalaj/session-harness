@@ -27,6 +27,7 @@ EXACT_COST_SERVICES = frozenset({'xai', 'openrouter'})
 SAFE_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9._:/-]{0,199}\Z')
 MAX_TOKENS = 1_048_576
 MAX_MONEY_TICKS = 10 ** 25
+OPENROUTER_EFFORTS = ('none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max')
 TOKEN_CLASSES = frozenset({'input_tokens', 'output_tokens', 'cache_read_tokens',
                           'cache_write_tokens', 'cache_write_5m_tokens',
                           'cache_write_1h_tokens', 'reasoning_tokens'})
@@ -86,7 +87,7 @@ def preflight(service, model, prompt, max_output_tokens, effort=None):
         model = _model(model[7:])
     if (type(max_output_tokens) is not int or not 1 <= max_output_tokens <= MAX_TOKENS):
         raise APIError('invalid_api_output_limit')
-    if effort is not None:
+    if effort is not None and (service != 'openrouter' or effort not in OPENROUTER_EFFORTS):
         raise APIError('unsupported_api_effort')
     if isinstance(prompt, bytes):
         try:
@@ -101,6 +102,10 @@ def preflight(service, model, prompt, max_output_tokens, effort=None):
     except UnicodeError:
         raise APIError('invalid_api_prompt') from None
     headers = _headers(service)
+    if effort is not None:
+        row = next((row for row in models(service)['models'] if row['id'] == model), None)
+        if row is None or effort not in row.get('reasoning_efforts', []):
+            raise APIError('unsupported_api_effort')
     if service == 'ollama':
         path = prefix + '/chat'
         body = {'model': model, 'messages': [{'role': 'user', 'content': prompt}],
@@ -125,6 +130,8 @@ def preflight(service, model, prompt, max_output_tokens, effort=None):
         if service == 'openrouter':
             body['usage'] = {'include': True}
             body['provider'] = {'allow_fallbacks': False, 'require_parameters': True}
+            if effort is not None:
+                body['reasoning'] = {'effort': effort, 'exclude': True}
     encoded = json.dumps(body, ensure_ascii=True, separators=(',', ':'), sort_keys=True).encode()
     validate_request(origin, path, 'POST', headers, encoded, 120)
     digest = hashlib.sha256(service.encode() + b'\0' + path.encode() + b'\0' + encoded).hexdigest()
@@ -362,6 +369,21 @@ def generate(service, model, prompt, max_output_tokens, effort=None, *, timeout=
     raise APIError('use_budgeted_api_execution')
 
 
+def _reasoning_efforts(row):
+    reasoning = row.get('reasoning')
+    if reasoning is None:
+        return []
+    if not isinstance(reasoning, dict) or type(reasoning.get('mandatory', False)) is not bool:
+        raise APIError('invalid_api_catalog')
+    efforts = reasoning.get('supported_efforts', [])
+    if efforts is None:
+        efforts = list(OPENROUTER_EFFORTS)
+    if (not isinstance(efforts, list) or any(not isinstance(e, str) or e not in OPENROUTER_EFFORTS for e in efforts)
+            or len(efforts) != len(set(efforts))):
+        raise APIError('invalid_api_catalog')
+    return [e for e in OPENROUTER_EFFORTS if e in efforts and not (e == 'none' and reasoning.get('mandatory'))]
+
+
 def models(service, *, timeout=15):
     origin, prefix, _ = _service(service)
     base = {'service': service, 'models': [], 'inference_verified': False,
@@ -405,6 +427,8 @@ def models(service, *, timeout=15):
             for key in ('context_length', 'inputTokenLimit', 'outputTokenLimit'):
                 if key in row:
                     item[key] = _count(row[key])
+            if service == 'openrouter':
+                item['reasoning_efforts'] = _reasoning_efforts(row)
             if service == 'gemini':
                 methods = row.get('supportedGenerationMethods')
                 if not isinstance(methods, list):

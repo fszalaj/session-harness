@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Validate explicit OpenRouter reasoning effort against fresh per-model metadata;
+  distinguish requested settings from unverified actual effort and expose truncation.
+- Document an optional maintainer role workflow without publishing private setup.
 - Add OpenRouter Jev decisions with dynamic catalog selection, typed input/output
   validation and existing monetary admission, receipts and unresolved-liability handling.
 - Prefer admitted Jev for suitable classification, triage and scoring tasks; document

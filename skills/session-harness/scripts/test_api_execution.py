@@ -95,6 +95,30 @@ class APIExecutionTests(unittest.TestCase):
         with patch.object(api_providers, "models", return_value={"status": "catalog_metadata", "models": []}), redirect_stdout(StringIO()):
             self.assertEqual(0, api_execution.main(["models", "xai"]))
 
+    def test_effort_gates_precede_liability_and_reasoning_still_costs(self):
+        from decimal import Decimal
+        self.money.ledger.complete_setup(services=[], api_services=['openrouter'], source='test')
+        row = {'id': 'vendor/model', 'reasoning_efforts': ['low']}
+        with patch.dict(os.environ, OPENROUTER_API_KEY='fixture-key'), \
+                patch.object(api_providers, 'models', return_value={'models': [row]}), \
+                patch.object(api_providers, 'request_json') as network:
+            with self.assertRaises(api_providers.APIError):
+                api_execution.execute('openrouter', 'vendor/model', 'text', 100, '0.01',
+                                      effort='medium', ledger=self.money)
+            self.assertEqual([], self.money.status()['unfinished'])
+            network.assert_not_called()
+            network.return_value = {'model': 'vendor/model', 'id': 'reasoning-only',
+                'choices': [{'finish_reason': 'length', 'message': {'role': 'assistant', 'content': ''}}],
+                'usage': {'prompt_tokens': 20, 'completion_tokens': 100, 'total_tokens': 120,
+                          'completion_tokens_details': {'reasoning_tokens': 100}, 'cost': Decimal('0.001')}}
+            result = api_execution.execute('openrouter', 'vendor/model', 'text', 100, '0.01',
+                                           effort='low', ledger=self.money)
+            self.assertEqual('output_rejected', result['status'])
+            self.assertEqual(ticks('0.001'), result['accounting']['charged_ticks'])
+            self.assertEqual('low', result['requested_effort'])
+            self.assertIsNone(result['actual_effort'])
+            self.assertEqual(1, network.call_count)
+
     def test_leaf_guard_precedes_all_routing_storage_and_network(self):
         with patch.dict(os.environ, {"SESSION_HARNESS_LEAF": "1"}), redirect_stdout(StringIO()), \
                 patch("harness.discover_provider") as native, patch.object(api_providers, "preflight") as api:

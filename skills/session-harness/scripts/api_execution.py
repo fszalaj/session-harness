@@ -59,6 +59,9 @@ def execute(service, model, prompt, max_output_tokens, reserve_cost, *, request_
                 **({"answers": result.get("answers") if valid else None, "requested_model": prepared.model}
                    if decision else {"text": result.get("text") if valid else None}),
                 "accounting": accounting,
+                **({"requested_effort": effort, "actual_effort": None,
+                    "effort_verification": "not_reported"} if effort is not None else {}),
+                **({"truncated": result["truncated"]} if "truncated" in result else {}),
                 **({"coding": coding} if coding is not None else {}),
                 "budget_note": "Observed estimates and reservations cannot guarantee an exact provider charge."}
     except Exception:

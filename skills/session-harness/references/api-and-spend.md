@@ -88,6 +88,20 @@ text-only, one candidate, non-streaming, with no tools. Unsupported model-specif
 effort options fail before dispatch. Z.ai Coding Plan routing is a different
 service contract and is not substituted for the general API.
 
+Development builds accept OpenRouter `--effort` only when the exact model's fresh
+catalog `reasoning.supported_efforts` allows it. `api models openrouter` exposes
+normalized `reasoning_efforts`; missing labels do not establish support, `null`
+accepts gateway levels, and mandatory reasoning excludes `none`. Other API
+adapters still reject effort overrides. No effort option preserves provider defaults.
+Use advertised medium for ordinary work, otherwise the highest supported level
+below medium; a model may support low/high without medium. Escalate deliberately.
+
+Requests exclude visible reasoning text, which does not remove its cost. Reasoning
+can consume the output limit and leave no usable answer; preserve the billed receipt
+and inspect `truncated` when supplied. `requested_effort` is a request setting;
+`actual_effort: null` means the provider did not attest its execution setting.
+See the [OpenRouter reasoning contract](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens).
+
 Development builds add `api coding-models` and `api coding-run` for a reviewed
 OpenRouter coding allowlist. Read [coding setup and eligibility](coding-models.md)
 before use. Catalog inspection is anonymous; coding execution uses the same money
