@@ -151,6 +151,14 @@ Named Copilot execution still requires verification on the intended paid account
 fixture tests do not prove that route works there. The initial DeepSeek probe
 timed out without a verifiable result. See [release verification limits](docs/RELEASES.md#060)
 and [client adapter boundaries](skills/session-harness/references/clients.md).
+Unreleased development changes allow a single configured service for bounded work
+and one finite token-billed Copilot `chat` or `premium_interactions` pool. Version
+0.6.0 requires two balancing services and a finite chat pool. Neither behavior
+permits paid overage or bypasses strict-mode admission. Development also fixes
+Windows npm lookup and prevents launcher imports from adding cache files to snapshots.
+It also uses an isolated Copilot session catalog to discover models omitted by
+the global SDK list, then verifies model selection before sending a task. These
+metadata checks do not establish successful inference or independent review.
 Follow [additional client execution](docs/CLIENT-EXECUTION.md) for Copilot, Cursor, local
 Ollama, explicit Meta/Ollama APIs and remaining inventory-only clients.
 Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).

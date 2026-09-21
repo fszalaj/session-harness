@@ -332,6 +332,15 @@ class DiscoveryTests(unittest.TestCase):
         self.assertNotIn("planner", result)
         self.assertEqual(result["review"]["status"], "missing_cli")
 
+    def test_discovery_os_failure_stays_scoped_to_the_unavailable_provider(self):
+        with patch.object(harness.platform_runtime, 'which', return_value='fixture.exe'), \
+                patch.object(harness, 'discover_claude', side_effect=OSError('private detail')):
+            result = harness.discover_provider('claude')
+        self.assertEqual(result['status'], 'provider_error')
+        self.assertEqual(result['review']['status'], 'provider_error')
+        self.assertNotIn('private detail', result['reason'])
+        self.assertNotIn('planner', result)
+
     def test_live_codex_catalog_pagination(self):
         def entry(ident):
             return {"model": ident, "supportedReasoningEfforts": [{"reasoningEffort": level} for level in ("low", "medium", "high")]}
@@ -1024,14 +1033,16 @@ class QuotaProcessIntegrationTests(unittest.TestCase):
         original = harness.supervision.Watch
         with tempfile.TemporaryDirectory() as directory:
             pid_file = Path(directory) / 'pid'
+            ready_file = Path(directory) / 'ready'
             child = ('import os,time,pathlib,subprocess,sys,json; '
                      'grandchild=subprocess.Popen([sys.executable,"-c","import time; time.sleep(30)"],'
                      'stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); '
                      'pathlib.Path(' + repr(str(pid_file)) +
                      ').write_text(json.dumps([os.getpid(),grandchild.pid])); '
-                     'os.close(1); os.close(2); time.sleep(30)')
-            with patch('usage.require_admission', side_effect=[{'allowed': True},
-                        {'allowed': False, 'reasons': ['daily_limit']}]), \
+                     'os.close(1); os.close(2); pathlib.Path(' + repr(str(ready_file)) + ').touch(); time.sleep(30)')
+            def admission(*args, **kwargs):
+                return {'allowed': False, 'reasons': ['daily_limit']} if ready_file.exists() else {'allowed': True}
+            with patch('usage.require_admission', side_effect=admission), \
                     patch.object(harness.supervision, 'Watch', side_effect=lambda service, **kw: original(service, interval=.25, **kw)):
                 with self.assertRaises(harness.supervision.Stop):
                     harness.run([sys.executable, '-c', child], timeout=5, quota_service='codex')

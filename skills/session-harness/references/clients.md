@@ -11,7 +11,7 @@ and Ollama commands, requirements, receipts and recovery.
 | Client or route | Harness support in v0.6.0 |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native discovery, quota and launch/review adapters; execution requires admission and the isolation/platform controls below |
-| Copilot CLI | Native launcher and text worker; explicit catalog-selected reviews require another declared manager family and exact usage identity; finite token-billed chat quota and disabled paid overage; no Auto review |
+| Copilot CLI | Native launcher and text worker; explicit catalog-selected reviews require another declared manager family and exact usage identity; one finite token-billed chat or premium_interactions quota (premium support unreleased) and disabled paid overage; no Auto review |
 | Cursor CLI | Personal Free account quota and Auto launch/text work; no routed model identity or independent review |
 | Ollama local | Fixed loopback execution, local-model residency checks and a separate job ledger |
 | Explicit APIs | Direct text including Meta and Ollama Cloud; separate credentials and money admission, no automatic fallback |
@@ -230,6 +230,12 @@ which application a model belongs to. Copilot, Cursor, Kimi CLI, OpenCode, Aider
 Continue (`cn`), Ollama and Gemini CLI have separate records. Unknown clients and
 model generations stay unknown. Grok/xAI, DeepSeek, Kimi/Moonshot and GLM/Z.ai names
 identify model families, not a new subscription authentication route.
+
+Unreleased Copilot discovery uses an empty isolated session's `session.model.list`
+because the global SDK catalog can omit selectable models. It sends no prompt.
+Named execution applies and checks model/effort through the session protocol
+before sending text, and still rejects mismatched actual usage identities.
+This protocol was checked with Copilot CLI 1.0.86; selection is not inference proof.
 
 Claude's selectable options and Copilot/Cursor catalogs do not prove execution
 entitlement. Ollama reports local installed models through forced loopback; it does

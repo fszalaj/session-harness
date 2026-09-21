@@ -207,6 +207,12 @@ ledger's timezone must remain consistent with its dated history. No mandatory 10
 reserve applies. If the owner defers configuration, report
 `environment_setup_required` and complete the remaining read-only verification.
 
+For owner-requested bounded work through one native billing service, the unreleased
+development version supports `ai-session balance enable --services copilot` after
+setup and fresh admission. Version 0.6.0 requires two services. Multiple Copilot
+models do not count as separate services. Do not add an account or change strict
+mode to bypass an admission failure; see [client execution](CLIENT-EXECUTION.md#copilot-cli).
+
 Only if the owner requests paid API use, follow [API and money setup](../skills/session-harness/references/api-and-spend.md)
 for supported services, existing key presence, explicit monthly authorization,
 separate money mode and bounded dispatch. Never reveal keys, buy credits, enable
@@ -233,6 +239,10 @@ Copilot and Cursor routes. Platform Auto does not verify newest-generation selec
 Version 0.6.0 adds Copilot `--model` selection for launch, work and isolated
 reviews; see [exact model selection and first-account verification](CLIENT-EXECUTION.md#explicit-models).
 An account catalog containing only Auto cannot provide named reviewer families.
+The unreleased development adapter also checks an isolated Copilot session
+catalog, which can include models missing from the global SDK list. Inventory
+creates no model request; successful selection still requires an actual usage
+receipt before a reviewer is verified. See the runbook above for protocol limits.
 
 For version 0.3.1 installations, a user requesting even native
 subscription use can enable [shared fractional pacing](../skills/session-harness/references/balancing.md).

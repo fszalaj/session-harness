@@ -19,11 +19,18 @@ model or an independent reviewer. Explicit provider requests remain available.
    `ai-session usage refresh copilot --initialize`. For an existing baseline, omit
    `--initialize`. Run `ai-session usage check copilot` before execution.
 5. Start an interactive session with `ai-session copilot`. For bounded text work,
-   enable subscription balancing on the authority and run:
+   explicitly enable bounded routing on the authority and run:
 
    ```sh
+   ai-session balance enable --services copilot
    ai-session work --provider copilot --id unique-task-id < task.txt
    ```
+
+The single-service enable command is supported by the unreleased development
+version. Release 0.6.0 requires two services. Multiple models through Copilot are
+one billing service; do not add another account solely to satisfy that old limit.
+With one service, relative balancing has no competing provider, but admission,
+one open task per service, stable task IDs and unresolved-job stops still apply.
 
 The worker uses Copilot's native session protocol with tools, MCP, hooks, skill
 discovery and additional agents disabled. Its return value is text for the manager
@@ -65,13 +72,19 @@ require a declared actual manager family. Auto, unknown families and the manager
 family cannot review. Compare the two receipts' `model_family` values as well:
 they must differ from each other and the manager. Both use the **same Copilot
 account quota**. Existing role restrictions, finite token-billed allowance and
-disabled-overage requirements still apply; premium-request-only plans are unsupported.
+disabled-overage requirements still apply; request-billed plans are unsupported.
 
-The execution process rechecks the model and effort before creating the session.
+The unreleased development adapter reads `session.model.list` in an isolated,
+empty session because the global SDK `models.list` can omit models available in
+the interactive picker. Inventory sends no prompt. This path was checked with
+Copilot CLI 1.0.86; older protocol versions may fail discovery or selection.
+Execution rechecks this session catalog, applies `session.model.switchTo` with
+`requireAvailable`, and verifies the selected model and effort before sending text.
 Every reported usage model must exactly equal the requested catalog ID. Missing
 identity, aliases that resolve to a different string or model fallback stop the
 request; do not loosen matching without separately verified alias evidence.
-Effort is requested but not confirmed by usage telemetry. A model name in a text
+Session settings confirm selection, not inference. Effort is not confirmed by
+usage telemetry. A model name in a text
 answer is not identity evidence. Interactive launches cannot verify a strongest
 model merely because an explicit ID was supplied.
 
@@ -87,8 +100,13 @@ entries and archived observation; they cannot authorize requests. If old and new
 aliases both contain consumption for a day, stop for reconciliation rather than
 counting the same usage twice. Existing newer observations are preserved.
 
-The worker requires a finite token-billed chat pool and checks aggregate account
-consumption before and after execution. These deltas can include other sessions;
+The unreleased worker accepts exactly one active finite token-billed `chat` or
+`premium_interactions` pool, with any other active pools unlimited. Release 0.6.0
+accepts only finite chat. Missing quota/overage flags, unknown finite pools or
+multiple finite pools stop execution. All pools must report disabled exhaustion
+and overage use. The selected pool, its entitlement and other pool definitions
+must remain consistent before and after execution; receipts identify that pool.
+The worker checks aggregate account consumption. These deltas can include other sessions;
 they are not an exclusive per-task bill. Native reset timestamps at or before the
 observation remain unknown. Monthly pacing uses a conservative 31-day window.
 
