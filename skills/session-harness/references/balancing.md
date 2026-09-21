@@ -100,7 +100,7 @@ ledger. Local audit reads only allowlisted token/cost metadata into its report.
 
 ## Select task capability and weekly balance
 
-The development revision supports a task-fit subset and weekly quota basis. Choose
+Version 0.7.0 supports a task-fit subset and weekly quota basis. Choose
 these before dispatch, never as a retry around a stop:
 
 ```sh

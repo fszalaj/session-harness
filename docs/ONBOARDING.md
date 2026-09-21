@@ -215,7 +215,7 @@ mode to bypass an admission failure; see [client execution](CLIENT-EXECUTION.md#
 
 For multi-service balancing, inspect `ai-session balance status`, submit a useful
 bounded task with `ai-session work --id unique-task-id < task.txt`, and verify its
-terminal receipt. In the current development revision, fractional daily consumption
+terminal receipt. In version 0.7.0, fractional daily consumption
 ranks before dispatch count. For suitable complex tasks, use `--provider native
 --eligible-services codex,claude --basis weekly --strong-model --worker-effort codex=high`
 to compare whole weekly use while selecting current strongest models. Other configured

@@ -5,6 +5,38 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.7.0
+
+Native work now ranks fresh fractional allowance consumption before dispatch count.
+Optional task-fit subsets can compare whole weekly quota usage with `--basis weekly`;
+`--strong-model` and per-service effort select capable native workers explicitly.
+Strong Claude work falls back only to a verified current Opus alternative. All daily
+admission, reserve, concurrency and configured-service quota checks remain in force.
+Copilot monthly pools cannot substitute for weekly evidence, and named Copilot
+models retain their separate explicit selection path.
+
+Quota corrections and rebounds no longer count twice within a verified reset window.
+Claude's account-bound sub-minute native cache keeps its original timestamp; stale or
+ambiguous evidence still blocks. Existing consumption is preserved, including past
+overcounts. Shared audit reports authority accounting separately from deduplicated
+local session/role telemetry; cached input is not additional usage or billing proof.
+
+OpenRouter coding responses accept verified current canonical catalog identities.
+Reasoning-only truncated responses retain model identity and actual cost while failing
+as empty output. This does not add a paid fallback, automatic retry or spending grant.
+
+The portable suite covers 777 tests, with platform-specific skips reported explicitly.
+An isolated 0.6.1 upgrade, repeated install and rollback validate private-policy and
+accounting preservation. Real bounded native and API probes verify their tested
+routes, not universal model quality or a guarantee of equal future quota use.
+
+Upgrade with `ai-session update --version 0.7.0 --apply`, then reload affected clients.
+Existing private policy, accounting, authentication and maintenance preferences remain.
+Identical registered overlays can be absorbed; inspect any conflict against the
+published bytes before explicit reconciliation. Shared installations retain their
+activation hooks. See [balancing](../skills/session-harness/references/balancing.md),
+[role workflow](OWNER-WORKFLOW.md) and [automatic maintenance](AUTO-UPDATE.md).
+
 ## 0.6.1
 
 This patch repairs Windows executable discovery and immutable launcher snapshots.
@@ -248,7 +280,7 @@ its release notes:
 ai-session update --version VERSION --apply
 ```
 
-For v0.6.1, use `ai-session update --version 0.6.1 --apply`, then restart affected
+For v0.7.0, use `ai-session update --version 0.7.0 --apply`, then restart affected
 clients. The manager defaults to advertised `xhigh`, otherwise the highest
 supported level below `max`; `max` and `ultra` are excluded from default selection.
 Existing conversations keep their selected model and runtime until restarted.
