@@ -153,6 +153,20 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(result['usage'], {'input_tokens': 15, 'cache_read_tokens': 5, 'output_tokens': 10})
         self.assertIsNone(result['actual_cost_ticks'])
 
+    def test_reasoning_only_length_preserves_identity_cost_without_accepting_output(self):
+        data = chat(usage={'prompt_tokens': 124, 'completion_tokens': 2048,
+                           'total_tokens': 2172, 'cost': Decimal('0.00099792')})
+        data['choices'][0].update(finish_reason='length',
+                                 message={'role': 'assistant', 'content': None})
+        result = api.normalize_response('openrouter', data)
+        self.assertFalse(result['output_valid'])
+        self.assertEqual('empty_output', result['status'])
+        self.assertEqual('future-model', result['model'])
+        self.assertEqual('request-test', result['response_id'])
+        self.assertEqual(9979200, result['actual_cost_ticks'])
+        self.assertTrue(result['truncated'])
+        self.assertIsNone(result['text'])
+
     def test_deepseek_cache_miss_parity(self):
         data = chat()
         data['usage'].update(prompt_cache_hit_tokens=4, prompt_cache_miss_tokens=16)

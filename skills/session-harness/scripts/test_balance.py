@@ -33,7 +33,9 @@ class BalanceTests(unittest.TestCase):
         self.assertTrue(result['allowed'], result)
 
     def seed(self, service, used=0, extra=None):
-        pools = [dict(pool='weekly', used_percent=used, resets_at=time.time() + 604800)]
+        pools = [dict(pool='weekly', used_percent=used, resets_at=time.time() + 604800,
+                      window_minutes=10080, window_source=('codex.windowDurationMins' if service == 'codex'
+                                                         else 'claude.native_limit_kind'))]
         pools.extend(extra or [])
         resources = credits.claude_resources({'extra_usage': {'is_enabled': False}}) if service == 'claude' else credits.codex_resources({'native': {'credits': {'hasCredits': False, 'unlimited': False, 'balance': '0'}}})
         self.observed[service] = max(time.time(), self.observed.get(service, 0) + .000001)
@@ -79,6 +81,100 @@ class BalanceTests(unittest.TestCase):
         self.assertEqual(explicit['job']['decision']['mode'], 'explicit_provider')
         self.assertEqual(len(explicit['job']['decision']['eligible_services']), 4)
         self.assertTrue(balance.start(self.ledger, 'explicit')['allowed'])
+
+    def test_weekly_basis_uses_whole_allowance_and_ignores_scoped_pools(self):
+        def pool(remaining, **extra):
+            return dict(window_minutes=10080, window_source='codex.windowDurationMins',
+                        remaining_percent=remaining, **extra)
+        services = {'codex': dict(progress=.01, pools=[pool(60)]),
+                    'claude': dict(progress=.04, pools=[pool(95), pool(0, model_scope={'tiers': ['fable']})])}
+        self.assertEqual(balance._selection(services)['minimum_progress'], .01)
+        weekly = balance._selection(services, basis='weekly')
+        self.assertEqual(weekly['progress_by_service'], {'codex': .4, 'claude': .05})
+        self.assertEqual(weekly['minimum_progress'], .05)
+        for invalid in ([], [pool(0, model_scope={})], [pool(-1)], [pool(None)],
+                        [dict(pool(60), window_source=None)], [dict(pool(60), window_minutes=43200)]):
+            services['codex']['pools'] = invalid
+            self.assertIsNone(balance._selection(services, basis='weekly')['minimum_progress'])
+
+    def test_weekly_start_rechecks_lead_and_releases_denied_slot(self):
+        request = self.request('weekly', provider='native', eligible_services=['codex', 'claude'], basis='weekly')
+        reserved = balance.reserve(self.ledger, request)
+        self.assertTrue(reserved['allowed'], reserved)
+        service = reserved['service']
+        self.seed(service, 16)
+        denied = balance.start(self.ledger, 'weekly')
+        self.assertFalse(denied['allowed'], denied)
+        self.assertIn('max_lead_exceeded', denied['reasons'])
+        self.assertEqual(denied['job']['status'], 'denied')
+        self.assertEqual(denied['job']['start_admission']['basis'], 'weekly')
+        self.seed('claude', 16)
+        self.seed('codex', 16)
+        retry = balance.reserve(self.ledger, self.request('other', provider='native',
+                                eligible_services=[service], basis='weekly'))
+        self.assertTrue(retry['allowed'], retry)
+        self.assertEqual(retry['service'], service)
+
+    def test_weekly_reserve_and_start_fail_closed_without_one_weekly_pool(self):
+        request = self.request('missing', provider='native', basis='weekly', eligible_services=['codex', 'claude'])
+        original = balance._evaluate
+        def missing(*args, **kwargs):
+            result, snapshot = original(*args, **kwargs)
+            result['services']['claude']['pools'] = []
+            return result, snapshot
+        with patch.object(balance, '_evaluate', side_effect=missing):
+            denied = balance.reserve(self.ledger, request)
+            self.assertEqual(denied['status'], 'evidence_unavailable')
+        self.assertTrue(balance.reserve(self.ledger, request)['allowed'])
+        with patch.object(balance, '_evaluate', side_effect=missing):
+            denied = balance.start(self.ledger, 'missing')
+            self.assertFalse(denied['allowed'])
+            self.assertIn('evidence_unavailable', denied['reasons'])
+            self.assertEqual(denied['job']['status'], 'denied')
+
+    def test_task_subset_does_not_bypass_other_service_admission(self):
+        self.seed('claude', 20)
+        stopped = balance.reserve(self.ledger, self.request(provider='native',
+                                  eligible_services=['codex'], basis='weekly'))
+        self.assertFalse(stopped['allowed'], stopped)
+        self.assertTrue(any('claude:quota_denied:' in r for r in stopped['reasons']), stopped)
+        self.assertEqual(balance.status(self.ledger)['jobs'], [])
+        for options in ({'basis': 'monthly'}, {'eligible_services': []},
+                        {'eligible_services': ['codex', 'codex']}, {'eligible_services': ['unknown']}):
+            with self.assertRaises(ValueError):
+                balance.reserve(self.ledger, self.request(provider='native', **options))
+
+    def test_lower_fraction_wins_even_with_more_previous_dispatches(self):
+        first = balance.reserve(self.ledger, self.request('first', provider='claude'))
+        self.assertTrue(first['allowed'])
+        self.assertTrue(balance.start(self.ledger, 'first')['allowed'])
+        balance.finish(self.ledger, 'first', 'completed')
+        self.seed('codex', 1)
+        result = balance.reserve(self.ledger, self.request('next'))
+        self.assertEqual(result['service'], 'claude')
+        balance.start(self.ledger, 'next')
+        balance.finish(self.ledger, 'next', 'completed')
+        self.seed('claude', 2)
+        result = balance.reserve(self.ledger, self.request('rebalance'))
+        self.assertEqual(result['service'], 'codex')
+
+    def test_unequal_daily_budgets_use_fraction_not_raw_consumption(self):
+        self.ledger.budget_set('claude', 'fixed', pool='weekly', daily_limit=40)
+        self.ledger.budget_set('codex', 'fixed', pool='weekly', daily_limit=10)
+        self.seed('claude', 2)
+        self.seed('codex', 1)
+        result = balance.reserve(self.ledger, self.request('unequal'))
+        self.assertTrue(result['allowed'], result)
+        self.assertEqual(result['service'], 'claude')
+
+    def test_compact_excludes_scoped_pacing_like_evaluation(self):
+        pools = [dict(pool='weekly', strategy='fixed', daily_consumed=2, daily_ceiling=20),
+                 dict(pool='scoped', strategy='fixed', daily_consumed=19, daily_ceiling=20,
+                      model_scope={'tiers': ['fable']})]
+        result = balance._compact({'pools': pools})
+        self.assertEqual(result['progress'], .1)
+        self.assertEqual(result['binding_pool'], 'weekly')
+        self.assertEqual(result['pools'][1]['model_scope'], {'tiers': ['fable']})
 
     def test_auto_clients_rotate_and_remain_bounded(self):
         self.add_auto_services(['copilot', 'cursor'])

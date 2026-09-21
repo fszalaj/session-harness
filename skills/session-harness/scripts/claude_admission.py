@@ -20,7 +20,7 @@ def candidates(capability, role):
             continue
         efforts = row.get('efforts', row.get('native_controls', {}).get('reasoning_efforts', []))
         models[ident] = [e for e in models[ident] if e in efforts] if ident in models else list(efforts)
-    tiers = ('opus',) if role == 'planner' else ('sonnet', 'opus')
+    tiers = ('opus',) if role == 'planner' or model_scope.tier(primary['model']) in {'fable', 'opus'} else ('sonnet', 'opus')
     for tier in tiers:
         available = [m for m in models if model_scope.tier(m) == tier]
         if not available:

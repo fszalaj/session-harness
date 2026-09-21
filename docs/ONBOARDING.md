@@ -213,6 +213,18 @@ setup and fresh admission. Version 0.6.0 requires two services. Multiple Copilot
 models do not count as separate services. Do not add an account or change strict
 mode to bypass an admission failure; see [client execution](CLIENT-EXECUTION.md#copilot-cli).
 
+For multi-service balancing, inspect `ai-session balance status`, submit a useful
+bounded task with `ai-session work --id unique-task-id < task.txt`, and verify its
+terminal receipt. In version 0.7.0, fractional daily consumption
+ranks before dispatch count. For suitable complex tasks, use `--provider native
+--eligible-services codex,claude --basis weekly --strong-model --worker-effort codex=high`
+to compare whole weekly use while selecting current strongest models. Other configured
+services still undergo admission; this never changes daily budgets. See
+[task selection](../skills/session-harness/references/balancing.md#select-task-capability-and-weekly-balance).
+Use `ai-session audit --since YYYY-MM-DD` to distinguish
+shared accounting from local manager/subagent telemetry. Older installed releases
+retain their own behavior until explicitly updated.
+
 Only if the owner requests paid API use, follow [API and money setup](../skills/session-harness/references/api-and-spend.md)
 for supported services, existing key presence, explicit monthly authorization,
 separate money mode and bounded dispatch. Never reveal keys, buy credits, enable

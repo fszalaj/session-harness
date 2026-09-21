@@ -10,7 +10,7 @@ instructions in private configuration. Corporate transfer instructions are priva
 | Manage a session | Codex or Claude, matching the hosting client | Plan, integrate changes and verify acceptance |
 | Help plan and check the result | The other of Codex and Claude | Fresh bounded review; no shared conversation history |
 | Narrow semantic judgments | Jev | Typed classification, selection and rubric scores |
-| Produce bounded implementation | Gemini or reviewed DeepSeek Flash | Manager inspects the returned code and runs tests |
+| Produce bounded implementation | Eligible native workers by fresh fractional allowance use; explicit reviewed API work separately | Manager inspects the returned code and runs tests |
 
 The manager remains accountable for broader decisions. Deterministic rules do not
 need a model call. Batch independent Jev questions over shared state when useful;
@@ -82,8 +82,18 @@ configuration, credentials and provider receipts are deliberately excluded.
 | OpenRouter `deepseek/deepseek-v4.1-flash` | Same coding packet did not return a verifiable result/cost within the 120-second deadline | No quality result; reservation retained, no automatic retry |
 | Named Claude/Gemini through Copilot | Selection, isolation and identity checks passed fixtures; a real Auto-only account rejected unavailable named models before inference | Paid-account named execution still requires first-account verification |
 
-The initial choice is Gemini for implementation and Jev for suitable narrow
-judgments, with Codex/Claude managing and checking work. Keep DeepSeek optional
-until the unresolved request has billing evidence and a separately admitted test
-succeeds. This small sample does not establish global optimality or a provider-wide
-outage; native subscription usage and API money are not directly comparable.
+Follow-up: provider evidence confirmed the initial DeepSeek cancellation and allowed
+its reservation to be reconciled. A 2048-token attempt exhausted its output allowance
+during reasoning. A separately admitted 4096-token task then returned two valid
+Python assertions in about 92 seconds, with verified identity and settled cost.
+This verifies a bounded route, not general coding quality or actual reasoning effort.
+
+Select task capability before routing. The evaluated complex-work policy compares
+Codex and Claude by whole weekly usage, with current Fable then Opus on Claude and
+explicit high effort on Codex. Lower Codex effort is a bounded-task exception when
+needed; prefer Claude while it has headroom and Codex is ahead. Routine Sonnet,
+Gemini and DeepSeek form an owner-selected execution tier, not a verified universal
+benchmark equivalence. Haiku currently lacks advertised effort controls for this
+adapter. Use Jev for suitable narrow judgments. Keep API work explicitly admitted
+and separately accounted. This small sample does not establish global optimality or
+a provider-wide outage; subscription usage and API money are not directly comparable.
