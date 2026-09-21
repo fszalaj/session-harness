@@ -134,6 +134,15 @@ class ProviderTests(unittest.TestCase):
             with self.assertRaises(APIError):
                 api._reasoning_efforts({'reasoning': metadata})
 
+    def test_openrouter_catalog_alias_does_not_block_concrete_model(self):
+        data = {'data': [{'id': '~vendor/latest'}, {'id': 'vendor/model',
+                        'reasoning': {'supported_efforts': ['low']}}]}
+        with patch.object(api, 'request_json', return_value=data):
+            self.assertEqual('~vendor/latest', api.models('openrouter')['models'][0]['id'])
+            self.assertEqual('vendor/model', api.preflight('openrouter', 'vendor/model', 'text', 100, 'low').model)
+            with self.assertRaises(APIError):
+                api.preflight('openrouter', '~vendor/latest', 'text', 100, 'low')
+
     def test_openai_reasoning_already_in_output_cache_disjoint(self):
         data = chat()
         data['usage'].update(prompt_tokens_details={'cached_tokens': 5},

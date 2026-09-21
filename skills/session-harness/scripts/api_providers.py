@@ -415,7 +415,9 @@ def models(service, *, timeout=15):
         for row in page:
             if not isinstance(row, dict):
                 raise APIError('invalid_api_catalog')
-            ident = _model(row.get('name' if service in {'gemini', 'ollama'} else 'id'))
+            raw_id = row.get('name' if service in {'gemini', 'ollama'} else 'id')
+            ident = ('~' + _model(raw_id[1:]) if service == 'openrouter'
+                     and isinstance(raw_id, str) and raw_id.startswith('~') else _model(raw_id))
             if service == 'gemini' and ident.startswith('models/'):
                 ident = ident[7:]
             if ident in seen:

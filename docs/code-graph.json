@@ -1,11 +1,11 @@
 {
-  "content_sha256": "009585448007979dc682ebf85ddf7bcdd59150159a11c6fd4811e540879c400e",
+  "content_sha256": "ad0357e9e5f13bcc8bad5218182629954f25f42ac0f02504cbfb2d79e8bdefb8",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 3077,
+    "edge_count": 3078,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1634,
+    "node_count": 1635,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -18,7 +18,7 @@
       "scripts/test.py": "ea279177805e95a35922f421f8e167cadf0d275cbcb851535aa9a4e8550fe38a",
       "skills/session-harness/scripts/agy_quota.py": "21e1f1d597b6e76acdcfa36c22437e9689a5b115ea83538508966a217e25829e",
       "skills/session-harness/scripts/api_execution.py": "7de8bed364b9aadde7314cbb3caa5d277d72007108a3035611b8461f40a41d3c",
-      "skills/session-harness/scripts/api_providers.py": "aeb821d09447d44ad4a2870da35dd62f39f6fc781369a9a95f1dae827a9744cd",
+      "skills/session-harness/scripts/api_providers.py": "4c7bc75243fe05e3bd4854b4198ce5b24400a8d0cbf219ad1552466e0bf846fc",
       "skills/session-harness/scripts/api_transport.py": "86fcb0093632ef3f5febf5299be120a3ff499e555be622d9a758af7809975144",
       "skills/session-harness/scripts/authentication.py": "3a78e5462584817df2430a27912cc03f7f36b1256c4381f8629465341d8b9ec0",
       "skills/session-harness/scripts/auto_install.py": "20352c5a9e233cef368f14f19352ffe4a9e2cd0018b3449eee8ea54f6be219b9",
@@ -59,7 +59,7 @@
       "skills/session-harness/scripts/supervision.py": "2d4deec714972f1781acb5e53c1e2740d623837e8adeae510052a45743af62b2",
       "skills/session-harness/scripts/test_agy_quota.py": "826279859721a34a94b7fdeed0bf2d516f061a67a057b42058097066b5117d7c",
       "skills/session-harness/scripts/test_api_execution.py": "c519f075725c9de315f61e97da7ca53d11873a6c80b20620d12b0771bcf26cdc",
-      "skills/session-harness/scripts/test_api_providers.py": "d56d6cb0884eb630d177f0f156e72bf0a87eac2c8195b19aedfadeebedb9556d",
+      "skills/session-harness/scripts/test_api_providers.py": "4ca12624fb3dc1ea9f8197cd834df0109c48344b0f6b35d6e8eb70aacb87daab",
       "skills/session-harness/scripts/test_api_transport.py": "ea14a2463337c553321ed999bd70f9491a808ab49fed5636cdcdcc78ef1e22a7",
       "skills/session-harness/scripts/test_authentication.py": "ccd5e88f2a9e4d8bd4bbc44b59b3ab4cf5e75715e6173bf7a801b12fcafdb5a8",
       "skills/session-harness/scripts/test_auto_update.py": "5f8ff221c7910f4f5c65bcf90a5739b29e3c32296c5439db0bf4d14a735b864d",
@@ -10533,6 +10533,12 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_api_providers.py:ProviderTests",
       "target": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_openai_reasoning_already_in_output_cache_disjoint"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_api_providers.py:ProviderTests",
+      "target": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_openrouter_catalog_alias_does_not_block_concrete_model"
     },
     {
       "confidence": "EXTRACTED",
@@ -25001,7 +25007,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_anthropic_cache_tiers_are_disjoint",
       "label": "ProviderTests.test_anthropic_cache_tiers_are_disjoint",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L154",
+      "source_location": "L163",
       "type": "method"
     },
     {
@@ -25009,7 +25015,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_anthropic_empty_tool_meter_is_zero_not_a_tool_execution",
       "label": "ProviderTests.test_anthropic_empty_tool_meter_is_zero_not_a_tool_execution",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L271",
+      "source_location": "L280",
       "type": "method"
     },
     {
@@ -25017,7 +25023,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_arbitrary_decimal_context_cannot_drop_positive_cost_tail",
       "label": "ProviderTests.test_arbitrary_decimal_context_cannot_drop_positive_cost_tail",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L281",
+      "source_location": "L290",
       "type": "method"
     },
     {
@@ -25025,7 +25031,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_catalog_pagination_and_gemini_header_auth",
       "label": "ProviderTests.test_catalog_pagination_and_gemini_header_auth",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L241",
+      "source_location": "L250",
       "type": "method"
     },
     {
@@ -25033,7 +25039,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_deepseek_cache_miss_parity",
       "label": "ProviderTests.test_deepseek_cache_miss_parity",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L147",
+      "source_location": "L156",
       "type": "method"
     },
     {
@@ -25049,7 +25055,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_duplicate_catalog_and_pagination_fail",
       "label": "ProviderTests.test_duplicate_catalog_and_pagination_fail",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L252",
+      "source_location": "L261",
       "type": "method"
     },
     {
@@ -25057,7 +25063,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_exact_cost_decimal_rounds_up_and_preserves_receipt_on_tools",
       "label": "ProviderTests.test_exact_cost_decimal_rounds_up_and_preserves_receipt_on_tools",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L183",
+      "source_location": "L192",
       "type": "method"
     },
     {
@@ -25065,7 +25071,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_gemini_additional_thought_tokens_and_text_only",
       "label": "ProviderTests.test_gemini_additional_thought_tokens_and_text_only",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L167",
+      "source_location": "L176",
       "type": "method"
     },
     {
@@ -25073,7 +25079,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_invalid_cost_never_becomes_zero",
       "label": "ProviderTests.test_invalid_cost_never_becomes_zero",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L194",
+      "source_location": "L203",
       "type": "method"
     },
     {
@@ -25089,7 +25095,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_model_catalog_no_versions_and_zai_no_fake_endpoint",
       "label": "ProviderTests.test_model_catalog_no_versions_and_zai_no_fake_endpoint",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L231",
+      "source_location": "L240",
       "type": "method"
     },
     {
@@ -25097,13 +25103,21 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_multiple_candidates_or_private_error_are_not_results",
       "label": "ProviderTests.test_multiple_candidates_or_private_error_are_not_results",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L214",
+      "source_location": "L223",
       "type": "method"
     },
     {
       "file_type": "python",
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_openai_reasoning_already_in_output_cache_disjoint",
       "label": "ProviderTests.test_openai_reasoning_already_in_output_cache_disjoint",
+      "source_file": "skills/session-harness/scripts/test_api_providers.py",
+      "source_location": "L146",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_openrouter_catalog_alias_does_not_block_concrete_model",
+      "label": "ProviderTests.test_openrouter_catalog_alias_does_not_block_concrete_model",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
       "source_location": "L137",
       "type": "method"
@@ -25137,7 +25151,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_response_id_is_opaque_not_a_model_identifier",
       "label": "ProviderTests.test_response_id_is_opaque_not_a_model_identifier",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L266",
+      "source_location": "L275",
       "type": "method"
     },
     {
@@ -25145,7 +25159,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_unbudgeted_transport_and_generate_cannot_dispatch",
       "label": "ProviderTests.test_unbudgeted_transport_and_generate_cannot_dispatch",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L222",
+      "source_location": "L231",
       "type": "method"
     },
     {
@@ -25153,7 +25167,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_unknown_billed_class_and_malformed_usage_retain_unresolved",
       "label": "ProviderTests.test_unknown_billed_class_and_malformed_usage_retain_unresolved",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L201",
+      "source_location": "L210",
       "type": "method"
     },
     {
@@ -25161,7 +25175,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_api_providers.py:ProviderTests.test_unknown_service_tiers_and_conflicting_cache_are_unresolved",
       "label": "ProviderTests.test_unknown_service_tiers_and_conflicting_cache_are_unresolved",
       "source_file": "skills/session-harness/scripts/test_api_providers.py",
-      "source_location": "L259",
+      "source_location": "L268",
       "type": "method"
     },
     {
