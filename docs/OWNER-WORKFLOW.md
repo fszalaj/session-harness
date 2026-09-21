@@ -70,3 +70,21 @@ not end-to-end quality. Paid testing needs explicit monetary admission first.
 A small coding probe can show that a route works or reveal a defect; it cannot
 establish a globally optimal allocation. Prefer the simplest division that passes
 the project's tests, and keep the manager's review cost in the comparison.
+
+### Initial synthetic evaluation (2026-09-21)
+
+These are observed test identities, not pinned routing defaults. Private account
+configuration, credentials and provider receipts are deliberately excluded.
+
+| Route | Observation | What it establishes |
+| --- | --- | --- |
+| Native Gemini `gemini-3.8-flash-medium` | Generated two Python functions; passed 18 deterministic checks in about 49 seconds | One bounded implementation task passed; actual effort was not reported |
+| OpenRouter Jev `typesafe/jev-1.13-20260917` | Returned valid probability, candidate choice and rubric score for a synthetic checkout incident in about 1.2 seconds | Structured decisions and actual-cost settlement worked |
+| OpenRouter `deepseek/deepseek-v4.1-flash` | Same coding packet did not return a verifiable result/cost within the 120-second deadline | No quality result; reservation retained, no automatic retry |
+| Named Claude/Gemini through Copilot | Selection, isolation and identity checks passed fixtures; a real Auto-only account rejected unavailable named models before inference | Paid-account named execution still requires first-account verification |
+
+The initial choice is Gemini for implementation and Jev for suitable narrow
+judgments, with Codex/Claude managing and checking work. Keep DeepSeek optional
+until the unresolved request has billing evidence and a separately admitted test
+succeeds. This small sample does not establish global optimality or a provider-wide
+outage; native subscription usage and API money are not directly comparable.
