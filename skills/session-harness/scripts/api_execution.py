@@ -50,12 +50,17 @@ def execute(service, model, prompt, max_output_tokens, reserve_cost, *, request_
                                        rates["evidence"], kind="estimated")
         else:
             accounting = ledger.unresolved(identifier)
-        mismatch = coding is not None and result.get("model") != model
+        mismatch = (coding is not None and result.get("model") is not None
+                    and result["model"] not in coding["accepted_response_models"])
         valid = result.get("output_valid", False) and not mismatch
+        if coding is not None:
+            valid = valid and result.get("model") in coding["accepted_response_models"]
         if decision:
             valid = valid and actual is not None
         return {"status": "model_mismatch" if mismatch else "completed" if valid else "output_rejected", "request_id": identifier,
                 "model": result.get("model"),
+                **({"reason": result.get("status")} if not valid and not mismatch
+                   and result.get("status") in {"empty_output", "unexpected_api_content"} else {}),
                 **({"answers": result.get("answers") if valid else None, "requested_model": prepared.model}
                    if decision else {"text": result.get("text") if valid else None}),
                 "accounting": accounting,
@@ -64,9 +69,11 @@ def execute(service, model, prompt, max_output_tokens, reserve_cost, *, request_
                 **({"truncated": result["truncated"]} if "truncated" in result else {}),
                 **({"coding": coding} if coding is not None else {}),
                 "budget_note": "Observed estimates and reservations cannot guarantee an exact provider charge."}
-    except Exception:
+    except Exception as exc:
+        reason = exc.status if isinstance(exc, api_providers.APIError) and exc.status in {
+            "api_timeout", "api_transport_error", "api_http_error", "invalid_api_json"} else "unverified_provider_result"
         return {"status": "unresolved_dispatch", "request_id": identifier,
-                "accounting": ledger.unresolved(identifier),
+                "accounting": ledger.unresolved(identifier), "reason": reason,
                 "error": "Provider result or cost could not be verified; reservation retained. Do not retry automatically."}
 
 

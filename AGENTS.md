@@ -1,6 +1,6 @@
 # Session harness maintenance
 
-Claude Code 2.1.277+ reads `AGENTS.md` natively; keep the built-in `agents-md` plugin enabled.
+`AGENTS.md` is canonical; `CLAUDE.md` is a relative symlink to it for compatible instruction loading.
 
 Use `skills/session-harness/SKILL.md` for substantive work. This is a generic
 coding-client and explicit API harness; do not add application-specific policies or data.

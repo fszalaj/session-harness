@@ -577,4 +577,5 @@ class AutoSchedulerTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    result = unittest.main(exit=False).result
+    raise SystemExit(0 if result.wasSuccessful() and (result.testsRun or result.skipped) else 1)

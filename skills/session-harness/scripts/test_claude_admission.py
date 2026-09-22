@@ -62,6 +62,20 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual([c['effort'] for c in choices], ['medium', 'medium'])
         self.assertEqual(admission.candidates(cap, 'planner')[-1]['effort'], 'medium')
 
+    def test_strong_worker_never_downgrades_to_sonnet(self):
+        cap = capability()
+        cap['worker'] = dict(model=FABLE, effort='high')
+        self.assertEqual([FABLE, OPUS], [c['model'] for c in admission.candidates(cap, 'worker')])
+        checks = []
+        def check(model):
+            checks.append(model)
+            return receipt(model, model == OPUS)
+        choice, _ = admission.choose(cap, 'worker', check=check)
+        self.assertEqual([FABLE, OPUS], checks)
+        self.assertEqual(OPUS, choice['model'])
+        with self.assertRaises(supervision.Stop):
+            admission.choose(cap, 'worker', check=lambda model: receipt(model, False))
+
     def test_old_remote_authority_cannot_drop_models(self):
         class Result:
             returncode = 0

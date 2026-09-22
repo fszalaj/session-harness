@@ -371,6 +371,13 @@ class Ledger:
             state["days"][self._day(observed)][pool]
             if not 0 <= observed <= latest or not 0 <= number(value["used_percent"], "stored usage") <= 100:
                 raise ValueError("invalid stored accounting")
+            high = {"high_water_used_percent", "high_water_reset_at"} & value.keys()
+            if high:
+                if len(high) != 2 or not value["used_percent"] <= number(value["high_water_used_percent"], "stored high water") <= 100:
+                    raise ValueError("invalid stored high water")
+                anchor = value["high_water_reset_at"]
+                if anchor is not None and number(anchor, "stored high water reset") < 0:
+                    raise ValueError("invalid stored high water reset")
             if value["resets_at"] is not None and number(value["resets_at"], "stored reset") < 0:
                 raise ValueError("invalid stored reset")
             if "window_minutes" in value and number(value["window_minutes"], "window minutes") <= 0:
@@ -437,6 +444,17 @@ class Ledger:
                 except (KeyError, TypeError, AttributeError) as exc:
                     raise ValueError("invalid stored accounting") from exc
             previous_time = state.get("observed_at")
+            if (service == "claude" and source == "claude.native_account_bound_cache"
+                    and observed == previous_time and 0 <= now - observed < 60
+                    and state.get("source") in {"claude.native_backend_refresh", source}
+                    and snapshot["complete"] is True and state.get("complete") is True
+                    and state.get("missing_pools") == []
+                    and state.get("credit_resources") == resources
+                    and {key: {k: v for k, v in value.items() if k not in {"high_water_used_percent", "high_water_reset_at"}}
+                         for key, value in state["pools"].items()}
+                    == {key: dict(value, observed_at=observed) for key, value in clean.items()}):
+                db.rollback()
+                return self.check(service, now=now)
             if previous_time is not None and observed <= previous_time:
                 raise ValueError("observations must be strictly ordered")
             config = self._budgets(db)
@@ -448,24 +466,36 @@ class Ledger:
                     old = state.get("retired_pools", {}).pop(pool, None)
                 entry = daily.setdefault(pool, {"consumed": 0.0, "unknown": False,
                                                 "history_partial": old is None})
+                high_water, anchor = current["used_percent"], current["resets_at"]
                 if old is None:
                     entry["unknown"] = not initialize
                 else:
                     gap = observed - old["observed_at"]
                     delta = current["used_percent"] - old["used_percent"]
-                    entry["consumed"] += current["used_percent"] if delta < 0 else delta
+                    old_high = old.get("high_water_used_percent", old["used_percent"])
+                    old_anchor = old.get("high_water_reset_at", old["resets_at"])
+                    same_window = (old_anchor is not None and old["resets_at"] is not None
+                                   and anchor is not None and min(old_anchor, old["resets_at"], anchor) > observed
+                                   and abs(anchor - old_anchor) <= 1
+                                   and abs(old["resets_at"] - old_anchor) <= 1)
+                    if same_window:
+                        entry["consumed"] += max(0, high_water - old_high)
+                        high_water, anchor = max(high_water, old_high), old_anchor
+                    else:
+                        entry["consumed"] += current["used_percent"] if delta < 0 else delta
                     changed_reset = current["resets_at"] != old["resets_at"]
                     crossed_reset = old["resets_at"] is not None and old["resets_at"] <= observed
                     if delta < 0 or changed_reset or crossed_reset or gap > self.policy["max_gap"]:
                         entry["unknown"] = True
                         entry["history_partial"] = True
-                    if delta < 0:
+                    if delta < 0 and not same_window:
                         recoveries.add(pool)
                         state["resets"].append(dict(pool=pool, observed_at=observed,
                                                     prior_reset=old["resets_at"],
                                                     resets_at=current["resets_at"],
                                                     usage_drop=delta < 0))
-                state["pools"][pool] = dict(current, observed_at=observed)
+                state["pools"][pool] = dict(current, observed_at=observed,
+                                            high_water_used_percent=high_water, high_water_reset_at=anchor)
             missing = sorted(set(state["pools"]) - set(clean))
             state.update(observed_at=observed, source=source,
                          complete=snapshot["complete"], missing_pools=missing, credit_resources=resources)

@@ -98,6 +98,41 @@ class NativeTests(unittest.TestCase):
                 with self.assertRaises(native.NativeQuotaError):
                     native.claude_snapshot(stdout, debug, IDS, NOW)
 
+    def test_claude_cache_preserves_verified_backend_timestamp(self):
+        data = claude_data()
+        evidence = dict(account="account-a", cache=dict(accountUuid="account-a",
+            fetchedAtMs=(NOW - 20) * 1000,
+            utilization={k: v for k, v in data["rate_limits"].items() if k != "model_scoped"}))
+        debug = "Usage read answered from a snapshot 20s old; endpoint not asked"
+        result = native.claude_snapshot(stream(data), debug, IDS, NOW, evidence, copy.deepcopy(evidence))
+        self.assertEqual(NOW - 20, result["observed_at"])
+        self.assertEqual("native_original_fetched_at", result["freshness"])
+        self.assertEqual([12, 18, 7], [row["used_percent"] for row in result["pools"]])
+        replay = native.claude_snapshot(stream(data), debug, IDS, NOW + 1, evidence, evidence)
+        self.assertEqual(result["observed_at"], replay["observed_at"])
+
+        mutations = [lambda e: e.update(account="account-b"),
+                     lambda e: e["cache"].update(accountUuid="account-b"),
+                     lambda e: e["cache"]["utilization"]["five_hour"].update(utilization=99),
+                     lambda e: e["cache"]["utilization"].pop("extra_usage")]
+        mutations.extend(lambda e, value=value: e["cache"].update(fetchedAtMs=value)
+                         for value in (True, "1", float("nan"), float("inf"),
+                                       (NOW + 1) * 1000, (NOW - 60) * 1000, (NOW - 3599) * 1000))
+        for mutate in mutations:
+            changed = copy.deepcopy(evidence)
+            mutate(changed)
+            with self.subTest(evidence=changed):
+                with self.assertRaises(native.NativeQuotaError):
+                    native.claude_snapshot(stream(data), debug, IDS, NOW, changed, changed)
+        for before, after, message in ((evidence, None, debug), (None, evidence, debug),
+                                       (evidence, dict(evidence, account="account-b"), debug),
+                                       (evidence, evidence, "cached fallback"),
+                                       (evidence, evidence, debug + "\nfetchUtilization: failed"),
+                                       (evidence, evidence, debug + "\n" + debug)):
+            with self.subTest(message=message):
+                with self.assertRaises(native.NativeQuotaError):
+                    native.claude_snapshot(stream(data), message, IDS, NOW, before, after)
+
     def test_claude_missing_unknown_enabled_or_disagreeing_limits(self):
         mutations = [lambda d: d["rate_limits"]["limits"].pop(1),
                      lambda d: d["rate_limits"]["limits"].append(copy.deepcopy(d["rate_limits"]["limits"][0])),

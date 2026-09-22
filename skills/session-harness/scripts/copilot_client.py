@@ -8,20 +8,24 @@ import inventory
 import supervision
 
 
-def chat_pool(payload):
+def billing_pool(payload):
     if not inventory.quota_complete(payload):
         raise harness.HarnessError('usage_unverified', 'Copilot quota metadata is incomplete.')
     rows = inventory.normalize_quota(payload)
     for row in rows:
-        if any(row.get(key) is not False for key in ('usageAllowedWithExhaustedQuota', 'overageAllowedWithExhaustedQuota')):
+        if (type(row.get('hasQuota')) is not bool or
+                any(row.get(key) is not False for key in ('usageAllowedWithExhaustedQuota', 'overageAllowedWithExhaustedQuota'))):
             raise harness.HarnessError('usage_unverified', 'Copilot paid-overage controls are unverified.')
-    chat = next((row for row in rows if row['pool'] == 'chat'), {})
-    if (chat.get('hasQuota') is not True or chat.get('tokenBasedBilling') is not True
-            or chat.get('isUnlimitedEntitlement') is True or chat.get('entitlementRequests', 0) <= 0):
-        raise harness.HarnessError('usage_unverified', 'Copilot requires a finite token-billed chat allowance.')
-    return {**{k: chat[k] for k in ('entitlementRequests', 'usedRequests', 'remainingPercentage')},
-            'inactive_pools': sorted(({k: v for k, v in row.items() if k != 'resetDate'}
-                                      for row in rows if row.get('hasQuota') is False), key=lambda row: row['pool'])}
+    finite = [row for row in rows if row['hasQuota'] and row.get('isUnlimitedEntitlement') is not True
+              and row.get('entitlementRequests') != -1]
+    if (len(finite) != 1 or finite[0]['pool'] not in {'chat', 'premium_interactions'}
+            or finite[0].get('tokenBasedBilling') is not True or finite[0]['entitlementRequests'] <= 0):
+        raise harness.HarnessError('usage_unverified', 'Copilot requires one finite token-billed chat or premium_interactions allowance.')
+    selected = finite[0]
+    return {**{k: selected[k] for k in ('pool', 'entitlementRequests', 'usedRequests', 'remainingPercentage')},
+            'other_pools': sorted(({k: v for k, v in row.items()
+                                    if k not in ({'resetDate', 'usedRequests', 'remainingPercentage'} if row['hasQuota'] else {'resetDate'})}
+                                   for row in rows if row['pool'] != selected['pool']), key=lambda row: row['pool'])}
 
 
 def discover(executable, offline=False):
@@ -159,18 +163,28 @@ def execute(artifact, timeout, capability, *, task):
         with tempfile.TemporaryDirectory(prefix='session-harness-copilot-') as directory:
             client = inventory.MetadataRPC(capability['executable'])
             client.on_message, client.tick = event, watch.tick
-            before = chat_pool(rpc('account.getQuota'))
+            before = billing_pool(rpc('account.getQuota'))
             choice = capability['planner']
-            if choice['model'] != 'auto':
-                fresh = dict(capability, models=inventory.normalize_models(rpc('models.list'), 'copilot', True))
-                select_model(fresh, choice['model'], choice['effort'], role='worker' if task else 'reviewer',
-                             manager_family=capability.get('manager_family'))
-            created = rpc('session.create', session_config(directory, choice['model'], choice['effort'], task=task))
+            created = rpc('session.create', session_config(directory, 'auto',
+                          choice['effort'] if choice['model'] == 'auto' else None, task=task))
             identity = created.get('sessionId')
             if not isinstance(identity, str) or not identity or len(identity) > 128:
                 raise harness.HarnessError('schema_error', 'Copilot session identity is missing.')
             if early_ids and early_ids != {identity}:
                 raise harness.HarnessError('session_mismatch', 'Copilot session identity changed during creation.')
+            if choice['model'] != 'auto':
+                fresh = dict(capability, models=inventory.copilot_session_models(rpc, identity))
+                select_model(fresh, choice['model'], choice['effort'], role='worker' if task else 'reviewer',
+                             manager_family=capability.get('manager_family'))
+                settings = {'sessionId': identity, 'modelId': choice['model'], 'requireAvailable': True}
+                if choice['effort'] is not None:
+                    settings['reasoningEffort'] = choice['effort']
+                switched = rpc('session.model.switchTo', settings)
+                current = rpc('session.model.getCurrent', {'sessionId': identity})
+                if (switched.get('status') != 'applied' or switched.get('deferred') is not False
+                        or current.get('modelId') != choice['model']
+                        or (choice['effort'] is not None and current.get('reasoningEffort') != choice['effort'])):
+                    raise harness.HarnessError('model_mismatch', 'Copilot did not apply the selected model and effort.')
             idle = False
             rpc('session.send', {'sessionId': identity, 'prompt': prompt})
             while not idle:
@@ -186,12 +200,12 @@ def execute(artifact, timeout, capability, *, task):
                 raise harness.HarnessError('model_mismatch', 'Copilot used multiple models in one bounded task.')
             if choice['model'] != 'auto' and models != {choice['model']}:
                 raise harness.HarnessError('model_mismatch', 'Copilot returned a different model than requested.')
-            after = chat_pool(rpc('account.getQuota'))
-            if (before['entitlementRequests'] != after['entitlementRequests']
-                    or before['inactive_pools'] != after['inactive_pools']
+            after = billing_pool(rpc('account.getQuota'))
+            if (before['pool'] != after['pool'] or before['entitlementRequests'] != after['entitlementRequests']
+                    or before['other_pools'] != after['other_pools']
                     or after['usedRequests'] < before['usedRequests']
                     or after['remainingPercentage'] > before['remainingPercentage']):
-                raise harness.HarnessError('usage_unaccounted', 'Copilot chat-pool consumption could not be verified; inspect the retained unresolved job.')
+                raise harness.HarnessError('usage_unaccounted', 'Copilot billing-pool consumption could not be verified; inspect the retained unresolved job.')
             finished_client, client = client, None
             finished_client.close()
             watch.finish()
@@ -202,7 +216,7 @@ def execute(artifact, timeout, capability, *, task):
                     'verdict': 'worker output requires inspection' if task else 'unparsed; manager must assess findings',
                     'prompt_tokens': sum(row['inputTokens'] for row in usages),
                     'completion_tokens': sum(row['outputTokens'] for row in usages),
-                    'quota_evidence': {'pool': 'chat:token_billing', 'before': before, 'after': after,
+                    'quota_evidence': {'pool': before['pool'] + ':token_billing', 'before': before, 'after': after,
                                        'attribution': 'aggregate_account_change_not_exclusive_task_cost',
                                        'delta_lower_bound_percent': before['remainingPercentage'] - after['remainingPercentage'],
                                        'per_task_charge': 'unknown',
@@ -211,7 +225,7 @@ def execute(artifact, timeout, capability, *, task):
                     'isolation': 'empty tool surface, configuration discovery/hooks/skills disabled; tool callbacks rejected'}
     except supervision.Stop:
         raise harness.HarnessError('quota_blocked', 'Copilot quota supervision stopped this task.') from None
-    except (KeyError, TypeError, AttributeError, UnicodeError):
+    except (KeyError, TypeError, AttributeError, UnicodeError, ValueError):
         raise harness.HarnessError('schema_error', 'Copilot returned malformed task metadata.') from None
     finally:
         if client is not None:

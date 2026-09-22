@@ -23,6 +23,14 @@ other shells, invoke the installed `ai-session.py` with Python directly. No batc
 wrapper interpolates prompts through `cmd.exe`. Trusted executable lookup excludes
 the current directory; arbitrary `.cmd` files are rejected. Recognized standard
 npm shims are normalized to a direct Node/script argument vector.
+Version 0.6.1 prefers `.exe`/`.cmd` over extensionless npm files and recognizes
+the current npm `node`/PATHEXT wrapper variant. The wrapper is parsed, never run
+through a shell; npm wrappers targeting a contained native `.exe` are resolved
+directly too. An operating-system failure for one discovered CLI remains a failure
+for that provider instead of aborting discovery of every other provider.
+The generated launcher also suppresses bytecode in itself and
+child Python processes so normal use does not change its immutable snapshot.
+Version 0.6.0 can require explicit native executable paths and `python -B` on Windows.
 
 Windows subprocesses enter a kill-on-close Job Object through a gated helper
 before a target can spawn descendants. Breakaway is not enabled. Failed job

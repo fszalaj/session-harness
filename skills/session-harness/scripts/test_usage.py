@@ -16,6 +16,45 @@ from quota import Ledger
 
 
 class UsageTests(unittest.TestCase):
+    def test_account_bound_cache_replay_preserves_accounting(self):
+        import copy
+        from test_model_scope import snap, FABLE_SCOPE
+        ledger = Ledger()
+        ledger.set_mode("observed")
+        original = snap(ts=1000.123, scope=FABLE_SCOPE)
+        first = ledger.record(original, initialize=True, now=1001)
+        cached = dict(original, source="claude.native_account_bound_cache")
+        with ledger._connect() as db:
+            before = db.execute("SELECT value FROM state WHERE key='service:claude'").fetchone()[0]
+        for now in (1001, 1015, 1059):
+            replay = ledger.record(cached, now=now)
+            self.assertEqual(replay["observed_at"], first["observed_at"])
+        with ledger._connect() as db:
+            self.assertEqual(before, db.execute("SELECT value FROM state WHERE key='service:claude'").fetchone()[0])
+        for mutation in (lambda x: x["pools"][0].update(used_percent=99),
+                         lambda x: x.update(complete=False),
+                         lambda x: x.update(observed_at=999),
+                         lambda x: x.update(source="claude.native_backend_refresh")):
+            changed = copy.deepcopy(cached)
+            mutation(changed)
+            with self.assertRaises(ValueError):
+                ledger.record(changed, now=1002)
+        with self.assertRaises(ValueError):
+            ledger.record(cached, now=1061)
+
+    def test_new_native_cache_observation_preserves_budget_policy(self):
+        from test_model_scope import snap, FABLE_SCOPE
+        ledger = Ledger()
+        ledger.set_mode("observed")
+        cached = dict(snap(ts=1000.123, scope=FABLE_SCOPE), source="claude.native_account_bound_cache")
+        first = ledger.record(cached, now=1001)
+        self.assertTrue(all(pool["history_partial"] for pool in first["pools"]))
+        with self.assertRaises(ValueError):
+            ledger.record(dict(cached, observed_at=999), now=1002)
+        exhausted = dict(snap(ts=1002.123, weekly_used=100, scope=FABLE_SCOPE),
+                         source="claude.native_account_bound_cache")
+        self.assertFalse(ledger.record(exhausted, now=1003)["allowed"])
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)

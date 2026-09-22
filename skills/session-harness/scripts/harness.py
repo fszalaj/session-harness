@@ -665,6 +665,9 @@ def discover_provider(provider, offline=False):
     except HarnessError as exc:
         return {"status": exc.status, "reason": str(exc), "executable": executable,
                 "review": {"status": exc.status}}
+    except OSError:
+        return {"status": "provider_error", "reason": "Operating-system operation failed while discovering this CLI.",
+                "executable": executable, "review": {"status": "provider_error"}}
 
 
 def launch_plan(provider, role, capability, client_args=None):

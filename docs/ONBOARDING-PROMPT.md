@@ -54,6 +54,13 @@ workers normally at medium (low for gathering), with two independent
 other-provider plan reviews. Follow the selected skill's admission/context procedure;
 missing capabilities or reviews are not success. Do not restart orchestration for leaf tasks.
 
+For owner-enabled balancing on version 0.7.0 or newer, choose task capability before
+routing and use fresh allowance fractions. Weekly ranking requires verified seven-day
+pools for every eligible subscription; monthly and model-scoped pools do not substitute.
+Keep daily admission and separate API money checks. Strong-model native work and named
+Copilot work have different supported controls; inspect help and actual account catalogs.
+Record a useful worker receipt or a concrete manager-only reason per substantive stage.
+
 Report version/provenance, preserved rules, changes, tests, actual loading, discovery
 and protected execution separately, plus rollback and unresolved items. Read release
 and recovery guides when updating, rolling back or considering optional maintenance;

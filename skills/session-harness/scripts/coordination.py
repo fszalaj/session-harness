@@ -219,12 +219,16 @@ def balance_local(operation, payload, ledger):
     if settings(ledger)['authority'] != 'local':
         raise ValueError('balance authority must terminate locally')
     fields = {'status': set(), 'role_admission': {'service', 'model', 'role', 'supervised'},
+              'audit': {'since'},
               'reserve': {'request', 'client_services'}, 'start': {'id'},
               'finish': {'id', 'status', 'metadata'},
               'reconcile': {'id', 'confirm_stopped'},
               'work_route': {'id', 'fingerprint', 'proposed'}}
     if operation not in fields or not isinstance(payload, dict) or set(payload) != fields[operation]:
         raise ValueError('invalid balance operation or fields')
+    if operation == 'audit':
+        import usage_audit
+        return {'protocol_version': 1, **usage_audit.account_report(ledger, **payload)}
     return {'protocol_version': 1, **getattr(balance, operation)(ledger, **payload)}
 
 

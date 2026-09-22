@@ -48,6 +48,16 @@ class APIExecutionTests(unittest.TestCase):
         self.assertNotIn("SECRET", str(result))
         self.assertEqual(ticks("1"), self.money.status()["caps"][0]["pending_ticks"])
 
+    def test_transport_reason_is_safe_and_never_retries(self):
+        with patch.object(api_providers, 'execute', side_effect=api_providers.APIError('api_timeout')) as call:
+            result = self.run_request(request_id='deadline')
+        self.assertEqual(result['reason'], 'api_timeout')
+        self.assertEqual(result['accounting']['status'], 'UNRESOLVED')
+        self.assertEqual(call.call_count, 1)
+        with patch.object(api_providers, 'execute', side_effect=api_providers.APIError('SECRET')):
+            result = self.run_request(request_id='unexpected')
+        self.assertNotIn('SECRET', str(result))
+
     def test_missing_key_fails_before_liability(self):
         with patch.dict(os.environ, {"XAI_API_KEY": ""}), self.assertRaises(api_providers.APIError):
             self.run_request()

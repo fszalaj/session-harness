@@ -66,7 +66,27 @@ def request(ledger, task_id, artifact, role, provider):
             'host': socket.gethostname(), 'role': role, 'provider': provider}
 
 
-def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None, model=None, effort=None):
+def _worker_choice(capability, strong_model, effort):
+    import harness
+    choice = dict(capability['planner' if strong_model else 'worker'])
+    selected = choice['model']
+    rows = [row for row in capability.get('models', [])
+            if selected in (row.get('id'), row.get('resolved_model'))
+            or isinstance(row.get('variants'), dict) and selected in row['variants'].values()]
+    if not rows:
+        raise harness.HarnessError('unsupported_capability', 'Worker model has no advertised effort evidence.')
+    supported = set(rows[0].get('efforts', []))
+    for row in rows[1:]:
+        supported.intersection_update(row.get('efforts', []))
+    effort = effort if effort is not None else harness.select_effort(supported, 'worker')
+    if effort not in supported:
+        raise harness.HarnessError('unsupported_capability', 'Requested worker effort is unavailable.')
+    choice.update(model=harness.resolve_variant(rows[0], effort, selected), effort=effort)
+    return choice
+
+
+def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None, model=None, effort=None,
+             eligible_services=None, basis='daily', strong_model=False, worker_efforts=None):
     import harness
     ledger = ledger or Ledger()
     if not artifact.strip() or len(artifact) > 8192:
@@ -76,8 +96,24 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None, mo
         raise ValueError('work deadline must be between 1 and 180 seconds')
     if (model is not None and provider != 'copilot') or (effort is not None and model is None):
         raise ValueError('model/effort controls require --provider copilot and an explicit --model')
+    import balance
+    balance.task_options(provider, eligible_services, basis)
+    worker_efforts = {} if worker_efforts is None else worker_efforts
+    if (not isinstance(worker_efforts, dict)
+            or any(s not in coordination.SERVICES or e not in harness.EFFORTS for s, e in worker_efforts.items())):
+        raise ValueError('invalid worker effort overrides')
+    if (strong_model or worker_efforts) and (provider != 'native' or model is not None or effort is not None):
+        raise ValueError('native worker controls cannot be combined with explicit model controls')
+    if worker_efforts and eligible_services is not None and not set(worker_efforts).issubset(eligible_services):
+        raise ValueError('worker effort targets an excluded service')
+    if strong_model and (not eligible_services or not set(eligible_services).issubset({'codex', 'claude', 'antigravity'})):
+        raise ValueError('strong model requires an explicit verified native service subset')
     selected = None
     fingerprint_artifact = artifact
+    if eligible_services is not None or basis != 'daily' or strong_model or worker_efforts:
+        fingerprint_artifact = json.dumps(dict(packet=artifact.decode('utf-8'), basis=basis,
+            eligible_services=sorted(eligible_services) if eligible_services else None,
+            strong_model=strong_model, worker_efforts=worker_efforts), sort_keys=True).encode()
     if model is not None:
         import copilot_client
         selected = copilot_client.select_model(harness.discover_provider(provider), model, effort)
@@ -90,8 +126,10 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None, mo
             result = mixed_work(artifact, task_id, timeout, ledger)
             if result is not None:
                 return result
-    job = coordination.balance_dispatch('reserve', {
-        'request': request(ledger, task_id, fingerprint_artifact, 'worker', provider)}, ledger)
+    packet = request(ledger, task_id, fingerprint_artifact, 'worker', provider)
+    if eligible_services is not None or basis != 'daily':
+        packet.update(eligible_services=eligible_services, basis=basis)
+    job = coordination.balance_dispatch('reserve', {'request': packet}, ledger)
     if not job.get('allowed') or job.get('status') != 'reserved':
         return job
     service = job['service']
@@ -99,6 +137,8 @@ def run_work(artifact, *, task_id, provider='auto', timeout=180, ledger=None, mo
         capability = copy.deepcopy(selected if selected is not None else harness.discover_provider(service))
         if not capability.get('worker'):
             raise harness.HarnessError('unsupported_capability', 'No verified current worker model')
+        if strong_model or service in worker_efforts:
+            capability['worker'] = _worker_choice(capability, strong_model, worker_efforts.get(service))
         capability['planner'] = capability['worker']
         started = coordination.balance_dispatch('start', {'id': task_id}, ledger)
         if not started.get('allowed'):
@@ -209,10 +249,14 @@ def main(argv=None):
     recover.add_argument('--confirm-stopped', action='store_true', required=True)
     work = sub.add_parser('work', help='Run one useful bounded text task; no tools or automatic retry')
     work.add_argument('--id', required=True, help='Stable unique task ID; repeat never redispatches')
-    work.add_argument('--provider', default='auto', choices=('auto', *coordination.SERVICES))
+    work.add_argument('--provider', default='auto', choices=('auto', 'native', *coordination.SERVICES))
     work.add_argument('--timeout', type=float, default=180)
     work.add_argument('--model', help='Exact account-selectable Copilot model ID')
     work.add_argument('--effort', help='Advertised effort for explicit Copilot model')
+    work.add_argument('--eligible-services', help='Task-fit native service subset, selected before dispatch')
+    work.add_argument('--basis', choices=('daily', 'weekly'), default='daily')
+    work.add_argument('--strong-model', action='store_true', help='Use the current strongest native family model as supervised worker')
+    work.add_argument('--worker-effort', action='append', default=[], metavar='SERVICE=LEVEL', help='Explicit per-service native worker effort')
     audit = sub.add_parser('audit', help='Read allowlisted usage metadata without model inference')
     audit.add_argument('--since', help='First UTC date (YYYY-MM-DD) for token metadata')
     args = parser.parse_args(argv)
@@ -220,8 +264,16 @@ def main(argv=None):
         import balance
         ledger = Ledger()
         if args.command == 'work':
+            overrides = {}
+            for value in args.worker_effort:
+                service, level = value.split('=', 1)
+                if service in overrides:
+                    raise ValueError('duplicate worker effort service')
+                overrides[service] = level
             result = run_work(sys.stdin.buffer.read(8193), task_id=args.id,
-                              provider=args.provider, timeout=args.timeout, ledger=ledger, model=args.model, effort=args.effort)
+                              provider=args.provider, timeout=args.timeout, ledger=ledger, model=args.model, effort=args.effort,
+                              eligible_services=args.eligible_services.split(',') if args.eligible_services else None,
+                              basis=args.basis, strong_model=args.strong_model, worker_efforts=overrides)
         elif args.command == 'audit':
             import usage_audit
             result = usage_audit.report(ledger, since=args.since)

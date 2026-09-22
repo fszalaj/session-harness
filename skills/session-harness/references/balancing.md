@@ -18,7 +18,7 @@ Submit the bounded task through `work` and verify its receipt before claiming de
 ```sh
 ai-session balance status
 ai-session balance enable
-ai-session work --id unique-task-id < task.txt
+ai-session work --provider native --id unique-task-id < task.txt
 ai-session audit --since 2026-01-01
 ```
 
@@ -26,6 +26,11 @@ Enable only after the owner requests balancing. Run configuration on the account
 authority; clients on other computers use that same authority for every reservation.
 Existing setup, budgets, calendar, reserves, grants and API money authorization are
 preserved. `enable --services codex,claude` selects a supported subset explicitly.
+Version 0.6.1 also accepts one configured service, for
+example `enable --services copilot`. Version 0.6.0 requires two. Single-service
+work retains the same admission, concurrency slot, task journal and no-replay
+rules; its relative progress comparison has only one participant. Multiple model
+families through Copilot remain one service. Do not add another account to enable work.
 `--max-lead 0.15` sets a maximum lead of 15% of a day's local budget at dispatch.
 It is neither a token cap nor 15 percentage points of a provider's entire quota.
 
@@ -53,7 +58,9 @@ refresh, quota denial or policy change still stops dispatch. The final snapshot
 comparison remains mandatory; this mitigates the sequential-refresh race rather
 than promising an atomic multi-provider backend snapshot.
 
-Automatic native requests (`auto`, including an omitted provider) rank all
+Explicit `--provider native` selects subscription work before dispatch and excludes
+separately configured mixed free routes. Never use it as a retry around a stopped
+mixed task. Automatic native requests (`auto`, including an omitted provider) rank all
 configured native worker services. Copilot and Cursor Auto are supervised text
 workers, not evidence of a current model or an independent verdict. Every configured
 service still participates in quota/evidence admission; genuine stops pause the batch.
@@ -65,8 +72,9 @@ services return `busy`. Running jobs and repeated IDs never redispatch; missing 
 provider intent means automatic. Accounting history is retained.
 
 The next useful chunk comes from eligible services within the configured lead of the least
-consumed fraction. Within that band, choose the fewest recorded dispatches today,
-then the service name. This rotates ties when native counters remain rounded to
+consumed fraction. Within that band, choose the lowest current fraction first,
+then the fewest recorded dispatch attempts today, then the service name. Failed
+and abandoned attempts remain in that daily tie-break count. This rotates ties when native counters remain rounded to
 zero. Atomic reservations allow one open work item per billing service. A reservation
 is a concurrency slot, never an invented quota debit. Manager, native workers and
 reviews affect future choices through aggregate account counters even when they
@@ -89,6 +97,37 @@ model again; changed input under that ID is rejected. Only a private keyed finge
 and bounded metadata enter the journal; prompts and responses are not stored there.
 The key is private ledger state, not a signature against someone who controls that
 ledger. Local audit reads only allowlisted token/cost metadata into its report.
+
+## Select task capability and weekly balance
+
+Version 0.7.0 supports a task-fit subset and weekly quota basis. Choose
+these before dispatch, never as a retry around a stop:
+
+```sh
+ai-session work --provider native --eligible-services codex,claude --basis weekly \
+  --strong-model --worker-effort codex=high --id complex-task < task.txt
+```
+
+`--basis weekly` ranks the highest used fraction of verified, unscoped seven-day
+pools. It compares the whole weekly allowance, not today's consumption. Missing
+weekly evidence stops the task; monthly or model-specific pools do not substitute.
+The existing `max_lead` is measured in this selected basis (0.15 means 15 percentage
+points of weekly usage). Daily admission, reserve and every configured participant's
+quota checks remain unchanged, including services outside `--eligible-services`.
+Reserve and start both use the persisted subset and basis; a denied start releases
+the slot without selecting another provider. Default requests retain daily ranking.
+
+`--strong-model` uses the catalog-selected planning model for supervised work, at
+ordinary supported worker effort. It requires an explicit subset of Codex, Claude
+and/or Antigravity. A Fable or Opus worker can use only a verified current Opus
+alternative; it never silently drops to Sonnet. Common quota stops still block.
+Repeatable `--worker-effort SERVICE=LEVEL` sets only that selected service's effort;
+unsupported model controls fail before inference. All controls enter the task
+fingerprint. Requested and reported effort remain distinct in the receipt.
+
+Choose quality and task capability first, then balance eligible subscriptions.
+Lower effort is an explicit task choice, not a way to avoid a quota stop. These
+controls do not change an active manager or turn supervised work into review.
 
 ## Configure which models need supervision
 
@@ -131,7 +170,7 @@ Match work against verified adapter capabilities:
 | Provider or tool | Execution status | Quota and billing scope |
 | --- | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Protected native execution | Fresh native quota readers; balance fractions of local daily budgets |
-| Copilot, Cursor | Native launch and supervised text | Finite Copilot chat pool or personal Cursor Free Auto; fresh no-overage evidence required |
+| Copilot, Cursor | Native launch and supervised text | One finite token-billed Copilot chat or premium_interactions pool (premium support since 0.6.1), or personal Cursor Free Auto; fresh no-overage evidence required |
 | Gemini CLI, Kimi CLI, OpenCode, Aider, Continue | Discovery | No protected native execution adapter |
 | Ollama local | Bounded text with local residency checks | Separate local job ledger, outside subscription balancing |
 | Paid OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi, Z.ai, OpenRouter APIs | Explicit text requests | Separate monthly money admission; never subscription fallback |
@@ -175,8 +214,22 @@ execution, automatic model fallback or additional charges.
 
 ## Interpreting the audit output
 
-`audit` reports quota history and local token history separately. Quota history
-counts cumulative positive percentage-point changes per pool. Do not add overlapping
+`audit` reports authority quota/work/API accounting and local token history separately.
+A remote authority failure is explicit; local records never masquerade as shared
+account totals. Work receipts count bounded dispatches, excluding direct manager
+calls and independent reviews. Monetary rows separate settled charges from pending
+reservations; neither proves external billing coverage. Ledger dates use its configured
+timezone, while transcript dates use UTC. Per-session IDs, model, observed role and
+response counts help locate manager context overhead without copying prompt text.
+Unknown roles remain unknown. Mirrored parent responses are deduplicated before
+assignment to their original session.
+
+Quota history Quota history
+counts cumulative positive percentage-point changes per pool. Within a verified
+future reset window, a downward correction and rebound count only growth above
+the prior high-water mark. Reset timestamp jitter is bounded against a fixed
+epoch anchor. Corrections remain uncertain history; they do not create resets,
+reanchor budgets or refund previously recorded consumption. Do not add overlapping
 pools together. A reset never refunds consumption recorded for that day. Incomplete
 observation windows provide lower bounds, not totals.
 
@@ -190,7 +243,7 @@ rows from that date onward. Claude cost-state `totalCostUSD` values are cumulati
 token-price estimates over the examined sessions, not date-filtered charges or
 proof of an API invoice.
 
-- Zero recorded monetary requests describes the local harness journal; it cannot
+- Zero recorded monetary requests describes the selected harness journal; it cannot
   establish an external API invoice of zero.
 - A transcript may be mirrored. Its location does not identify the compute host;
   do not sum host reports on that basis.
@@ -203,7 +256,7 @@ proof of an API invoice.
 
 Interactive workers report `balance_blocked` with a phase and reason codes when
 pacing prevents launch. `max_lead_exceeded` means that service is ahead of the
-configured fraction of daily budgets; it is not a CLI schema failure or proof that
+configured lead for the task's daily or weekly basis; it is not a CLI schema failure or proof that
 the subscription is exhausted. Inspect `ai-session balance status`. Keep useful work
 within the admitted band; changing the lead requires an explicit configuration choice.
 

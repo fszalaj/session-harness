@@ -45,6 +45,52 @@ class WorkTests(unittest.TestCase):
         self.ledger.complete_setup(services=['codex', 'claude', 'antigravity'], api_services=[], source='test')
         self.capability = {'worker': {'model': 'example-current', 'effort': 'medium'}}
 
+    def test_native_role_controls_bind_fingerprint_and_selected_effort(self):
+        cap = dict(worker={'model': 'current', 'effort': 'medium'},
+                   planner={'model': 'current', 'effort': 'xhigh'},
+                   models=[{'id': 'current', 'efforts': ['low', 'medium', 'high', 'xhigh']}])
+        prints = []
+        for service, level in [('codex', 'high'), ('claude', 'medium')]:
+            replies = [{'allowed': True, 'status': 'reserved', 'service': service},
+                       {'allowed': True, 'status': 'running'}, {'allowed': True, 'status': 'completed'}]
+            with patch.object(coordination, 'balance_dispatch', side_effect=replies) as dispatch, \
+                 patch.object(harness, 'discover_provider', return_value=cap), \
+                 patch.object(harness, 'review', return_value={'actual_model': 'current'}) as execute:
+                result = balance_cli.run_work(b'task', task_id='same', provider='native', ledger=self.ledger,
+                    eligible_services=['codex', 'claude'], basis='weekly', strong_model=True,
+                    worker_efforts={'codex': 'high'})
+                self.assertEqual('completed', result['status'])
+                self.assertEqual(level, execute.call_args.args[4])
+                request = dispatch.call_args_list[0].args[1]['request']
+                self.assertEqual('weekly', request['basis'])
+                prints.append(request['fingerprint'])
+        self.assertEqual(prints[0], prints[1])
+        with patch.object(coordination, 'balance_dispatch', return_value={'allowed': False}) as dispatch:
+            balance_cli.run_work(b'task', task_id='same', provider='native', ledger=self.ledger,
+                eligible_services=['codex', 'claude'], basis='weekly', strong_model=True,
+                worker_efforts={'codex': 'low'})
+            self.assertNotEqual(prints[0], dispatch.call_args.args[1]['request']['fingerprint'])
+
+    def test_unsupported_worker_effort_fails_reserved_job_before_start(self):
+        replies = [{'allowed': True, 'status': 'reserved', 'service': 'codex'},
+                   {'allowed': True, 'status': 'failed'}]
+        cap = {**self.capability, 'models': [{'id': 'example-current', 'efforts': ['medium']}]}
+        with patch.object(coordination, 'balance_dispatch', side_effect=replies) as dispatch, \
+             patch.object(harness, 'discover_provider', return_value=cap), \
+             patch.object(harness, 'review') as execute:
+            result = balance_cli.run_work(b'task', task_id='bad', provider='native', ledger=self.ledger,
+                                         worker_efforts={'codex': 'high'})
+            self.assertEqual('failed', result['status'])
+            self.assertEqual(['reserve', 'finish'], [c.args[0] for c in dispatch.call_args_list])
+            execute.assert_not_called()
+        with patch.object(coordination, 'balance_dispatch') as dispatch:
+            for options in [{'provider': 'auto', 'basis': 'weekly'},
+                            {'provider': 'native', 'eligible_services': ['claude'], 'worker_efforts': {'codex': 'high'}},
+                            {'provider': 'native', 'strong_model': True}]:
+                with self.assertRaises(ValueError):
+                    balance_cli.run_work(b'task', task_id='bad', ledger=self.ledger, **options)
+            dispatch.assert_not_called()
+
     def test_mixed_free_selection_and_native_stop(self):
         replies = [{'allowed': True, 'bound': False},
                    {'allowed': True, 'enabled': True, 'services': {'claude': {'progress': 0.4}}},

@@ -312,6 +312,9 @@ def _text_result(service, data):
         raise APIError('unexpected_api_content')
     choice = choices[0]
     message = choice.get('message')
+    if (service == 'openrouter' and choice.get('finish_reason') == 'length'
+            and isinstance(message, dict) and message.get('content') is None):
+        message = dict(message, content='')
     if (not isinstance(message, dict) or message.get('role') != 'assistant'
             or message.get('tool_calls') or message.get('function_call')
             or not isinstance(message.get('content'), str)):
@@ -334,16 +337,21 @@ def normalize_response(service, data):
         pass
     try:
         text, model, response_id, reason = _text_result(service, data)
-        if not text.strip() or len(text.encode()) > MAX_BODY or not isinstance(reason, str):
+        if not isinstance(reason, str):
             raise APIError('unexpected_api_content')
         if reason not in {'stop', 'length', 'end_turn', 'max_tokens', 'stop_sequence', 'STOP', 'MAX_TOKENS'}:
             raise APIError('unexpected_api_content')
         if not (service == 'ollama' and response_id is None) and (
                 not isinstance(response_id, str) or not re.fullmatch(r'[A-Za-z0-9._:/+=-]{1,256}', response_id)):
             raise APIError('unexpected_api_content')
-        result.update(text=text, model=_model(model), response_id=response_id,
-                      output_valid=True, status='completed', inference_verified=True,
+        result.update(model=_model(model), response_id=response_id,
                       truncated=reason in {'length', 'max_tokens', 'MAX_TOKENS'})
+        if not text.strip():
+            result['status'] = 'empty_output'
+            return result
+        if len(text.encode()) > MAX_BODY:
+            raise APIError('unexpected_api_content')
+        result.update(text=text, output_valid=True, status='completed', inference_verified=True)
     except (APIError, TypeError, AttributeError, UnicodeError):
         pass
     return result

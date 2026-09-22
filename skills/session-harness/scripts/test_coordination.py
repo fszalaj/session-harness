@@ -27,6 +27,14 @@ class CoordinationTests(unittest.TestCase):
     def admit(self, owner):
         return coordination.dispatch('admit', 'claude', owner, self.ledger)
 
+    def test_authority_audit_is_read_only_and_cannot_authorize_inference(self):
+        result = coordination.balance_local('audit', {'since': '2026-09-21'}, self.ledger)
+        self.assertFalse(result['allowed'])
+        self.assertEqual(result['status'], 'audit')
+        self.assertIn('quota_history', result)
+        with self.assertRaises(ValueError):
+            coordination.balance_local('audit', {'since': '2026-09-21', 'owner': 'spoof'}, self.ledger)
+
     def test_parallel_sessions_have_one_winner_and_no_timeout_refund(self):
         coordination.configure(self.ledger, max_sessions=1)
         with patch('usage.require_admission', return_value={'allowed': True}):

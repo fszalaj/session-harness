@@ -29,8 +29,9 @@ def which(name):
             continue
         paths.append(directory)
     # Python's Windows which can prepend CWD even with an explicit PATH.
+    suffixes = ('',) if Path(name).suffix.lower() in {'.exe', '.cmd'} else ('.exe', '.cmd')
     for directory in paths:
-        for suffix in ('', '.exe', '.cmd'):
+        for suffix in suffixes:
             candidate = Path(directory) / (name + suffix)
             if candidate.is_file(): return str(candidate)
     return None
@@ -48,14 +49,19 @@ def executable_argv(argv):
         candidate = Path(found)
     if candidate.suffix.lower() in {'.cmd', '.bat'}:
         text = candidate.read_text(encoding='utf-8')
-        # Only the standard npm shim's final node invocation is accepted.
-        match = re.search(r'^endLocal & goto #_undefined_# 2>NUL \|\| title %COMSPEC% & "%_prog%"\s+"%dp0%\\([^"\r\n]+\.js)" %\*\s*$', text, re.M)
-        if (not match or 'SET "_prog=node.exe"' not in text or
-                'SET "_prog=%dp0%\\node.exe"' not in text or len(text) > 8192):
+        # Decode npm's final target; never execute the surrounding batch commands.
+        native = re.search(r'^"%dp0%\\([^"\r\n]+\.exe)"\s+%\*\s*$', text, re.M)
+        match = native or re.search(r'^endLocal & goto #_undefined_# 2>NUL \|\| title %COMSPEC% & '
+                          r'(?:set PATHEXT=%PATHEXT:;\.JS;=;% & )?"%_prog%"\s+"%dp0%\\([^"\r\n]+\.js)" %\*\s*$', text, re.M)
+        if (not match or len(text) > 8192 or (not native and (
+                not re.search(r'^\s*SET "_prog=node(?:\.exe)?"\s*$', text, re.M)
+                or 'SET "_prog=%dp0%\\node.exe"' not in text))):
             raise OSError('Unsupported batch shim; use the absolute native executable or node script')
         script = (candidate.parent / match[1]).resolve()
         if not script.is_relative_to(candidate.parent.resolve()) or not script.is_file():
             raise OSError('Invalid npm shim target')
+        if native:
+            return executable_argv([str(script), *argv[1:]])
         node = candidate.parent / 'node.exe'
         prefix = executable_argv([str(node)]) if node.is_file() else executable_argv(['node.exe'])
         return [*prefix, str(script), *argv[1:]]

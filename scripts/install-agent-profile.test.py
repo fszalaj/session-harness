@@ -343,8 +343,7 @@ class RepositoryProfileContractTests(unittest.TestCase):
         instructions = canonical.read_text()
         self.assertLess(len(instructions.splitlines()), 200, "Move operational detail into linked procedures")
         self.assertLess(len(instructions), 12_000, "Keep the session entrypoint within its context budget")
-        self.assertFalse((repo / "CLAUDE.md").exists())
-        for name in ("GEMINI.md",):
+        for name in ("CLAUDE.md", "GEMINI.md"):
             entrypoint = repo / name
             with self.subTest(entrypoint=name):
                 if os.name == 'nt' and not entrypoint.is_symlink():
@@ -453,6 +452,20 @@ class CheckedCopyTests(unittest.TestCase):
         result = subprocess.run([sys.executable, str(launcher), 'inventory'], capture_output=True, text=True)
         self.assertEqual(result.returncode, 7)
         self.assertEqual(result.stdout.strip(), 'from sibling')
+
+    def test_launcher_keeps_snapshot_clean_after_imports_and_child_process(self):
+        (self.skill / 'scripts/sibling.py').write_text('MESSAGE = "snapshot import"')
+        (self.skill / 'scripts/harness.py').write_text(
+            'import sibling,subprocess,sys\n'
+            'subprocess.run([sys.executable,"-c","import sibling"],check=True)\n')
+        installed = self.install()
+        entry = self.home / ('.local/bin/ai-session.py' if os.name == 'nt' else '.local/bin/ai-session')
+        runtime = Path(installed['release_root']) / 'session-harness/scripts'
+        env = dict(os.environ)
+        env.pop('PYTHONDONTWRITEBYTECODE', None)
+        subprocess.run([sys.executable, str(entry), 'inventory'], cwd=runtime, env=env, check=True)
+        self.assertEqual(list(runtime.rglob('*.pyc')), [])
+        self.assertEqual(self.install()['changes'], [])
 
     def test_modified_copy_is_preserved(self):
         self.install()

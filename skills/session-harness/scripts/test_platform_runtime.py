@@ -51,6 +51,39 @@ class PipeTests(unittest.TestCase):
                  patch.object(Path, 'cwd', return_value=root):
                 self.assertIsNone(runtime.which('evil'))
 
+    def test_windows_lookup_prefers_native_extensions_and_rejects_extensionless(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            for name in ('client', 'client.exe', 'client.cmd'):
+                (root / name).write_text('fixture')
+            with patch.object(runtime, 'WINDOWS', True), patch.dict(os.environ, {'PATH': directory}):
+                self.assertEqual(runtime.which('client'), str(root / 'client.exe'))
+                self.assertEqual(runtime.which('client.exe'), str(root / 'client.exe'))
+                (root / 'client.exe').unlink()
+                self.assertEqual(runtime.which('client'), str(root / 'client.cmd'))
+                (root / 'client.cmd').unlink()
+                self.assertIsNone(runtime.which('client'))
+
+    def test_current_npm_shim_is_resolved_without_a_batch_shell(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve(); node = root / 'node.exe'; node.touch()
+            script = root / 'node_modules/client/loader.js'; script.parent.mkdir(parents=True); script.touch()
+            shim = root / 'client.cmd'
+            for program, pathext in [('node.exe', ''), ('node', 'set PATHEXT=%PATHEXT:;.JS;=;% & ')]:
+                shim.write_text('SET "_prog=%dp0%\\node.exe"\nSET "_prog=' + program + '"\n'
+                                'endLocal & goto #_undefined_# 2>NUL || title %COMSPEC% & ' + pathext +
+                                '"%_prog%"  "%dp0%\\node_modules/client/loader.js" %*\n')
+                with patch.object(runtime, 'WINDOWS', True):
+                    self.assertEqual(runtime.executable_argv([str(shim), '&|<>']), [str(node), str(script), '&|<>'])
+                    shim.write_text(shim.read_text().replace('node_modules/client/loader.js', '../escape.js'))
+                    with self.assertRaises(OSError): runtime.executable_argv([str(shim)])
+            target = root / 'node_modules/client/client.exe'; target.touch()
+            shim.write_text('CALL :find_dp0\n"%dp0%\\node_modules/client/client.exe"   %*\n')
+            with patch.object(runtime, 'WINDOWS', True):
+                self.assertEqual(runtime.executable_argv([str(shim), '&|<>']), [str(target), '&|<>'])
+                shim.write_text(shim.read_text().replace('node_modules/client/client.exe', '../escape.exe'))
+                with self.assertRaises(OSError): runtime.executable_argv([str(shim)])
+
     def test_portable_runner_reports_failure_and_continues_later_files(self):
         source = next(parent / 'scripts' / name for parent in Path(__file__).resolve().parents
                       for name in ('test.py', 'test-agent-harness.py')
@@ -101,10 +134,11 @@ class WindowsTests(unittest.TestCase):
             self.assertFalse(marker.exists())
 
     def test_breakaway_child_is_denied(self):
+        # A venv adds an inner job that permits breakaway into the enclosing job.
         code = ('import subprocess,sys; '
-                '\ntry: subprocess.Popen([sys.executable,"-c","pass"],creationflags=subprocess.CREATE_BREAKAWAY_FROM_JOB)'
+                '\ntry: subprocess.Popen([sys._base_executable,"-c","pass"],creationflags=subprocess.CREATE_BREAKAWAY_FROM_JOB)'
                 '\nexcept OSError: print("denied")')
-        result = harness.run([sys.executable, '-c', code])
+        result = harness.run([sys._base_executable, '-c', code])
         self.assertEqual(result[1].strip(), 'denied')
 
     def test_output_overflow_and_blocked_stdin_have_bounded_cleanup(self):

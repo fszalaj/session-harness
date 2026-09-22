@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Metadata-only optional client inventory; never create or send an AI session."""
+"""Optional client metadata; isolated Copilot sessions never send a prompt."""
 import datetime as dt
 import json
 import math
@@ -9,6 +9,7 @@ import selectors
 import platform_runtime
 import shutil
 import subprocess
+import tempfile
 import time
 
 import harness
@@ -107,6 +108,22 @@ def normalize_quota(payload, service='copilot'):
         if len(item) > 4:
             result.append(item)
     return result
+
+
+def copilot_session_models(request, identity):
+    """The session catalog can contain models omitted by the SDK global list."""
+    payload = request('session.model.list', {'sessionId': identity, 'skipCache': True})
+    if not isinstance(payload, dict) or not isinstance(payload.get('list'), list):
+        raise ValueError('Copilot session catalog is unavailable')
+    rows = []
+    for row in payload['list']:
+        if not isinstance(row, dict) or row.get('model_picker_enabled') is not True:
+            continue
+        capabilities = row.get('capabilities', {})
+        supports = capabilities.get('supports', {}) if isinstance(capabilities, dict) else {}
+        efforts = supports.get('reasoning_effort', []) if isinstance(supports, dict) else []
+        rows.append({**row, 'supportedReasoningEfforts': efforts})
+    return normalize_models({'models': rows}, 'copilot', True, source='session.model.list')
 
 
 def quota_complete(payload):
@@ -236,7 +253,7 @@ def discover_copilot(executable=None, timeout=15):
     result = base_record('copilot', executable)
     if not executable:
         return result
-    client = None
+    client, scratch = None, None
     try:
         client = MetadataRPC(executable, timeout)
         status = client.request('status.get')
@@ -250,20 +267,39 @@ def discover_copilot(executable=None, timeout=15):
             result['status'] = 'unauthenticated' if authenticated is False else 'auth_unknown'
             return result
         result['models'] = normalize_models(client.request('models.list'), 'copilot', True)
-        result['status'] = 'account_metadata' if result['models'] else 'no_account_models'
         try:
             raw_quota = client.request('account.getQuota')
             result['quota'] = normalize_quota(raw_quota)
             result['quota_complete'] = quota_complete(raw_quota)
         except (OSError, ValueError, TimeoutError, harness.HarnessError):
             result['quota_status'] = 'unavailable'
+        # Global SDK discovery omits some account-selectable session models.
+        # Bootstrap only an isolated empty session; never send a prompt.
+        import copilot_client
+        scratch = tempfile.TemporaryDirectory(prefix='session-harness-catalog-')
+        def reject_execution(message):
+            kind = message.get('params', {}).get('event', {}).get('type', '')
+            if ('id' in message or kind in {'session.error', 'session.shutdown'}
+                    or kind.startswith(('assistant.', 'tool.', 'subagent.', 'hook.'))):
+                raise ValueError('Unexpected execution during Copilot metadata discovery')
+        client.on_message = reject_execution
+        created = client._request('session.create', copilot_client.session_config(scratch.name, 'auto', None))
+        identity = created.get('sessionId')
+        if not isinstance(identity, str) or not identity or len(identity) > 128:
+            raise ValueError('Copilot catalog session identity is missing')
+        session_models = copilot_session_models(client._request, identity)
+        result['models'] = ([row for row in result['models'] if row['id'] == 'auto'
+                             and not any(model['id'] == 'auto' for model in session_models)] + session_models)
+        result['status'] = 'account_metadata' if result['models'] else 'no_account_models'
         result['native_controls'] = {'model_selection': '--model', 'reasoning_selection': '--effort',
                                      'execution_verification': 'required_before_dispatch'}
-    except (OSError, ValueError, TimeoutError, harness.HarnessError):
+    except (OSError, ValueError, TypeError, AttributeError, TimeoutError, harness.HarnessError):
         result['error'] = 'metadata_probe_failed'
     finally:
         if client:
             client.close()
+        if scratch:
+            scratch.cleanup()
     return result
 
 

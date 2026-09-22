@@ -211,6 +211,16 @@ independent work is exhausted; this skill does not require routine plan approval
 
 ## 4. Implement and verify
 
+- Before each substantive stage, record the task digest and either a completed
+  bounded worker receipt or a concrete reason the manager must do it. With balancing
+  enabled, use fresh fractional allowance consumption across eligible native services,
+  including the manager's own service; do not use a fixed provider rotation. Select
+  task capability first. Where the owner requests weekly parity, use the verified
+  weekly basis and task-fit subset described in [balancing](references/balancing.md);
+  preserve daily admission and explicitly selected strong-model/effort controls.
+  As a heuristic, every 15 completed manager tool batches, reassess delegation at the next safe
+  boundary. A batch is one model/tool round, not each shell command. Never interrupt
+  an atomic operation. This is session guidance, not interception of direct IDE calls.
 - Dispatch only useful parallel tasks. Respect the actual concurrency limit and
   keep one slot for the manager. Each worker gets a leaf marker, task/plan version,
   owned files/worktree, relevant rules, selected model/effort, acceptance criteria
