@@ -244,6 +244,11 @@ before configuring it. Select one execution host and use its SSH interface from
 other computers. A saved key alone does not enable dispatch; missing evidence
 keeps a provider disabled. No monetary budget or billing upgrade is created.
 
+With mixed routing enabled, the configured free authority must also be reachable
+for status checks. Development builds return `mixed_work_status_unavailable` if
+that check fails. Restore the existing transport before retrying the task; do not
+disable mixed routing or select another provider to bypass this stop.
+
 Use the newest available generation within each model family by default. In v0.3.1,
 automatic native `work` selects Codex, Claude or Antigravity and resolves its current
 worker model. Current automatic native work also includes configured supervised

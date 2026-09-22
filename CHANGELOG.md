@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Return a structured stop when mixed-routing authority status is unavailable,
+  retaining the task ID without exposing private transport errors or falling back
+  to native inference.
+
 ## 0.7.1
 
 - Accept equivalent, account-selectable Claude aliases when native initialization

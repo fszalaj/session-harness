@@ -1,11 +1,11 @@
 {
-  "content_sha256": "65b6850aff9314a41badfedc701caa6662e715dce67b0e6aec246e975fea494e",
+  "content_sha256": "52db0e9dd3086474f29b8173bf050ce650609281134a07afcba5604639d43b31",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 3178,
+    "edge_count": 3179,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1698,
+    "node_count": 1699,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -25,7 +25,7 @@
       "skills/session-harness/scripts/auto_scheduler.py": "b8f8bd43374bb6206eee6804f94a43f8bfc6e3d9e5f8de29dc5fcff6b3062563",
       "skills/session-harness/scripts/auto_update.py": "e239364ffb34a1bd1d9ee3e08c837bcaabcc5a569ebce2ed867302ccf5df1706",
       "skills/session-harness/scripts/balance.py": "d5238d0eca9b9d9df5776581b56d6d025ddefa2bd9f744091022961af122ce95",
-      "skills/session-harness/scripts/balance_cli.py": "3d0057a524fa7fc385bc75bf6a8aff3341e3e45bc90d45afeb921fbad3c9ca7a",
+      "skills/session-harness/scripts/balance_cli.py": "956d602bdbe8b41789469e1a7beaf5b828387f3a203238eba36166792d5e1da6",
       "skills/session-harness/scripts/budget_cli.py": "a6f6d39897920b29247e9cac91678e30a3050939d0ae38fd8492c3d29b60a68f",
       "skills/session-harness/scripts/budget_policy.py": "2d2b6d2092544db21d032bdc503d7687716865695e6c5ce02063e3e17f8354ac",
       "skills/session-harness/scripts/claude_admission.py": "2f476f019fac7806f098abd89a6f6a4468f8698053ff834ae477e95769e5b3c0",
@@ -65,7 +65,7 @@
       "skills/session-harness/scripts/test_authentication.py": "ccd5e88f2a9e4d8bd4bbc44b59b3ab4cf5e75715e6173bf7a801b12fcafdb5a8",
       "skills/session-harness/scripts/test_auto_update.py": "15580b9bd48f71b4e859b39fcb7ce9f4263af1461a0502f4e2531b396a2aee68",
       "skills/session-harness/scripts/test_balance.py": "e5ae555ffbf9710d47d5e79047f8c7b8080f7c3082759686cb68e2d622cacd18",
-      "skills/session-harness/scripts/test_balance_cli.py": "21540cf26573324d60a42b5b0239972f7cb1f67a52e531cdd7db4f2e0ded6dca",
+      "skills/session-harness/scripts/test_balance_cli.py": "7372f3e000a9d934b01a63190df37832e0692a89e9fab723d371a28e764f3e1e",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "0c47a6265593cdf123b61546e59b28ec70c64d3ac63fc8168464dadea2e9f6a0",
@@ -11644,6 +11644,12 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
+      "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_mixed_status_failure_returns_private_safe_stop_without_dispatch"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_balance_cli.py:WorkTests",
       "target": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_native_role_controls_bind_fingerprint_and_selected_effort"
     },
     {
@@ -21946,7 +21952,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L234",
+      "source_location": "L242",
       "type": "function"
     },
     {
@@ -21970,7 +21976,7 @@
       "id": "pyfunc:skills/session-harness/scripts/balance_cli.py:run_interactive",
       "label": "run_interactive",
       "source_file": "skills/session-harness/scripts/balance_cli.py",
-      "source_location": "L204",
+      "source_location": "L212",
       "type": "function"
     },
     {
@@ -26882,7 +26888,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.interactive",
       "label": "WorkTests.interactive",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L256",
+      "source_location": "L276",
       "type": "method"
     },
     {
@@ -26890,7 +26896,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.interactive_replies",
       "label": "WorkTests.interactive_replies",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L251",
+      "source_location": "L271",
       "type": "method"
     },
     {
@@ -26906,7 +26912,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_copilot_work_preserves_advertised_effort_through_real_review",
       "label": "WorkTests.test_copilot_work_preserves_advertised_effort_through_real_review",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L139",
+      "source_location": "L159",
       "type": "method"
     },
     {
@@ -26914,7 +26920,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_denial_and_duplicate_never_execute_or_switch",
       "label": "WorkTests.test_denial_and_duplicate_never_execute_or_switch",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L161",
+      "source_location": "L181",
       "type": "method"
     },
     {
@@ -26930,7 +26936,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_failure_retains_terminal_attempt_and_never_retries",
       "label": "WorkTests.test_failure_retains_terminal_attempt_and_never_retries",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L170",
+      "source_location": "L190",
       "type": "method"
     },
     {
@@ -26938,7 +26944,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_disabled_shape_and_successful_execution",
       "label": "WorkTests.test_interactive_disabled_shape_and_successful_execution",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L282",
+      "source_location": "L302",
       "type": "method"
     },
     {
@@ -26946,7 +26952,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_quota_stop_remains_primary_and_retains_job",
       "label": "WorkTests.test_interactive_quota_stop_remains_primary_and_retains_job",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L300",
+      "source_location": "L320",
       "type": "method"
     },
     {
@@ -26954,7 +26960,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_receipt_denial_is_not_process_success",
       "label": "WorkTests.test_interactive_receipt_denial_is_not_process_success",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L232",
+      "source_location": "L252",
       "type": "method"
     },
     {
@@ -26962,7 +26968,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_transport_and_malformed_replies_preserve_phase_without_retry",
       "label": "WorkTests.test_interactive_transport_and_malformed_replies_preserve_phase_without_retry",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L260",
+      "source_location": "L280",
       "type": "method"
     },
     {
@@ -26970,7 +26976,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_interactive_worker_lead_denial_before_process",
       "label": "WorkTests.test_interactive_worker_lead_denial_before_process",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L241",
+      "source_location": "L261",
       "type": "method"
     },
     {
@@ -26978,13 +26984,21 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_lost_receipt_preserves_output_without_second_dispatch",
       "label": "WorkTests.test_lost_receipt_preserves_output_without_second_dispatch",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L205",
+      "source_location": "L225",
       "type": "method"
     },
     {
       "file_type": "python",
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_mixed_free_selection_and_native_stop",
       "label": "WorkTests.test_mixed_free_selection_and_native_stop",
+      "source_file": "skills/session-harness/scripts/test_balance_cli.py",
+      "source_location": "L114",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_mixed_status_failure_returns_private_safe_stop_without_dispatch",
+      "label": "WorkTests.test_mixed_status_failure_returns_private_safe_stop_without_dispatch",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
       "source_location": "L94",
       "type": "method"
@@ -27002,7 +27016,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service",
       "label": "WorkTests.test_real_adapter_entry_uses_current_worker_and_native_service",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L117",
+      "source_location": "L137",
       "type": "method"
     },
     {
@@ -27010,7 +27024,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_fixed_schema_never_accepts_extra_fields",
       "label": "WorkTests.test_remote_fixed_schema_never_accepts_extra_fields",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L218",
+      "source_location": "L238",
       "type": "method"
     },
     {
@@ -27018,7 +27032,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_missing_protocol_and_transport_fail_closed",
       "label": "WorkTests.test_remote_missing_protocol_and_transport_fail_closed",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L195",
+      "source_location": "L215",
       "type": "method"
     },
     {
@@ -27026,7 +27040,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_remote_reserve_transmits_client_setup_and_timeout_is_safe",
       "label": "WorkTests.test_remote_reserve_transmits_client_setup_and_timeout_is_safe",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L224",
+      "source_location": "L244",
       "type": "method"
     },
     {
@@ -27034,7 +27048,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_unresolved_actual_model_preserves_output_and_valid_receipt",
       "label": "WorkTests.test_unresolved_actual_model_preserves_output_and_valid_receipt",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L182",
+      "source_location": "L202",
       "type": "method"
     },
     {
@@ -27050,7 +27064,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_balance_cli.py:WorkTests.test_worker_cli_reports_policy_denial_in_imported_and_script_namespaces",
       "label": "WorkTests.test_worker_cli_reports_policy_denial_in_imported_and_script_namespaces",
       "source_file": "skills/session-harness/scripts/test_balance_cli.py",
-      "source_location": "L310",
+      "source_location": "L330",
       "type": "method"
     },
     {

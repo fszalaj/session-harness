@@ -223,6 +223,10 @@ of a CLI schema error. An unconfirmed work receipt reports
 `balance_receipt_unavailable`; inspect the task before recovery or another dispatch. See
 [session stop recovery](skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
 
+Development builds report `mixed_work_status_unavailable` when the configured
+mixed-route authority cannot return status. Restore that authority's transport
+before retrying; the stop never falls back to another provider.
+
 Use `ai-session usage check SERVICE` for a fresh native admission check through the
 configured authority, with or without a Claude `--model`. `usage status` reads local
 evidence and may stay stale on another computer; `usage refresh` updates only that

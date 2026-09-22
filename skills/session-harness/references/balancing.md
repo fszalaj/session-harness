@@ -189,6 +189,13 @@ The separate [recurring free account pools](free-access.md) can participate in
 `work` only with explicit `mixed_work` configuration and verified no-overage
 entitlement. They use a dedicated shared executor and free quota ledger.
 
+In development, an unavailable mixed-route authority status returns
+`mixed_work_status_unavailable` with the task ID and
+`free_authority_status_unavailable`. No worker is dispatched by that attempt.
+Restore the configured authority's transport and obtain fresh admission before
+retrying. Do not change providers or disable mixed routing to bypass the stop.
+This response does not establish the outcome of any earlier attempt with that ID.
+
 For a multi-model platform, distinguish the billing service, its account pool, the
 requested and observed model IDs, and the model's vendor. Claude through Copilot
 draws on Copilot resources, not the direct Claude subscription. Two Claude models

@@ -182,7 +182,15 @@ def mixed_work(artifact, task_id, timeout, ledger):
     if native.get('allowed') is not True or native.get('enabled') is not True:
         return native
     if not route.get('bound'):
-        state = free_access.dispatch('status')
+        try:
+            state = free_access.dispatch('status')
+        except (OSError, ValueError):
+            return {'allowed': False, 'status': 'mixed_work_status_unavailable',
+                    'task_id': task_id,
+                    'reasons': ['free_authority_status_unavailable'],
+                    'message': 'The configured mixed-route authority status is unavailable. '
+                               'Restore its existing transport before retrying this task.',
+                    'automatic_retry': False}
         if state.get('allowed') is not True:
             return state
         values = [row.get('progress') for row in native.get('services', {}).values()]

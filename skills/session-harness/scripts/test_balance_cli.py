@@ -91,6 +91,26 @@ class WorkTests(unittest.TestCase):
                     balance_cli.run_work(b'task', task_id='bad', ledger=self.ledger, **options)
             dispatch.assert_not_called()
 
+    def test_mixed_status_failure_returns_private_safe_stop_without_dispatch(self):
+        for error in (ValueError('private authority detail'), OSError('private transport detail')):
+            with self.subTest(error=type(error).__name__):
+                replies = [{'allowed': True, 'bound': False},
+                           {'allowed': True, 'enabled': True, 'services': {'claude': {'progress': 0.4}}}]
+                with patch.object(free_access, 'load_config', return_value={'enabled': True, 'mixed_work': True}), \
+                     patch.object(coordination, 'balance_dispatch', side_effect=replies) as authority, \
+                     patch.object(free_access, 'dispatch', side_effect=error) as free, \
+                     patch.object(harness, 'review') as inference:
+                    result = balance_cli.run_work(b'task', task_id='stopped', ledger=self.ledger)
+                self.assertFalse(result['allowed'])
+                self.assertEqual(result['status'], 'mixed_work_status_unavailable')
+                self.assertEqual(result['task_id'], 'stopped')
+                self.assertEqual(result['reasons'], ['free_authority_status_unavailable'])
+                self.assertFalse(result['automatic_retry'])
+                self.assertNotIn('private', json.dumps(result))
+                free.assert_called_once_with('status')
+                self.assertEqual([c.args[0] for c in authority.call_args_list], ['work_route', 'status'])
+                inference.assert_not_called()
+
     def test_mixed_free_selection_and_native_stop(self):
         replies = [{'allowed': True, 'bound': False},
                    {'allowed': True, 'enabled': True, 'services': {'claude': {'progress': 0.4}}},
