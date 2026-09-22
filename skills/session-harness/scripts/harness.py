@@ -1085,6 +1085,10 @@ def review(provider, artifact, timeout, capability, effort=None, *, task=False, 
     if not entries:
         entries = [entry for entry in models if entry.get("resolved_model") == selected
                    or (isinstance(entry.get("variants"), dict) and selected in entry["variants"].values())]
+    if len(entries) > 1 and provider == 'claude':
+        import claude_models
+        if claude_models.equivalent_review_aliases(entries, selected):
+            entries = entries[:1]
     if len(entries) > 1:
         raise HarnessError("unsupported_capability", "Selected review model matches multiple catalog entries.")
     supported = entries[0].get("efforts", []) if entries else capability.get("supported_efforts", [])

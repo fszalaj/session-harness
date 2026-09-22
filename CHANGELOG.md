@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Accept equivalent, account-selectable Claude aliases when native initialization
+  resolves them to the same concrete review model with identical effort controls.
+  Conflicting or unverified aliases still block; quota, role and returned-model
+  verification remain required. This does not add automatic context handoff.
+
 ## 0.7.0
 
 - Add explicit task-fit native subsets, weekly quota ranking and current strongest
