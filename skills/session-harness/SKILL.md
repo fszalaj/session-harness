@@ -95,7 +95,7 @@ from a previous conversation. Read-only discovery does not authorize inference.
   client's catalog. See [client adapters](references/clients.md) for CLI details.
   Never read credentials or transcripts to guess identity or entitlements.
 - The manager/planner uses the strongest available **active-provider** model and
-  Extra High (`xhigh`), or the highest advertised level below `max` when unavailable. Use a supported model switch or launch
+  the configured effort (publicly `high`), or the highest advertised level below it. Use a supported model switch or launch
   a fresh manager through `harness.py launch <client> --execute` when necessary.
   A running model cannot promote itself by writing instructions. If switching is
   unavailable, report the mismatch, prepare a handoff, and keep planning explicitly
@@ -123,19 +123,21 @@ provider guidance when capability or successor relationships remain uncertain.
   configured Copilot/Cursor Auto only as supervised text workers; their output
   requires manager inspection and cannot satisfy independent review.
 - Prefer a cheaper **current-generation** model for bounded work. If none exists,
-  use the current flagship at medium effort instead of an older cheap model.
+  use the current flagship at the configured effort instead of an older cheap model.
 - At each native leaf dispatch, pass both the current catalog-selected model and
   supported effort explicitly. Read the returned effective configuration when exposed.
   A role's name, an omitted parameter or a rolling alias alone does not prove those
   settings. If a role fixes effort, choose a compatible role; Markdown cannot override
   native controls. Record requested settings separately from verified observations.
-- Only use effort levels advertised by that model/client. Normal workers use
-  medium; simple evidence collection may use low; complex implementation and
-  final review use high. Reserve `max` for explicit task-level escalation on
-  extremely difficult tasks. Do not force global max effort onto workers through environment.
-  Automatic helper defaults choose advertised medium or the highest advertised
-  level below it. High and above require explicit task selection; a catalog with
-  no routine level stops automatic work. Do not guess a missing model variant.
+- Only use effort levels advertised by that model/client. Every role defaults to
+  configured `high` or the highest advertised level below it. The local file
+  `~/.config/session-harness/default-effort` accepts `low`, `medium` or `high`;
+  `SESSION_HARNESS_DEFAULT_EFFORT` overrides it for runtime commands. Explicit
+  supported task effort overrides the default. No compatible level stops selection.
+  Native role files capture the local preference at installation; refresh the profile
+  after changing it. Environment overrides do not rewrite client role files.
+  Reserve `max` for explicit task-level escalation on extremely difficult tasks.
+  Do not guess a missing model variant or send unsupported controls to API clients.
 - No fixed provider-to-specialty stereotype. Choose from demonstrated capability,
   task risk, required tools, context size, latency and remaining subscription quota.
   When the owner enables subscription balancing, read [balancing](references/balancing.md)
@@ -150,8 +152,8 @@ provider guidance when capability or successor relationships remain uncertain.
   total subscription allowance. Use [model-aware admission](references/model-allowances.md)
   for current alternatives and supervised exact-session recovery.
   Installed Claude investigator/implementer roles use the rolling `sonnet` alias
-  (investigator: low; implementer: medium) and the verifier inherits the manager
-  model at high effort; pass a per-call model only for a verified better fit. Keep leaf work off the
+  and the verifier inherits the manager model. All profiles capture the target
+  home's configured effort at installation; pass a per-call model only for a verified better fit. Keep leaf work off the
   flagship unless task fit requires escalation; maximum effort requires an
   explicitly selected, extremely difficult task.
   Another provider may implement in an isolated
@@ -159,11 +161,11 @@ provider guidance when capability or successor relationships remain uncertain.
 
 | Role | Model and effort | Ownership |
 | --- | --- | --- |
-| Manager/planner | Strongest current session model, `xhigh` by default; highest advertised level below `max` if unavailable | Plan, reconciliation, integration, final verification |
-| Two plan reviewers | Current suitable models from two other distinct provider families, medium; high for demonstrated difficult risks | Independent findings on the same plan |
-| Investigator | Current suitable model, low/medium | Bounded evidence gathering, no edits |
-| Implementer | Current suitable model, medium; high for hard changes | One non-overlapping file/task scope |
-| Verifier | Current suitable model, high | Independent diff/test review, no self-approval |
+| Manager/planner | Strongest current session model, configured effort (default high) | Plan, reconciliation, integration, final verification |
+| Two plan reviewers | Current suitable models from two other distinct provider families, configured effort | Independent findings on the same plan |
+| Investigator | Current suitable model, configured effort | Bounded evidence gathering, no edits |
+| Implementer | Current suitable model, configured effort | One non-overlapping file/task scope |
+| Verifier | Current suitable model, configured effort | Independent diff/test review, no self-approval |
 
 Both external reviewers have equal standing. The manager resolves the union of
 findings using evidence; majority voting does not erase a concrete defect.

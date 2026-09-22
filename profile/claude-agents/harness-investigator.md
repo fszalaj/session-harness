@@ -2,7 +2,7 @@
 name: harness-investigator
 description: Gather bounded evidence for the session manager without edits.
 model: sonnet
-effort: low
+effort: high
 maxTurns: 8
 tools: Read, Glob, Grep, Bash
 ---

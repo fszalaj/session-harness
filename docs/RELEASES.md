@@ -5,6 +5,24 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.7.2
+
+All reasoning roles now default to advertised high, or the highest supported lower
+level. A local `~/.config/session-harness/default-effort` can select low, medium or
+high without changing public release files. Runtime commands also accept
+`SESSION_HARNESS_DEFAULT_EFFORT`; explicit supported task effort takes precedence.
+
+Installers render Codex and Claude role fields from the target home's preference,
+including automatic-update baselines, while preserving published source integrity.
+A changed preference after preview stops apply. Refresh installed profiles after
+changing the file; environment overrides do not change static client roles or
+running conversations. Clients without effort controls remain client-managed.
+Rollback to older versions restores their historical effort behavior.
+
+Upgrade with `ai-session update --version 0.7.2 --apply`, then restart clients.
+See [effort configuration](ONBOARDING.md#default-reasoning-effort). Authentication,
+quota policy, accounting and existing task-level overrides are unchanged.
+
 ## 0.7.1
 
 Claude reviews and bounded text work now accept equivalent native aliases when

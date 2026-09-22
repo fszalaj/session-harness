@@ -2,13 +2,10 @@
 
 Shared instructions, current-model discovery, independent plan review and usage
 accounting for coding assistants. The strongest available model of the hosting
-provider manages substantive work; bounded workers normally use medium effort.
-Automatic worker and review defaults choose advertised `medium`, otherwise the
-highest advertised level below it. Higher effort is an explicit task decision.
-Manager policy defaults to Extra High (`xhigh`), or the highest advertised level
-below `max` if unavailable. Since v0.2.1, the launcher excludes `max` and `ultra`
-from default manager selection. Reserve `max` for explicitly selected, extremely
-difficult tasks through native controls.
+provider manages substantive work. All roles default to advertised `high`, or the
+highest supported level below it. A local [effort preference](docs/ONBOARDING.md#default-reasoning-effort)
+can select `low`, `medium` or `high`. Explicit supported task settings override it.
+Reserve `max` for explicitly selected, extremely difficult tasks through native controls.
 Two other provider families review the same plan independently. Models are resolved
 at runtime rather than pinned in policy. Select the newest available generation
 within each family before optimizing cost; an older cheaper tier is not a default.

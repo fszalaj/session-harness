@@ -33,9 +33,11 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
   skills/knowledge access. Select reviewers by verified upstream family and capability,
   never a remembered provider pair. Metadata visibility is not execution or review approval.
 - Identify the actual hosting session. The strongest available model from that
-  session's provider plans and manages, defaulting to Extra High (`xhigh`). If that
-  level is unavailable, use the highest advertised level below `max`. Use `max`
-  only by explicit task-level selection for an extremely difficult task.
+  session's provider plans and manages. All roles default to the configured effort,
+  publicly `high`, or the highest advertised level below it. A local
+  `~/.config/session-harness/default-effort` can select `low`, `medium` or `high`.
+  Explicit supported task settings override the preference. Reserve `max` for
+  explicitly selected, extremely difficult tasks.
 - Resolve models at runtime from the account-visible catalog and current documented
   aliases. Never pin version IDs, invent a `latest` alias or assume a model exists
   because it appeared in a previous conversation or on another subscription.
@@ -45,14 +47,12 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
   implementation. They have equal standing; reconcile every material finding.
   Honor configured model supervision limits and report unavailable independent reviews.
 - Choose execution roles, models and effort for the task. Use current generations,
-  normally medium effort, low for simple gathering and high for difficult work.
+  using the same configured default for managers, workers and reviewers.
   Pass native leaf model and effort explicitly and verify the effective controls.
-  Automatic helper defaults choose advertised medium or the highest level below it;
-  higher effort requires explicit task selection on a compatible current model.
   Leaf roles default to the cheaper current model (Claude: `sonnet`); the flagship
   is reserved for the manager and the final verifier. Maximum effort is an
   explicit exception for extremely difficult tasks, never a routine role default.
-  If a current cheaper model is unavailable, use the current flagship at lower
+  If a current cheaper model is unavailable, use the current flagship at the configured
   effort rather than an older generation. Keep the manager at its planning tier.
 - When subscription balancing is enabled, route bounded work through its shared
   authority using fresh quota fractions, independently of the manager family. Otherwise
@@ -80,9 +80,9 @@ stop supported prompt/tool events without another model call. Default account
 capacity is four protected sessions per service for new configurations; preserve
 existing choices. All sessions and native workers share usage. Change capacity with
 `ai-session coordination set --max-sessions NUMBER` on the account authority.
-Give workers fresh bounded packets, not full-history forks. Keep execution at medium
-effort and gathering at low. Ordinary reviews use medium, with high only for a concrete
-risk. Do not start maximum-effort sessions for routine execution, docs, or polling.
+Give workers fresh bounded packets, not full-history forks. Use the configured
+reasoning default for every role; explicitly select another supported level only
+when the task calls for it. Never use maximum effort as a routine default.
 
 Before inference, read the shared ledger and its persisted per-pool budget strategy,
 reserve, calendar and dated grants through the skill. New ledgers default to

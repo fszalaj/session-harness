@@ -23,6 +23,7 @@ if __name__ == "__main__":
 import supervision
 import platform_runtime
 import balance_cli
+import effort_policy
 
 
 PROVIDERS = {"codex": "codex", "claude": "claude", "antigravity": "agy", "copilot": "copilot", "cursor": "cursor-agent"}
@@ -292,14 +293,14 @@ def select_effort(supported, role):
     if not supported or any(value not in EFFORTS for value in supported):
         raise HarnessError("unsupported_capability", "Reasoning efforts are missing or unknown; refresh capability policy.")
     ordered = sorted(set(supported), key=EFFORTS.index)
-    if role == "planner":
-        reasoning = [effort for effort in ordered if effort not in {"max", "ultra"}]
-        if not reasoning:
-            raise HarnessError("unsupported_capability", "No advertised default reasoning effort below max; refresh capability policy.")
-        return reasoning[-1]
-    choices = [effort for effort in ordered if EFFORTS.index(effort) <= EFFORTS.index("medium")]
+    try:
+        default = effort_policy.preference()
+    except ValueError as error:
+        raise HarnessError("invalid_configuration", str(error)) from error
+    choices = [effort for effort in ordered if EFFORTS.index(effort) <= EFFORTS.index(default)]
     if not choices:
-        raise HarnessError("unsupported_capability", "No advertised routine effort at or below medium.")
+        raise HarnessError("unsupported_capability", "No advertised effort at or below " + default +
+                           "; select a compatible model or pass an explicit supported effort.")
     return choices[-1]
 
 
@@ -1233,7 +1234,7 @@ def main(argv=None):
     review_parser = sub.add_parser("review", help="Review a bounded stdin artifact with a verified leaf adapter")
     review_parser.add_argument("provider", choices=PROVIDERS)
     review_parser.add_argument("--timeout", type=float, default=180)
-    review_parser.add_argument("--effort", help="Optional advertised reviewer effort; defaults to medium when supported")
+    review_parser.add_argument("--effort", help="Optional advertised reviewer effort; defaults to configured high or the highest supported lower level")
     review_parser.add_argument('--model', help='Exact account-selectable Copilot model ID')
     review_parser.add_argument('--manager-family', choices=('openai', 'anthropic', 'google', 'xai', 'deepseek', 'moonshot', 'zai'),
                                help='Actual manager upstream family; required for named Copilot reviews')

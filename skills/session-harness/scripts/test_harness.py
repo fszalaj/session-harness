@@ -203,14 +203,14 @@ class ModelTests(unittest.TestCase):
         planner, worker = harness.select_models(models, "gpt")
         self.assertEqual(planner["model"], "gpt-99.10-leader")
         self.assertEqual(worker["model"], planner["model"])
-        self.assertEqual(worker["effort"], "medium")
+        self.assertEqual(worker["effort"], "high")
 
     def test_current_generation_affordable_variant(self):
         models = [model("gpt-99.10-leader", 0, "Most capable"), model("gpt-99.10-scout", 1, "Fast and affordable")]
         self.assertEqual(harness.select_models(models, "gpt")[1]["model"], "gpt-99.10-scout")
 
     def test_infeasible_budget_variant_uses_current_flagship_worker(self):
-        models = [model("gpt-99.10-leader", 0, "Most capable"), model("gpt-99.10-budget", 1, "Affordable", ["high"])]
+        models = [model("gpt-99.10-leader", 0, "Most capable"), model("gpt-99.10-budget", 1, "Affordable", ["max"])]
         self.assertEqual(harness.select_models(models, "gpt")[1]["model"], "gpt-99.10-leader")
 
     def test_catalog_order_does_not_establish_planner_capability(self):
@@ -227,13 +227,13 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(worker["selection_status"], "task_fit_verification_required")
 
     def test_routine_effort_ceiling_and_advertised_floor(self):
-        for role in ('worker', 'reviewer'):
+        for role in ('planner', 'worker', 'reviewer'):
             for options, expected in ((['low'], 'low'), (['medium'], 'medium'),
                                       (['none'], 'none'), (['none', 'minimal'], 'minimal'),
-                                      (['high', 'low'], 'low'), (['high', 'medium', 'low'], 'medium')):
+                                      (['high', 'low'], 'high'), (['high', 'medium', 'low'], 'high')):
                 with self.subTest(role=role, options=options):
                     self.assertEqual(harness.select_effort(options, role), expected)
-            for options in ([], ['high'], ['xhigh', 'max'], ['max', 'ultra'], ['medium', 'unknown']):
+            for options in ([], ['xhigh', 'max'], ['max', 'ultra'], ['medium', 'unknown']):
                 with self.subTest(role=role, options=options), self.assertRaises(harness.HarnessError) as raised:
                     harness.select_effort(options, role)
                 self.assertEqual(raised.exception.status, 'unsupported_capability')
@@ -245,32 +245,32 @@ class ModelTests(unittest.TestCase):
             with self.subTest(variants=variants), self.assertRaises(harness.HarnessError) as raised:
                 harness.select_models([dict(leader, variants=variants), cheap], 'gpt')
             self.assertEqual(raised.exception.status, 'unsupported_capability')
-        for variants in (None, {}, [], {'high': 'gpt-99.10-cheap-high'}, {'medium': 'unsafe id'}):
+        for variants in (None, {}, [], {'medium': 'gpt-99.10-cheap-medium'}, {'medium': 'unsafe id'}):
             with self.subTest(worker_variants=variants):
                 planner, worker = harness.select_models([leader, dict(cheap, variants=variants)], 'gpt')
                 self.assertEqual(worker['model'], leader['id'])
         mapped = dict(leader, variants={'medium': 'gpt-99.10-medium', 'high': 'gpt-99.10-high'})
         planner, worker = harness.select_models([mapped], 'gpt')
         self.assertEqual(planner['model'], 'gpt-99.10-high')
-        self.assertEqual(worker['model'], 'gpt-99.10-medium')
-        self.assertIn('gpt-99.10-medium', harness.launch_plan('codex', 'worker',
+        self.assertEqual(worker['model'], 'gpt-99.10-high')
+        self.assertIn('gpt-99.10-high', harness.launch_plan('codex', 'worker',
                       {'executable': 'codex', 'worker': worker})['argv'])
         with self.assertRaises(harness.HarnessError):
-            harness.select_models([dict(leader, variants={'high': 'gpt-99.10-high'}),
+            harness.select_models([dict(leader, variants={'medium': 'gpt-99.10-medium'}),
                                    model('gpt-99.9-old', 2, 'Affordable')], 'gpt')
 
     def test_manager_defaults_below_maximum_effort(self):
         self.assertEqual(harness.select_effort(["low", "high", "max", "ultra"], "planner"), "high")
-        self.assertEqual(harness.select_effort(["high", "xhigh", "max", "ultra"], "planner"), "xhigh")
+        self.assertEqual(harness.select_effort(["high", "xhigh", "max", "ultra"], "planner"), "high")
         with self.assertRaises(harness.HarnessError):
             harness.select_effort(["max", "ultra"], "planner")
 
     def test_codex_launch_keeps_delegation_with_harness_manager(self):
         planner, worker = harness.select_models([model("gpt-99.10-test", efforts=["low", "medium", "high", "xhigh", "max", "ultra"])], "gpt")
         result = harness.launch_plan("codex", "planner", {"executable": "codex", "planner": planner})
-        self.assertIn('model_reasoning_effort="xhigh"', result["argv"])
-        self.assertIn('plan_mode_reasoning_effort="xhigh"', result["argv"])
-        self.assertEqual(worker["effort"], "medium")
+        self.assertIn('model_reasoning_effort="high"', result["argv"])
+        self.assertIn('plan_mode_reasoning_effort="high"', result["argv"])
+        self.assertEqual(worker["effort"], "high")
 
     def test_orchestration_mode_alone_cannot_establish_reasoning_effort(self):
         with self.assertRaises(harness.HarnessError) as raised:
@@ -284,7 +284,7 @@ class ModelTests(unittest.TestCase):
 
     def test_single_effort_does_not_claim_nonmax_worker(self):
         with self.assertRaises(harness.HarnessError):
-            harness.select_effort(["high"], "worker")
+            harness.select_effort(["max"], "worker")
 
     def test_undocumented_generation_does_not_get_invented(self):
         with self.assertRaises(harness.HarnessError):
@@ -294,7 +294,7 @@ class ModelTests(unittest.TestCase):
         raw = "Fetching available models...\ngemini-99.10-flash-high\tNewest Flash\ngemini-99.10-flash-medium\tNewest Flash\ngemini-99.9-pro-high\tOlder Pro\ngemini-99.9-pro-low\tOlder Pro\nclaude-unknown\tOther vendor\n"
         planner, worker = harness.select_models(harness.parse_agy_catalog(raw), "gemini")
         self.assertEqual(planner["model"], "gemini-99.10-flash-high")
-        self.assertEqual(worker["model"], "gemini-99.10-flash-medium")
+        self.assertEqual(worker["model"], "gemini-99.10-flash-high")
 
     def test_hidden_cache_models_excluded(self):
         raw = [{"slug": "gpt-100-hidden", "visibility": "hide"},
@@ -430,7 +430,7 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual("claude-fable-99-10[1m]", result["planner"]["model"])
         self.assertEqual("high", result["planner"]["effort"])
         self.assertEqual("claude-fable-99-10[1m]", result["worker"]["model"])
-        self.assertEqual("medium", result["worker"]["effort"])
+        self.assertEqual("high", result["worker"]["effort"])
         self.assertFalse(result["entitlement_verified"])
 
     def test_resolved_current_sonnet_workers_keep_manager_and_pool_gates(self):
@@ -454,7 +454,7 @@ class DiscoveryTests(unittest.TestCase):
             self.assertEqual(result['planner']['model'], 'claude-fable-99-10')
             expected = 'claude-sonnet-99' if sonnet_major == 99 else 'claude-fable-99-10'
             self.assertEqual(result['worker']['model'], expected)
-            self.assertEqual(result['worker']['effort'], 'medium')
+            self.assertEqual(result['worker']['effort'], 'high')
             self.assertTrue(result['model_scoped_admission_supported'])
             self.assertIn('unknown scopes remain required', result['quota_scope_policy'])
         self.assertEqual(harness.generation('claude-opus-99-20260908', 'claude'),
@@ -514,7 +514,7 @@ class DiscoveryTests(unittest.TestCase):
                     self.assertEqual(res['planner']['model'], 'claude-fable-99-1')
                     self.assertEqual(res['planner']['effort'], 'high')
                     self.assertEqual(res['worker']['model'], 'claude-sonnet-99')
-                    self.assertEqual(res['worker']['effort'], 'low')
+                    self.assertEqual(res['worker']['effort'], 'high')
                 self.assertEqual(mock_checked.call_count, 2)
 
 
@@ -745,15 +745,15 @@ class ReviewTests(unittest.TestCase):
         with patch.object(harness, "checked", return_value=self.stream()) as checked, \
                 patch.object(harness, "require_quota"), patch.object(harness, 'require_role', return_value={}):
             result = harness.review("claude", b"plan", 1, capability)
-        self.assertEqual(result['requested_effort'], 'low')
-        self.assertEqual(checked.call_args.args[0][checked.call_args.args[0].index('--effort') + 1], 'low')
+        self.assertEqual(result['requested_effort'], 'high')
+        self.assertEqual(checked.call_args.args[0][checked.call_args.args[0].index('--effort') + 1], 'high')
         self.assertEqual(capability['planner']['effort'], 'high')
 
     def test_review_rejects_invalid_efforts_and_model_variants_before_execution(self):
         model = {"id": "best", "efforts": ["low", "medium", "high"]}
         cases = [('', [model]), ('unknown', [model]), ('ultra', [model]),
                  (None, [dict(model, efforts=[])]),
-                 (None, [dict(model, variants={'high': 'best-high'})]),
+                 (None, [dict(model, variants={'medium': 'best-medium'})]),
                  (None, [dict(model, variants={})]),
                  (None, [dict(model, id='a', resolved_model='best'),
                          dict(model, id='b', variants={'medium': 'best'})])]
@@ -846,7 +846,7 @@ class ReviewTests(unittest.TestCase):
 
     def test_copilot_task_preserves_supported_default_and_explicit_effort(self):
         model = {'id': 'auto', 'native_controls': {'reasoning_efforts': ['low', 'medium', 'high']}}
-        for override, expected, source in ((None, 'medium', 'default'), ('high', 'high', 'explicit')):
+        for override, expected, source in ((None, 'high', 'default'), ('medium', 'medium', 'explicit')):
             with self.subTest(override=override):
                 capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
                               'planner': {'model': 'auto', 'effort': 'xhigh'}, 'models': [model]}
@@ -882,7 +882,7 @@ class ReviewTests(unittest.TestCase):
                 harness.review('antigravity', b'plan', 1, dict(base, models=[dict(entry, variants=variants)]))
             self.assertEqual(raised.exception.status, 'unsupported_capability')
         for selected_entry, override, expected in ((entry, None, 'resolved'),
-                (dict(entry, variants={'medium': 'base-medium', 'high': 'base-high'}), None, 'base-medium'),
+                (dict(entry, variants={'medium': 'base-medium', 'high': 'base-high'}), None, 'base-high'),
                 (dict(entry, variants={'medium': 'base-medium', 'high': 'base-high'}), 'high', 'base-high')):
             with self.subTest(expected=expected), patch.object(harness, 'require_quota'), \
                     patch.object(harness, 'require_role', return_value={}), \
@@ -895,7 +895,7 @@ class ReviewTests(unittest.TestCase):
         model = {'id': 'auto', 'native_controls': {'reasoning_efforts': ['low', 'medium', 'high']}}
         for override, models in (('ultra', [model]), ('', [model]), ('unknown', [model]),
                                  ('medium', [model, model]), ('medium', []),
-                                 (None, [dict(model, native_controls={'reasoning_efforts': ['high']})])):
+                                 (None, [dict(model, native_controls={'reasoning_efforts': ['max']})])):
             with self.subTest(override=override, models=models):
                 capability = {'review': {'status': 'supervised_only'}, 'auth': {'status': 'subscription'},
                               'planner': {'model': 'auto', 'effort': 'high'}, 'models': models}

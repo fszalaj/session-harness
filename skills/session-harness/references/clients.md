@@ -61,20 +61,18 @@ ranking; multiple candidates require explicit provider capability evidence. The
 helper refuses ambiguous manager ranking. Worker suggestions still require the
 manager to verify task fit, tools and cost.
 
-Use the exact runtime-selected ID with Extra High (`xhigh`) for the manager. Since
-v0.2.1, the selector chooses the highest advertised reasoning level below `max`
-when `xhigh` is unavailable. Use `max` only for an extremely difficult task,
-selected explicitly through the client's supported model/effort control; return
-to the default afterwards. There is no generic launcher `--effort` option.
-Default selection excludes both `max` and `ultra`. Codex `ultra` combines maximum
-reasoning with automatic delegation and remains outside the default policy.
+Use the exact runtime-selected ID with the configured effort (publicly `high`),
+or the highest advertised level below it. Reserve `max` for an explicitly selected,
+extremely difficult task. There is no generic launcher `--effort` option.
+Default selection excludes `xhigh`, `max` and `ultra` unless explicitly selected
+through supported client controls. Codex `ultra` also enables delegation.
 See [Codex models](https://learn.chatgpt.com/docs/models). Claude's `max` is a reasoning
 level, while `ultracode` is a separate orchestration mode. Effort labels across clients
 do not establish equal cost or quality, and this choice makes no savings guarantee.
 There is no invented `latest` alias. Launch resolves afresh; a persistent exact
 `model` in `config.toml` will age. Native sessions opened without the launcher must
 check their selected model before planning. Workers may use the same current model
-at medium effort when all cheaper catalog alternatives are older generations.
+at the configured effort when all cheaper catalog alternatives are older generations.
 
 The restricted review adapter uses a read-only sandbox, ignored user config/rules,
 disabled execution/delegation/integrations and no project instructions. Residual
@@ -105,7 +103,7 @@ does not prove that another terminal or desktop client can access its authentica
 catalog supplies them. Select the newest numeric generation and advertised effort; do not let an
 unresolved `best` or `sonnet` alias override a visible newer generation. When no
 current cheaper concrete tier is available, use the selected current model at
-medium effort for execution. A concrete review verifies the returned actual model;
+configured effort for execution. A concrete review verifies the returned actual model;
 alias-only catalogs remain explicitly unresolved until native session evidence.
 Version 0.1.2 reported unresolved alias suggestions; verify the actual model
 through native session evidence before accepting a manager or reviewer.
@@ -117,7 +115,7 @@ aliases share the intersection of their advertised efforts. Resolution is read a
 at discovery, not cached or copied between accounts. Current Sonnet workers may share
 the planning model's major generation while having a different minor revision. Compare
 minor revisions within Sonnet; an older major still falls back to the current planning
-model at medium. The existing manager-selection policy remains unchanged. A returned
+model at the configured effort. The existing manager-selection policy remains unchanged. A returned
 model mismatch rejects the result without an automatic inference retry.
 Malformed resolution metadata rejects the catalog. Equivalent dated and undated
 Sonnet revisions prefer the undated ID deterministically, matching the runtime
@@ -142,17 +140,15 @@ Version 0.3.0 preserve proven model scopes and support current Opus selection
 after a Fable-only stop, with supervised exact-session resume on supported clients.
 Common limits and unknown scopes remain required; see [model allowances](model-allowances.md).
 
-Since v0.2.1, the manager launcher defaults to advertised `xhigh`, otherwise the
-highest advertised reasoning level below `max`. Explicit `max` is reserved for
-extremely difficult tasks.
+The manager launcher uses the same configured effort default as workers and reviews.
 Persistent `effortLevel` does not accept every CLI effort value. Do not put a max
 value in an unsupported setting or globally set `CLAUDE_CODE_EFFORT_LEVEL`: that
 environment variable overrides worker effort. `ultracode` is an orchestration mode,
 not an extra leaf reasoning tier. Installed Claude roles use the rolling `sonnet`
-alias at low effort for the investigator and medium for the implementer and inherit the manager
-model at high effort for the verifier. A per-invocation `model` overrides
+alias for the investigator and implementer and inherit the manager model for the
+verifier. All installed roles use the target home's configured effort at installation. A per-invocation `model` overrides
 frontmatter and `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` overrides both; reject `sonnet`
-when its resolved generation is superseded and pass the current flagship at medium.
+when its resolved generation is superseded and pass the current flagship at the configured effort.
 
 For isolated subscription reviews use `--safe-mode`, an empty tools list, empty
 strict MCP config, disabled slash commands and no session persistence. Safe mode

@@ -20,13 +20,11 @@ model's agreement is not a substitute for tests, and workers never approve their
 own implementations. Use a fresh verifier for substantial integrated changes.
 
 Resolve the newest eligible generation from current catalogs and reviewed evidence.
-Keep the manager at supported xhigh, or the highest advertised level below max.
-Ordinary native workers and reviews use medium when supported. OpenRouter effort
-labels must come from the model's reasoning metadata: some models expose low and
-high without medium. Prefer the highest supported level below medium for ordinary
-work and raise it for a concrete difficult task or failed attempt. Record that
-selection rather than calling it the provider's default. Max remains an explicit
-task-level exception. A dated private coding policy must be reviewed again before
+All roles use configured high by default, or the highest advertised lower level.
+Local preferences can select medium or low; explicit task effort wins. API effort
+labels must come from current model metadata; unsupported controls stay omitted.
+Record requested settings separately from provider defaults and actual observations.
+Max remains an explicit task-level exception. A dated private coding policy must be reviewed again before
 renewal or adding a successor; a model name containing Flash is not quality proof.
 
 ## Execution and billing boundaries

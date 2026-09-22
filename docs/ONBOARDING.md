@@ -162,8 +162,8 @@ they do not replace an existing installation's choices:
 | Timezone and calendar | UTC, all seven days, reset cutoff 08:30 |
 | Budget allocation and reserve | Adaptive allocation, reserve 0% |
 | Paid API allowance | None; API use needs an explicit positive money budget |
-| Manager | Strongest current hosting-provider model, xhigh when advertised |
-| Routine workers/reviews | Advertised medium or the highest supported level below it |
+| Manager | Strongest current hosting-provider model, configured effort (default high) |
+| Routine workers/reviews | Configured effort (default high) or the highest supported lower level |
 
 The manager falls back to the highest advertised level below max. Select supported
 high explicitly for difficult work; max is an explicit extremely-difficult-task
@@ -368,15 +368,52 @@ enabled, malformed or unreadable settings block. The harness never changes billi
 settings. Native extra-credit accounting retains reported units and does not prove
 protected paid execution.
 
-Select the strongest account-available hosting-provider model as manager at Extra
-High (`xhigh`), falling back to the highest advertised level below `max` if needed.
+Select the strongest account-available hosting-provider model as manager. All roles
+use the configured effort (publicly `high`) or the highest supported lower level.
 Use `max` only by explicit task-level selection for an extremely difficult task.
-Since v0.2.1, the launcher applies this default and excludes `max` and `ultra` from
-default selection. Use native model/effort controls for an explicit exception;
-the launcher has no generic `--effort` flag. Use bounded fresh-context native workers at
-medium effort, low for gathering. Two distinct other-provider families review the
-same plan independently, normally at medium effort. Reconcile findings and report
-missing reviews accurately. Do not start a new harness cycle for trivial or leaf work.
+Two distinct other-provider families review the same plan independently. Reconcile
+findings and report missing reviews accurately. Trivial or leaf work needs no new cycle.
+
+### Default reasoning effort
+
+All manager, worker and reviewer defaults are `high`. To keep a local installation
+at `medium`, create `~/.config/session-harness/default-effort` with exactly `medium`.
+The file also accepts `low` or `high`. Write it atomically:
+
+```bash
+python3 - <<'PYTHON'
+import os
+from pathlib import Path
+import tempfile
+path = Path.home() / '.config/session-harness/default-effort'
+path.parent.mkdir(parents=True, exist_ok=True)
+fd, temporary = tempfile.mkstemp(dir=path.parent)
+with os.fdopen(fd, 'w') as stream:
+    stream.write('medium\n')
+os.replace(temporary, path)
+PYTHON
+```
+
+Preview and apply the selected release installer again to refresh native agent
+profiles, preserving the same personal policy and installation options. Automatic
+updates preserve this file and render profiles against it. The installer ignores
+ambient effort overrides and uses the explicitly selected target home. An effort
+change during preview aborts apply; preview again. Vendor client settings remain
+untouched; set their effort separately when opening clients without the launcher.
+
+Runtime precedence is explicit supported task effort, then
+`SESSION_HARNESS_DEFAULT_EFFORT`, then the local file, then public `high`. The env
+variable affects harness commands, not existing client sessions or static native
+role files. Native profiles capture the local value during installation. Missing
+files select public high; empty, unreadable or invalid values stop selection. A
+model without any advertised level at or below the preference needs a compatible
+model or an explicit supported effort. This is a preference, not a spending limit;
+all existing admission controls still apply. Clients with no effort control and
+raw API calls without explicit effort remain client-managed.
+
+Rollback to a release before this setting was introduced restores that release's
+historical effort behavior. The preference file is retained for a later upgrade;
+older runtimes do not honor it.
 
 Keep the same task in the current session through compaction by default. At 60%
 context usage, save a checkpoint; at 75%, reduce new context and use bounded packets;

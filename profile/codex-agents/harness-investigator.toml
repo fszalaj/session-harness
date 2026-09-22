@@ -1,6 +1,6 @@
 name = "harness_investigator"
 description = "Gather bounded evidence for the session manager without edits."
-model_reasoning_effort = "low"
+model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are a leaf investigator. Follow the assigned scope and applicable repository rules.

@@ -41,7 +41,7 @@ class CopilotTests(unittest.TestCase):
     def test_named_selection_requires_catalog_effort_policy_and_other_family(self):
         capability = self.named_capability()
         selected = copilot.select_model(capability, 'claude-99.1', role='reviewer', manager_family='openai')
-        self.assertEqual(selected['planner']['effort'], 'medium')
+        self.assertEqual(selected['planner']['effort'], 'high')
         self.assertEqual(selected['review']['status'], 'available')
         pending = dict(capability, status='model_selection_required')
         self.assertEqual(copilot.select_model(pending, 'claude-99.1')['status'], 'available')
@@ -80,7 +80,7 @@ class CopilotTests(unittest.TestCase):
                     if method == 'session.model.list':
                         return {'list': [] if scenario == 'catalog-removed' else [{'id': 'claude-99.1',
                             'model_picker_enabled': True, 'capabilities': {'supports': {
-                            'reasoning_effort': [] if scenario == 'effort-removed' else ['medium']}}}]}
+                            'reasoning_effort': [] if scenario == 'effort-removed' else ['high']}}}]}
                     if method == 'session.create':
                         self.assertEqual(params['model'], 'auto')
                         self.assertNotIn('reasoningEffort', params)
@@ -94,10 +94,10 @@ class CopilotTests(unittest.TestCase):
                         return {'sessionId': 'fixture'}
                     if method == 'session.model.switchTo':
                         self.assertEqual(params, {'sessionId': 'fixture', 'modelId': 'claude-99.1',
-                                                 'requireAvailable': True, 'reasoningEffort': 'medium'})
+                                                 'requireAvailable': True, 'reasoningEffort': 'high'})
                         return {'status': 'applied', 'deferred': scenario == 'deferred', 'modelId': 'claude-99.1'}
                     if method == 'session.model.getCurrent':
-                        return {'modelId': 'claude-99.1', 'reasoningEffort': 'low' if scenario == 'wrong-effort' else 'medium'}
+                        return {'modelId': 'claude-99.1', 'reasoningEffort': 'low' if scenario == 'wrong-effort' else 'high'}
                     if method == 'session.send':
                         for kind, data in [('assistant.message', {'content': 'Approve with checks.'}),
                                            ('assistant.usage', {'model': 'gemini-99.1' if scenario == 'mismatch' else 'claude-99.1',

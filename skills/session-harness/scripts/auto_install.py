@@ -1,6 +1,7 @@
 """Verified local overlays and reversible managed-profile activation."""
 import base64
 import hashlib
+import inspect
 import importlib.util
 import json
 import os
@@ -118,7 +119,8 @@ def baseline(home, source, previous):
         raise ValueError('Baseline must be the matching published release source')
     module = installer(source)
     policy = Path(previous['personal_policy']) if previous.get('personal_policy') else None
-    payload, _ = module.release_sources(source, policy)
+    options = {"home": home} if "home" in inspect.signature(module.release_sources).parameters else {}
+    payload, _ = module.release_sources(source, policy, **options)
     digest = module.release_hash(payload)
     result = {'source_hash': digest, 'release_root': str(home / '.local/share/session-harness/releases' / digest),
               'release_created': False}
