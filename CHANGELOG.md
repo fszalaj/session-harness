@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.7.1
 
 - Accept equivalent, account-selectable Claude aliases when native initialization
   resolves them to the same concrete review model with identical effort controls.

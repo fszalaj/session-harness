@@ -5,6 +5,19 @@ installing a checkout is an explicit development choice. Version 0.x is still ev
 read release notes before upgrading. Published tags and assets are immutable. A fix
 gets a new version, including during initial development.
 
+## 0.7.1
+
+Claude reviews and bounded text work now accept equivalent native aliases when
+initialization confirms the same account-selectable concrete model, context suffix
+and effort controls. Conflicting or unverified entries still stop with an ambiguous
+catalog error. Exact-ID precedence, model-scoped admission, role policy and returned
+model validation remain unchanged.
+
+This patch removes a review blocker; it does not implement automatic Codex context
+handoff. Upgrade with `ai-session update --version 0.7.1 --apply`, then restart
+clients. Use the registered activation workflow for shared installations. Existing
+private policy, authentication, accounting and automatic-update settings are preserved.
+
 ## 0.7.0
 
 Native work now ranks fresh fractional allowance consumption before dispatch count.
