@@ -91,7 +91,7 @@ live capacity increases, refusal of unsafe decreases and preservation of explici
 existing limits. Distinct account authorities must remain independent. Capacity
 errors must identify concurrency rather than claiming quota exhaustion.
 
-Review protocols default to medium effort and 16 KiB packets. Confirm native effort
+Review protocols use configured effort (publicly high) and 16 KiB packets. Confirm native effort
 from the actual catalog; fixtures cannot establish the current cheapest tier.
 On v0.1.2, Antigravity clients that omitted a false setting when persisting
 sparse configuration were blocked. Since v0.2.0, the adapter distinguishes a

@@ -2,7 +2,7 @@
 name: harness-implementer
 description: Implement one assigned non-overlapping task and verify the change.
 model: sonnet
-effort: medium
+effort: high
 maxTurns: 12
 tools: Read, Glob, Grep, Bash, Edit, Write
 ---

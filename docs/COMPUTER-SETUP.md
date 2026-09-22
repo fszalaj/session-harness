@@ -104,7 +104,7 @@ Quota authority: local / approved SSH alias
 Quota mode, timezone, workdays, reset cutoff and reserve:
 Session capacity:
 Private personal-policy file location:
-Manager: xhigh when advertised; otherwise highest supported level below max
+All roles: configured effort, default high or highest supported lower level
 Max exception: explicit task-level selection for an extremely difficult task
 Verification: version, configure --status, coordination status, usage check
 ```
@@ -116,15 +116,11 @@ to a shared document or repository. Each person authorizes their own setup.
 
 ## Manager effort and release availability
 
-Use the strongest eligible model of the hosting provider at Extra High (`xhigh`).
-When unavailable, use the highest advertised reasoning level below `max`.
-Use `max` only for an extremely difficult task, selected explicitly in the native
-model/effort control, and return to the default afterwards. Worker effort remains
-medium, or low for gathering. Do not set a global worker effort override.
-
-Since v0.2.1, the launcher implements this manager default and excludes `max` and
-`ultra` from default selection. Editing Markdown or a configuration file does not
-switch an already-running conversation. There is no generic launcher `--effort` flag.
+Use the strongest eligible model of the hosting provider. Every role defaults to
+configured high, or the highest supported lower level. A local
+[effort preference](ONBOARDING.md#default-reasoning-effort) selects medium or low.
+Use max only for explicitly selected, extremely difficult tasks. Editing Markdown
+or configuration does not switch an already-running conversation. There is no generic launcher `--effort` flag.
 
 Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).
 Paid API use separately requires explicit monetary authorization. No setup path

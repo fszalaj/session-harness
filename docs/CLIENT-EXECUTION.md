@@ -60,8 +60,8 @@ ai-session review copilot --model CLAUDE_MODEL_ID --manager-family openai --effo
 ai-session review copilot --model GEMINI_MODEL_ID --manager-family openai --effort medium < plan.txt
 ```
 
-Use only advertised effort labels; omitting effort selects medium or the highest
-routine level below it for workers/reviews, and the planning tier for launches.
+Use only advertised effort labels; omitting effort selects the configured default
+(publicly high) or the highest supported lower level for every role.
 No advertised effort means the field is omitted. These flags are Copilot-only;
 automatic routing is unchanged. Model and effort bind a worker's existing task ID,
 so changing either requires a new task ID, not a retry of a completed request.

@@ -50,7 +50,7 @@ class WorkTests(unittest.TestCase):
                    planner={'model': 'current', 'effort': 'xhigh'},
                    models=[{'id': 'current', 'efforts': ['low', 'medium', 'high', 'xhigh']}])
         prints = []
-        for service, level in [('codex', 'high'), ('claude', 'medium')]:
+        for service, level in [('codex', 'medium'), ('claude', 'high')]:
             replies = [{'allowed': True, 'status': 'reserved', 'service': service},
                        {'allowed': True, 'status': 'running'}, {'allowed': True, 'status': 'completed'}]
             with patch.object(coordination, 'balance_dispatch', side_effect=replies) as dispatch, \
@@ -58,7 +58,7 @@ class WorkTests(unittest.TestCase):
                  patch.object(harness, 'review', return_value={'actual_model': 'current'}) as execute:
                 result = balance_cli.run_work(b'task', task_id='same', provider='native', ledger=self.ledger,
                     eligible_services=['codex', 'claude'], basis='weekly', strong_model=True,
-                    worker_efforts={'codex': 'high'})
+                    worker_efforts={'codex': 'medium'})
                 self.assertEqual('completed', result['status'])
                 self.assertEqual(level, execute.call_args.args[4])
                 request = dispatch.call_args_list[0].args[1]['request']

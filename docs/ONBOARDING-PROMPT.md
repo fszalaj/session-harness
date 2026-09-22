@@ -46,11 +46,10 @@ family from the client and billing service. Select only verified reviewer-capabl
 routes; preserve restrictions and report missing coverage after checking alternatives.
 
 Resolve models dynamically: newest available generation within each family before
-cost optimization, strongest hosting-provider manager at Extra High (xhigh),
-or the highest advertised level below max if unavailable. Use max only by explicit
-task-level selection for an extremely difficult task. Verify older releases' native
-effort control; instructions cannot change a running session. Use bounded native
-workers normally at medium (low for gathering), with two independent
+cost optimization, strongest hosting-provider manager, and configured effort for
+all roles (public default high or the highest advertised lower level). Use max only
+by explicit task-level selection for an extremely difficult task. Instructions cannot
+change a running session. Use bounded native workers and two independent
 other-provider plan reviews. Follow the selected skill's admission/context procedure;
 missing capabilities or reviews are not success. Do not restart orchestration for leaf tasks.
 

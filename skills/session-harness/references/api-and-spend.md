@@ -93,8 +93,9 @@ catalog `reasoning.supported_efforts` allows it. `api models openrouter` exposes
 normalized `reasoning_efforts`; missing labels do not establish support, `null`
 accepts gateway levels, and mandatory reasoning excludes `none`. Other API
 adapters still reject effort overrides. No effort option preserves provider defaults.
-Use advertised medium for ordinary work, otherwise the highest supported level
-below medium; a model may support low/high without medium. Escalate deliberately.
+Use the configured effort where the selected API or helper exposes that control,
+or its highest supported lower level. Raw API calls without an effort remain
+client-managed; never invent unsupported parameters. Escalate explicitly.
 
 Requests exclude visible reasoning text, which does not remove its cost. Reasoning
 can consume the output limit and leave no usable answer; preserve the billed receipt

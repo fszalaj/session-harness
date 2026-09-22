@@ -58,14 +58,12 @@ instructions. Do not store account details or runtime state in a team runbook.
 Establish execution and role eligibility from current evidence. Within each family,
 default to the newest available generation, then optimize task fit and cost within
 that generation. Do not silently fall back to an older generation after a stop.
-Use the strongest current hosting-provider model for the manager at advertised
-`xhigh`, otherwise the highest supported level below `max`. Reserve `max` for an
-explicitly selected, extremely difficult task. Verify the running model; Markdown
-cannot switch it. Normal bounded workers and ordinary reviews use supported medium
-effort, gathering low and difficult verification high.
-Automatic helper defaults select advertised medium or the highest supported level
-below it. If no routine level or required model variant exists, inspect the catalog
-and select a compatible current model. Do not infer a working base-model fallback.
+Use the strongest current hosting-provider model for the manager. Every role uses
+configured `high` by default, or the highest advertised level below it. Read the
+local effort preference described in SKILL.md; explicit supported task settings
+win. Reserve `max` for explicitly selected, extremely difficult tasks. Verify the
+running model and effort; Markdown cannot switch an existing session. If no
+compatible level or required variant exists, select a compatible current model.
 
 Select two reviewer-capable routes with different **upstream model families**, both
 different from the manager. Do not prescribe a fixed pair of brands. Resolve model
@@ -103,8 +101,7 @@ Complete [task] in this project. Success means [observable result]; constraints 
 Use its session-start reference to inspect current clients, registered native/API/
 free routes, model catalogs, role permissions, quotas, project skills and knowledge
 access. Resolve capabilities from live evidence instead of a remembered provider list.
-Select the newest available generation in each family; keep manager xhigh and normal
-workers/reviews at supported medium effort. Use max only for my explicit extremely
+Select the newest available generation in each family; use the configured effort default for all roles. Use max only for my explicit extremely
 difficult-task exception. Resolve two permitted independent upstream reviewer families
 outside the manager's family. Preserve every budget and role restriction; supervised
 output is not an independent verdict. Carry authorized work through verification and

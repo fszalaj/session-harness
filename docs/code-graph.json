@@ -1,18 +1,18 @@
 {
-  "content_sha256": "5b12b8dcd8df054ea123e4317679c57101c19b44df239ec122b204b76dd41265",
+  "content_sha256": "65b6850aff9314a41badfedc701caa6662e715dce67b0e6aec246e975fea494e",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 3155,
+    "edge_count": 3178,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1688,
+    "node_count": 1698,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
       "scripts/code_graph.py": "fa7c041129167808a7a3cc44fed5534c57ba31da2bf42cddc470f549e3fd58b3",
       "scripts/code_graph.test.py": "5baef7e0c95ef579828bfbceab61c7b3792c05c160714378bdfe6580ce40d423",
-      "scripts/install-agent-profile.py": "2cb453afa90d992b67e74b8648003d8698541a64f6d130031d2de94a33a73413",
-      "scripts/install-agent-profile.test.py": "f37d979a133c898c6505ce3f7723c4582cf1f18cb1ace2bf53e1421145e00d1e",
+      "scripts/install-agent-profile.py": "b492c0089bc729865c8b65672f95d34ecf868b74cda2c8624dfb579aaf1f9171",
+      "scripts/install-agent-profile.test.py": "5a513ea8db146146780d8b04b410b4917068daa808526be29d04bb593a81cfd1",
       "scripts/release.py": "711b3c849d21285dd7932338e1ed145e9e5a1566dfc7c6d7e3f0876f424c53db",
       "scripts/release.test.py": "c0cabc31299955487c013852d4d1956b4c05c785ac7dd78927a360960027dcaa",
       "scripts/test.py": "ea279177805e95a35922f421f8e167cadf0d275cbcb851535aa9a4e8550fe38a",
@@ -21,7 +21,7 @@
       "skills/session-harness/scripts/api_providers.py": "643ecc83d00499fa2be4a2c8c29de55c3737b8175964dcb972764bdff0136db4",
       "skills/session-harness/scripts/api_transport.py": "86fcb0093632ef3f5febf5299be120a3ff499e555be622d9a758af7809975144",
       "skills/session-harness/scripts/authentication.py": "3a78e5462584817df2430a27912cc03f7f36b1256c4381f8629465341d8b9ec0",
-      "skills/session-harness/scripts/auto_install.py": "20352c5a9e233cef368f14f19352ffe4a9e2cd0018b3449eee8ea54f6be219b9",
+      "skills/session-harness/scripts/auto_install.py": "988b791e15e1acfc99ee53f47bb186189e63b276077b68bd94021b4708d1147a",
       "skills/session-harness/scripts/auto_scheduler.py": "b8f8bd43374bb6206eee6804f94a43f8bfc6e3d9e5f8de29dc5fcff6b3062563",
       "skills/session-harness/scripts/auto_update.py": "e239364ffb34a1bd1d9ee3e08c837bcaabcc5a569ebce2ed867302ccf5df1706",
       "skills/session-harness/scripts/balance.py": "d5238d0eca9b9d9df5776581b56d6d025ddefa2bd9f744091022961af122ce95",
@@ -39,10 +39,11 @@
       "skills/session-harness/scripts/credits.py": "58d04bb8a27a9dabe20cd55d87b2096de8334b6e649756eadaeca74f8775531a",
       "skills/session-harness/scripts/cursor_client.py": "71d44b254384e7b738e6320adf5045c2fe22596a39b7f93aa09302670380ba55",
       "skills/session-harness/scripts/decisions.py": "a5621d5011c6d59fa35d2befae9636ee1eaf90cb604c017b879dcf8cbcb1d68e",
+      "skills/session-harness/scripts/effort_policy.py": "92359afe06f6ca15e443f5d1a44c1e08e2cb3d7fb6124e14d2f36efb9a793ea5",
       "skills/session-harness/scripts/free_access.py": "2369641cad5089366ba901b7694d72941c3bc8564b1e2cad64a22d1acd7856ab",
       "skills/session-harness/scripts/free_access_cli.py": "96bfaa0becc7cd0d377548d15565ff2082a3961ed69e5c660869a71dd6db1ee8",
       "skills/session-harness/scripts/free_accounts.py": "d3882bf770e7a7505a2d28d9cdd148c2bf3ea4a02b454805c72f07838c663a52",
-      "skills/session-harness/scripts/harness.py": "e854c1c7df00cf218bcf1b9185b12b15192e080243470ff3d9f2fedee5b4f4d3",
+      "skills/session-harness/scripts/harness.py": "d1b5d9b90bd86ddc752ad6790f1196d2c0ab4169da965150b7b971c0d2e050af",
       "skills/session-harness/scripts/inventory.py": "d69a8e638d4c691c54cdb5e7a055241d804b557165db9888f9114402029e653f",
       "skills/session-harness/scripts/local_ollama.py": "688a50049dac1a44f9d6876bd1fc466a24f274180a148402c2be3ef63796fb59",
       "skills/session-harness/scripts/model_scope.py": "bf9e5c86392875681a27d992a9aa174f875190cb710812cf1e664a03a253851c",
@@ -64,7 +65,7 @@
       "skills/session-harness/scripts/test_authentication.py": "ccd5e88f2a9e4d8bd4bbc44b59b3ab4cf5e75715e6173bf7a801b12fcafdb5a8",
       "skills/session-harness/scripts/test_auto_update.py": "15580b9bd48f71b4e859b39fcb7ce9f4263af1461a0502f4e2531b396a2aee68",
       "skills/session-harness/scripts/test_balance.py": "e5ae555ffbf9710d47d5e79047f8c7b8080f7c3082759686cb68e2d622cacd18",
-      "skills/session-harness/scripts/test_balance_cli.py": "38ddbb43d9d3da74ce4e5e7f4d28869440a3818d101b25343955764f0d0e9e77",
+      "skills/session-harness/scripts/test_balance_cli.py": "21540cf26573324d60a42b5b0239972f7cb1f67a52e531cdd7db4f2e0ded6dca",
       "skills/session-harness/scripts/test_budget_calendar.py": "d5d1f693be99210cda1d3824b8db25e52e755b81d2a05672f1370e45da06028f",
       "skills/session-harness/scripts/test_budget_cli.py": "2de296d181f29306b5dfe6d91352961f3aef86f6654831e262c2d9251cbe351d",
       "skills/session-harness/scripts/test_budget_policy.py": "0c47a6265593cdf123b61546e59b28ec70c64d3ac63fc8168464dadea2e9f6a0",
@@ -73,14 +74,15 @@
       "skills/session-harness/scripts/test_claude_models.py": "872c06d8a895d2df541f312d0eefd5cf2779ab102007ac359d8d9d0279a7ab69",
       "skills/session-harness/scripts/test_coding_models.py": "f2b01c320762fbabbc284dffc788d9533dac36d3500717cdbcca15057049cbbd",
       "skills/session-harness/scripts/test_coordination.py": "479816c73b8892b33a8d144f0be3d95080a9c6bb289aaf092f6dc734aeef3e01",
-      "skills/session-harness/scripts/test_copilot_client.py": "b9b27e522e8b72e3e8bcca30a19c9a6f783ac0442cc44d83ab296db60994ae01",
+      "skills/session-harness/scripts/test_copilot_client.py": "8f038188884a02f261cf8a9be6c9066a229098fc53f31b9ae64d5ddcc4bdbff8",
       "skills/session-harness/scripts/test_copilot_migration.py": "bcb6be2d58bb757cf9f7c58783996e29b656edb3a22806d5f14732d645b33c9b",
       "skills/session-harness/scripts/test_credits.py": "704750318911cabb7369d9a371e718986837be31a404629df77d0012b8618633",
       "skills/session-harness/scripts/test_cursor_client.py": "12e8eebbbb612817951066936c91eb109920f51e7a3166b12b376ca6cea366cc",
       "skills/session-harness/scripts/test_decisions.py": "f382bce29de876303e99e07ebfdd2b732e1744ba8cc599d7e468477c742f7c83",
+      "skills/session-harness/scripts/test_effort_policy.py": "31631a73130fde49e7564f2b10dba871dfbf3a41c68a3b230b8862f8fbaac6a4",
       "skills/session-harness/scripts/test_free_access.py": "9c6aa5be9b643f34008403dbd490960c2ec070a2c05c34a07d67e1b955b9bec9",
       "skills/session-harness/scripts/test_free_accounts.py": "34d4c2d0e19dffd0d9b1804a504001d3afd125623cc9b779b34255020ea9aaba",
-      "skills/session-harness/scripts/test_harness.py": "9b07728310de6bfe3a97099846ac7f03e47ea2630016e5fce9dafdd416b57153",
+      "skills/session-harness/scripts/test_harness.py": "87c9971e440531c46365ec9095dd5cb2c4d954cf2b84bbea13b6c87a8a16a01d",
       "skills/session-harness/scripts/test_inventory.py": "7035cf2969521549e3c02f670a9555bdef167960ea156f2e86750231be49a23c",
       "skills/session-harness/scripts/test_local_ollama.py": "9e3c111004bb5a3db421331cd55153744e3c29800e5d813dcb32304758615a85",
       "skills/session-harness/scripts/test_maintenance.py": "25b1b96761f7e4d614af5cceb4eb79c54b51c729d43173b1de2d29ba88a8ca76",
@@ -495,6 +497,12 @@
       "relation": "defines",
       "source": "module:scripts/install-agent-profile.py",
       "target": "pyfunc:scripts/install-agent-profile.py:set_permissions"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:scripts/install-agent-profile.py",
+      "target": "pyfunc:scripts/install-agent-profile.py:verify_effort_preflight"
     },
     {
       "confidence": "EXTRACTED",
@@ -1395,6 +1403,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/auto_install.py",
       "target": "extmodule:importlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/auto_install.py",
+      "target": "extmodule:inspect"
     },
     {
       "confidence": "EXTRACTED",
@@ -3469,6 +3483,36 @@
     {
       "confidence": "EXTRACTED",
       "relation": "imports",
+      "source": "module:skills/session-harness/scripts/effort_policy.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/effort_policy.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/effort_policy.py",
+      "target": "extmodule:stat"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/effort_policy.py",
+      "target": "pyfunc:skills/session-harness/scripts/effort_policy.py:preference"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/effort_policy.py",
+      "target": "pyfunc:skills/session-harness/scripts/effort_policy.py:render_profile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
       "source": "module:skills/session-harness/scripts/free_access.py",
       "target": "extmodule:contextlib"
     },
@@ -3993,6 +4037,12 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/harness.py",
       "target": "module:skills/session-harness/scripts/cursor_client.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/harness.py",
+      "target": "module:skills/session-harness/scripts/effort_policy.py"
     },
     {
       "confidence": "EXTRACTED",
@@ -7569,6 +7619,60 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/test_decisions.py",
       "target": "pyclass:skills/session-harness/scripts/test_decisions.py:DecisionTests"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "extmodule:importlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "extmodule:os"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "extmodule:pathlib"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "extmodule:tempfile"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "extmodule:unittest"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "module:skills/session-harness/scripts/auto_install.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "module:skills/session-harness/scripts/effort_policy.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "module:skills/session-harness/scripts/harness.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "target": "pyclass:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests"
     },
     {
       "confidence": "EXTRACTED",
@@ -13033,6 +13137,24 @@
     {
       "confidence": "EXTRACTED",
       "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests.test_install_baseline_and_preflight_use_target_home"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests.test_render_is_idempotent_and_preserves_prose"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests",
+      "target": "pymethod:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests.test_runtime_precedence_validation_and_capability_ceiling"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_free_access.py:FreeAccessTests",
       "target": "pymethod:skills/session-harness/scripts/test_free_access.py:FreeAccessTests.execute"
     },
@@ -15644,6 +15766,12 @@
       "confidence": "INFERRED",
       "relation": "calls",
       "source": "pyfunc:scripts/install-agent-profile.py:_apply_copy_locked",
+      "target": "pyfunc:scripts/install-agent-profile.py:verify_effort_preflight"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:_apply_copy_locked",
       "target": "pyfunc:scripts/install-agent-profile.py:windows_security"
     },
     {
@@ -15699,6 +15827,12 @@
       "relation": "calls",
       "source": "pyfunc:scripts/install-agent-profile.py:apply_install",
       "target": "pyfunc:scripts/install-agent-profile.py:set_permissions"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:apply_install",
+      "target": "pyfunc:scripts/install-agent-profile.py:verify_effort_preflight"
     },
     {
       "confidence": "INFERRED",
@@ -15885,6 +16019,12 @@
       "relation": "calls",
       "source": "pyfunc:scripts/install-agent-profile.py:set_permissions",
       "target": "pyfunc:scripts/install-agent-profile.py:windows_security"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "source": "pyfunc:scripts/install-agent-profile.py:verify_effort_preflight",
+      "target": "pyfunc:scripts/install-agent-profile.py:fingerprint"
     },
     {
       "confidence": "INFERRED",
@@ -19103,6 +19243,9 @@
       "id": "extmodule:importlib"
     },
     {
+      "id": "extmodule:inspect"
+    },
+    {
       "id": "extmodule:io"
     },
     {
@@ -19434,6 +19577,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/effort_policy.py",
+      "label": "skills/session-harness/scripts/effort_policy.py",
+      "source_file": "skills/session-harness/scripts/effort_policy.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/free_access.py",
       "label": "skills/session-harness/scripts/free_access.py",
       "source_file": "skills/session-harness/scripts/free_access.py",
@@ -19707,6 +19857,13 @@
     },
     {
       "file_type": "python",
+      "id": "module:skills/session-harness/scripts/test_effort_policy.py",
+      "label": "skills/session-harness/scripts/test_effort_policy.py",
+      "source_file": "skills/session-harness/scripts/test_effort_policy.py",
+      "type": "module"
+    },
+    {
+      "file_type": "python",
       "id": "module:skills/session-harness/scripts/test_free_access.py",
       "label": "skills/session-harness/scripts/test_free_access.py",
       "source_file": "skills/session-harness/scripts/test_free_access.py",
@@ -19893,7 +20050,7 @@
       "id": "pyclass:scripts/install-agent-profile.py:InstallationError",
       "label": "InstallationError",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L21",
+      "source_location": "L22",
       "type": "class"
     },
     {
@@ -19901,7 +20058,7 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:CheckedCopyTests",
       "label": "CheckedCopyTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L394",
+      "source_location": "L396",
       "type": "class"
     },
     {
@@ -19917,7 +20074,7 @@
       "id": "pyclass:scripts/install-agent-profile.test.py:RepositoryProfileContractTests",
       "label": "RepositoryProfileContractTests",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L339",
+      "source_location": "L341",
       "type": "class"
     },
     {
@@ -20013,7 +20170,7 @@
       "id": "pyclass:skills/session-harness/scripts/harness.py:CodexRPC",
       "label": "CodexRPC",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L358",
+      "source_location": "L359",
       "type": "class"
     },
     {
@@ -20021,7 +20178,7 @@
       "id": "pyclass:skills/session-harness/scripts/harness.py:HarnessError",
       "label": "HarnessError",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "type": "class"
     },
     {
@@ -20350,6 +20507,14 @@
       "label": "DecisionTests",
       "source_file": "skills/session-harness/scripts/test_decisions.py",
       "source_location": "L37",
+      "type": "class"
+    },
+    {
+      "file_type": "python",
+      "id": "pyclass:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests",
+      "label": "EffortPolicyTests",
+      "source_file": "skills/session-harness/scripts/test_effort_policy.py",
+      "source_location": "L14",
       "type": "class"
     },
     {
@@ -20701,7 +20866,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:_apply_copy_locked",
       "label": "_apply_copy_locked",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L211",
+      "source_location": "L216",
       "type": "function"
     },
     {
@@ -20709,7 +20874,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:apply_copy",
       "label": "apply_copy",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L186",
+      "source_location": "L191",
       "type": "function"
     },
     {
@@ -20717,7 +20882,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:apply_install",
       "label": "apply_install",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L484",
+      "source_location": "L511",
       "type": "function"
     },
     {
@@ -20725,7 +20890,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:copy_state_path",
       "label": "copy_state_path",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L115",
+      "source_location": "L116",
       "type": "function"
     },
     {
@@ -20733,7 +20898,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:file_digest",
       "label": "file_digest",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L119",
+      "source_location": "L120",
       "type": "function"
     },
     {
@@ -20741,7 +20906,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:fingerprint",
       "label": "fingerprint",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "type": "function"
     },
     {
@@ -20749,7 +20914,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:install_release",
       "label": "install_release",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L349",
+      "source_location": "L366",
       "type": "function"
     },
     {
@@ -20757,7 +20922,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:installation_state_path",
       "label": "installation_state_path",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L549",
+      "source_location": "L577",
       "type": "function"
     },
     {
@@ -20765,7 +20930,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:kind",
       "label": "kind",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L34",
+      "source_location": "L35",
       "type": "function"
     },
     {
@@ -20773,7 +20938,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:launcher_content",
       "label": "launcher_content",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L51",
+      "source_location": "L52",
       "type": "function"
     },
     {
@@ -20781,7 +20946,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:launcher_files",
       "label": "launcher_files",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L101",
+      "source_location": "L102",
       "type": "function"
     },
     {
@@ -20789,7 +20954,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:link_matches",
       "label": "link_matches",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L44",
+      "source_location": "L45",
       "type": "function"
     },
     {
@@ -20797,7 +20962,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:main",
       "label": "main",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L589",
+      "source_location": "L617",
       "type": "function"
     },
     {
@@ -20805,7 +20970,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:plan_copy",
       "label": "plan_copy",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L123",
+      "source_location": "L124",
       "type": "function"
     },
     {
@@ -20813,7 +20978,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:plan_install",
       "label": "plan_install",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L386",
+      "source_location": "L403",
       "type": "function"
     },
     {
@@ -20821,7 +20986,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:private_backup_run",
       "label": "private_backup_run",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L463",
+      "source_location": "L484",
       "type": "function"
     },
     {
@@ -20829,7 +20994,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:read_installation_state",
       "label": "read_installation_state",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L553",
+      "source_location": "L581",
       "type": "function"
     },
     {
@@ -20837,7 +21002,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:release_hash",
       "label": "release_hash",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L316",
+      "source_location": "L333",
       "type": "function"
     },
     {
@@ -20845,7 +21010,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:release_sources",
       "label": "release_sources",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L261",
+      "source_location": "L267",
       "type": "function"
     },
     {
@@ -20853,7 +21018,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:save_installation_state",
       "label": "save_installation_state",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L567",
+      "source_location": "L595",
       "type": "function"
     },
     {
@@ -20861,7 +21026,15 @@
       "id": "pyfunc:scripts/install-agent-profile.py:set_permissions",
       "label": "set_permissions",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L94",
+      "source_location": "L95",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:scripts/install-agent-profile.py:verify_effort_preflight",
+      "label": "verify_effort_preflight",
+      "source_file": "scripts/install-agent-profile.py",
+      "source_location": "L505",
       "type": "function"
     },
     {
@@ -20869,7 +21042,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:verify_release",
       "label": "verify_release",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L324",
+      "source_location": "L341",
       "type": "function"
     },
     {
@@ -20877,7 +21050,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:windows_security",
       "label": "windows_security",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L82",
+      "source_location": "L83",
       "type": "function"
     },
     {
@@ -20885,7 +21058,7 @@
       "id": "pyfunc:scripts/install-agent-profile.py:write_manifest",
       "label": "write_manifest",
       "source_file": "scripts/install-agent-profile.py",
-      "source_location": "L476",
+      "source_location": "L497",
       "type": "function"
     },
     {
@@ -21205,7 +21378,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:atomic",
       "label": "atomic",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L22",
+      "source_location": "L23",
       "type": "function"
     },
     {
@@ -21213,7 +21386,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:backup",
       "label": "backup",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L231",
+      "source_location": "L233",
       "type": "function"
     },
     {
@@ -21221,7 +21394,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:baseline",
       "label": "baseline",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L115",
+      "source_location": "L116",
       "type": "function"
     },
     {
@@ -21229,7 +21402,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:expected_paths",
       "label": "expected_paths",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L268",
+      "source_location": "L270",
       "type": "function"
     },
     {
@@ -21237,7 +21410,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:footprint",
       "label": "footprint",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L87",
+      "source_location": "L88",
       "type": "function"
     },
     {
@@ -21245,7 +21418,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:inspect_path",
       "label": "inspect_path",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L77",
+      "source_location": "L78",
       "type": "function"
     },
     {
@@ -21253,7 +21426,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:installer",
       "label": "installer",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L97",
+      "source_location": "L98",
       "type": "function"
     },
     {
@@ -21261,7 +21434,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:plan_install",
       "label": "plan_install",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L107",
+      "source_location": "L108",
       "type": "function"
     },
     {
@@ -21269,7 +21442,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:prepare",
       "label": "prepare",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L181",
+      "source_location": "L183",
       "type": "function"
     },
     {
@@ -21277,7 +21450,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:read_json",
       "label": "read_json",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "type": "function"
     },
     {
@@ -21285,7 +21458,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:register",
       "label": "register",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L129",
+      "source_location": "L131",
       "type": "function"
     },
     {
@@ -21293,7 +21466,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:registered",
       "label": "registered",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L171",
+      "source_location": "L173",
       "type": "function"
     },
     {
@@ -21301,7 +21474,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:restore",
       "label": "restore",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L245",
+      "source_location": "L247",
       "type": "function"
     },
     {
@@ -21309,7 +21482,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:save",
       "label": "save",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L46",
+      "source_location": "L47",
       "type": "function"
     },
     {
@@ -21317,7 +21490,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:sha",
       "label": "sha",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L18",
+      "source_location": "L19",
       "type": "function"
     },
     {
@@ -21325,7 +21498,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:snapshot",
       "label": "snapshot",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L50",
+      "source_location": "L51",
       "type": "function"
     },
     {
@@ -21333,7 +21506,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:state_path",
       "label": "state_path",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L42",
+      "source_location": "L43",
       "type": "function"
     },
     {
@@ -21341,7 +21514,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_candidate_launcher",
       "label": "verify_candidate_launcher",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L216",
+      "source_location": "L218",
       "type": "function"
     },
     {
@@ -21349,7 +21522,7 @@
       "id": "pyfunc:skills/session-harness/scripts/auto_install.py:verify_footprint",
       "label": "verify_footprint",
       "source_file": "skills/session-harness/scripts/auto_install.py",
-      "source_location": "L91",
+      "source_location": "L92",
       "type": "function"
     },
     {
@@ -22586,6 +22759,22 @@
     },
     {
       "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/effort_policy.py:preference",
+      "label": "preference",
+      "source_file": "skills/session-harness/scripts/effort_policy.py",
+      "source_location": "L11",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/effort_policy.py:render_profile",
+      "label": "render_profile",
+      "source_file": "skills/session-harness/scripts/effort_policy.py",
+      "source_location": "L35",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
       "id": "pyfunc:skills/session-harness/scripts/free_access.py:catalog",
       "label": "catalog",
       "source_file": "skills/session-harness/scripts/free_access.py",
@@ -22741,7 +22930,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:cached_codex",
       "label": "cached_codex",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L441",
+      "source_location": "L442",
       "type": "function"
     },
     {
@@ -22749,7 +22938,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:check_agy_event",
       "label": "check_agy_event",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L873",
+      "source_location": "L874",
       "type": "function"
     },
     {
@@ -22757,7 +22946,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:check_codex_line",
       "label": "check_codex_line",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L827",
+      "source_location": "L828",
       "type": "function"
     },
     {
@@ -22765,7 +22954,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:checked",
       "label": "checked",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L215",
+      "source_location": "L216",
       "type": "function"
     },
     {
@@ -22773,7 +22962,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:checked_role_response",
       "label": "checked_role_response",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L1011",
+      "source_location": "L1012",
       "type": "function"
     },
     {
@@ -22781,7 +22970,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:child_env",
       "label": "child_env",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L51",
+      "source_location": "L52",
       "type": "function"
     },
     {
@@ -22789,7 +22978,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:classify_failure",
       "label": "classify_failure",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L202",
+      "source_location": "L203",
       "type": "function"
     },
     {
@@ -22797,7 +22986,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:claude_auth_status",
       "label": "claude_auth_status",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L557",
+      "source_location": "L558",
       "type": "function"
     },
     {
@@ -22805,7 +22994,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:cli_help",
       "label": "cli_help",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L222",
+      "source_location": "L223",
       "type": "function"
     },
     {
@@ -22813,7 +23002,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_item_error",
       "label": "codex_item_error",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L816",
+      "source_location": "L817",
       "type": "function"
     },
     {
@@ -22821,7 +23010,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_models",
       "label": "codex_models",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L418",
+      "source_location": "L419",
       "type": "function"
     },
     {
@@ -22829,7 +23018,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_review_argv",
       "label": "codex_review_argv",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L744",
+      "source_location": "L745",
       "type": "function"
     },
     {
@@ -22837,7 +23026,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:codex_review_capability",
       "label": "codex_review_capability",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L460",
+      "source_location": "L461",
       "type": "function"
     },
     {
@@ -22845,7 +23034,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:detect_session",
       "label": "detect_session",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L247",
+      "source_location": "L248",
       "type": "function"
     },
     {
@@ -22853,7 +23042,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_agy",
       "label": "discover_agy",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L540",
+      "source_location": "L541",
       "type": "function"
     },
     {
@@ -22861,7 +23050,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_claude",
       "label": "discover_claude",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L574",
+      "source_location": "L575",
       "type": "function"
     },
     {
@@ -22869,7 +23058,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_codex",
       "label": "discover_codex",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L472",
+      "source_location": "L473",
       "type": "function"
     },
     {
@@ -22877,7 +23066,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:discover_provider",
       "label": "discover_provider",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L650",
+      "source_location": "L651",
       "type": "function"
     },
     {
@@ -22885,7 +23074,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:explain_terminal_stop",
       "label": "explain_terminal_stop",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L976",
+      "source_location": "L977",
       "type": "function"
     },
     {
@@ -22893,7 +23082,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:generation",
       "label": "generation",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L273",
+      "source_location": "L274",
       "type": "function"
     },
     {
@@ -22901,7 +23090,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:interrupt_children",
       "label": "interrupt_children",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L93",
+      "source_location": "L94",
       "type": "function"
     },
     {
@@ -22909,7 +23098,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:launch_plan",
       "label": "launch_plan",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L673",
+      "source_location": "L674",
       "type": "function"
     },
     {
@@ -22917,7 +23106,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L1157",
+      "source_location": "L1158",
       "type": "function"
     },
     {
@@ -22925,7 +23114,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:parent_commands",
       "label": "parent_commands",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L229",
+      "source_location": "L230",
       "type": "function"
     },
     {
@@ -22933,7 +23122,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:parse_agy_catalog",
       "label": "parse_agy_catalog",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L519",
+      "source_location": "L520",
       "type": "function"
     },
     {
@@ -22941,7 +23130,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:register_process",
       "label": "register_process",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L101",
+      "source_location": "L102",
       "type": "function"
     },
     {
@@ -22949,7 +23138,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:require_quota",
       "label": "require_quota",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L966",
+      "source_location": "L967",
       "type": "function"
     },
     {
@@ -22957,7 +23146,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:require_role",
       "label": "require_role",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L998",
+      "source_location": "L999",
       "type": "function"
     },
     {
@@ -22965,7 +23154,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:resolve_variant",
       "label": "resolve_variant",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L306",
+      "source_location": "L307",
       "type": "function"
     },
     {
@@ -22973,7 +23162,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:review",
       "label": "review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L1026",
+      "source_location": "L1027",
       "type": "function"
     },
     {
@@ -22981,7 +23170,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:review_agy",
       "label": "review_agy",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L926",
+      "source_location": "L927",
       "type": "function"
     },
     {
@@ -22989,7 +23178,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:review_metadata",
       "label": "review_metadata",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L959",
+      "source_location": "L960",
       "type": "function"
     },
     {
@@ -22997,7 +23186,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:run",
       "label": "run",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L124",
+      "source_location": "L125",
       "type": "function"
     },
     {
@@ -23005,7 +23194,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:select_effort",
       "label": "select_effort",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L291",
+      "source_location": "L292",
       "type": "function"
     },
     {
@@ -23013,7 +23202,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:select_models",
       "label": "select_models",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L317",
+      "source_location": "L318",
       "type": "function"
     },
     {
@@ -23021,7 +23210,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:stop_group",
       "label": "stop_group",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L68",
+      "source_location": "L69",
       "type": "function"
     },
     {
@@ -23029,7 +23218,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:unregister_process",
       "label": "unregister_process",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L111",
+      "source_location": "L112",
       "type": "function"
     },
     {
@@ -23037,7 +23226,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:validate_agy_review",
       "label": "validate_agy_review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L910",
+      "source_location": "L911",
       "type": "function"
     },
     {
@@ -23045,7 +23234,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:validate_claude_review",
       "label": "validate_claude_review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L710",
+      "source_location": "L711",
       "type": "function"
     },
     {
@@ -23053,7 +23242,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:validate_codex_review",
       "label": "validate_codex_review",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L776",
+      "source_location": "L777",
       "type": "function"
     },
     {
@@ -23061,7 +23250,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:verify_codex_sandbox",
       "label": "verify_codex_sandbox",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L761",
+      "source_location": "L762",
       "type": "function"
     },
     {
@@ -24245,7 +24434,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.install",
       "label": "CheckedCopyTests.install",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L410",
+      "source_location": "L412",
       "type": "method"
     },
     {
@@ -24253,7 +24442,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.setUp",
       "label": "CheckedCopyTests.setUp",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L395",
+      "source_location": "L397",
       "type": "method"
     },
     {
@@ -24261,7 +24450,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
       "label": "CheckedCopyTests.test_copy_upgrade_preserves_registered_personal_policy",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L415",
+      "source_location": "L417",
       "type": "method"
     },
     {
@@ -24269,7 +24458,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "label": "CheckedCopyTests.test_launcher_in_process_path_preserves_output_imports_and_exit_status",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L445",
+      "source_location": "L447",
       "type": "method"
     },
     {
@@ -24277,7 +24466,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_launcher_keeps_snapshot_clean_after_imports_and_child_process",
       "label": "CheckedCopyTests.test_launcher_keeps_snapshot_clean_after_imports_and_child_process",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L456",
+      "source_location": "L458",
       "type": "method"
     },
     {
@@ -24285,7 +24474,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_modified_copy_is_preserved",
       "label": "CheckedCopyTests.test_modified_copy_is_preserved",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L470",
+      "source_location": "L472",
       "type": "method"
     },
     {
@@ -24293,7 +24482,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "label": "CheckedCopyTests.test_powershell_launcher_preserves_empty_quotes_and_metacharacters",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L491",
+      "source_location": "L493",
       "type": "method"
     },
     {
@@ -24301,7 +24490,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "label": "CheckedCopyTests.test_preview_race_preserves_modified_destination",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L484",
+      "source_location": "L486",
       "type": "method"
     },
     {
@@ -24309,7 +24498,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "label": "CheckedCopyTests.test_real_copy_install_idempotence_legal_and_source_removal",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L427",
+      "source_location": "L429",
       "type": "method"
     },
     {
@@ -24317,7 +24506,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "label": "CheckedCopyTests.test_source_upgrade_removes_only_unchanged_managed_files",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L477",
+      "source_location": "L479",
       "type": "method"
     },
     {
@@ -24357,7 +24546,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_concurrent_managed_change_is_preserved",
       "label": "ProfileInstallationTests.test_concurrent_managed_change_is_preserved",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L219",
+      "source_location": "L221",
       "type": "method"
     },
     {
@@ -24365,7 +24554,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_corrupted_existing_release_is_not_overwritten_or_relinked",
       "label": "ProfileInstallationTests.test_corrupted_existing_release_is_not_overwritten_or_relinked",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L326",
+      "source_location": "L328",
       "type": "method"
     },
     {
@@ -24421,7 +24610,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_private_policy_survives_upgrades_and_missing_policy_blocks",
       "label": "ProfileInstallationTests.test_private_policy_survives_upgrades_and_missing_policy_blocks",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L286",
+      "source_location": "L288",
       "type": "method"
     },
     {
@@ -24437,7 +24626,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_reinstall_preserves_environment_setup_and_ledger_bytes",
       "label": "ProfileInstallationTests.test_reinstall_preserves_environment_setup_and_ledger_bytes",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L197",
+      "source_location": "L199",
       "type": "method"
     },
     {
@@ -24445,7 +24634,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_survives_source_removal_and_excludes_unrelated_files",
       "label": "ProfileInstallationTests.test_release_survives_source_removal_and_excludes_unrelated_files",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L231",
+      "source_location": "L233",
       "type": "method"
     },
     {
@@ -24453,7 +24642,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_release_update_and_rollback_keep_private_policy_and_accounting",
       "label": "ProfileInstallationTests.test_release_update_and_rollback_keep_private_policy_and_accounting",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L300",
+      "source_location": "L302",
       "type": "method"
     },
     {
@@ -24461,7 +24650,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_source_change_creates_a_new_release_and_preserves_the_old_release",
       "label": "ProfileInstallationTests.test_source_change_creates_a_new_release_and_preserves_the_old_release",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L276",
+      "source_location": "L278",
       "type": "method"
     },
     {
@@ -24469,7 +24658,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:ProfileInstallationTests.test_standalone_legal_artifacts_and_incomplete_source_protection",
       "label": "ProfileInstallationTests.test_standalone_legal_artifacts_and_incomplete_source_protection",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L261",
+      "source_location": "L263",
       "type": "method"
     },
     {
@@ -24485,7 +24674,7 @@
       "id": "pymethod:scripts/install-agent-profile.test.py:RepositoryProfileContractTests.test_shared_entrypoints_and_native_roles_keep_the_profile_contract",
       "label": "RepositoryProfileContractTests.test_shared_entrypoints_and_native_roles_keep_the_profile_contract",
       "source_file": "scripts/install-agent-profile.test.py",
-      "source_location": "L340",
+      "source_location": "L342",
       "type": "method"
     },
     {
@@ -24717,7 +24906,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.__init__",
       "label": "CodexRPC.__init__",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L359",
+      "source_location": "L360",
       "type": "method"
     },
     {
@@ -24725,7 +24914,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.close",
       "label": "CodexRPC.close",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L407",
+      "source_location": "L408",
       "type": "method"
     },
     {
@@ -24733,7 +24922,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.notify",
       "label": "CodexRPC.notify",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L371",
+      "source_location": "L372",
       "type": "method"
     },
     {
@@ -24741,7 +24930,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:CodexRPC.request",
       "label": "CodexRPC.request",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L376",
+      "source_location": "L377",
       "type": "method"
     },
     {
@@ -24749,7 +24938,7 @@
       "id": "pymethod:skills/session-harness/scripts/harness.py:HarnessError.__init__",
       "label": "HarnessError.__init__",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L46",
+      "source_location": "L47",
       "type": "method"
     },
     {
@@ -28790,6 +28979,30 @@
       "label": "DecisionTests.test_wrong_model_is_billed_but_not_exposed",
       "source_file": "skills/session-harness/scripts/test_decisions.py",
       "source_location": "L126",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests.test_install_baseline_and_preflight_use_target_home",
+      "label": "EffortPolicyTests.test_install_baseline_and_preflight_use_target_home",
+      "source_file": "skills/session-harness/scripts/test_effort_policy.py",
+      "source_location": "L57",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests.test_render_is_idempotent_and_preserves_prose",
+      "label": "EffortPolicyTests.test_render_is_idempotent_and_preserves_prose",
+      "source_file": "skills/session-harness/scripts/test_effort_policy.py",
+      "source_location": "L47",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_effort_policy.py:EffortPolicyTests.test_runtime_precedence_validation_and_capability_ceiling",
+      "label": "EffortPolicyTests.test_runtime_precedence_validation_and_capability_ceiling",
+      "source_file": "skills/session-harness/scripts/test_effort_policy.py",
+      "source_location": "L15",
       "type": "method"
     },
     {

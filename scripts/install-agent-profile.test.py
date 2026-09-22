@@ -164,14 +164,16 @@ class ProfileInstallationTests(unittest.TestCase):
         self.assertEqual(list(self.home.iterdir()), [])
 
     def test_native_definitions_and_launcher_forward_arguments_without_a_shell(self):
+        shutil.copyfile(INSTALLER.parent.parent / "skills/session-harness/scripts/effort_policy.py",
+                        self.skill / "scripts/effort_policy.py")
         definition_root = self.repo / "infra/host/agent-profile"
-        self.write(definition_root / "codex-agents/worker.toml", 'name = "Worker"\n')
-        self.write(definition_root / "claude-agents/reviewer.md", "Reviewer\n")
+        self.write(definition_root / "codex-agents/harness-implementer.toml", 'name = "Worker"\nmodel_reasoning_effort = "high"\n')
+        self.write(definition_root / "claude-agents/harness-verifier.md", "---\neffort: high\n---\nReviewer\n")
         result = self.run_installer("--apply", "--launcher")
         self.assertEqual(len(result["changes"]), 14)
         release = Path(result["release_root"])
-        self.assertEqual((self.home / ".codex/agents/worker.toml").resolve(), release / "native/codex/worker.toml")
-        self.assertEqual((self.home / ".claude/agents/reviewer.md").resolve(), release / "native/claude/reviewer.md")
+        self.assertEqual((self.home / ".codex/agents/harness-implementer.toml").resolve(), release / "native/codex/harness-implementer.toml")
+        self.assertEqual((self.home / ".claude/agents/harness-verifier.md").resolve(), release / "native/claude/harness-verifier.md")
         launcher = self.home / ".local/bin/ai-session"
         self.assertEqual(stat.S_IMODE(launcher.stat().st_mode), 0o755)
         payload = "Prompt with spaces, '$HOME', `touch forbidden`, and $(commands)."

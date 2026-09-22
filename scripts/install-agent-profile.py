@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -121,7 +122,11 @@ def file_digest(path):
 
 
 def plan_copy(home, repo, include_launcher, personal_policy=None):
-    payload, native = release_sources(repo, personal_policy)
+    effort_path = home / ".config/session-harness/default-effort"
+    effort_snapshot = fingerprint(effort_path)
+    payload, native = release_sources(repo, personal_policy, home)
+    if fingerprint(effort_path) != effort_snapshot:
+        raise InstallationError("Default effort preference changed during preview; preview again")
     source_hash = release_hash(payload)
     release = home / '.local/share/session-harness/releases' / source_hash
     state_path = copy_state_path(home)
@@ -164,7 +169,7 @@ def plan_copy(home, repo, include_launcher, personal_policy=None):
                 content[str(path)] = path.read_bytes()
     result = dict(home=str(home), repo=str(repo), source_hash=source_hash, release_root=str(release),
                   release_files=len(payload), release_created=False, link_mode='copy', changes=[], unchanged=[])
-    snapshots = {}
+    snapshots = {str(effort_path): effort_snapshot}
     for name in sorted(set(content) | set(previous)):
         path = Path(name)
         if not path.is_absolute() or not path.resolve().is_relative_to(home.resolve()):
@@ -215,6 +220,7 @@ def _apply_copy_locked(result, internal):
     for entry in result['changes']:
         if fingerprint(Path(entry['path'])) != internal['snapshots'][entry['path']]:
             raise InstallationError('Copy destination changed after preview')
+    verify_effort_preflight(result, internal)
     install_release(result, internal['release'])
     if not result['changes'] and state_path.exists():
         return
@@ -258,7 +264,7 @@ def _apply_copy_locked(result, internal):
         write_manifest(run, result)
 
 
-def release_sources(repo: Path, personal_policy: Path | None = None) -> tuple[dict, list]:
+def release_sources(repo: Path, personal_policy: Path | None = None, home: Path | None = None) -> tuple[dict, list]:
     profile = repo / "profile"
     skill = repo / "skills/session-harness"
     legal_root = repo
@@ -303,6 +309,17 @@ def release_sources(repo: Path, personal_policy: Path | None = None) -> tuple[di
             raise InstallationError(f"Snapshot source must be a regular file: {path}")
         mode = 0o555 if path.stat().st_mode & 0o111 else 0o444
         payload[relative] = {"content": path.read_bytes(), "mode": mode}
+    effort_profiles = {f"native/{provider}/harness-{role}.{suffix}" for provider, suffix in
+                       (("codex", "toml"), ("claude", "md")) for role in
+                       ("investigator", "implementer", "verifier")}
+    if effort_profiles.intersection(payload):
+        spec = importlib.util.spec_from_file_location("profile_effort_policy", skill / "scripts/effort_policy.py")
+        policy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(policy)
+        effort = policy.DEFAULT if home is None else policy.preference(home)
+        for relative, item in payload.items():
+            if relative in effort_profiles:
+                item["content"] = policy.render_profile(item["content"], relative.split("/")[1], effort)
     if personal_policy is not None:
         if not personal_policy.is_file() or personal_policy.is_symlink():
             raise InstallationError("Personal policy must be a regular private Markdown file")
@@ -393,7 +410,11 @@ def plan_install(home: Path, repo: Path, include_launcher: bool, link_mode="syml
         return plan_copy(home, repo, include_launcher, personal_policy)
     if link_mode != 'symlink':
         raise InstallationError('Link mode must be symlink or copy')
-    payload, native = release_sources(repo, personal_policy)
+    effort_path = home / ".config/session-harness/default-effort"
+    effort_snapshot = fingerprint(effort_path)
+    payload, native = release_sources(repo, personal_policy, home)
+    if fingerprint(effort_path) != effort_snapshot:
+        raise InstallationError("Default effort preference changed during preview; preview again")
     source_hash = release_hash(payload)
     release = home / ".local/share/session-harness/releases" / source_hash
     if release.exists() or release.is_symlink():
@@ -431,7 +452,7 @@ def plan_install(home: Path, repo: Path, include_launcher: bool, link_mode="syml
     result = {"home": str(home), "repo": str(repo), "source_hash": source_hash,
               "release_root": str(release), "release_files": len(payload),
               "release_created": False, "changes": [], "unchanged": []}
-    snapshots = {}
+    snapshots = {str(effort_path): effort_snapshot}
     for entry in entries:
         path = Path(entry["path"])
         previous_kind = kind(path)
@@ -481,6 +502,12 @@ def write_manifest(run: Path, result: dict) -> None:
         stream.write("\n")
 
 
+def verify_effort_preflight(result, internal):
+    path = Path(result["home"]) / ".config/session-harness/default-effort"
+    if fingerprint(path) != internal["snapshots"][str(path)]:
+        raise InstallationError("Default effort preference changed after preview; preview again")
+
+
 def apply_install(result: dict, internal: dict) -> None:
     if result.get('link_mode') == 'copy':
         return apply_copy(result, internal)
@@ -500,6 +527,7 @@ def apply_install(result: dict, internal: dict) -> None:
                 (root / 'directory-link').symlink_to(home, target_is_directory=True)
             except OSError as error:
                 raise InstallationError('Windows symlinks unavailable; explicitly select --link-mode copy') from error
+    verify_effort_preflight(result, internal)
     install_release(result, internal["release"])
     if any(entry["action"] == "replace" for entry in changes):
         backup_run = private_backup_run(home)
