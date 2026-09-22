@@ -121,3 +121,18 @@ or subscription percentage from token totals. A small probe is a diagnostic,
 not evidence to lower every role's effort. Prefer the cheaper current-generation
 tier only where task quality remains acceptable. Keep the manager default and
 explicit maximum-effort exception intact.
+
+## Equivalent Claude aliases (development)
+
+An admitted concrete Claude model can appear under both `default` and a tier alias.
+The development adapter accepts these entries only when native initialization
+verifies the same concrete identity, account selectability and identical execution
+controls. Conflicting controls, duplicate IDs, unverified resolution and a changed
+context suffix remain errors. Exact catalog IDs retain precedence.
+
+If an older release reports `Selected review model matches multiple catalog entries`,
+preserve the missing verdict and update through the supported release workflow.
+On a shared host, the account administrator updates the shared runtime. Do not edit
+installed files, replace the catalog or run an unadmitted reviewer. Repeat the same
+review packet after the repair with fresh admission; retain the original failure.
+The fix does not install a context supervisor or authorize a pending review.

@@ -81,6 +81,42 @@ def parse_initialize(stdout, request_id):
     return safe
 
 
+
+def equivalent_review_aliases(entries, selected):
+    """Collapse only verified aliases with identical execution controls."""
+    if len(entries) < 2:
+        return False
+    seen, signatures = set(), []
+    for entry in entries:
+        ident = entry.get('id')
+        if (not isinstance(ident, str) or not SAFE_ID.fullmatch(ident) or ident in seen
+                or entry.get('account_selectable') is not True
+                or entry.get('alias_resolution') != 'client_initialize'
+                or entry.get('resolution_source') != 'initialize.response.models.resolvedModel'
+                or entry.get('resolved_model') != selected or 'variants' in entry):
+            return False
+        try:
+            if resolved_model(ident, selected) != selected:
+                return False
+        except ValueError:
+            return False
+        seen.add(ident)
+        efforts = entry.get('efforts')
+        controls = entry.get('native_controls')
+        if (not isinstance(efforts, list) or not efforts
+                or any(not isinstance(e, str) or e not in EFFORTS for e in efforts)
+                or len(set(efforts)) != len(efforts) or not isinstance(controls, dict)):
+            return False
+        native_efforts = controls.get('reasoning_efforts')
+        if (not isinstance(native_efforts, list)
+                or any(not isinstance(e, str) for e in native_efforts)
+                or len(set(native_efforts)) != len(native_efforts)
+                or set(native_efforts) != set(efforts)):
+            return False
+        signatures.append(dict(controls, reasoning_efforts=sorted(efforts)))
+    return all(signature == signatures[0] for signature in signatures[1:])
+
+
 def discover(executable, authenticated=None):
     result = {'models': [], 'status': 'auth_unverified', 'entitlement_verified': False,
               'inference_verified': False, 'evidence': {'kind': 'client_selectable_metadata'}}

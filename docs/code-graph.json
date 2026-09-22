@@ -1,11 +1,11 @@
 {
-  "content_sha256": "b20d01d9fd14d599ff5443849dcea921e3bbb22dbcd5dca41662e5419c86d991",
+  "content_sha256": "5b12b8dcd8df054ea123e4317679c57101c19b44df239ec122b204b76dd41265",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 3144,
+    "edge_count": 3155,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1682,
+    "node_count": 1688,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -30,7 +30,7 @@
       "skills/session-harness/scripts/budget_policy.py": "2d2b6d2092544db21d032bdc503d7687716865695e6c5ce02063e3e17f8354ac",
       "skills/session-harness/scripts/claude_admission.py": "2f476f019fac7806f098abd89a6f6a4468f8698053ff834ae477e95769e5b3c0",
       "skills/session-harness/scripts/claude_gate.py": "25c9a193f40bab156d5b69a77b5eba9075f820ccf930ce7bba466e809fabc61f",
-      "skills/session-harness/scripts/claude_models.py": "4f3978013faea78ec36b4bd769fbd0589d57dc5a4e3ae21a2fe5fd1b35756098",
+      "skills/session-harness/scripts/claude_models.py": "5328451f770451688a44ee9fdba6f1fc918305ddeee137a026fd1db4b7dec3f9",
       "skills/session-harness/scripts/claude_session.py": "d43e869e5c90e50d828e2014c94490590791f48e3041d48b3c794ecb93a52963",
       "skills/session-harness/scripts/coding_models.py": "c96072ea5f99bcfb5f2664902151baae96856e54ee06ef47941b012c5e4945cc",
       "skills/session-harness/scripts/coordination.py": "792e225a0f1ad1d5f4d17007650b16b9f5bb557fcc6e2e4e5a3ac8319e516a11",
@@ -42,7 +42,7 @@
       "skills/session-harness/scripts/free_access.py": "2369641cad5089366ba901b7694d72941c3bc8564b1e2cad64a22d1acd7856ab",
       "skills/session-harness/scripts/free_access_cli.py": "96bfaa0becc7cd0d377548d15565ff2082a3961ed69e5c660869a71dd6db1ee8",
       "skills/session-harness/scripts/free_accounts.py": "d3882bf770e7a7505a2d28d9cdd148c2bf3ea4a02b454805c72f07838c663a52",
-      "skills/session-harness/scripts/harness.py": "355bdde1a298c0ecbb824959a151501b0310d65bd4b7b9af85ed2b9ef2569764",
+      "skills/session-harness/scripts/harness.py": "e854c1c7df00cf218bcf1b9185b12b15192e080243470ff3d9f2fedee5b4f4d3",
       "skills/session-harness/scripts/inventory.py": "d69a8e638d4c691c54cdb5e7a055241d804b557165db9888f9114402029e653f",
       "skills/session-harness/scripts/local_ollama.py": "688a50049dac1a44f9d6876bd1fc466a24f274180a148402c2be3ef63796fb59",
       "skills/session-harness/scripts/model_scope.py": "bf9e5c86392875681a27d992a9aa174f875190cb710812cf1e664a03a253851c",
@@ -70,7 +70,7 @@
       "skills/session-harness/scripts/test_budget_policy.py": "0c47a6265593cdf123b61546e59b28ec70c64d3ac63fc8168464dadea2e9f6a0",
       "skills/session-harness/scripts/test_budget_unknown_reset.py": "5120bb55cba23b45ec3f5d6f37d9559aed33027c5798d3b333c51b789de94643",
       "skills/session-harness/scripts/test_claude_admission.py": "ab69a5acf2e313c940423d34230e38ea6ce4626bda932aa56d90e8b30e3aff70",
-      "skills/session-harness/scripts/test_claude_models.py": "297e16906baf5323fe13e03e8ccb2c69fe5e20f53edc362399ff4732eb97ba60",
+      "skills/session-harness/scripts/test_claude_models.py": "872c06d8a895d2df541f312d0eefd5cf2779ab102007ac359d8d9d0279a7ab69",
       "skills/session-harness/scripts/test_coding_models.py": "f2b01c320762fbabbc284dffc788d9533dac36d3500717cdbcca15057049cbbd",
       "skills/session-harness/scripts/test_coordination.py": "479816c73b8892b33a8d144f0be3d95080a9c6bb289aaf092f6dc734aeef3e01",
       "skills/session-harness/scripts/test_copilot_client.py": "b9b27e522e8b72e3e8bcca30a19c9a6f783ac0442cc44d83ab296db60994ae01",
@@ -2631,6 +2631,12 @@
       "relation": "defines",
       "source": "module:skills/session-harness/scripts/claude_models.py",
       "target": "pyfunc:skills/session-harness/scripts/claude_models.py:discover"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "module:skills/session-harness/scripts/claude_models.py",
+      "target": "pyfunc:skills/session-harness/scripts/claude_models.py:equivalent_review_aliases"
     },
     {
       "confidence": "EXTRACTED",
@@ -6920,6 +6926,12 @@
       "confidence": "EXTRACTED",
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_claude_models.py",
+      "target": "extmodule:copy"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_claude_models.py",
       "target": "extmodule:json"
     },
     {
@@ -6939,6 +6951,24 @@
       "relation": "imports",
       "source": "module:skills/session-harness/scripts/test_claude_models.py",
       "target": "module:skills/session-harness/scripts/claude_models.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_claude_models.py",
+      "target": "module:skills/session-harness/scripts/harness.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_claude_models.py",
+      "target": "module:skills/session-harness/scripts/supervision.py"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "imports",
+      "source": "module:skills/session-harness/scripts/test_claude_models.py",
+      "target": "module:skills/session-harness/scripts/test_claude_admission.py"
     },
     {
       "confidence": "EXTRACTED",
@@ -12170,7 +12200,25 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.aliases"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_conflicting_or_unverified_aliases_remain_ambiguous"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
       "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_current_alias_resolution_is_allowlisted_without_entitlement_claim"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_equivalent_aliases_preserve_concrete_identity_and_effort"
     },
     {
       "confidence": "EXTRACTED",
@@ -12201,6 +12249,18 @@
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
       "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_safe_models_unresolved_and_private_fields_removed"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_scope_selection_and_catalog_order_keep_the_same_review_model"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
+      "target": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_scoped_review_accepts_aliases_without_bypassing_admission"
     },
     {
       "confidence": "EXTRACTED",
@@ -17179,6 +17239,12 @@
     {
       "confidence": "INFERRED",
       "relation": "calls",
+      "source": "pyfunc:skills/session-harness/scripts/claude_models.py:equivalent_review_aliases",
+      "target": "pyfunc:skills/session-harness/scripts/claude_models.py:resolved_model"
+    },
+    {
+      "confidence": "INFERRED",
+      "relation": "calls",
       "source": "pyfunc:skills/session-harness/scripts/claude_models.py:parse_initialize",
       "target": "pyfunc:skills/session-harness/scripts/claude_models.py:resolved_model"
     },
@@ -20187,7 +20253,7 @@
       "id": "pyclass:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests",
       "label": "ClaudeModelsTests",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "type": "class"
     },
     {
@@ -21979,7 +22045,15 @@
       "id": "pyfunc:skills/session-harness/scripts/claude_models.py:discover",
       "label": "discover",
       "source_file": "skills/session-harness/scripts/claude_models.py",
-      "source_location": "L84",
+      "source_location": "L120",
+      "type": "function"
+    },
+    {
+      "file_type": "python",
+      "id": "pyfunc:skills/session-harness/scripts/claude_models.py:equivalent_review_aliases",
+      "label": "equivalent_review_aliases",
+      "source_file": "skills/session-harness/scripts/claude_models.py",
+      "source_location": "L85",
       "type": "function"
     },
     {
@@ -22843,7 +22917,7 @@
       "id": "pyfunc:skills/session-harness/scripts/harness.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/harness.py",
-      "source_location": "L1153",
+      "source_location": "L1157",
       "type": "function"
     },
     {
@@ -23739,7 +23813,7 @@
       "id": "pyfunc:skills/session-harness/scripts/test_claude_models.py:event",
       "label": "event",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "type": "function"
     },
     {
@@ -27608,10 +27682,34 @@
     },
     {
       "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.aliases",
+      "label": "ClaudeModelsTests.aliases",
+      "source_file": "skills/session-harness/scripts/test_claude_models.py",
+      "source_location": "L88",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_conflicting_or_unverified_aliases_remain_ambiguous",
+      "label": "ClaudeModelsTests.test_conflicting_or_unverified_aliases_remain_ambiguous",
+      "source_file": "skills/session-harness/scripts/test_claude_models.py",
+      "source_location": "L105",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
       "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_current_alias_resolution_is_allowlisted_without_entitlement_claim",
       "label": "ClaudeModelsTests.test_current_alias_resolution_is_allowlisted_without_entitlement_claim",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L34",
+      "source_location": "L35",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_equivalent_aliases_preserve_concrete_identity_and_effort",
+      "label": "ClaudeModelsTests.test_equivalent_aliases_preserve_concrete_identity_and_effort",
+      "source_file": "skills/session-harness/scripts/test_claude_models.py",
+      "source_location": "L95",
       "type": "method"
     },
     {
@@ -27619,7 +27717,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_literal_auth_and_single_owned_initialize",
       "label": "ClaudeModelsTests.test_literal_auth_and_single_owned_initialize",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "type": "method"
     },
     {
@@ -27627,7 +27725,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_narrow_identifier_and_capabilities",
       "label": "ClaudeModelsTests.test_narrow_identifier_and_capabilities",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L57",
+      "source_location": "L58",
       "type": "method"
     },
     {
@@ -27635,7 +27733,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_reject_unexpected_duplicate_and_error_events",
       "label": "ClaudeModelsTests.test_reject_unexpected_duplicate_and_error_events",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "type": "method"
     },
     {
@@ -27643,7 +27741,7 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_resolution_rejects_malformed_cross_tier_and_concrete_drift",
       "label": "ClaudeModelsTests.test_resolution_rejects_malformed_cross_tier_and_concrete_drift",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L42",
+      "source_location": "L43",
       "type": "method"
     },
     {
@@ -27651,7 +27749,23 @@
       "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_safe_models_unresolved_and_private_fields_removed",
       "label": "ClaudeModelsTests.test_safe_models_unresolved_and_private_fields_removed",
       "source_file": "skills/session-harness/scripts/test_claude_models.py",
-      "source_location": "L17",
+      "source_location": "L18",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_scope_selection_and_catalog_order_keep_the_same_review_model",
+      "label": "ClaudeModelsTests.test_scope_selection_and_catalog_order_keep_the_same_review_model",
+      "source_file": "skills/session-harness/scripts/test_claude_models.py",
+      "source_location": "L128",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_claude_models.py:ClaudeModelsTests.test_scoped_review_accepts_aliases_without_bypassing_admission",
+      "label": "ClaudeModelsTests.test_scoped_review_accepts_aliases_without_bypassing_admission",
+      "source_file": "skills/session-harness/scripts/test_claude_models.py",
+      "source_location": "L149",
       "type": "method"
     },
     {

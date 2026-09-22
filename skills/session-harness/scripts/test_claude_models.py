@@ -1,3 +1,4 @@
+import copy
 import json
 from pathlib import Path
 import unittest
@@ -82,6 +83,105 @@ class ClaudeModelsTests(unittest.TestCase):
         self.assertTrue(result['models'][0]['account_selectable'])
         self.assertNotIn('private', json.dumps(result))
         self.assertFalse(Path(run.call_args.kwargs['cwd']).exists())
+
+
+    def aliases(self):
+        rows = [{'value': alias, 'resolvedModel': 'claude-opus-99[1m]',
+                 'supportedEffortLevels': ['low', 'medium', 'high'], 'supportsEffort': True}
+                for alias in ('default', 'opus[1m]')]
+        return [dict(row, account_selectable=True, efforts=list(row['native_controls']['reasoning_efforts']))
+                for row in claude_models.parse_initialize(json.dumps(event(rows)), 'match')]
+
+    def test_equivalent_aliases_preserve_concrete_identity_and_effort(self):
+        entries = self.aliases()
+        original = copy.deepcopy(entries)
+        self.assertTrue(claude_models.equivalent_review_aliases(entries, 'claude-opus-99[1m]'))
+        self.assertEqual(entries, original)
+        entries[1]['efforts'].reverse()
+        entries[1]['native_controls']['reasoning_efforts'].reverse()
+        self.assertTrue(claude_models.equivalent_review_aliases(entries, 'claude-opus-99[1m]'))
+        self.assertFalse(claude_models.equivalent_review_aliases(entries, 'claude-opus-99'))
+
+    def test_conflicting_or_unverified_aliases_remain_ambiguous(self):
+        changes = [{'id': 'default'}, {'id': 'sonnet'}, {'id': '../invalid'},
+                   {'resolved_model': 'claude-opus-98[1m]'},
+                   {'resolved_model': 'claude-opus-99'}, {'account_selectable': 1},
+                   {'account_selectable': False}, {'alias_resolution': 'unresolved'},
+                   {'resolution_source': 'config'}, {'variants': {}},
+                   {'efforts': ['high']}, {'efforts': []}, {'efforts': ['medium', 'medium']},
+                   {'efforts': [None]}, {'native_controls': {}},
+                   {'native_controls': {'reasoning_efforts': ['low', 'medium', 'high'],
+                                        'supportsEffort': False}},
+                   {'native_controls': {'reasoning_efforts': ['low', 'medium', 'high'],
+                                        'supportsEffort': True, 'supportsFastMode': True}},
+                   {'native_controls': {'reasoning_efforts': ['low', 'medium', 'high', 'high']}}]
+        for change in changes:
+            entries = self.aliases()
+            entries[1].update(change)
+            with self.subTest(change=change):
+                self.assertFalse(claude_models.equivalent_review_aliases(entries, 'claude-opus-99[1m]'))
+        for missing in ('efforts', 'native_controls', 'account_selectable', 'resolution_source'):
+            entries = self.aliases()
+            del entries[1][missing]
+            self.assertFalse(claude_models.equivalent_review_aliases(entries, 'claude-opus-99[1m]'))
+
+    def test_scope_selection_and_catalog_order_keep_the_same_review_model(self):
+        import harness
+        from test_claude_admission import receipt
+        selected, primary = 'claude-opus-99[1m]', 'claude-fable-99-1'
+        for reverse in (False, True):
+            entries = self.aliases()[::(-1 if reverse else 1)]
+            capability = {'review': {'status': 'available'}, 'auth': {'status': 'subscription'},
+                          'planner': {'model': primary, 'effort': 'xhigh'}, 'models': entries,
+                          'model_scoped_admission_supported': True, 'executable': 'mock-claude'}
+            with patch('coordination.dispatch', side_effect=lambda action, service, owner, models:
+                       receipt(models[0], models[0] == selected)) as check, \
+                    patch.object(harness, 'require_role', return_value={}), \
+                    patch.object(harness, 'checked', return_value='fixture') as execute, \
+                    patch.object(harness, 'validate_claude_review',
+                                 return_value={'result': 'approve', 'actual_model': selected}):
+                result = harness.review('claude', b'plan', 30, capability, 'medium')
+            self.assertEqual([call.kwargs['models'] for call in check.call_args_list], [[primary], [selected]])
+            self.assertEqual(result['requested_model'], selected)
+            self.assertEqual(result['requested_effort'], 'medium')
+            self.assertEqual(execute.call_args.kwargs['quota_models'], [selected])
+
+    def test_scoped_review_accepts_aliases_without_bypassing_admission(self):
+        import harness
+        import supervision
+        selected = 'claude-opus-99[1m]'
+        capability = {'review': {'status': 'available'}, 'auth': {'status': 'subscription'},
+                      'planner': {'model': selected, 'effort': 'xhigh'},
+                      'models': self.aliases(), 'model_scoped_admission_supported': True,
+                      'executable': 'mock-claude'}
+        stream = '\n'.join(json.dumps(row) for row in [
+            {'type': 'system', 'subtype': 'init', 'model': 'claude-opus-99',
+             'tools': [], 'mcp_servers': []},
+            {'type': 'result', 'subtype': 'success', 'is_error': False, 'result': 'approve'}])
+        with patch('claude_admission.choose', return_value=(capability['planner'], {})) as admission, \
+                patch.object(harness, 'require_role', return_value={}) as role, \
+                patch.object(harness, 'checked', return_value=stream) as execute:
+            result = harness.review('claude', b'plan', 30, capability, 'medium')
+        admission.assert_called_once_with(capability, 'planner')
+        self.assertEqual(execute.call_args.kwargs['quota_models'], [selected])
+        self.assertEqual(execute.call_args.kwargs['quota_service'], 'claude')
+        self.assertEqual(execute.call_args.args[0][execute.call_args.args[0].index('--model') + 1], selected)
+        self.assertEqual(result['requested_model'], selected)
+        self.assertEqual(result['requested_effort'], 'medium')
+        self.assertEqual(result['actual_model'], 'claude-opus-99')
+        self.assertTrue(result['independent_judgment'])
+        self.assertEqual(capability['planner']['effort'], 'xhigh')
+        role.assert_any_call('claude', selected, 'reviewer', supervised=False)
+        with patch('claude_admission.choose', side_effect=supervision.Stop('claude', ['daily_limit'])), \
+                patch.object(harness, 'checked') as execute, self.assertRaises(supervision.Stop):
+            harness.review('claude', b'plan', 30, capability, 'medium')
+        execute.assert_not_called()
+        capability['models'][1]['efforts'] = ['high']
+        with patch('claude_admission.choose', return_value=(capability['planner'], {})), \
+                patch.object(harness, 'checked') as execute, self.assertRaises(harness.HarnessError):
+            harness.review('claude', b'plan', 30, capability, 'medium')
+        execute.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()
