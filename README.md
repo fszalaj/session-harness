@@ -1,298 +1,214 @@
 # Session harness
 
-Shared instructions, current-model discovery, independent plan review and usage
-accounting for coding assistants. The strongest available model of the hosting
-provider manages substantive work. All roles default to advertised `high`, or the
-highest supported level below it. A local [effort preference](docs/ONBOARDING.md#default-reasoning-effort)
-can select `low`, `medium` or `high`. Explicit supported task settings override it.
-Reserve `max` for explicitly selected, extremely difficult tasks through native controls.
-Routine reversible work uses direct execution and tests. Material production changes
-require one independent other-family review; exceptionally risky or irreversible
-changes require two. Delegate only when it saves work. Models are resolved
-at runtime rather than pinned in policy. Select the newest available generation
-within each family before optimizing cost; an older cheaper tier is not a default.
+Coordinate coding assistants across clients and computers with shared instructions,
+model discovery, usage budgets and independent reviews. Work directly on routine
+tasks, delegate when it helps, and choose review depth according to risk.
 
-## Start here
+Session harness provides the `ai-session` CLI and installable agent profiles. It
+uses your configured clients and accounts; it does not provide a model subscription
+or require a particular combination of providers.
 
-For a laptop or desktop, start with [use your own computer](docs/COMPUTER-SETUP.md).
-It distinguishes personal accounts, shared account coordination and remote execution.
+## Features
 
-New installation: open the [latest stable release](https://github.com/fszalaj/session-harness/releases/latest)
-and follow the [installation workflow](docs/ONBOARDING.md#1-select-and-verify-the-release).
-Download its release archive and checksum together, verify them, then work from the
-extracted directory. Resolve the release once; maintained installations never track
-`main`. To delegate the whole workflow, use the [short onboarding prompt](docs/ONBOARDING-PROMPT.md).
+- **Shared agent instructions.** Install common workflows across supported clients
+  while preserving project rules, private preferences and unrelated settings.
+- **Model and client discovery.** Inspect installed clients, account-visible models,
+  supported roles and reasoning controls. Distinguish available metadata from
+  verified execution capability.
+- **Usage controls.** Coordinate native subscription budgets, reserves, calendars,
+  temporary grants and concurrent sessions through one account authority.
+- **Selective delegation.** Route bounded tasks using fresh allowance fractions,
+  explicit model choices and role restrictions. Inspect worker output before use.
+- **Risk-based review.** Routine reversible work uses relevant tests. Material
+  production changes require one independent other-family review; exceptionally
+  risky or irreversible changes require two other-family plan reviews.
+- **Explicit API work.** Run text tasks and typed decisions with separate monetary
+  authorization, accounting and model identity checks. No automatic paid fallback.
+- **Sign-in and recovery tools.** Inspect native authentication, start supported
+  login flows, diagnose admission stops and retain resumable task evidence.
+- **Reproducible installation.** Use checksum-verified releases, reversible profile
+  updates and optional automatic maintenance. Keep private policy outside the repo.
 
-Already installed? Run `ai-session version` and retain that selected release.
-`ai-session update --check` checks availability; updates need your instruction or
-your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.8.0 --apply`, then
-restart affected clients. See [updates and rollback](docs/RELEASES.md).
+## Get started
 
-Python 3.11+, Git and your chosen clients are required. From the verified extracted
-release directory, the essential installation commands are:
+You need Python 3.11+, Git and at least one supported client or configured API route.
+For platform-specific steps, see [computer setup](docs/COMPUTER-SETUP.md).
 
-```sh
-python3 scripts/test.py
-python3 scripts/install-agent-profile.py --launcher
-python3 scripts/install-agent-profile.py --launcher --apply
-```
+1. Download the archive and checksum from the
+   [latest stable release](https://github.com/fszalaj/session-harness/releases/latest).
+2. Follow the [verification and extraction instructions](docs/ONBOARDING.md#1-select-and-verify-the-release).
+3. From the extracted directory, preview and install:
 
-Open a new terminal and run `ai-session --help`. If the command is unavailable,
-add the launcher directory reported by the installer to PATH (`~/.local/bin` on
-macOS/Linux), or invoke the reported launcher by its full path. Then run
-`ai-session configure` interactively.
+   ```sh
+   python3 scripts/install-agent-profile.py --launcher
+   python3 scripts/install-agent-profile.py --launcher --apply
+   ```
 
-The first installer command previews changes. Preserve unique personal rules in a
-private Markdown addendum and pass the same `--personal-policy /absolute/path/to/personal.md`
-to both invocations. Backups alone do not keep those rules active. Installation
-preserves unrelated settings and skills; updates retain private policy and accounting.
-Restart affected clients and rerun the preview to verify idempotence.
+4. Open a new terminal and configure the services you authorize:
 
-On Windows, use `python`, first run `python -m pip install -r requirements-windows.txt`,
-and add `--link-mode copy` to both installer commands when symlinks are unavailable.
-Checked copies protect subsequent user edits. Use PowerShell 7.3+ with the installed
-`ai-session.ps1`, or invoke `ai-session.py` with Python; add the reported launcher
-directory to PATH. See [platform support](skills/session-harness/references/platforms.md).
+   ```sh
+   ai-session configure
+   ai-session configure --status
+   ai-session inventory
+   ```
 
-For each new substantive task, use the [dynamic session startup procedure and prompt](skills/session-harness/references/session-start.md).
-It discovers configured capabilities and selects reviewers by upstream family and
-permitted role instead of a fixed provider pair.
-Select an explicit current model and effort for each native worker and verify the
-effective controls; omitted settings can inherit the manager's effort. Review
-defaults use the selected model's advertised levels. See [review evidence and
-efficiency](skills/session-harness/references/review-protocol.md#avoid-unnecessary-review-work)
-for receipt fields, checkpoint reuse and matched-task comparisons.
+Configuration is interactive. An assistant must not answer authorization prompts
+on your behalf. Installation does not enable billing or authorize inference.
+If `ai-session` is unavailable, add the reported launcher directory to `PATH`
+(`~/.local/bin` on macOS and Linux).
 
-## Configure and run
+To retain personal instructions, pass
+`--personal-policy /absolute/path/to/personal.md` to both installer commands.
+On Windows, use `python`, install `requirements-windows.txt`, and add
+`--link-mode copy` when symlinks are unavailable. The PowerShell launcher requires
+PowerShell 7.3+. See [onboarding](docs/ONBOARDING.md) for complete steps, or use the
+[assistant onboarding prompt](docs/ONBOARDING-PROMPT.md).
 
-Version 0.6.0 includes [Jev decisions through OpenRouter](skills/session-harness/references/decisions.md).
-Prefer an authorized, available Jev route for classification, triage, filtering,
-candidate selection and scoring. `api decision-models` discovers the current catalog;
-`api decide openrouter` submits typed questions through existing money controls.
-Jev handles narrow judgments; coding models and independent reviewers retain their roles.
+## Supported clients and routes
 
-The [maintainer's role workflow](docs/OWNER-WORKFLOW.md) describes an opt-in division
-of planning, decisions and implementation. It is an example, not another user's
-configuration or a change to installed defaults.
+| Client or route | Support |
+| --- | --- |
+| Codex, Claude Code, Antigravity CLI | Native discovery, quota checks, launch and review adapters, subject to client and platform capabilities |
+| Copilot CLI | Native launch, bounded text work and explicit catalog-selected reviews with model-family and returned-identity checks |
+| Cursor CLI | Personal Free account quota checks, launch and supervised text through Auto; independent review is unavailable |
+| Ollama local | Bounded text tasks from installed local models with explicit task IDs and local receipts |
+| Explicit APIs | Authorized text requests with separate credentials and monetary accounting, including Meta and Ollama Cloud routes |
+| Configured free routes | Verified allowances, conservative reservations and explicit opt-in to mixed routing |
 
-Add one provider with the [interactive provider wizard](skills/session-harness/references/provider-onboarding.md):
+An installed client or a listed model does not prove that an account can execute a
+task. Authentication, current quota, model identity, role permission and adapter
+support must all pass. Opaque Auto output is supervised work, not an independent
+review. See [client execution](docs/CLIENT-EXECUTION.md),
+[adapter boundaries](skills/session-harness/references/clients.md) and
+[provider validation](docs/PROVIDER-VALIDATION.md).
 
-```sh
-ai-session onboard claude
-ai-session gemini onboard
-ai-session onboard --list
-```
+## Everyday workflow
 
-Choose an available access route, review its settings and confirm. Existing services
-and account policy remain in place. Native sign-in and API keys use their existing
-secure configuration; recurring free accounts need verified evidence. Use `configure`
-for the full account-wide settings instead.
-
-Complete `ai-session onboard` or `ai-session configure` interactively to authorize native/API
-services and choose usage policy. An assistant must not complete it with `--yes`.
-Existing choices remain defaults; installation enables no billing. Before setup,
-inference returns `environment_setup_required`; inspection remains available.
+Inspect your environment and start an authorized client from your project:
 
 ```sh
-ai-session version
-ai-session configure --status
-ai-session inventory
+ai-session auth status
 ai-session discover --session auto
 ai-session budget
-ai-session coordination status
-ai-session claude
+ai-session codex
 ```
 
-For a new setup, defaults are local authority, strict quota mode, four sessions
-per service, UTC, all seven days, an 08:30 reset cutoff, adaptive allocation and
-0% reserve. No service or paid API allowance is authorized automatically. Existing
-settings stay selected. See the [configuration defaults](docs/ONBOARDING.md#5-configure-interactively).
+Use another supported launcher, such as `ai-session claude`, when appropriate.
+Automatic session detection can report `unknown` or `ambiguous`; an explicit
+`--session` value declares the hosting client rather than proving its identity.
 
-`inventory` detects known clients on the current host and reports their adapter and
-account status. `discover --session auto` also identifies the active assistant when
-its launcher/session markers or parent process are available. A plain SSH shell may
-correctly report `unknown`; conflicting markers report `ambiguous`. If needed,
-confirm the actual client and pass `--session codex`, `claude` or another supported
-identity. That explicit value is your declaration, not automatic detection.
+The manager handles planning, integration and verification. It executes routine
+work directly and delegates only when the expected benefit outweighs preparation
+and integration. Required reviews use distinct verified upstream model families,
+not merely different gateways. Re-review material changes or unresolved defects;
+do not repeat full panels for optional suggestions.
 
-For a first task, open your project in a terminal and start an authorized client
-with `ai-session codex` or `ai-session claude`, then paste:
+Models are resolved from current account-visible catalogs. Roles default to
+advertised `high`, or the highest supported lower level. A local
+[effort preference](docs/ONBOARDING.md#default-reasoning-effort) can select `low`,
+`medium` or `high`; explicit supported task settings take precedence. Instructions
+cannot change the model or reasoning effort of an already-running conversation.
 
-```text
-Read this project's instructions and explain how to run its tests. Follow the
-installed session-harness startup procedure and report the detected client,
-selected model/effort, project skills and available knowledge tools. Do not change files.
-```
+Keep application conventions in the project's `AGENTS.md`. Existing project wiki,
+code graph and knowledge tools remain authoritative; no knowledge backend is
+required. See the [task startup procedure](skills/session-harness/references/session-start.md)
+and [review protocol](skills/session-harness/references/review-protocol.md).
 
-Use the [reusable task prompt](skills/session-harness/references/session-start.md#reusable-task-prompt)
-for implementation. Missing login, catalog, quota or adapter evidence must be
-resolved before execution; detecting an installed client does not prove it can run.
+## Budgets and delegation
 
-Use one trusted quota authority when sharing an account across computers. Native
-sessions and workers share its budget. Direct clients outside these controls remain
-unprotected. See [coordination](skills/session-harness/references/coordination.md).
+New configurations default to a local authority, strict quota mode, four concurrent
+sessions per service, UTC, all seven workdays, an 08:30 reset cutoff, adaptive
+allocation and zero reserve. Existing settings are preserved.
 
-**Strict mode is the default and blocks inference without enforceable bounds.**
-Explicit observed mode accepts delayed counters and possible in-flight overshoot.
-Fresh quota and paid-usage eligibility are still required. Metadata discovery does
-not prove protected execution or a successful independent review.
+Strict mode blocks inference when bounds cannot be enforced. Explicit observed
+mode accepts delayed counters and possible in-flight overshoot. Both require
+fresh admission evidence. Missing telemetry is not proof of an exhausted account
+or permission to bypass a stop.
 
-| Client or route | Harness support in v0.7.1 |
-| --- | --- |
-| Codex, Claude Code, Antigravity CLI | Native model discovery, quota checks and launch/review adapters, subject to admission and client/platform limits |
-| Copilot CLI | Native launcher, text worker and explicit catalog-selected reviews with manager-family and exact usage-identity checks; Auto cannot independently review |
-| Cursor CLI | Personal Free accounts: native quota, launcher and supervised text via Auto; routed model identity and independent review unavailable |
-| Ollama local | Bounded text from installed local models, explicit task IDs and separate local receipts |
-| Explicit APIs | Direct text requests, including Meta and Ollama Cloud, with separate credentials and monetary authorization; no automatic fallback |
+When an account is shared across computers, configure one trusted authority.
+Native sessions, workers and reviews share its accounting. API spending has a
+separate monetary budget. Direct client calls outside the harness are not
+universally intercepted or controlled.
 
-Named Copilot execution still requires verification on the intended paid account;
-fixture tests do not prove that route works there. The initial DeepSeek probe
-timed out without a verifiable result. See [release verification limits](docs/RELEASES.md#060)
-and [client adapter boundaries](skills/session-harness/references/clients.md).
-Version 0.6.1 allows a single configured service for bounded work
-and one finite token-billed Copilot `chat` or `premium_interactions` pool. Version
-0.6.0 requires two balancing services and a finite chat pool. Neither behavior
-permits paid overage or bypasses strict-mode admission. Version 0.6.1 also fixes
-Windows npm lookup and prevents launcher imports from adding cache files to snapshots.
-It also uses an isolated Copilot session catalog to discover models omitted by
-the global SDK list, then verifies model selection before sending a task. These
-metadata checks do not establish successful inference or independent review.
-Follow [additional client execution](docs/CLIENT-EXECUTION.md) for Copilot, Cursor, local
-Ollama, explicit Meta/Ollama APIs and remaining inventory-only clients.
-Version 0.3.0 adds explicit recurring free account pools and opt-in mixed routing; see [free account setup](https://github.com/fszalaj/session-harness/blob/v0.3.0/skills/session-harness/references/free-access.md).
-
-Version 0.2.0 adds account-bound owner confirmation of disabled Codex Auto top-up
-plus fresh zero-credit evidence; quota and admission controls still apply. It also
-adds optional automatic stable updates, disabled by default. Existing opt-ins are
-preserved. Version 0.1.2 blocked protected Codex execution because its native
-credit metadata could not establish paid-use disablement.
-Check the [capability guide](docs/PROVIDER-VALIDATION.md) and [release guide](docs/RELEASES.md)
-for your selected version before relying on either feature.
-
-## Restore sign-in
-
-`ai-session auth status` checks configured native clients without inference and
-reports lost sign-in using private local history. Managed interactive launches show
-the report and offer `ai-session auth login PROVIDER`, which starts the native
-browser/device flow with a ten-minute deadline. Direct app sessions use the same
-status command from their startup instructions. Unknown metadata is not a logout.
-
-For configured free providers, the login action opens a fixed account page.
-Browser sign-in and free-plan evidence still require verification; opening the page
-does not renew a plan, quota, key or evidence timestamp. Shared account administrators
-retain control of sign-in. No billing settings are enabled.
-
-## Balance subscriptions
-
-Automatic native work includes every configured native worker service, including
-Copilot and Cursor Auto. These two routes produce supervised text and do not verify
-the newest model generation or provide independent review. All configured services
-still undergo quota checks.
-A short manager session can distribute bounded text work independently of its model
-family while respecting every provider's daily quota and paid-use guards. Use these commands after installing version 0.3.1:
+Enable optional balancing on the account authority, then submit useful bounded work:
 
 ```sh
 ai-session balance enable
 ai-session balance status
 ai-session work --id unique-task-id < task.txt
-ai-session audit --since 2026-01-01
 ```
 
-Enable on the account authority after the owner requests balancing. Selection targets
-equal fractions of daily allowances, using atomic task reservations and fresh native
-observations. Version 0.7.0 ranks the least-consumed fraction
-first, using daily dispatch counts only for ties. Task-fit native subsets can select
-`--basis weekly` to equalize used fractions of whole weekly quotas; `--strong-model`
-and per-service `--worker-effort` retain explicit capability and effort choices.
-Daily admission remains mandatory. Manager and review usage enters
-through account counters; `audit` separates authority accounting from local session
-telemetry. These controls require runtime 0.7.0 or newer. It does not promise equal token totals or dollar costs. APIs remain
-separately authorized; inventory-only clients are reported as unsupported for routing.
-The manager must submit useful tasks to `work`; enabling a profile does not transfer
-its interactive conversation to another model. A newer concurrent quota observation
-gets one read-only re-evaluation; failed refreshes and quota denials still stop work.
-See [balancing, supported clients and recovery](skills/session-harness/references/balancing.md).
-Owners can also [configure model supervision](skills/session-harness/references/balancing.md#configure-which-models-need-supervision)
-by model pattern and role. These settings can allow implementation while preventing
-the same model from acting as an independent reviewer; no vendor ranking is built in.
+Selection ranks fresh allowance fractions; it does not promise equal token totals
+or costs. Task-fit subsets can use `--basis weekly`, with explicit model and effort
+controls. Enabling balancing does not move an interactive conversation to another
+model. Workers return supervised output that the manager checks and tests.
 
-Version 0.3.0 installations also explain protected session stops in the terminal,
-including the reason and recovery commands. Cleanup errors retain the original quota
-reason and report uncertain process termination separately. Worker pacing denials
-report `balance_blocked` and the real reason, such as `max_lead_exceeded`, instead
-of a CLI schema error. An unconfirmed work receipt reports
-`balance_receipt_unavailable`; inspect the task before recovery or another dispatch. See
-[session stop recovery](skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
+Use `ai-session usage check SERVICE` for fresh admission through the configured
+authority. `usage status` reads local evidence, which can be stale on another host.
+`ai-session audit --since YYYY-MM-DD` separates authority accounting from local
+session telemetry. See [budgets](skills/session-harness/references/budgets.md),
+[balancing](skills/session-harness/references/balancing.md) and
+[coordination](skills/session-harness/references/coordination.md).
 
-Use `ai-session usage check SERVICE` for a fresh native admission check through the
-configured authority, with or without a Claude `--model`. `usage status` reads local
-evidence and may stay stale on another computer; `usage refresh` updates only that
-computer's ledger. An unavailable quota read does not establish an exhausted plan.
-Claude discovery reports a verified signed-out response as `auth_required`; native
-sign-in in that execution context is separate from shared quota admission.
+## API tasks and typed decisions
 
-Claude alias resolution also uses fresh native `resolvedModel` metadata, allowing
-current Sonnet workers alongside a newer minor revision of the planning tier.
-Version 0.3.0 keeps model-specific and common Claude allowances separate. A
-Fable-only stop can select current Opus and resume the exact protected conversation
-after confirmed cleanup. Common quota and configured role restrictions still apply.
-See [model allowances and recovery](skills/session-harness/references/model-allowances.md).
+Use the [provider wizard](skills/session-harness/references/provider-onboarding.md)
+to select and authorize an access route:
 
-## Add reviewed coding models (v0.3.0)
+```sh
+ai-session onboard --list
+ai-session onboard claude
+```
 
-The optional [coding profile](skills/session-harness/references/coding-models.md)
-adds Kimi, GLM, DeepSeek, MiniMax and Qwen candidates through OpenRouter. This is
-one access route within the broader native/API harness: five model families can
-share one gateway account, while direct accounts have separate authentication and
-allowances. Choose an [access route](skills/session-harness/references/coding-models.md#choose-the-access-route)
-before creating accounts. Run
-`ai-session api coding-models` to intersect the reviewed allowlist with fresh public
-metadata. Review expiry, missing capabilities and unapproved variants block selection.
+Explicit API work requires configured credentials and monetary authorization.
+The [coding-model workflow](skills/session-harness/references/coding-models.md)
+selects eligible candidates against fresh metadata and a reviewed policy.
+`ai-session api coding-run` returns supervised text for inspection, not autonomous
+deployment or independent review approval.
 
-Execution with `ai-session api coding-run` requires an OpenRouter key, explicit API
-setup and a monthly money budget. It returns supervised text work for manager
-inspection. API billing stays separate from native subscription balancing, and
-installation does not enable paid inference. The guide explains what to configure;
-keep passwords, keys and deployment records private.
+For narrow classification, filtering, candidate selection and scoring,
+[Jev typed decisions](skills/session-harness/references/decisions.md) use
+`api decision-models` and `api decide openrouter` through existing money controls.
+Deterministic rules do not need a model call.
 
-For recurring free allowances, version 0.3.0 also provides
-[`ai-session free`](skills/session-harness/references/free-access.md). OpenRouter
-uses an exact-zero route; direct free accounts use separately verified account
-limits and conservative reservations. One executor serves both computers, keeps
-credentials local, and records actual model identities without paid fallback.
-Explicit `mixed_work` opt-in includes admitted free pools in `ai-session work`.
-Evidence expiry or an unresolved request requires inspection before more work.
+[Free routes](skills/session-harness/references/free-access.md) require verified
+allowances and explicit configuration. Expired evidence or unresolved requests
+require inspection; they do not trigger paid fallback.
 
-## Find the relevant guide
+## Updates and recovery
 
-Browse the [documentation index](docs/README.md) or choose a task below.
+```sh
+ai-session version
+ai-session update --check
+ai-session update
+```
 
-- [Onboarding](docs/ONBOARDING.md): preserve rules, install, configure and verify loading.
-- [Client instructions](skills/session-harness/references/instructions.md): native paths and discovery limits.
-- [Budgets](skills/session-harness/references/budgets.md): calendars, reserves and dated grants.
-- [API and money](skills/session-harness/references/api-and-spend.md): explicit paid authorization and accounting.
-- [Usage and context](skills/session-harness/references/usage-and-context.md): admission and session continuity.
-- [Releases](docs/RELEASES.md) and [automatic maintenance](docs/AUTO-UPDATE.md): supported updates and recovery.
-- [Code graph](docs/CODE-GRAPH.md): dependency queries and rebuilding for contributors.
+Updates use published releases and preserve registered private policy and
+accounting. Restart clients to load changed profiles. Automatic maintenance is
+optional; see [updates and rollback](docs/RELEASES.md) and
+[automatic maintenance](docs/AUTO-UPDATE.md).
 
-Prefer the shared installed skill plus a short project `AGENTS.md` reference.
-Keep application conventions in the project and explicitly vendored harness copies
-on their own reviewed release. Existing knowledge and graph tools remain authoritative;
-no knowledge backend is required by installation.
+For authentication problems, run `ai-session auth status` and use the returned
+`ai-session auth login PROVIDER` action. Unknown metadata is not a confirmed logout;
+opening a login page does not renew quota evidence or authorize spending.
 
-## Help and license
+For admission or interrupted-task problems, follow
+[session recovery](skills/session-harness/references/usage-and-context.md#when-a-protected-session-stops).
+Do not delete a ledger, erase consumption or grant quota to repair telemetry.
 
-Run `ai-session --help`, consult [provider validation](docs/PROVIDER-VALIDATION.md),
-or [open an issue](https://github.com/fszalaj/session-harness/issues) with redacted
-reproduction details. Keep credentials, account evidence and personal setup private.
-See [contributing](CONTRIBUTING.md) and [security reporting](SECURITY.md).
+## Documentation and contribution
 
-Licensed under [Apache 2.0](LICENSE), copyright 2026 Filip Szalaj.
-Retain [NOTICE](NOTICE) when redistributing; installation includes both legal files.
+Browse the [documentation index](docs/README.md), or start with:
 
-### Recover a missing historical Codex pool
+- [Onboarding](docs/ONBOARDING.md): installation, configuration and profile loading.
+- [Client instructions](skills/session-harness/references/instructions.md): supported instruction paths and discovery limits.
+- [API and money](skills/session-harness/references/api-and-spend.md): spending authorization and accounting.
+- [Code graph](docs/CODE-GRAPH.md): dependency queries and rebuilding.
+- [Contributing](CONTRIBUTING.md): development and testing.
 
-Version 0.5.1 adds explicit, authority-local `ai-session usage reconcile-pools codex`
-with named `--retire-pool` arguments and `--confirm-retired`. It preserves accounting
-and never retires missing pools automatically. Follow the [recovery procedure](docs/RELEASES.md#codex-reports-missing-historical-pools); do not delete a ledger or grant quota to repair missing telemetry.
+Run `ai-session --help` for command options. Report problems through
+[issues](https://github.com/fszalaj/session-harness/issues) with redacted reproduction
+details; use [security reporting](SECURITY.md) for vulnerabilities. Keep credentials,
+account evidence and personal setup private.
+
+Licensed under [Apache 2.0](LICENSE). Retain [NOTICE](NOTICE) when redistributing.
