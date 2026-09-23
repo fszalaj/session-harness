@@ -133,8 +133,35 @@ class CreditMetadataTests(unittest.TestCase):
         self.assertTrue(row["native_controls"]["tokenBasedBilling"])
         self.assertEqual(row["pool"], "premium")
         self.assertNotIn("secret", json.dumps(rows))
-        self.assertEqual(credits.native_reasons("copilot", rows),
-                         ["native_paid_execution_unsupported", "copilot_hard_user_budget_unverified"])
+        self.assertEqual(credits.native_reasons("copilot", rows), ["native_paid_execution_unsupported"])
+
+    def test_copilot_observed_policy_is_account_pool_and_time_bound(self):
+        self.assertEqual(len(credits.copilot_account_fingerprint("fictional_user")), 64)
+        quota = {"pool": "premium_interactions", "overage": 0,
+                 "overageAllowedWithExhaustedQuota": True, "usageAllowedWithExhaustedQuota": True}
+        rows = credits.copilot_resources([quota])
+        selected_pool = {"premium_interactions:token_billing"}
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {"XDG_STATE_HOME": directory}), \
+             patch.object(credits, "copilot_account_fingerprint",
+                          side_effect=lambda login=None: "b" * 64 if login == "different-user" else "a" * 64):
+            self.assertTrue(credits.native_reasons("copilot", rows, mode="observed"))
+            with patch("sys.stdout", new_callable=io.StringIO) as output:
+                self.assertEqual(usage.main(["credit-policy", "copilot", "--observed-user-budget",
+                                             "--pool", "premium_interactions"]), 0)
+            policy = json.loads(output.getvalue())
+            self.assertTrue(policy["account_matches"])
+            self.assertFalse(policy["hard_budget_proven"])
+            self.assertEqual(credits.native_reasons("copilot", rows, mode="observed",
+                                                    pool_names=selected_pool), [])
+            self.assertTrue(credits.native_reasons("copilot", rows, mode="observed",
+                                                   pool_names={"chat:token_billing"}))
+            self.assertTrue(credits.native_reasons("copilot", rows, mode="strict"))
+            self.assertIsNone(credits.copilot_observed_policy("different-user", "premium_interactions"))
+            self.assertIsNone(credits.copilot_observed_policy("fictional-user", "chat"))
+            with patch.object(credits.time, "time", return_value=policy["expires_at"] + 1):
+                self.assertTrue(credits.native_reasons("copilot", rows, mode="observed"))
+            credits.configure_copilot_policy(revoke=True)
+            self.assertTrue(credits.native_reasons("copilot", rows, mode="observed"))
 
     def test_copilot_unknown_overage_or_malformed_flags_do_not_admit(self):
         for row in ({"pool": "p"}, {"pool": "p", "overageAllowedWithExhaustedQuota": "false"},

@@ -241,12 +241,14 @@ def main(argv=None):
     parser.add_argument("service", nargs="?", choices=("codex", "claude", "antigravity", "copilot", "cursor"))
     parser.add_argument("--initialize", action="store_true", help="Explicit prospective first baseline; prior daily use stays unknown")
     parser.add_argument("--model", help="Concrete Claude model for a scoped check or status")
+    parser.add_argument("--pool", choices=("chat", "premium_interactions"), help="Copilot observed-policy billing pool")
     parser.add_argument("--db")
     parser.add_argument("--timezone", default=None)
     parser.add_argument("--renderer", help="Existing trusted statusline command; forward its original input/output")
     policy = parser.add_mutually_exclusive_group()
     policy.add_argument("--auto-top-up", choices=("disabled",), help="Record the owner's explicit account setting confirmation")
     policy.add_argument("--revoke-credit-policy", action="store_true", help="Remove the account's owner confirmation")
+    policy.add_argument("--observed-user-budget", action="store_true", help="Record an observed Copilot user-level budget")
     args = parser.parse_args(argv)
     raw = None
     try:
@@ -258,12 +260,19 @@ def main(argv=None):
         if args.model and (args.service != "claude" or args.action not in {"check", "status"}):
             parser.error("--model requires Claude check or status")
         if args.action == "credit-policy":
-            if args.service != "codex" or args.db:
-                parser.error("credit-policy supports the current Codex account only")
-            print(json.dumps(credits.configure_codex_policy(disabled=args.auto_top_up == "disabled",
-                                                           revoke=args.revoke_credit_policy), indent=2))
+            if args.db:
+                parser.error("credit-policy uses the current account only")
+            if args.service == "codex" and not args.observed_user_budget and args.pool is None:
+                result = credits.configure_codex_policy(disabled=args.auto_top_up == "disabled",
+                                                        revoke=args.revoke_credit_policy)
+            elif args.service == "copilot" and not args.auto_top_up:
+                result = credits.configure_copilot_policy(pool=args.pool, confirmed=args.observed_user_budget,
+                                                          revoke=args.revoke_credit_policy)
+            else:
+                parser.error("credit-policy supports Codex top-up or Copilot observed-budget settings")
+            print(json.dumps(result, indent=2))
             return 0
-        if args.auto_top_up or args.revoke_credit_policy:
+        if args.auto_top_up or args.revoke_credit_policy or args.observed_user_budget or args.pool:
             parser.error("credit policy options require the credit-policy action")
         if args.action in {"capture", "context"}:
             raw = sys.stdin.buffer.read(256 * 1024 + 1)

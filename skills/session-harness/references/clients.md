@@ -11,7 +11,7 @@ and Ollama commands, requirements, receipts and recovery.
 | Client or route | Current harness support |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native discovery, quota and launch/review adapters; execution requires admission and the isolation/platform controls below |
-| Copilot CLI | Native launcher and text worker; explicit catalog-selected reviews require another declared manager family and exact usage identity; one finite token-billed chat or premium_interactions quota and disabled paid overage; no Auto review |
+| Copilot CLI | Native launcher and text worker; explicit catalog-selected reviews require another declared manager family and exact usage identity; one finite token-billed chat or premium_interactions quota, with an observed-policy option for paid-overage flags; no Auto review |
 | Cursor CLI | Personal Free account quota and Auto launch/text work; no routed model identity or independent review |
 | Ollama local | Fixed loopback execution, local-model residency checks and a separate job ledger |
 | Explicit APIs | Direct text including Meta and Ollama Cloud; separate credentials and money admission, no automatic fallback |
@@ -277,7 +277,8 @@ Native quota discovery is separate from paid-credit eligibility. **Since v0.2.0:
 Codex supports a private owner confirmation that automatic top-up is disabled for the authenticated
 account, combined with fresh zero-credit evidence and unchanged quota admission.
 Antigravity uses its verified disabled CLI setting/default. Claude requires disabled
-paid controls. Enabled native paid credits remain unsupported. See
+paid controls. Copilot's account-bound observed policy is an explicit exception for
+an active pool whose flags allow overage; it is not a hard-budget proof. See
 [API and spend](api-and-spend.md) for confirmation and revocation commands.
 
 Core accounting/API and checked profile installation target Windows as well as

@@ -70,8 +70,9 @@ Named reviews use separate sessions with the same isolation as text workers and
 require a declared actual manager family. Auto, unknown families and the manager's
 family cannot review. Compare the two receipts' `model_family` values as well:
 they must differ from each other and the manager. Both use the **same Copilot
-account quota**. Existing role restrictions, finite token-billed allowance and
-disabled-overage requirements still apply; request-billed plans are unsupported.
+account quota**. Existing role restrictions and the finite token-billed allowance
+still apply; paid-overage flags require the observed-mode policy below.
+Request-billed plans are unsupported.
 
 The 0.6.1 adapter reads `session.model.list` in an isolated,
 empty session because the global SDK `models.list` can omit models available in
@@ -101,13 +102,32 @@ counting the same usage twice. Existing newer observations are preserved.
 
 The worker accepts exactly one active finite token-billed `chat` or
 `premium_interactions` pool, with any other active pools unlimited. Missing
-quota/overage flags, unknown finite pools or multiple finite pools stop execution.
-All pools must report disabled exhaustion and overage use. When an active pool
-reports `usageAllowedWithExhaustedQuota` or `overageAllowedWithExhaustedQuota`,
-`usage check copilot` reports `copilot_hard_user_budget_unverified` alongside
-`native_paid_execution_unsupported`. A positive remaining percentage does not
-establish a hard stop. The selected pool, its entitlement and other pool definitions
-must remain consistent before and after execution; receipts identify that pool.
+quota/overage flags, unknown finite pools, multiple finite pools and reported
+paid overage stop execution. When an active pool permits exhausted-quota use or
+overage, strict mode blocks with `copilot_hard_user_budget_unverified`. A positive
+remaining percentage does not establish a hard stop.
+
+Observed mode can use an account- and pool-bound local policy after an operator
+checks the **same account's** GitHub Copilot settings and sees AI credits used out
+of a user-level budget total. A used-only figure does not qualify. On the account
+authority, after that check, run:
+
+```sh
+ai-session usage credit-policy copilot --observed-user-budget --pool premium_interactions
+ai-session usage check copilot
+```
+
+Use `chat` instead when it is the one finite billing pool. The policy expires after
+seven days; recheck the GitHub view before renewing it. Revoke it with
+`ai-session usage credit-policy copilot --revoke-credit-policy`. This policy is an
+explicit observed-mode risk choice, **not** proof that the budget is enforced for
+an SDK request. It changes no GitHub account or billing settings. The harness still
+checks the selected account, pool and quota in a new CLI process just before sending,
+blocks at 100% or any reported overage, verifies the selected model when available,
+and records aggregate account consumption afterward. A model-selected request must
+match the session catalog and returned model; Auto remains supervised only.
+The selected pool, its entitlement and other pool definitions must remain consistent
+before and after execution; receipts identify that pool.
 The worker checks aggregate account consumption. These deltas can include other sessions;
 they are not an exclusive per-task bill. Native reset timestamps at or before the
 observation remain unknown. Monthly pacing uses a conservative 31-day window.
@@ -118,8 +138,9 @@ lists budget records. The SDK `account.getQuota` exposes entitlement and overage
 flags, not the effective user-level budget. Budget listings also do not attest
 which billing entity, account, model and pool govern a particular SDK request or
 that an effective hard stop was freshly checked for that request. The protected
-route therefore keeps paid-overage execution blocked until supported server
-evidence can bind those facts and be checked again immediately before sending.
+route therefore blocks paid-overage execution in strict mode. Observed mode accepts
+the documented in-flight and configuration-drift risk only while its account-bound
+policy is valid.
 The `usage` result names `chat`, `completions` and `premium_interactions` credit
 resources alongside their stable ledger identifiers.
 

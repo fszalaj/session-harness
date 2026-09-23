@@ -170,7 +170,7 @@ Match work against verified adapter capabilities:
 | Provider or tool | Execution status | Quota and billing scope |
 | --- | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Protected native execution | Fresh native quota readers; balance fractions of local daily budgets |
-| Copilot, Cursor | Native launch and supervised text | One finite token-billed Copilot chat or premium_interactions pool (premium support since 0.6.1), or personal Cursor Free Auto; fresh no-overage evidence required |
+| Copilot, Cursor | Native launch and supervised text | One finite token-billed Copilot chat or premium_interactions pool, or personal Cursor Free Auto; Copilot paid-overage flags require observed mode and a current account-bound policy |
 | Gemini CLI, Kimi CLI, OpenCode, Aider, Continue | Discovery | No protected native execution adapter |
 | Ollama local | Bounded text with local residency checks | Separate local job ledger, outside subscription balancing |
 | Paid OpenAI, Anthropic, Gemini, xAI, DeepSeek, Kimi, Z.ai, OpenRouter APIs | Explicit text requests | Separate monthly money admission; never subscription fallback |

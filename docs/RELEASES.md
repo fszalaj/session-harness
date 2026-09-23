@@ -1,5 +1,16 @@
 # Releases and updates
 
+## 0.8.3
+
+Copilot Business can use an active finite token-billed pool whose exhaustion and
+overage flags are enabled only in explicitly configured observed mode. A local
+seven-day policy is bound to the authenticated account and billing pool after the
+operator verifies a user-level budget in GitHub's Copilot settings. It is not hard
+budget proof; strict mode still blocks. The worker checks the account and pool in
+a new CLI process immediately before sending, blocks exhausted or already overage
+pools, and reads them again after completion. The early quota gate remains ahead of
+session creation. No GitHub billing settings or account limits are changed.
+
 ## 0.8.2
 
 The updater checks GitHub's release-assets endpoint when the tag response omits

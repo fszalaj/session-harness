@@ -572,7 +572,8 @@ class Ledger:
                 raise ValueError("invalid stored completeness")
             result.update(observed_at=observed, source=state["source"], reset_history=state["resets"])
             result["credit_resources"] = credits.validate_resources(state.get("credit_resources", credits.missing(service)), service)
-            reasons.extend(credits.native_reasons(service, result["credit_resources"]))
+            reasons.extend(credits.native_reasons(service, result["credit_resources"], mode=mode,
+                                                  pool_names=set(state["pools"])))
             if now < observed or now - observed > self.policy["max_age"]:
                 reasons.append("stale_or_future_snapshot")
             if not state["complete"] or state["missing_pools"]:
