@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.2
+
+- Fetch release assets from GitHub's dedicated assets endpoint when tag metadata
+  omits them, while retaining URL, checksum, digest and immutability checks.
+
 ## 0.8.1
 
 - Name Copilot quota pools in `usage` output alongside stable ledger IDs.

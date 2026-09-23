@@ -1,11 +1,11 @@
 {
-  "content_sha256": "f5ecf8656c338478df56d6a2ecfed0a9bdc0b6facaf1e6b1e955b9162d6ed2de",
+  "content_sha256": "d04fefb7dbdb4db02ef264d87b140c21ecf69215d5eacf89774ae82487683862",
   "directed": true,
   "graph": {
     "coverage": "Python declarations and static imports/calls only; dynamic dispatch, CLI subprocesses, configuration, SQL and Markdown links need source inspection. An empty result does not prove unused code.",
-    "edge_count": 3189,
+    "edge_count": 3191,
     "extractor": "knowledge-gateway==0.11.0",
-    "node_count": 1707,
+    "node_count": 1709,
     "root": "session-harness",
     "schema_version": 1,
     "sources": {
@@ -53,7 +53,7 @@
       "skills/session-harness/scripts/platform_runtime.py": "543fe2ce2db1ce17d6ab5a4233212e8feb1d54e3d0d93a5598ec300505d0e5f8",
       "skills/session-harness/scripts/quota.py": "373fb8468c8932a2a14c39e2063bfcd36c0126b1874a008ed2a36d8449e26f59",
       "skills/session-harness/scripts/quota_refresh.py": "f813b187f8178310015fea2664f42f49ef1b2c84a34438bf56ff0048894fb262",
-      "skills/session-harness/scripts/releases.py": "9b465697065360e3d03771421532d8fa87488bdcfdd1f46efb8ee0a6e9eafded",
+      "skills/session-harness/scripts/releases.py": "38b7109d689df5f974cbf153565f5d07ac1d11a34c1fffc26611c7c6efb8d27e",
       "skills/session-harness/scripts/setup_environment.py": "b864aae3e5d61fdb80ed48bed61d195d8a363f3e0b0d52689874423c86ccded5",
       "skills/session-harness/scripts/spend.py": "f808ea30f9f3ae7d141065f6c968dea5a3db26053670f4aa6cc069d20d2b1600",
       "skills/session-harness/scripts/spend_cli.py": "60271671526d4443f48c8e1661ec88f1b90b2b4b0d399c11c316434096b2b086",
@@ -94,7 +94,7 @@
       "skills/session-harness/scripts/test_platform_runtime.py": "320cfc69cf0ef8d4c94c1e1bb39472ba27973b0837fc0bf62101fe9e4b4d4792",
       "skills/session-harness/scripts/test_quota.py": "9664912b44d1120948f444ca7a129808f3b1d32bdad5cdab389caa81f5010d7d",
       "skills/session-harness/scripts/test_quota_refresh.py": "8786678609b8e81f1673687057b88835d9a0c34508ae66400afaec9af8af8240",
-      "skills/session-harness/scripts/test_releases.py": "b964deebbc9d72ee7a64d262a6a1422e150a3315bc383b7afda7a3e2955fb7f3",
+      "skills/session-harness/scripts/test_releases.py": "18b2f998943a20fcf644f400df486d5500ef801b8d27b6c5ea468ff8c94ca2d8",
       "skills/session-harness/scripts/test_setup_admission.py": "a1eac325a60b7435d170ad8261f505a55551cc4aa8e3f36b531b9cf6fe0161b6",
       "skills/session-harness/scripts/test_setup_environment.py": "f2b25a674f45c725f5c097139742b3c94ab8afd10d3fe12a2c7a2b1527ec3266",
       "skills/session-harness/scripts/test_spend.py": "89219080c1b1561e61c74d4a9f1d98fa2237f849e11ceede30c20cb050747d52",
@@ -14896,6 +14896,18 @@
       "confidence": "EXTRACTED",
       "relation": "defines",
       "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_fallback_assets_from_another_tag_are_rejected"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
+      "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_fetches_release_assets_when_tag_metadata_omits_them"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "defines",
+      "source": "pyclass:skills/session-harness/scripts/test_releases.py:ReleaseTests",
       "target": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_metadata_rejects_mutable_draft_prerelease_and_wrong_tag"
     },
     {
@@ -23836,7 +23848,7 @@
       "id": "pyfunc:skills/session-harness/scripts/releases.py:installation",
       "label": "installation",
       "source_file": "skills/session-harness/scripts/releases.py",
-      "source_location": "L124",
+      "source_location": "L135",
       "type": "function"
     },
     {
@@ -23844,7 +23856,7 @@
       "id": "pyfunc:skills/session-harness/scripts/releases.py:main",
       "label": "main",
       "source_file": "skills/session-harness/scripts/releases.py",
-      "source_location": "L168",
+      "source_location": "L179",
       "type": "function"
     },
     {
@@ -23868,7 +23880,7 @@
       "id": "pyfunc:skills/session-harness/scripts/releases.py:update",
       "label": "update",
       "source_file": "skills/session-harness/scripts/releases.py",
-      "source_location": "L140",
+      "source_location": "L151",
       "type": "function"
     },
     {
@@ -31372,13 +31384,29 @@
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_concurrent_update_is_refused",
       "label": "ReleaseTests.test_concurrent_update_is_refused",
       "source_file": "skills/session-harness/scripts/test_releases.py",
-      "source_location": "L97",
+      "source_location": "L126",
       "type": "method"
     },
     {
       "file_type": "python",
       "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_failed_download_preserves_private_state_and_releases_lock",
       "label": "ReleaseTests.test_failed_download_preserves_private_state_and_releases_lock",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L116",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_fallback_assets_from_another_tag_are_rejected",
+      "label": "ReleaseTests.test_fallback_assets_from_another_tag_are_rejected",
+      "source_file": "skills/session-harness/scripts/test_releases.py",
+      "source_location": "L106",
+      "type": "method"
+    },
+    {
+      "file_type": "python",
+      "id": "pymethod:skills/session-harness/scripts/test_releases.py:ReleaseTests.test_fetches_release_assets_when_tag_metadata_omits_them",
+      "label": "ReleaseTests.test_fetches_release_assets_when_tag_metadata_omits_them",
       "source_file": "skills/session-harness/scripts/test_releases.py",
       "source_location": "L87",
       "type": "method"
