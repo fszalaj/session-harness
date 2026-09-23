@@ -8,6 +8,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 import copilot_client as copilot
+import credits
 import harness
 import inventory
 import usage
@@ -31,8 +32,8 @@ def paid_quota(used=2):
                               'premium_interactions': dict(row)}}
 
 
-def business_quota():
-    data = paid_quota()
+def business_quota(used=2):
+    data = paid_quota(used)
     data['quotaSnapshots']['premium_interactions'].update(
         usageAllowedWithExhaustedQuota=True, overageAllowedWithExhaustedQuota=True)
     return data
@@ -82,6 +83,8 @@ class CopilotTests(unittest.TestCase):
             with self.subTest(scenario=scenario):
                 client = MagicMock()
                 def rpc(method, params=None):
+                    if method == 'auth.getStatus':
+                        return {'isAuthenticated': True, 'login': 'fictional-user'}
                     if method == 'account.getQuota':
                         return quota()
                     if method == 'session.model.list':
@@ -113,7 +116,9 @@ class CopilotTests(unittest.TestCase):
                                                'event': {'type': kind, 'data': data}}})
                     return {}
                 client.request.side_effect = client._request.side_effect = rpc
-                with patch.object(inventory, 'MetadataRPC', return_value=client), patch('supervision.Watch') as watch, \
+                with patch.object(inventory, 'MetadataRPC', return_value=client), \
+                     patch.object(copilot, 'fresh_billing_pool', return_value=copilot.billing_pool(quota())), \
+                     patch('supervision.Watch') as watch, \
                      patch.object(harness, 'require_quota') as admission, \
                      patch.object(harness, 'require_role', return_value={}) as role:
                     if scenario == 'success':
@@ -154,15 +159,22 @@ class CopilotTests(unittest.TestCase):
         client.on_message.assert_called_once()
 
     def test_execution_receipt_and_tool_or_unaccounted_response_stop(self):
-        for scenario in ('success', 'tool', 'unknown-model', 'unchanged-quota', 'paid', 'pool-change'):
+        for scenario in ('success', 'tool', 'unknown-model', 'unchanged-quota', 'paid', 'pool-change',
+                         'account-change', 'session-account-change', 'exhausted', 'observed-business'):
             with self.subTest(scenario=scenario):
                 client = MagicMock()
                 finished = False
+                auth_reads = 0
 
                 def rpc(method, params=None):
-                    nonlocal finished
+                    nonlocal finished, auth_reads
+                    if method == 'auth.getStatus':
+                        auth_reads += 1
+                        return {'isAuthenticated': True, 'login': 'different-user' if
+                                scenario == 'session-account-change' and auth_reads > 1 else 'fictional-user'}
                     if method == 'account.getQuota':
-                        factory = paid_quota if scenario == 'paid' or (scenario == 'pool-change' and not finished) else quota
+                        factory = (business_quota if scenario == 'observed-business' else paid_quota
+                                   if scenario == 'paid' or (scenario == 'pool-change' and not finished) else quota)
                         return factory(3 if finished and scenario != 'unchanged-quota' else 2)
                     if method == 'session.create':
                         self.assertEqual(params['tools'], [])
@@ -183,19 +195,73 @@ class CopilotTests(unittest.TestCase):
                 client._request.side_effect = rpc
                 client.request.side_effect = rpc
                 capability = {'executable': 'copilot', 'planner': {'model': 'auto', 'effort': None}}
-                with patch.object(inventory, 'MetadataRPC', return_value=client), patch('supervision.Watch'):
-                    if scenario in {'success', 'unchanged-quota', 'paid'}:
+                def fresh(executable, login, *, timeout, tick, observed):
+                    self.assertEqual((executable, login), ('copilot', 'fictional-user'))
+                    self.assertGreater(timeout, 0)
+                    self.assertTrue(callable(tick))
+                    self.assertEqual(observed, scenario == 'observed-business')
+                    if scenario == 'account-change':
+                        raise harness.HarnessError('account_mismatch', 'Copilot account changed.')
+                    if scenario == 'exhausted':
+                        depleted = quota(200)
+                        depleted['quotaSnapshots']['chat']['remainingPercentage'] = 0
+                        return copilot.billing_pool(depleted)
+                    factory = (business_quota if scenario == 'observed-business' else paid_quota
+                               if scenario == 'paid' or (scenario == 'pool-change' and not finished) else quota)
+                    return copilot.billing_pool(factory(3 if finished and scenario != 'unchanged-quota' else 2),
+                                                login=login, observed=observed)
+                with patch.object(inventory, 'MetadataRPC', return_value=client), \
+                     patch.object(copilot, 'fresh_billing_pool', side_effect=fresh) as fresh_read, \
+                     patch.object(credits, 'copilot_observed_policy', return_value={'pool': 'premium_interactions'}), \
+                     patch('supervision.Watch') as watch:
+                    watch.return_value.start.return_value = {'mode': 'observed'} if scenario == 'observed-business' else {}
+                    if scenario in {'success', 'unchanged-quota', 'paid', 'observed-business'}:
                         result = copilot.execute(b'task', 30, capability, task=True)
                         self.assertEqual(result['actual_model'], 'gpt-test')
                         self.assertEqual(result['completion_tokens'], 10)
                         self.assertEqual(result['quota_evidence']['pool'],
-                                         'premium_interactions:token_billing' if scenario == 'paid' else 'chat:token_billing')
+                                         'premium_interactions:token_billing' if scenario in {'paid', 'observed-business'}
+                                         else 'chat:token_billing')
                         if scenario == 'unchanged-quota':
                             self.assertEqual(result['quota_evidence']['delta_lower_bound_percent'], 0)
                             self.assertEqual(result['quota_evidence']['per_task_charge'], 'unknown')
                     else:
                         with self.assertRaises(harness.HarnessError):
                             copilot.execute(b'task', 30, capability, task=True)
+                    self.assertEqual(fresh_read.call_count, 1 if scenario in {'tool', 'unknown-model', 'account-change',
+                                                                             'session-account-change', 'exhausted'} else 2)
+                    if scenario in {'account-change', 'session-account-change', 'exhausted'}:
+                        self.assertFalse(any(call.args[0] == 'session.send' for call in client._request.call_args_list))
+                client.close.assert_called_once()
+
+    def test_fresh_pool_rechecks_account_with_a_new_client(self):
+        with patch.object(inventory, 'MetadataRPC') as rpc, self.assertRaises(harness.HarnessError) as error:
+            copilot.fresh_billing_pool('copilot', 'fictional-user', timeout=0)
+        self.assertEqual(error.exception.status, 'timeout')
+        rpc.assert_not_called()
+        client = MagicMock()
+        client.request.return_value = {'isAuthenticated': True, 'login': 'fictional-user'}
+        with patch.object(inventory, 'MetadataRPC', return_value=client), \
+             patch.object(copilot.time, 'monotonic', side_effect=[0, .1, 1.1]), \
+             self.assertRaises(harness.HarnessError) as error:
+            copilot.fresh_billing_pool('copilot', 'fictional-user', timeout=1)
+        self.assertEqual(error.exception.status, 'timeout')
+        client.request.assert_called_once_with('auth.getStatus')
+        client.close.assert_called_once()
+        for account in ('fictional-user', 'different-user'):
+            client = MagicMock()
+            client.request.side_effect = lambda method: (
+                {'isAuthenticated': True, 'login': account} if method == 'auth.getStatus' else quota())
+            with self.subTest(account=account), patch.object(inventory, 'MetadataRPC', return_value=client) as rpc:
+                if account == 'fictional-user':
+                    self.assertEqual(copilot.fresh_billing_pool('copilot', 'fictional-user')['pool'], 'chat')
+                    self.assertEqual(client.request.call_count, 2)
+                else:
+                    with self.assertRaises(harness.HarnessError) as error:
+                        copilot.fresh_billing_pool('copilot', 'fictional-user')
+                    self.assertEqual(error.exception.status, 'account_mismatch')
+                    client.request.assert_called_once_with('auth.getStatus')
+                rpc.assert_called_once_with('copilot', timeout=15)
                 client.close.assert_called_once()
 
     def test_paid_control_and_reset_are_never_invented(self):
@@ -239,15 +305,48 @@ class CopilotTests(unittest.TestCase):
             elif scenario == 'model-mismatch':
                 data['hardUserBudget'] = dict(budget, model='other-fixture')
             client = MagicMock()
-            client.request.side_effect = lambda method: data if method == 'account.getQuota' else self.fail(method)
+            client.request.side_effect = lambda method: (
+                {'isAuthenticated': True, 'login': 'fictional-user'} if method == 'auth.getStatus' else data)
             with self.subTest(scenario=scenario), patch.object(inventory, 'MetadataRPC', return_value=client), \
                  patch('supervision.Watch'):
                 with self.assertRaises(harness.HarnessError) as error:
                     copilot.execute(b'fictional task', 30,
                                     {'executable': 'copilot', 'planner': {'model': 'gpt-fixture', 'effort': None}}, task=True)
-                self.assertEqual(error.exception.status, 'usage_unverified')
-                self.assertIn('fresh server proof', str(error.exception))
+                self.assertEqual(error.exception.status, 'quota_blocked' if scenario == 'paid-overage'
+                                 else 'usage_unverified')
+                if scenario != 'paid-overage':
+                    self.assertIn('fresh server proof', str(error.exception))
                 client._request.assert_not_called()
+                client.close.assert_called_once()
+
+    def test_observed_business_pool_requires_matching_private_policy(self):
+        data = business_quota()
+        with patch.object(credits, 'copilot_observed_policy', return_value={'pool': 'premium_interactions'}) as policy:
+            selected = copilot.billing_pool(data, login='fictional-user', observed=True)
+            self.assertEqual(selected['pool'], 'premium_interactions')
+            policy.assert_called_once_with('fictional-user', 'premium_interactions')
+            mismatch = business_quota()
+            mismatch['quotaSnapshots']['chat'].update(isUnlimitedEntitlement=False,
+                                                      entitlementRequests=200, usedRequests=2,
+                                                      remainingPercentage=99)
+            mismatch['quotaSnapshots']['premium_interactions']['isUnlimitedEntitlement'] = True
+            with self.assertRaises(harness.HarnessError) as error:
+                copilot.billing_pool(mismatch, login='fictional-user', observed=True)
+            self.assertEqual(error.exception.status, 'usage_unverified')
+        with patch.object(credits, 'copilot_observed_policy', return_value=None):
+            with self.assertRaises(harness.HarnessError):
+                copilot.billing_pool(data, login='different-user', observed=True)
+        data['quotaSnapshots']['premium_interactions']['overage'] = 1
+        with patch.object(credits, 'copilot_observed_policy', return_value={'pool': 'premium_interactions'}):
+            with self.assertRaises(harness.HarnessError) as error:
+                copilot.billing_pool(data, login='fictional-user', observed=True)
+        self.assertEqual(error.exception.status, 'quota_blocked')
+        for invalid in (None, float('nan'), -1):
+            malformed = business_quota()
+            malformed['quotaSnapshots']['premium_interactions']['overage'] = invalid
+            with self.subTest(invalid=invalid), self.assertRaises(harness.HarnessError) as error:
+                copilot.billing_pool(malformed, login='fictional-user', observed=True)
+            self.assertEqual(error.exception.status, 'usage_unverified')
 
     def test_exhausted_finite_business_pool_stops_without_overage(self):
         data = paid_quota()

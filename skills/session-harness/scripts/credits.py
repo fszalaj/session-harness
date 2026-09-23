@@ -1,4 +1,4 @@
-"""Allowlisted credit metadata; no native paid execution contract is verified."""
+"""Allowlisted credit metadata and explicit observed-mode policies."""
 from decimal import Decimal, InvalidOperation
 import hashlib
 import json
@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import stat
 import re
+import shutil
 import tempfile
 import time
 
@@ -23,6 +24,11 @@ CONTROLS = {"useG1Credits", "tokenBasedBilling", "hasQuota", "usageAllowedWithEx
 def credit_policy_path():
     root = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
     return root / "session-harness/native-credit-policy/codex.json"
+
+
+def copilot_policy_path():
+    root = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
+    return root / "session-harness/native-credit-policy/copilot.json"
 
 
 def private_json(path):
@@ -50,6 +56,77 @@ def private_json(path):
     if not isinstance(value, dict):
         raise ValueError("Credit evidence must be an object")
     return value
+
+
+def copilot_account_fingerprint(login=None):
+    if login is None:
+        import inventory
+        executable = shutil.which("copilot")
+        if not executable:
+            raise ValueError("Copilot CLI is unavailable")
+        client = inventory.MetadataRPC(executable)
+        try:
+            auth = client.request("auth.getStatus")
+        finally:
+            client.close()
+        if not isinstance(auth, dict) or auth.get("isAuthenticated") is not True:
+            raise ValueError("Copilot account is unavailable")
+        login = auth.get("login")
+    if not isinstance(login, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,39}", login):
+        raise ValueError("Copilot account identity is unavailable")
+    return hashlib.sha256(("copilot-account:" + login.lower()).encode()).hexdigest()
+
+
+def copilot_observed_policy(login=None, pool=None):
+    try:
+        value = private_json(copilot_policy_path())
+        now = time.time()
+        if (set(value) != {"version", "service", "source", "account_fingerprint", "pool", "confirmed_at", "expires_at"}
+                or type(value["version"]) is not int or value["version"] != 1
+                or value["service"] != "copilot" or value["source"] != "owner_observed_user_budget"
+                or value["pool"] not in {"chat", "premium_interactions"}
+                or (pool is not None and value["pool"] != pool)
+                or type(value["confirmed_at"]) not in (int, float)
+                or type(value["expires_at"]) not in (int, float)
+                or not 0 < value["confirmed_at"] <= now + 60
+                or not now < value["expires_at"] <= value["confirmed_at"] + 7 * 86400
+                or value["account_fingerprint"] != copilot_account_fingerprint(login)):
+            return None
+        return value
+    except (OSError, ValueError, TypeError, AttributeError, UnicodeError, RecursionError):
+        return None
+
+
+def configure_copilot_policy(*, pool=None, confirmed=False, revoke=False):
+    if (confirmed and revoke or confirmed and pool not in {"chat", "premium_interactions"}
+            or not confirmed and pool is not None):
+        raise ValueError("Choose a pool confirmation or revocation")
+    path = copilot_policy_path()
+    if revoke:
+        path.unlink(missing_ok=True)
+    elif confirmed:
+        now = time.time()
+        value = dict(version=1, service="copilot", source="owner_observed_user_budget",
+                     account_fingerprint=copilot_account_fingerprint(), pool=pool,
+                     confirmed_at=now, expires_at=now + 7 * 86400)
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if os.name != "nt":
+            os.chmod(path.parent, 0o700)
+        fd, temporary = tempfile.mkstemp(prefix=".policy-", dir=path.parent)
+        try:
+            with os.fdopen(fd, "w") as stream:
+                json.dump(value, stream)
+                stream.write("\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, path)
+        finally:
+            Path(temporary).unlink(missing_ok=True)
+    value = copilot_observed_policy()
+    return {"service": "copilot", "source": value["source"] if value else None,
+            "mode": "observed" if value else None, "pool": value["pool"] if value else None,
+            "expires_at": value["expires_at"] if value else None, "account_matches": bool(value),
+            "hard_budget_proven": False}
 
 
 def codex_account_fingerprint():
@@ -363,7 +440,7 @@ def antigravity_resources():
     return [result]
 
 
-def native_reasons(service, rows):
+def native_reasons(service, rows, *, mode=None, pool_names=None):
     if service not in SERVICES:
         return []
     try:
@@ -385,9 +462,21 @@ def native_reasons(service, rows):
             return ["credit_metadata_unverified"]
     if not rows or any(row["metadata_status"] != "reported" for row in rows):
         return ["credit_metadata_unverified"]
-    if service == "copilot" and any(row["native_controls"].get(key) is not False for row in rows
-                                    for key in ("usageAllowedWithExhaustedQuota", "overageAllowedWithExhaustedQuota")):
-        return ["native_paid_execution_unsupported", "copilot_hard_user_budget_unverified"]
+    if service == "copilot":
+        if any(row["used"] is not None and Decimal(row["used"]) > 0 for row in rows):
+            return ["native_paid_execution_unsupported"]
+        controls = ("usageAllowedWithExhaustedQuota", "overageAllowedWithExhaustedQuota")
+        if any(any(row["native_controls"].get(key) is None for key in controls) for row in rows):
+            return ["native_paid_execution_unsupported", "copilot_hard_user_budget_unverified"]
+        paid = [row for row in rows if any(row["native_controls"][key] is True for key in controls)]
+        if paid and (mode != "observed" or len(paid) != 1
+                     or pool_names != {paid[0]["pool"] + ":token_billing"}
+                     or not copilot_observed_policy(pool=paid[0]["pool"])):
+            return ["native_paid_execution_unsupported", "copilot_hard_user_budget_unverified"]
+        if any((row["enabled"] is not False and row not in paid) or row["auto_reload"] is True
+               or row["can_purchase"] is True for row in rows):
+            return ["native_paid_execution_unsupported"]
+        return []
     if any(row["enabled"] is not False or row["auto_reload"] is True or row["can_purchase"] is True
            for row in rows):
         return ["native_paid_execution_unsupported"]
@@ -395,7 +484,8 @@ def native_reasons(service, rows):
 
 
 def gate(result, service):
-    reasons = native_reasons(service, result.get("credit_resources", []))
+    reasons = native_reasons(service, result.get("credit_resources", []), mode=result.get("mode"),
+                             pool_names={row["pool"] for row in result.get("pools", [])})
     if reasons:
         result["allowed"] = False
         result["allowed_by_observed_threshold"] = False

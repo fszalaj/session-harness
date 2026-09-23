@@ -163,10 +163,11 @@ A Codex balance string has no verified currency scale; Copilot quota/overage uni
 are not automatically AI credits or dollars. Promotional, purchased and reset
 credits are not merged into subscription percentages.
 
-A money configuration does not make a native paid-credit route safe. Until a
-verified adapter can establish billing eligibility and associate charges with
-requests, paid native execution is unsupported. Version 0.1.2 blocked protected
-Codex execution and required an explicit disabled Antigravity setting.
+A money configuration does not make a native paid-credit route safe. Copilot can
+admit an account-bound, time-limited observed policy for a user-level budget after
+the owner explicitly accepts its residual risk; it is not proof of a per-request
+hard cap. Other native paid-credit execution remains unsupported. Version 0.1.2
+blocked protected Codex execution and required an explicit disabled Antigravity setting.
 
 The Codex confirmation commands and absent-file/key Antigravity default handling
 below are available in v0.2.0. Retain an existing installation until the owner

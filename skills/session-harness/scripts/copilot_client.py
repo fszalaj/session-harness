@@ -6,29 +6,57 @@ import time
 import harness
 import inventory
 import supervision
+import credits
 
 
-def billing_pool(payload):
+def billing_pool(payload, *, login=None, observed=False):
     if not inventory.quota_complete(payload):
         raise harness.HarnessError('usage_unverified', 'Copilot quota metadata is incomplete.')
     rows = inventory.normalize_quota(payload)
     for row in rows:
         if type(row.get('hasQuota')) is not bool:
             raise harness.HarnessError('usage_unverified', 'Copilot quota activity is unverified.')
+        if row.get('overage', 0) > 0:
+            raise harness.HarnessError('quota_blocked', 'Copilot reports paid overage.')
         if any(row.get(key) is not False for key in ('usageAllowedWithExhaustedQuota', 'overageAllowedWithExhaustedQuota')):
-            raise harness.HarnessError('usage_unverified', 'Copilot paid overage is possible. Missing fresh server proof that an effective hard user budget stops the selected account, model and billing pool; recheck that proof before sending.')
+            if not (observed and login and credits.copilot_observed_policy(login, row['pool'])):
+                raise harness.HarnessError('usage_unverified', 'Copilot paid overage is possible. Missing fresh server proof or an active account-bound observed-mode policy for this billing pool.')
     finite = [row for row in rows if row['hasQuota'] and row.get('isUnlimitedEntitlement') is not True
               and row.get('entitlementRequests') != -1]
     if (len(finite) != 1 or finite[0]['pool'] not in {'chat', 'premium_interactions'}
             or finite[0].get('tokenBasedBilling') is not True or finite[0]['entitlementRequests'] <= 0):
         raise harness.HarnessError('usage_unverified', 'Copilot requires one finite token-billed chat or premium_interactions allowance.')
     selected = finite[0]
+    if any(row['pool'] != selected['pool'] and any(row.get(key) is True for key in
+           ('usageAllowedWithExhaustedQuota', 'overageAllowedWithExhaustedQuota')) for row in rows):
+        raise harness.HarnessError('usage_unverified', 'Copilot paid-capable pool differs from the active billing pool.')
     if selected['remainingPercentage'] <= 0 or selected['usedRequests'] >= selected['entitlementRequests']:
         raise harness.HarnessError('quota_blocked', 'Copilot billing pool is exhausted.')
     return {**{k: selected[k] for k in ('pool', 'entitlementRequests', 'usedRequests', 'remainingPercentage')},
             'other_pools': sorted(({k: v for k, v in row.items()
                                     if k not in ({'resetDate', 'usedRequests', 'remainingPercentage'} if row['hasQuota'] else {'resetDate'})}
                                    for row in rows if row['pool'] != selected['pool']), key=lambda row: row['pool'])}
+
+
+def fresh_billing_pool(executable, login, *, timeout=15, tick=None, observed=False):
+    if timeout <= 0:
+        raise harness.HarnessError('timeout', 'Copilot worker deadline exceeded.')
+    deadline = time.monotonic() + timeout
+    client = inventory.MetadataRPC(executable, timeout=timeout)
+    try:
+        client.tick = tick
+        def read(method):
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise harness.HarnessError('timeout', 'Copilot worker deadline exceeded.')
+            client.timeout = remaining
+            return client.request(method)
+        auth = read('auth.getStatus')
+        if not isinstance(auth, dict) or auth.get('isAuthenticated') is not True or auth.get('login') != login:
+            raise harness.HarnessError('account_mismatch', 'Copilot account changed during the task.')
+        return billing_pool(read('account.getQuota'), login=login, observed=observed)
+    finally:
+        client.close()
 
 
 def discover(executable, offline=False):
@@ -162,11 +190,16 @@ def execute(artifact, timeout, capability, *, task):
             usages.append({k: data[k] for k in ('model', 'inputTokens', 'outputTokens')})
 
     try:
-        watch.start()
+        admission = watch.start()
+        observed = isinstance(admission, dict) and admission.get('mode') == 'observed'
         with tempfile.TemporaryDirectory(prefix='session-harness-copilot-') as directory:
             client = inventory.MetadataRPC(capability['executable'])
             client.on_message, client.tick = event, watch.tick
-            before = billing_pool(rpc('account.getQuota'))
+            auth = rpc('auth.getStatus')
+            login = auth.get('login') if isinstance(auth, dict) else None
+            if not isinstance(login, str) or not login or auth.get('isAuthenticated') is not True:
+                raise harness.HarnessError('account_unverified', 'Copilot account identity is unavailable.')
+            billing_pool(rpc('account.getQuota'), login=login, observed=observed)
             choice = capability['planner']
             created = rpc('session.create', session_config(directory, 'auto',
                           choice['effort'] if choice['model'] == 'auto' else None, task=task))
@@ -188,6 +221,15 @@ def execute(artifact, timeout, capability, *, task):
                         or current.get('modelId') != choice['model']
                         or (choice['effort'] is not None and current.get('reasoningEffort') != choice['effort'])):
                     raise harness.HarnessError('model_mismatch', 'Copilot did not apply the selected model and effort.')
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise harness.HarnessError('timeout', 'Copilot worker deadline exceeded.')
+            before = fresh_billing_pool(capability['executable'], login,
+                                        timeout=min(15, remaining), tick=watch.tick, observed=observed)
+            current_auth = rpc('auth.getStatus')
+            if (not isinstance(current_auth, dict) or current_auth.get('isAuthenticated') is not True
+                    or current_auth.get('login') != login):
+                raise harness.HarnessError('account_mismatch', 'Copilot account changed during the task.')
             idle = False
             rpc('session.send', {'sessionId': identity, 'prompt': prompt})
             while not idle:
@@ -203,7 +245,11 @@ def execute(artifact, timeout, capability, *, task):
                 raise harness.HarnessError('model_mismatch', 'Copilot used multiple models in one bounded task.')
             if choice['model'] != 'auto' and models != {choice['model']}:
                 raise harness.HarnessError('model_mismatch', 'Copilot returned a different model than requested.')
-            after = billing_pool(rpc('account.getQuota'))
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise harness.HarnessError('timeout', 'Copilot worker deadline exceeded.')
+            after = fresh_billing_pool(capability['executable'], login,
+                                       timeout=min(15, remaining), tick=watch.tick, observed=observed)
             if (before['pool'] != after['pool'] or before['entitlementRequests'] != after['entitlementRequests']
                     or before['other_pools'] != after['other_pools']
                     or after['usedRequests'] < before['usedRequests']
