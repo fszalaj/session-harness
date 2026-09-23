@@ -72,7 +72,8 @@ PowerShell 7.3+. See [onboarding](docs/ONBOARDING.md) for complete steps, or use
 | Copilot CLI | Native launch, bounded text work and explicit catalog-selected reviews with model-family and returned-identity checks |
 | Cursor CLI | Personal Free account quota checks, launch and supervised text through Auto; independent review is unavailable |
 | Ollama local | Bounded text tasks from installed local models with explicit task IDs and local receipts |
-| Explicit APIs | Authorized text requests with separate credentials and monetary accounting, including Meta and Ollama Cloud routes |
+| OpenRouter API | Reviewed coding models, including DeepSeek, return supervised text; Jev provides typed decisions. Both use explicit monetary authorization and accounting |
+| Other explicit APIs | Authorized text requests with separate credentials and monetary accounting, including direct DeepSeek, Meta and Ollama Cloud routes |
 | Configured free routes | Verified allowances, conservative reservations and explicit opt-in to mixed routing |
 
 An installed client or a listed model does not prove that an account can execute a
@@ -163,13 +164,28 @@ ai-session onboard claude
 Explicit API work requires configured credentials and monetary authorization.
 The [coding-model workflow](skills/session-harness/references/coding-models.md)
 selects eligible candidates against fresh metadata and a reviewed policy.
-`ai-session api coding-run` returns supervised text for inspection, not autonomous
-deployment or independent review approval.
+OpenRouter exposes reviewed coding models, including DeepSeek; inspect the live
+eligible IDs before choosing one:
+
+```sh
+ai-session onboard openrouter
+ai-session api coding-models
+ai-session api coding-run --model REVIEWED_MODEL_ID --max-output-tokens 1000 --reserve-cost 0.25 --id UNIQUE_TASK_ID < task.txt
+```
+
+`coding-run` returns supervised text for inspection, not autonomous deployment
+or independent review approval. The reservation above is an example, not a price;
+size it from current provider evidence and the configured money budget.
 
 For narrow classification, filtering, candidate selection and scoring,
 [Jev typed decisions](skills/session-harness/references/decisions.md) use
 `api decision-models` and `api decide openrouter` through existing money controls.
 Deterministic rules do not need a model call.
+
+```sh
+ai-session api decision-models
+ai-session api decide openrouter --reserve-cost 0.01 < decision.json
+```
 
 [Free routes](skills/session-harness/references/free-access.md) require verified
 allowances and explicit configuration. Expired evidence or unresolved requests
