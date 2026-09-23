@@ -84,6 +84,35 @@ class ReleaseTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory, self.assertRaises(ValueError):
             releases.download_release(meta, Path(directory))
 
+    def test_fetches_release_assets_when_tag_metadata_omits_them(self):
+        data = archive()
+        checksum = hashlib.sha256(data).hexdigest() + "  session-harness-0.1.0.zip\n"
+        metadata = self.metadata()
+        assets = metadata.pop("assets")
+        metadata["id"] = 123
+        urls = []
+        def fetch(url, limit=releases.MAX_DOWNLOAD):
+            urls.append(url)
+            return [json.dumps(assets).encode(), checksum.encode(), data][len(urls) - 1]
+        with patch.object(releases, "fetch", side_effect=fetch):
+            with tempfile.TemporaryDirectory() as directory:
+                self.assertTrue(releases.download_release(metadata, Path(directory)).is_dir())
+        self.assertEqual(urls, [
+            "https://api.github.com/repos/fszalaj/session-harness/releases/123/assets?per_page=100",
+            "https://github.com/fszalaj/session-harness/releases/download/v0.1.0/SHA256SUMS",
+            "https://github.com/fszalaj/session-harness/releases/download/v0.1.0/session-harness-0.1.0.zip",
+        ])
+
+    def test_fallback_assets_from_another_tag_are_rejected(self):
+        metadata = self.metadata()
+        assets = metadata.pop("assets")
+        metadata["id"] = 123
+        assets[0]["browser_download_url"] = "https://github.com/fszalaj/session-harness/releases/download/v0.2.0/session-harness-0.1.0.zip"
+        with patch.object(releases, "fetch", return_value=json.dumps(assets).encode()) as fetch:
+            with tempfile.TemporaryDirectory() as directory, self.assertRaisesRegex(ValueError, "Unexpected release asset URL"):
+                releases.download_release(metadata, Path(directory))
+        fetch.assert_called_once()
+
     def test_failed_download_preserves_private_state_and_releases_lock(self):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory); state = home / ".local/state/session-harness"

@@ -1,5 +1,21 @@
 # Releases and updates
 
+## 0.8.2
+
+The updater checks GitHub's release-assets endpoint when the tag response omits
+the ZIP or `SHA256SUMS`. Asset URL, checksum, digest and immutable-release checks
+still apply. Upgrade with `ai-session update --version 0.8.2 --apply` from a
+working updater, or run the verified 0.8.2 updater from the published archive
+when upgrading a host affected by an empty tag asset list.
+
+For an affected 0.8.0 host, download the published ZIP and `SHA256SUMS` with
+`gh release download v0.8.2 --repo fszalaj/session-harness`, verify the release
+with `gh release verify v0.8.2 --repo fszalaj/session-harness` and the archive
+with `shasum -a 256 -c SHA256SUMS`, then extract it. Run
+`python3 session-harness-0.8.2/skills/session-harness/scripts/releases.py update --version 0.8.2 --apply`
+from that verified extraction. Use the equivalent Python and checksum commands
+on Windows. The updater retains the registered private policy and accounting.
+
 ## 0.8.1
 
 Copilot `usage` output names quota pools alongside stable credit-resource IDs.

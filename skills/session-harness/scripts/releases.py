@@ -99,7 +99,18 @@ def unpack(data, destination, selected):
 def download_release(metadata, destination):
     selected = version(metadata["tag_name"])
     name = f"session-harness-{selected}.zip"
-    assets = {asset["name"]: asset for asset in metadata.get("assets", [])}
+    listed = metadata.get("assets", [])
+    if not isinstance(listed, list):
+        raise ValueError("Invalid release assets")
+    assets = {asset["name"]: asset for asset in listed}
+    if name not in assets or "SHA256SUMS" not in assets:
+        release_id = metadata.get("id")
+        if type(release_id) is not int or release_id <= 0:
+            raise ValueError("Release archive or checksums are missing")
+        listed = json.loads(fetch(f"https://api.github.com/repos/{REPOSITORY}/releases/{release_id}/assets?per_page=100", 1024 * 1024))
+        if not isinstance(listed, list):
+            raise ValueError("Invalid release assets")
+        assets = {asset["name"]: asset for asset in listed}
     if name not in assets or "SHA256SUMS" not in assets:
         raise ValueError("Release archive or checksums are missing")
     base = f"https://github.com/{REPOSITORY}/releases/download/v{selected}/"
