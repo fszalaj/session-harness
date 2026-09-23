@@ -6,7 +6,9 @@ provider manages substantive work. All roles default to advertised `high`, or th
 highest supported level below it. A local [effort preference](docs/ONBOARDING.md#default-reasoning-effort)
 can select `low`, `medium` or `high`. Explicit supported task settings override it.
 Reserve `max` for explicitly selected, extremely difficult tasks through native controls.
-Two other provider families review the same plan independently. Models are resolved
+Routine reversible work uses direct execution and tests. Material production changes
+require one independent other-family review; exceptionally risky or irreversible
+changes require two. Delegate only when it saves work. Models are resolved
 at runtime rather than pinned in policy. Select the newest available generation
 within each family before optimizing cost; an older cheaper tier is not a default.
 
@@ -24,7 +26,7 @@ extracted directory. Resolve the release once; maintained installations never tr
 Already installed? Run `ai-session version` and retain that selected release.
 `ai-session update --check` checks availability; updates need your instruction or
 your existing opt-in to [automatic maintenance](docs/AUTO-UPDATE.md).
-To select this release, run `ai-session update --version 0.7.1 --apply`, then
+To select this release, run `ai-session update --version 0.8.0 --apply`, then
 restart affected clients. See [updates and rollback](docs/RELEASES.md).
 
 Python 3.11+, Git and your chosen clients are required. From the verified extracted

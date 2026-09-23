@@ -1,6 +1,6 @@
 ---
 name: session-harness
-description: Coordinate substantive work across coding clients and explicitly configured API providers. Discover current models, have the strongest session model manage, obtain two independent provider reviews, and delegate bounded work with quota, money and context safeguards. Skip orchestration for trivial edits and leaf assignments.
+description: Coordinate substantive work across coding clients and explicitly configured API providers. Discover current models, have the strongest session model manage, use risk-based independent reviews, and selectively delegate bounded work with quota, money and context safeguards. Skip orchestration for trivial edits and leaf assignments.
 ---
 
 # Session harness
@@ -12,6 +12,30 @@ independent review, not a replacement for the clients' permission controls.
 Use the selected [session startup procedure](references/session-start.md) once per
 substantive task. It resolves current capabilities without loading every provider
 procedure. Trivial questions, edits and assigned leaf tasks do not start a new cycle.
+
+## Risk-based review (default)
+
+Routine investigation, reversible implementation, documentation and small fixes use
+manager execution and relevant deterministic checks, without mandatory model reviews
+or delegation. Before a material production change affecting DNS, access, secrets or
+data, require one independent reviewer from a different verified upstream family.
+Exceptionally risky or irreversible changes require two distinct other families to
+review the plan before execution. Record the risk and acceptance checks briefly.
+A stricter explicit project or owner requirement still applies.
+
+For the one-review tier, prepare and test the change first; review the integrated
+result before production execution. Do not start separate plan and final panels.
+Re-review only a material change or unresolved defect, using the affected diff and
+contracts. Optional suggestions and missing context are not automatic blockers.
+Required missing reviews block only the affected production action; independent
+preparation can continue within existing admission. Never bypass a quota stop.
+
+Delegate only when a bounded task saves work after integration and verification.
+No mandatory worker receipt for each stage, timed delegation cycle, or recurring
+completion polling. Reuse fresh session discovery; inspect only the routes needed.
+Authentication, quota accounting, spending authorization, secret handling, backups,
+tests, release permissions and rollback requirements remain unchanged. This is an
+instruction policy, not interception of every direct client call.
 
 ## 0. Check resources before dispatch
 
@@ -162,15 +186,18 @@ provider guidance when capability or successor relationships remain uncertain.
 | Role | Model and effort | Ownership |
 | --- | --- | --- |
 | Manager/planner | Strongest current session model, configured effort (default high) | Plan, reconciliation, integration, final verification |
-| Two plan reviewers | Current suitable models from two other distinct provider families, configured effort | Independent findings on the same plan |
+| Required reviewers (one or two by risk) | Current suitable models from the required distinct other families, configured effort | Independent findings on the same plan |
 | Investigator | Current suitable model, configured effort | Bounded evidence gathering, no edits |
 | Implementer | Current suitable model, configured effort | One non-overlapping file/task scope |
 | Verifier | Current suitable model, configured effort | Independent diff/test review, no self-approval |
 
-Both external reviewers have equal standing. The manager resolves the union of
+When two reviewers are required, both have equal standing. The manager resolves the union of
 findings using evidence; majority voting does not erase a concrete defect.
 
 ## 3. Plan and cross-check
+
+Apply this review procedure only when the risk tier requires a review. Routine
+work needs a concise implementation plan and relevant checks, not a review packet.
 
 Before another review, consult the private checkpoint's phase/artifact/family index.
 Reuse a completed verdict only for the same scope and evidence; preserve missing,
@@ -186,18 +213,18 @@ unresolved material finding still requires the appropriate independent review.
    plan artifact or private run directory, not a new committed progress log.
 2. Hash the exact review packet. Include sufficient relevant code/contracts inline,
    sanitize secrets and personal data, and omit irrelevant conversation history.
-3. Use the [session startup procedure](references/session-start.md) to select two
-   eligible upstream model families different from each other and the manager.
+3. Use the [session startup procedure](references/session-start.md) to select the required one or two
+   eligible upstream model families, each different from the manager and one another.
    Resolve the model family separately from its client, gateway and billing service.
-   Give both the same packet; reviewers do not see each other's first verdict.
+   When two are required, give both the same packet without sharing their first verdicts.
    Honor current role restrictions, model selection, isolation and admission.
    Inventory-only, opaque Auto and supervised-only routes do not fill the panel.
 4. Request `approve`, `revise` or `blocked`, with concrete findings, severity,
    evidence, missing assumptions and required checks. A completed process is not
    approval. Do not ask for private reasoning traces.
 5. Reconcile all material findings. A changed decision, interface, data invariant or
-   acceptance scope invalidates the old plan digest. Obtain both verdicts on the
-   revised packet before implementation. Limit to two review rounds; unresolved
+   acceptance scope invalidates the old plan digest. Obtain the required verdicts on the
+   changed scope before the risk-tier execution gate. Limit to two review rounds; unresolved
    disagreement becomes an explicit decision with evidence, not endless retries.
 
 Only the manager starts reviews. Prefer `harness.py review <provider>` with the
@@ -207,22 +234,15 @@ supported native/provider bridge with equivalent scope and execution restriction
 with a same-provider agent and call that independent cross-provider review.
 
 On unavailable auth, quota, tooling or an unverified model, record the precise
-missing review and continue independent preparation. Do not start implementation
+missing review and continue independent preparation. Do not execute the gated action
 behind a mandatory missing verdict. Request only the missing setup/decision when
 independent work is exhausted; this skill does not require routine plan approval.
 
 ## 4. Implement and verify
 
-- Before each substantive stage, record the task digest and either a completed
-  bounded worker receipt or a concrete reason the manager must do it. With balancing
-  enabled, use fresh fractional allowance consumption across eligible native services,
-  including the manager's own service; do not use a fixed provider rotation. Select
-  task capability first. Where the owner requests weekly parity, use the verified
-  weekly basis and task-fit subset described in [balancing](references/balancing.md);
-  preserve daily admission and explicitly selected strong-model/effort controls.
-  As a heuristic, every 15 completed manager tool batches, reassess delegation at the next safe
-  boundary. A batch is one model/tool round, not each shell command. Never interrupt
-  an atomic operation. This is session guidance, not interception of direct IDE calls.
+- Execute directly by default. Delegate only when the bounded task saves time after
+  integration. For a selected worker, preserve configured balancing, fresh admission,
+  task-fit routing and supported model/effort controls. No per-stage worker quota.
 - Dispatch only useful parallel tasks. Respect the actual concurrency limit and
   keep one slot for the manager. Each worker gets a leaf marker, task/plan version,
   owned files/worktree, relevant rules, selected model/effort, acceptance criteria
@@ -249,7 +269,7 @@ independent work is exhausted; this skill does not require routine plan approval
   When a native role fixes effort, choose another role or a fresh configurable leaf
   instead of assuming a spawn parameter overrides it. Verify effective controls.
 - The manager independently reviews the integrated diff and runs applicable gates.
-  Use a fresh verifier for substantial changes. Material plan drift returns to
+  Use the independent review required by the risk tier. Material plan drift returns to
   plan review. Follow any repository requirement for final cross-provider review.
 - Checkpoint durable decisions and resumable state through the project's knowledge
   workflow. Record completed/pending tasks, exact plan digest, reviews, selected

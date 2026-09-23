@@ -56,7 +56,7 @@ name. Retry at most once, only for a transient failure and only with the remaini
 original time budget. Quota, authentication, unsupported controls and invalid
 models need a concrete remedy; blind retry or older/paid fallback is not a remedy.
 
-Reviews are complete only when both independent providers have valid verdicts on
+Required reviews are complete when the risk tier's one or two independent providers have valid verdicts on
 the current packet. The manager resolves all material findings. A remaining
 blocker is explicit; it cannot be turned into PASS by majority vote or elapsed time.
 
