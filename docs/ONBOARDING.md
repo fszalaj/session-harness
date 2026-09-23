@@ -370,11 +370,11 @@ enabled, malformed or unreadable settings block. The harness never changes billi
 settings. Native extra-credit accounting retains reported units and does not prove
 protected paid execution.
 
-Select the strongest account-available hosting-provider model as manager. All roles
-use the configured effort (publicly `high`) or the highest supported lower level.
+Select the strongest account-available hosting-provider model as manager unless
+an explicit local model preference is set. All roles use the configured effort
+(publicly `high`) or the highest supported lower level.
 Use `max` only by explicit task-level selection for an extremely difficult task.
-Two distinct other-provider families review the same plan independently. Reconcile
-findings and report missing reviews accurately. Trivial or leaf work needs no new cycle.
+Use risk-based independent review and report missing coverage accurately.
 
 ### Default reasoning effort
 
@@ -412,6 +412,16 @@ model without any advertised level at or below the preference needs a compatible
 model or an explicit supported effort. This is a preference, not a spending limit;
 all existing admission controls still apply. Clients with no effort control and
 raw API calls without explicit effort remain client-managed.
+
+### Local Codex model preference
+
+To select a specific default Codex model, put its exact account-catalog ID in
+`~/.config/session-harness/default-codex-model`. The launcher verifies that ID
+against the current model generation and selects it for manager and worker roles;
+missing or ambiguous IDs and unavailable live catalogs stop selection. The file never grants model access or
+changes quota checks. Direct Codex sessions use their own `~/.codex/config.toml`.
+Keep this preference outside the repository and verify the selected model with
+`ai-session discover --session codex` after changing it.
 
 Rollback to a release before this setting was introduced restores that release's
 historical effort behavior. The preference file is retained for a later upgrade;

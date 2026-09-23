@@ -8,10 +8,10 @@ Keep Gemini CLI, Antigravity CLI and their IDE interfaces separate.
 Use the [additional client runbook](../../../docs/CLIENT-EXECUTION.md) for Copilot, Cursor
 and Ollama commands, requirements, receipts and recovery.
 
-| Client or route | Harness support in v0.6.1 |
+| Client or route | Current harness support |
 | --- | --- |
 | Codex, Claude Code, Antigravity CLI | Native discovery, quota and launch/review adapters; execution requires admission and the isolation/platform controls below |
-| Copilot CLI | Native launcher and text worker; explicit catalog-selected reviews require another declared manager family and exact usage identity; one finite token-billed chat or premium_interactions quota (premium support since 0.6.1) and disabled paid overage; no Auto review |
+| Copilot CLI | Native launcher and text worker; explicit catalog-selected reviews require another declared manager family and exact usage identity; one finite token-billed chat or premium_interactions quota and disabled paid overage; no Auto review |
 | Cursor CLI | Personal Free account quota and Auto launch/text work; no routed model identity or independent review |
 | Ollama local | Fixed loopback execution, local-model residency checks and a separate job ledger |
 | Explicit APIs | Direct text including Meta and Ollama Cloud; separate credentials and money admission, no automatic fallback |
@@ -59,7 +59,10 @@ Newest-generation eligibility is an owner preference, not proof that a newer tie
 outperforms every older tier. A unique current candidate needs no within-generation
 ranking; multiple candidates require explicit provider capability evidence. The
 helper refuses ambiguous manager ranking. Worker suggestions still require the
-manager to verify task fit, tools and cost.
+manager to verify task fit, tools and cost. An exact ID in the local
+`default-codex-model` file overrides manager and worker selection only after
+current-generation catalog validation. See
+[onboarding](../../../docs/ONBOARDING.md#local-codex-model-preference).
 
 Use the exact runtime-selected ID with the configured effort (publicly `high`),
 or the highest advertised level below it. Reserve `max` for an explicitly selected,

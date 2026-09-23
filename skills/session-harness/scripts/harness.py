@@ -315,7 +315,7 @@ def resolve_variant(model, effort, selected):
     return variant
 
 
-def select_models(models, family):
+def select_models(models, family, preferred=None):
     candidates = [model for model in models if generation(model["id"], family) is not None]
     if not candidates:
         raise HarnessError("model_unavailable", "No current model generation can be established from the catalog.")
@@ -324,7 +324,13 @@ def select_models(models, family):
     current.sort(key=lambda model: model["rank"])
     leaders = [model for model in current if re.search(
         r"most capable|most intelligent|most powerful", model.get("description", ""), re.I)]
-    if len(current) == 1:
+    if preferred is not None:
+        matches = [model for model in current if model["id"] == preferred]
+        if len(matches) != 1:
+            raise HarnessError("model_unavailable", "Configured model is not uniquely present in the current account catalog generation.")
+        strongest = matches[0]
+        ranking_basis = "Explicit local model preference matched to the available catalog entry."
+    elif len(current) == 1:
         strongest = current[0]
         ranking_basis = "Only current-generation candidate; no superiority over older tiers is inferred."
     elif len(leaders) == 1:
@@ -350,7 +356,9 @@ def select_models(models, family):
             continue
     if not feasible:
         raise HarnessError("unsupported_capability", "Current generation has no verified routine worker effort and variant.")
-    worker = next((model for model in feasible if re.search(
+    if preferred is not None and strongest not in feasible:
+        raise HarnessError("unsupported_capability", "Configured model has no verified routine worker effort and variant.")
+    worker = strongest if preferred is not None else next((model for model in feasible if re.search(
         r"affordable|everyday|cost.efficient|lightweight", model.get("description", ""), re.I)),
                   strongest if strongest in feasible else feasible[0])
     return planner, selection(worker, "worker")
@@ -473,6 +481,10 @@ def codex_review_capability(executable):
 def discover_codex(executable, offline=False):
     auth = {"status": "unverified"}
     problem = None
+    try:
+        preferred = effort_policy.codex_model_preference()
+    except ValueError as error:
+        raise HarnessError("invalid_preference", str(error)) from error
     if not offline:
         rpc = None
         try:
@@ -501,7 +513,7 @@ def discover_codex(executable, offline=False):
             else:
                 raise HarnessError("schema_error", "Codex catalog exceeded the pagination bound.")
             models = codex_models(raw)
-            planner, worker = select_models(models, "gpt")
+            planner, worker = select_models(models, "gpt", preferred)
             return {"status": "available", "source": "codex app-server model/list",
                     "models": models, "planner": planner, "worker": worker, "auth": auth,
                     "review": codex_review_capability(executable)}
@@ -510,8 +522,10 @@ def discover_codex(executable, offline=False):
         finally:
             if rpc is not None:
                 rpc.close()
+    if preferred is not None:
+        raise HarnessError("live_metadata_required", "Configured Codex model requires live account catalog validation.")
     models, fetched = cached_codex()
-    planner, worker = select_models(models, "gpt")
+    planner, worker = select_models(models, "gpt", preferred)
     return {"status": "cached", "source": "local models_cache.json (24h TTL)", "fetched_at": fetched,
             "live_discovery_error": problem, "models": models, "planner": planner, "worker": worker,
             "auth": auth, "review": codex_review_capability(executable)}

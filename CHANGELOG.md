@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.1
+
+- Name Copilot quota pools in `usage` output alongside stable ledger IDs.
+- Keep paid-overage Business pools blocked when no supported, fresh proof binds an
+  effective hard user budget to the selected account, model and billing pool.
+  Report the missing proof explicitly; exhaust finite pools before execution.
+- Cover the Business case and budget, account, model and exhaustion failures with
+  synthetic tests. No account, billing, budget or usage-history settings change.
+- Honor an exact local Codex model preference after current-catalog validation;
+  keep the model choice outside the public repository.
+
 ## 0.8.0
 
 Use risk-based review by default: routine reversible work runs directly with tests;

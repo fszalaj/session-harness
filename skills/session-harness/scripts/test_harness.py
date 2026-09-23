@@ -198,6 +198,20 @@ class SessionTests(unittest.TestCase):
 
 
 class ModelTests(unittest.TestCase):
+    def test_explicit_local_codex_model_requires_current_catalog_and_effort(self):
+        models = [model("gpt-99.10-flagship", 0, "Most capable"),
+                  model("gpt-99.10-sol", 1, "Fast and affordable")]
+        planner, worker = harness.select_models(models, "gpt", "gpt-99.10-sol")
+        self.assertEqual((planner["model"], worker["model"]), ("gpt-99.10-sol", "gpt-99.10-sol"))
+        self.assertEqual(planner["effort"], "high")
+        for requested in ("gpt-99.9-sol", "gpt-99.10-missing"):
+            with self.subTest(requested=requested), self.assertRaises(harness.HarnessError):
+                harness.select_models(models, "gpt", requested)
+        infeasible = dict(models[1], efforts=["max"])
+        with self.assertRaises(harness.HarnessError) as error:
+            harness.select_models([models[0], infeasible], "gpt", "gpt-99.10-sol")
+        self.assertEqual(error.exception.status, "unsupported_capability")
+
     def test_numeric_generation_beats_lexical_order_and_cheap_old_models(self):
         models = [model("gpt-99.9-budget", 0, "Fast and affordable"), model("gpt-99.10-leader", 1, "Most capable")]
         planner, worker = harness.select_models(models, "gpt")
@@ -303,6 +317,15 @@ class ModelTests(unittest.TestCase):
 
 
 class DiscoveryTests(unittest.TestCase):
+    def test_codex_preference_does_not_select_from_cached_catalog(self):
+        with patch.object(harness.effort_policy, "codex_model_preference", return_value="gpt-99.10-sol"), \
+             patch.object(harness, "cached_codex", side_effect=AssertionError("Cache must not be read")), \
+             patch.object(harness, "CodexRPC", side_effect=OSError("fictional RPC failure")):
+            for offline in (True, False):
+                with self.subTest(offline=offline), self.assertRaises(harness.HarnessError) as error:
+                    harness.discover_codex("mock-codex", offline=offline)
+                self.assertEqual(error.exception.status, "live_metadata_required")
+
     def cache(self, stamp):
         directory = tempfile.TemporaryDirectory()
         self.addCleanup(directory.cleanup)
@@ -361,7 +384,8 @@ class DiscoveryTests(unittest.TestCase):
                 return {"data": [entry("gpt-99.9-leader")], "nextCursor": "page-two"}
             def close(self):
                 pass
-        with patch.object(harness, "CodexRPC", RPC), patch.object(harness, "codex_review_capability", return_value={"status": "available"}):
+        with patch.object(harness, "CodexRPC", RPC), patch.object(harness, "codex_review_capability", return_value={"status": "available"}), \
+             patch.object(harness.effort_policy, "codex_model_preference", return_value=None):
             result = harness.discover_codex("mock-codex")
         self.assertEqual(result["planner"]["model"], "gpt-99.10-leader")
         self.assertIn(("model/list", {"includeHidden": False, "limit": 100, "cursor": "page-two"}), RPC.calls)
