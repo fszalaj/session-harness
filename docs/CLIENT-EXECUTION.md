@@ -14,7 +14,7 @@ model or an independent reviewer. Explicit provider requests remain available.
 2. Run `ai-session inventory` and inspect Copilot's authentication, model catalog
    and quota records.
 3. Select Copilot in `ai-session configure` on the client and its account authority.
-   Preserve existing services, budgets and mode. Keep paid overage disabled.
+   Preserve existing services, budgets and mode.
 4. Initialize a first accounting baseline on the authority with
    `ai-session usage refresh copilot --initialize`. For an existing baseline, omit
    `--initialize`. Run `ai-session usage check copilot` before execution.
@@ -99,15 +99,29 @@ entries and archived observation; they cannot authorize requests. If old and new
 aliases both contain consumption for a day, stop for reconciliation rather than
 counting the same usage twice. Existing newer observations are preserved.
 
-The 0.6.1 worker accepts exactly one active finite token-billed `chat` or
-`premium_interactions` pool, with any other active pools unlimited. Release 0.6.0
-accepts only finite chat. Missing quota/overage flags, unknown finite pools or
-multiple finite pools stop execution. All pools must report disabled exhaustion
-and overage use. The selected pool, its entitlement and other pool definitions
+The worker accepts exactly one active finite token-billed `chat` or
+`premium_interactions` pool, with any other active pools unlimited. Missing
+quota/overage flags, unknown finite pools or multiple finite pools stop execution.
+All pools must report disabled exhaustion and overage use. When an active pool
+reports `usageAllowedWithExhaustedQuota` or `overageAllowedWithExhaustedQuota`,
+`usage check copilot` reports `copilot_hard_user_budget_unverified` alongside
+`native_paid_execution_unsupported`. A positive remaining percentage does not
+establish a hard stop. The selected pool, its entitlement and other pool definitions
 must remain consistent before and after execution; receipts identify that pool.
 The worker checks aggregate account consumption. These deltas can include other sessions;
 they are not an exclusive per-task bill. Native reset timestamps at or before the
 observation remain unknown. Monthly pacing uses a conservative 31-day window.
+
+[GitHub documents hard user-level AI-credit budgets](https://docs.github.com/en/copilot/concepts/billing-and-usage/organizations-and-enterprises/budgets),
+and its [read-only REST API](https://docs.github.com/en/rest/billing/budgets)
+lists budget records. The SDK `account.getQuota` exposes entitlement and overage
+flags, not the effective user-level budget. Budget listings also do not attest
+which billing entity, account, model and pool govern a particular SDK request or
+that an effective hard stop was freshly checked for that request. The protected
+route therefore keeps paid-overage execution blocked until supported server
+evidence can bind those facts and be checked again immediately before sending.
+The `usage` result names `chat`, `completions` and `premium_interactions` credit
+resources alongside their stable ledger identifiers.
 
 On missing usage, a model mismatch, timeout or failed execution, inspect the retained
 job and stop the owned client process before recording recovery:

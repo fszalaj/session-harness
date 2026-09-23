@@ -12,6 +12,18 @@ import auto_install
 
 
 class EffortPolicyTests(unittest.TestCase):
+    def test_codex_model_preference_is_local_and_validated(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            path = home / effort_policy.CODEX_MODEL_PATH
+            self.assertIsNone(effort_policy.codex_model_preference(home))
+            path.parent.mkdir(parents=True)
+            path.write_text('gpt-99.10-sol\n')
+            self.assertEqual(effort_policy.codex_model_preference(home), 'gpt-99.10-sol')
+            path.write_text('gpt-99.10-sol\n--provider evil')
+            with self.assertRaises(ValueError):
+                effort_policy.codex_model_preference(home)
+
     def test_runtime_precedence_validation_and_capability_ceiling(self):
         with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {}, clear=True):
             home = Path(directory)

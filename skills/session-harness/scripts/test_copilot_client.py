@@ -31,6 +31,13 @@ def paid_quota(used=2):
                               'premium_interactions': dict(row)}}
 
 
+def business_quota():
+    data = paid_quota()
+    data['quotaSnapshots']['premium_interactions'].update(
+        usageAllowedWithExhaustedQuota=True, overageAllowedWithExhaustedQuota=True)
+    return data
+
+
 class CopilotTests(unittest.TestCase):
     def named_capability(self, model='claude-99.1'):
         return {'executable': 'copilot', 'auth': {'status': 'subscription'},
@@ -217,6 +224,37 @@ class CopilotTests(unittest.TestCase):
             if scenario == 'missing-quota': rows['premium_interactions'].pop('hasQuota')
             with self.subTest(scenario=scenario), self.assertRaises(harness.HarnessError):
                 copilot.billing_pool(data)
+
+    def test_business_budget_claims_cannot_override_active_paid_pool(self):
+        for scenario in ('hard-limit-claim', 'missing-proof', 'paid-overage', 'account-change', 'model-mismatch'):
+            data = business_quota()
+            budget = {'account': 'fictional-user', 'model': 'gpt-fixture',
+                      'pool': 'premium_interactions', 'hardStop': True, 'observedAt': '2026-09-23T00:00:00Z'}
+            if scenario == 'hard-limit-claim':
+                data['hardUserBudget'] = budget
+            elif scenario == 'paid-overage':
+                data['quotaSnapshots']['premium_interactions']['overage'] = 1
+            elif scenario == 'account-change':
+                data['hardUserBudget'] = dict(budget, account='different-fictional-user')
+            elif scenario == 'model-mismatch':
+                data['hardUserBudget'] = dict(budget, model='other-fixture')
+            client = MagicMock()
+            client.request.side_effect = lambda method: data if method == 'account.getQuota' else self.fail(method)
+            with self.subTest(scenario=scenario), patch.object(inventory, 'MetadataRPC', return_value=client), \
+                 patch('supervision.Watch'):
+                with self.assertRaises(harness.HarnessError) as error:
+                    copilot.execute(b'fictional task', 30,
+                                    {'executable': 'copilot', 'planner': {'model': 'gpt-fixture', 'effort': None}}, task=True)
+                self.assertEqual(error.exception.status, 'usage_unverified')
+                self.assertIn('fresh server proof', str(error.exception))
+                client._request.assert_not_called()
+
+    def test_exhausted_finite_business_pool_stops_without_overage(self):
+        data = paid_quota()
+        data['quotaSnapshots']['premium_interactions'].update(usedRequests=200, remainingPercentage=0)
+        with self.assertRaises(harness.HarnessError) as error:
+            copilot.billing_pool(data)
+        self.assertEqual(error.exception.status, 'quota_blocked')
 
     def test_failed_copilot_job_blocks_admission_until_explicit_reconciliation(self):
         import json

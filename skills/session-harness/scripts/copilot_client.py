@@ -13,15 +13,18 @@ def billing_pool(payload):
         raise harness.HarnessError('usage_unverified', 'Copilot quota metadata is incomplete.')
     rows = inventory.normalize_quota(payload)
     for row in rows:
-        if (type(row.get('hasQuota')) is not bool or
-                any(row.get(key) is not False for key in ('usageAllowedWithExhaustedQuota', 'overageAllowedWithExhaustedQuota'))):
-            raise harness.HarnessError('usage_unverified', 'Copilot paid-overage controls are unverified.')
+        if type(row.get('hasQuota')) is not bool:
+            raise harness.HarnessError('usage_unverified', 'Copilot quota activity is unverified.')
+        if any(row.get(key) is not False for key in ('usageAllowedWithExhaustedQuota', 'overageAllowedWithExhaustedQuota')):
+            raise harness.HarnessError('usage_unverified', 'Copilot paid overage is possible. Missing fresh server proof that an effective hard user budget stops the selected account, model and billing pool; recheck that proof before sending.')
     finite = [row for row in rows if row['hasQuota'] and row.get('isUnlimitedEntitlement') is not True
               and row.get('entitlementRequests') != -1]
     if (len(finite) != 1 or finite[0]['pool'] not in {'chat', 'premium_interactions'}
             or finite[0].get('tokenBasedBilling') is not True or finite[0]['entitlementRequests'] <= 0):
         raise harness.HarnessError('usage_unverified', 'Copilot requires one finite token-billed chat or premium_interactions allowance.')
     selected = finite[0]
+    if selected['remainingPercentage'] <= 0 or selected['usedRequests'] >= selected['entitlementRequests']:
+        raise harness.HarnessError('quota_blocked', 'Copilot billing pool is exhausted.')
     return {**{k: selected[k] for k in ('pool', 'entitlementRequests', 'usedRequests', 'remainingPercentage')},
             'other_pools': sorted(({k: v for k, v in row.items()
                                     if k not in ({'resetDate', 'usedRequests', 'remainingPercentage'} if row['hasQuota'] else {'resetDate'})}

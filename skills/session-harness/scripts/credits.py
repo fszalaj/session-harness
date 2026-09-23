@@ -172,7 +172,11 @@ def validate_resources(rows, service):
     expected = set(resource("claude", "claude.native_usage"))
     seen = set()
     for row in rows:
-        if (not isinstance(row, dict) or set(row) != expected or row["service"] != service
+        if (not isinstance(row, dict) or set(row) not in ((expected, expected | {"pool"}) if service == "copilot" else (expected,))
+                or (service == "copilot" and "pool" in row and
+                    (not isinstance(row["pool"], str) or not re.fullmatch(r"[a-z_]{1,64}", row["pool"])
+                     or row["resource_id"] != resource("copilot", SOURCES[service], row["pool"])["resource_id"]))
+                or row["service"] != service
                 or service not in SERVICES or row["scope"] != "extra:" + service
                 or row["source"] not in ({SOURCES[service], AGY_SETTINGS_SOURCE, AGY_DEFAULTS_SOURCE}
                                          if service == "antigravity" else {SOURCES[service]})
@@ -279,6 +283,9 @@ def copilot_resources(rows):
         try:
             if not isinstance(row, dict):
                 raise ValueError("Invalid overage")
+            if not isinstance(identity, str) or not re.fullmatch(r"[a-z_]{1,64}", identity):
+                raise ValueError("Invalid Copilot pool")
+            result["pool"] = identity
             for key in CONTROLS:
                 if key in row:
                     value = flag(row[key])
@@ -378,6 +385,9 @@ def native_reasons(service, rows):
             return ["credit_metadata_unverified"]
     if not rows or any(row["metadata_status"] != "reported" for row in rows):
         return ["credit_metadata_unverified"]
+    if service == "copilot" and any(row["native_controls"].get(key) is not False for row in rows
+                                    for key in ("usageAllowedWithExhaustedQuota", "overageAllowedWithExhaustedQuota")):
+        return ["native_paid_execution_unsupported", "copilot_hard_user_budget_unverified"]
     if any(row["enabled"] is not False or row["auto_reload"] is True or row["can_purchase"] is True
            for row in rows):
         return ["native_paid_execution_unsupported"]

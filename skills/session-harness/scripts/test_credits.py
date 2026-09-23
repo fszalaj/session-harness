@@ -131,13 +131,34 @@ class CreditMetadataTests(unittest.TestCase):
         self.assertEqual("server_defined", row["unit"])
         self.assertIsNone(row["currency"])
         self.assertTrue(row["native_controls"]["tokenBasedBilling"])
+        self.assertEqual(row["pool"], "premium")
         self.assertNotIn("secret", json.dumps(rows))
-        self.assertTrue(credits.native_reasons("copilot", rows))
+        self.assertEqual(credits.native_reasons("copilot", rows),
+                         ["native_paid_execution_unsupported", "copilot_hard_user_budget_unverified"])
 
     def test_copilot_unknown_overage_or_malformed_flags_do_not_admit(self):
         for row in ({"pool": "p"}, {"pool": "p", "overageAllowedWithExhaustedQuota": "false"},
                     {"pool": "p", "overageAllowedWithExhaustedQuota": False, "tokenBasedBilling": "unknown"}):
             self.assertTrue(credits.native_reasons("copilot", credits.copilot_resources([row])))
+
+    def test_copilot_usage_names_all_pools_with_stable_ids(self):
+        rows = credits.copilot_resources([{"pool": pool, "overageAllowedWithExhaustedQuota": False,
+                                           "usageAllowedWithExhaustedQuota": False}
+                                          for pool in ("chat", "completions", "premium_interactions")])
+        with patch.object(usage, "Ledger") as ledger, patch("sys.stdout", new_callable=io.StringIO) as output:
+            ledger.return_value.check.return_value = {"allowed": True, "reasons": [], "credit_resources": rows}
+            self.assertEqual(usage.main(["status", "copilot"]), 0)
+        shown = json.loads(output.getvalue())
+        self.assertEqual([row["pool"] for row in shown["credit_resources"]],
+                         ["chat", "completions", "premium_interactions"])
+        self.assertEqual([row["resource_id"] for row in shown["credit_resources"]],
+                         [row["resource_id"] for row in rows])
+
+    def test_copilot_missing_overage_control_needs_budget_proof(self):
+        row = credits.resource("copilot", credits.SOURCES["copilot"], "premium_interactions")
+        row.update(pool="premium_interactions", enabled=False)
+        self.assertEqual(credits.native_reasons("copilot", [row]),
+                         ["native_paid_execution_unsupported", "copilot_hard_user_budget_unverified"])
 
     def test_antigravity_missing_eligibility_is_explicit(self):
         rows = credits.missing("antigravity")

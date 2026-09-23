@@ -1,5 +1,22 @@
 # Releases and updates
 
+## 0.8.1
+
+Copilot `usage` output names quota pools alongside stable credit-resource IDs.
+An active token-billed Business pool that permits exhausted-quota usage or
+paid overage remains blocked with `copilot_hard_user_budget_unverified`.
+`account.getQuota` does not return the effective user budget, and read-only budget
+records do not bind a specific SDK request to an account, model, billing pool and
+freshly enforced hard stop. A positive balance or a declared budget is insufficient.
+An exhausted finite pool also stops before a request is sent.
+
+An optional local Codex model preference selects an exact current-generation
+catalog ID for manager and worker launches. The preference is stored outside the
+release and does not override authentication or quota checks.
+
+Upgrade with `ai-session update --version 0.8.1 --apply` and restart affected
+clients. This release changes no account, billing, budget or usage-history settings.
+
 ## 0.8.0
 
 Use risk-based review by default: routine reversible work runs directly with tests;
