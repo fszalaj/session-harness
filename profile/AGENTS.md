@@ -43,9 +43,11 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
   because it appeared in a previous conversation or on another subscription.
   Select the newest available generation in each family before optimizing cost.
   Opaque Auto routing requires an explicit choice and never proves current-generation selection.
-- Two other distinct provider families independently review the same plan before
-  implementation. They have equal standing; reconcile every material finding.
-  Honor configured model supervision limits and report unavailable independent reviews.
+- Use risk-based review: routine reversible work needs relevant tests, not a model panel.
+  One independent other-family reviewer checks material production changes to DNS,
+  access, secrets or data before execution. Exceptionally risky or irreversible
+  changes need two distinct other-family plan reviews. Reconcile material findings.
+  Delegate only when it saves work; no mandatory per-stage worker or polling cycle.
 - Choose execution roles, models and effort for the task. Use current generations,
   using the same configured default for managers, workers and reviewers.
   Pass native leaf model and effort explicitly and verify the effective controls.
@@ -54,7 +56,7 @@ and already-delegated leaf tasks do not start a new orchestration cycle.
   explicit exception for extremely difficult tasks, never a routine role default.
   If a current cheaper model is unavailable, use the current flagship at the configured
   effort rather than an older generation. Keep the manager at its planning tier.
-- When subscription balancing is enabled, route bounded work through its shared
+- When useful delegation is selected and subscription balancing is enabled, route bounded work through its shared
   authority using fresh quota fractions, independently of the manager family. Otherwise
   prefer native same-family workers. Give workers bounded context and non-overlapping
   ownership. Only the manager starts reviews or additional workers; leaf agents

@@ -49,8 +49,9 @@ Resolve models dynamically: newest available generation within each family befor
 cost optimization, strongest hosting-provider manager, and configured effort for
 all roles (public default high or the highest advertised lower level). Use max only
 by explicit task-level selection for an extremely difficult task. Instructions cannot
-change a running session. Use bounded native workers and two independent
-other-provider plan reviews. Follow the selected skill's admission/context procedure;
+change a running session. Delegate only when useful. Routine reversible work needs
+tests; material production changes need one independent other-family review, and
+exceptionally risky or irreversible changes need two other-family plan reviews. Follow the selected skill's admission/context procedure;
 missing capabilities or reviews are not success. Do not restart orchestration for leaf tasks.
 
 For owner-enabled balancing on version 0.7.0 or newer, choose task capability before

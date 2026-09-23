@@ -15,9 +15,11 @@ instructions in private configuration. Corporate transfer instructions are priva
 The manager remains accountable for broader decisions. Deterministic rules do not
 need a model call. Batch independent Jev questions over shared state when useful;
 an extra classification call for every trivial task can increase cost and latency.
-Two independent permitted families still review material plans. The supervising
+Routine reversible work has no mandatory model review. Material production changes
+require one independent other-family review; exceptionally risky or irreversible
+changes require two other-family plan reviews. The supervising
 model's agreement is not a substitute for tests, and workers never approve their
-own implementations. Use a fresh verifier for substantial integrated changes.
+own implementations. Use the required review tier on the integrated change.
 
 Resolve the newest eligible generation from current catalogs and reviewed evidence.
 All roles use configured high by default, or the highest advertised lower level.
@@ -43,8 +45,8 @@ or shared accounting between otherwise separate ledgers.
 
 Copilot is a billing service, not a model family. Version 0.6.0 supports
 explicit catalog-selected models for workers and isolated reviews. Declare the
-actual manager family and verify the returned model identity and two distinct
-reviewer families. Both Copilot reviews share one account quota. Auto remains
+actual manager family and verify the returned model identity and the distinct
+reviewer families required by the risk tier. Both Copilot reviews share one account quota. Auto remains
 supervised-only, and an account offering only Auto cannot supply named Claude or
 Gemini reviews. Verify each named route on its actual account before relying on the workflow; catalog
 visibility alone is not execution evidence.

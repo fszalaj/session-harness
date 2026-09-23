@@ -1,5 +1,19 @@
 # Releases and updates
 
+## 0.8.0
+
+Use risk-based review by default: routine reversible work runs directly with tests;
+material production changes to DNS, access, secrets or data require one independent
+other-family review before execution. Exceptionally risky or irreversible changes
+require two other-family plan reviews. Useful delegation remains available without
+mandatory per-stage workers or repeated full review panels.
+
+This changes instruction defaults, not quota, billing or CLI enforcement. Existing
+stricter project/private policies still take precedence and must be reconciled
+explicitly by their owner. No admission bypass or automatic paid fallback is added.
+Upgrade with `ai-session update --version 0.8.0 --apply` and restart clients. Existing
+sessions must explicitly adopt the new instructions; Markdown cannot reload them.
+
 Use a published version for maintained installations. `main` is development code;
 installing a checkout is an explicit development choice. Version 0.x is still evolving:
 read release notes before upgrading. Published tags and assets are immutable. A fix

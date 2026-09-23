@@ -1,6 +1,8 @@
 # Start or resume substantive work
 
-Run this discovery at a new manager session and after a release, account, catalog
+Use the risk tier in SKILL.md before selecting review routes. Reuse fresh discovery
+within the session and inspect only routes needed for the task. Run discovery at a
+new manager session and after a release, account, catalog
 or policy change. Leaf tasks do not restart it. Use existing metadata commands;
 this procedure adds no inference, background polling or new account authorization.
 
@@ -65,7 +67,8 @@ win. Reserve `max` for explicitly selected, extremely difficult tasks. Verify th
 running model and effort; Markdown cannot switch an existing session. If no
 compatible level or required variant exists, select a compatible current model.
 
-Select two reviewer-capable routes with different **upstream model families**, both
+When review is required, select one route for material production changes or two
+for exceptionally risky or irreversible changes, with different **upstream model families**, both
 different from the manager. Do not prescribe a fixed pair of brands. Resolve model
 identity independently from the reseller, client and billing account; two gateways
 to one model family do not provide two independent families. Check the selected
@@ -88,9 +91,9 @@ Capability selection occurs before dispatch. A missing adapter or prohibited rol
 is not itself quota exhaustion; inspect the other authorized reviewer-capable
 routes before declaring a missing panel. A genuine quota/evidence stop still obeys
 its configured scope and cannot be bypassed by switching service or account.
-If fewer than two independent families qualify, name the verified coverage and
+If fewer than the required number of independent families qualify, name the verified coverage and
 exact missing capability or decision. Continue independent preparation; do not
-start gated implementation with one review, invent approval, or silently relax
+execute the gated action with missing reviews, invent approval, or silently relax
 policy. Ask only when that missing decision is necessary and not already authorized.
 
 ## Reusable task prompt
@@ -102,8 +105,9 @@ Use its session-start reference to inspect current clients, registered native/AP
 free routes, model catalogs, role permissions, quotas, project skills and knowledge
 access. Resolve capabilities from live evidence instead of a remembered provider list.
 Select the newest available generation in each family; use the configured effort default for all roles. Use max only for my explicit extremely
-difficult-task exception. Resolve two permitted independent upstream reviewer families
-outside the manager's family. Preserve every budget and role restriction; supervised
+difficult-task exception. Apply the risk-based review tier: no panel for routine work,
+one independent other-family review for material production changes, two for
+exceptionally risky or irreversible changes. Preserve every budget and role restriction; supervised
 output is not an independent verdict. Carry authorized work through verification and
 report actual models, supported capabilities, tests and precise remaining gaps.
 ```

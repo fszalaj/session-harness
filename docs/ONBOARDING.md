@@ -291,9 +291,11 @@ Keep application rules in the project's `AGENTS.md`. Add a short reference such 
 
 > For substantive work, use `~/.agents/skills/session-harness/SKILL.md`, unless this
 > repository explicitly selects a maintained project copy. Honor shared usage and
-> context safeguards. Use enabled subscription balancing for bounded workers (otherwise native same-family workers) and independent reviews from
-> the other two provider families when supported. Leaf assignments and trivial
-> tasks do not restart orchestration. Preserve this project's rules.
+> context safeguards. Execute routine reversible work directly with relevant tests.
+> Require one independent other-family review before material production changes,
+> and two other-family plan reviews for exceptionally risky or irreversible changes.
+> Delegate only when useful and honor enabled balancing for selected workers.
+> Leaf assignments do not restart orchestration. Preserve this project's rules.
 
 Prefer the installed release for projects that need no harness customization. Run
 `ai-session update --check` to inspect releases and `ai-session update` for a confirmed
