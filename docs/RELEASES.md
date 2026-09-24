@@ -1,5 +1,21 @@
 # Releases and updates
 
+## 0.8.4
+
+Raise Claude leaf agent turn bounds: `harness-implementer` from 12 to 40,
+`harness-investigator` from 8 to 25, and `harness-verifier` from 12 to 30. Real
+sessions showed these agents stopping mid-task on ordinary work (CI polling,
+multi-file edits, multi-item audits), needing manual resumes. Each leaf agent
+body also gains two rules: batch related shell steps into one command, and wait
+for CI or another long job with a single bounded polling command instead of one
+tool call per poll. The 300-word return limit and stop-at-the-turn-bound rule
+are unchanged.
+
+This changes instruction defaults only, not quota, billing or CLI enforcement.
+Upgrade with `ai-session update --version 0.8.4 --apply` and restart clients.
+Existing sessions must explicitly adopt the new instructions; Markdown cannot
+reload them.
+
 ## 0.8.3
 
 Copilot Business can use an active finite token-billed pool whose exhaustion and

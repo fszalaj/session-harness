@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.4
+
+- Raise Claude leaf agent turn bounds (implementer 12->40, investigator 8->25,
+  verifier 12->30) and add batching/polling rules to leaf agent instructions.
+
 ## 0.8.2
 
 - Fetch release assets from GitHub's dedicated assets endpoint when tag metadata
